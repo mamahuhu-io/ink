@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const GoodIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M10.473 3.104c.24-.527.768-.854 1.337-.854 1.584 0 2.9 1.257 2.9 2.846V8.1c0 .038.036.1.121.1h3.054c2.04 0 3.644 1.783 3.325 3.805l-.939 5.95c-.256 1.622-1.68 2.795-3.325 2.795H5.243c-1.359 0-2.493-1.08-2.493-2.45v-5.95c0-1.37 1.134-2.45 2.493-2.45h2.049c.058 0 .099-.033.114-.066zM8.608 19.25h8.338c.935 0 1.707-.663 1.843-1.53l.94-5.95c.168-1.067-.68-2.07-1.844-2.07H14.83c-.878 0-1.621-.699-1.621-1.6V5.096c0-.72-.6-1.337-1.383-1.346l-3.056 6.706q-.069.15-.163.279zm-1.5-7.85v7.85H5.243c-.566 0-.993-.443-.993-.95v-5.95c0-.507.427-.95.993-.95z" clipRule="evenodd" /></svg>;
+export default GoodIcon;

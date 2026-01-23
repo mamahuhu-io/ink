@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const KeyboardIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M6.997 8.92a1 1 0 1 0-1.993.16 1 1 0 0 0 1.993-.16m8.508 3.16a1 1 0 1 0 1.993-.16 1 1 0 0 0-1.993.16m-1.001-.16a1 1 0 1 0-1.993.16 1 1 0 0 0 1.993-.16M7.999 9.08a1 1 0 1 0 1.993-.16 1 1 0 0 0-1.993.16M2.25 7A2.75 2.75 0 0 1 5 4.25h14A2.75 2.75 0 0 1 21.75 7v10A2.75 2.75 0 0 1 19 19.75H5A2.75 2.75 0 0 1 2.25 17zM5 5.75c-.69 0-1.25.56-1.25 1.25v10c0 .69.56 1.25 1.25 1.25h14c.69 0 1.25-.56 1.25-1.25V7c0-.69-.56-1.25-1.25-1.25zm1 9.5a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H6.75a.75.75 0 0 1-.75-.75m5.213-3.958A1 1 0 1 0 9.8 12.708a1 1 0 0 0 1.414-1.416m-3 0a1 1 0 1 0-1.415 1.415 1 1 0 0 0 1.415-1.415m4.49-3a1 1 0 1 0-1.414 1.416 1 1 0 0 0 1.415-1.415m3.001 0a1 1 0 1 0-1.414 1.415 1 1 0 0 0 1.414-1.414m3.001 0a1 1 0 1 0-1.415 1.416 1 1 0 0 0 1.415-1.415" clipRule="evenodd" /></svg>;
+export default KeyboardIcon;

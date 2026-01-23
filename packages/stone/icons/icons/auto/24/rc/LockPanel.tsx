@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const LockPanelIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M12 3.25A3.25 3.25 0 0 0 8.75 6.5V10H7.5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1.25V6.5A3.25 3.25 0 0 0 12 3.25M13.75 10V6.5a1.75 1.75 0 1 0-3.5 0V10zM12 12.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75" clipRule="evenodd" /></svg>;
+export default LockPanelIcon;

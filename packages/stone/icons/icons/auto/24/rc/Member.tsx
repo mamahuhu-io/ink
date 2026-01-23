@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const MemberIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M16.402 19.06a8.2 8.2 0 0 1-4.352 1.24 8.2 8.2 0 0 1-4.315-1.217 4.73 4.73 0 0 1 4.338-2.807 4.73 4.73 0 0 1 4.329 2.784m1.218-.924a6.24 6.24 0 0 0-5.547-3.36 6.24 6.24 0 0 0-5.561 3.389 8.25 8.25 0 1 1 11.109-.03m4.18-6.086c0 5.385-4.365 9.75-9.75 9.75S2.3 17.435 2.3 12.05 6.665 2.3 12.05 2.3s9.75 4.365 9.75 9.75M9.692 10.1c0-1.29 1.059-2.35 2.381-2.35 1.323 0 2.382 1.06 2.382 2.35s-1.059 2.35-2.382 2.35c-1.322 0-2.381-1.059-2.381-2.35m2.381-3.85c-2.136 0-3.881 1.717-3.881 3.85s1.745 3.85 3.881 3.85c2.137 0 3.882-1.716 3.882-3.85 0-2.133-1.745-3.85-3.882-3.85" clipRule="evenodd" /></svg>;
+export default MemberIcon;

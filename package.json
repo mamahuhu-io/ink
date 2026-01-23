@@ -1,0 +1,26 @@
+{
+  "name": "ink-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.1.4",
+  "scripts": {
+    "dev": "pnpm --filter @ink/desktop dev",
+    "build": "pnpm --filter @ink/desktop build",
+    "preview": "pnpm --filter @ink/desktop preview",
+    "tauri": "pnpm --filter @ink/desktop tauri",
+    "tauri:dev": "pnpm --filter @ink/desktop tauri:dev",
+    "tauri:build": "pnpm --filter @ink/desktop tauri:build",
+    "build:stone": "cd packages/stone && pnpm build",
+    "build:stone:icon": "cd packages/stone/icons && pnpm build",
+    "cargo": "cd apps/desktop/src-tauri && cargo"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@ink/stone-icons": "workspace:*",
+      "yjs": "^13.6.21"
+    }
+  }
+}

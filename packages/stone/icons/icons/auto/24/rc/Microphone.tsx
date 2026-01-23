@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const MicrophoneIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M9.149 5.84a2.851 2.851 0 1 1 5.702 0v5.553a2.851 2.851 0 0 1-5.702 0z" clipRule="evenodd" /><path fill="currentColor" d="M7.147 10.794a.75.75 0 0 1 .815.679l.002.02.016.104a4.638 4.638 0 0 0 .613 1.635c.527.852 1.496 1.73 3.407 1.73 1.91 0 2.88-.878 3.408-1.73a4.6 4.6 0 0 0 .628-1.738l.002-.022v-.002a.75.75 0 0 1 1.494.138v.01l-.002.015a3 3 0 0 1-.03.21 6.142 6.142 0 0 1-.817 2.178c-.684 1.105-1.896 2.188-3.934 2.403v2.802H15a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1 0-1.5h2.25v-2.802C9.212 16.209 8 15.126 7.317 14.02a6.1 6.1 0 0 1-.847-2.388l-.001-.015v-.006l-.001-.004a.75.75 0 0 1 .68-.814" /></svg>;
+export default MicrophoneIcon;

@@ -1,0 +1,531 @@
+{
+  "app": {
+    "name": "Ink",
+    "untitled": "Untitled"
+  },
+  "menu": {
+    "file": "File",
+    "file.new_window": "New Window",
+    "file.new_tab": "New Tab",
+    "file.open": "Open",
+    "file.open_recent": "Open Recent",
+    "file.no_recent": "No Recent Items",
+    "file.clear_recent": "Clear Menu",
+    "file.save": "Save",
+    "file.save_as": "Save As",
+    "file.import": "Import",
+    "file.export": "Export",
+    "file.export.html": "Export as HTML",
+    "file.export.pdf": "Export as PDF",
+    "file.export.docx": "Export as Word",
+    "file.export.image": "Export as Image",
+    "file.close_tab": "Close Tab",
+    "file.quit": "Quit",
+    "edit": "Edit",
+    "edit.undo": "Undo",
+    "edit.redo": "Redo",
+    "edit.find": "Find",
+    "edit.find_replace": "Find and Replace",
+    "edit.search_files": "Search Files",
+    "edit.preferences": "Preferences",
+    "view": "View",
+    "view.toggle_sidebar": "Toggle Sidebar",
+    "view.toggle_source": "Toggle Source Mode",
+    "view.zoom_in": "Zoom In",
+    "view.zoom_out": "Zoom Out",
+    "view.actual_size": "Actual Size",
+    "view.fullscreen": "Fullscreen",
+    "themes": "Themes",
+    "themes.open_folder": "Open Themes Folder",
+    "themes.refresh": "Refresh Themes",
+    "help": "Help",
+    "help.website": "Website",
+    "help.about": "About"
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "editor": "Editor",
+      "general": "General",
+      "appearance": "Appearance",
+      "shortcuts": "Shortcuts",
+      "about": "About"
+    },
+    "editor": {
+      "title": "Editor Settings",
+      "subtitle": "Customize your editing experience",
+      "autoSave": {
+        "title": "Auto-save",
+        "enable": "Enable auto-save",
+        "enableDesc": "Automatically save changes to your documents",
+        "delay": "Save delay",
+        "delayDesc": "Time to wait before auto-saving (in seconds)"
+      },
+      "text": {
+        "title": "Text",
+        "fontSize": "Font size",
+        "fontSizeDesc": "Editor font size in pixels",
+        "lineHeight": "Line height",
+        "lineHeightDesc": "Space between lines of text",
+        "spellCheck": "Spell check",
+        "spellCheckDesc": "Highlight misspelled words in the editor"
+      },
+      "code": {
+        "title": "Code Block",
+        "lineNumbers": "Show line numbers",
+        "lineNumbersDesc": "Display line numbers in code blocks",
+        "wordWrap": "Enable word wrap",
+        "wordWrapDesc": "Wrap long lines in code blocks"
+      }
+    },
+    "general": {
+      "title": "General Settings",
+      "subtitle": "Configure general application behavior",
+      "files": {
+        "title": "Files",
+        "defaultLocation": "Default save location",
+        "defaultLocationDesc": "Default folder for new documents",
+        "chooseButton": "Choose...",
+        "recentLimit": "Recent files limit",
+        "recentLimitDesc": "Maximum number of recent files to remember"
+      },
+      "behavior": {
+        "title": "Behavior",
+        "confirmDelete": "Confirm before delete",
+        "confirmDeleteDesc": "Show confirmation dialog before deleting files",
+        "openLastFile": "Open last file on startup",
+        "openLastFileDesc": "Automatically open the last edited file when launching"
+      },
+      "language": {
+        "title": "Language",
+        "select": "Display language",
+        "selectDesc": "Choose the language for the user interface"
+      }
+    },
+    "appearance": {
+      "title": "Appearance",
+      "subtitle": "Customize how Ink looks and feels",
+      "theme": {
+        "title": "Theme",
+        "colorMode": "Color mode",
+        "colorModeDesc": "Choose between light and dark mode",
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark",
+        "openFolder": "Open Folder",
+        "getThemes": "Get Themes"
+      },
+      "export": {
+        "title": "Export",
+        "theme": "Export theme",
+        "themeDesc": "Theme to use when exporting documents",
+        "auto": "Auto (match current)"
+      },
+      "window": {
+        "title": "Window",
+        "sidebarPosition": "Sidebar position",
+        "sidebarPositionDesc": "Position of the file sidebar",
+        "left": "Left",
+        "right": "Right"
+      },
+      "display": {
+        "title": "Display",
+        "showDocStats": "Show Document Statistics",
+        "showDocStatsDesc": "Show document statistics: word count, word statistics, character count"
+      }
+    },
+    "about": {
+      "title": "About Ink",
+      "subtitle": "A Local-First, Extensible Markdown Workspace",
+      "version": {
+        "title": "Version",
+        "autoCheck": "Automatically check for updates",
+        "autoCheckDesc": "Check for updates on application startup",
+        "checkUpdates": "Check for updates",
+        "checkUpdatesDesc": "Check if a new version is available",
+        "checkNow": "Check now"
+      },
+      "resources": {
+        "title": "Resources",
+        "website": "Website",
+        "websiteDesc": "Visit our official website",
+        "github": "GitHub",
+        "githubDesc": "View source code and report issues",
+        "documentation": "Documentation",
+        "documentationDesc": "Read the user guide and documentation"
+      },
+      "data": {
+        "title": "Data",
+        "reset": "Reset all settings",
+        "resetDesc": "Restore all settings to their default values",
+        "resetButton": "Reset"
+      }
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "subtitle": "View all keyboard shortcuts available in Ink",
+      "categories": {
+        "file": "File",
+        "edit": "Edit",
+        "format": "Text Format",
+        "blocks": "Blocks",
+        "align": "Alignment",
+        "view": "View"
+      },
+      "actions": {
+        "newWindow": "New Window",
+        "newTab": "New Tab",
+        "openFile": "Open File",
+        "save": "Save",
+        "saveAs": "Save As",
+        "closeTab": "Close Tab",
+        "undo": "Undo",
+        "redo": "Redo",
+        "cut": "Cut",
+        "copy": "Copy",
+        "paste": "Paste",
+        "selectAll": "Select All",
+        "find": "Find",
+        "replace": "Find and Replace",
+        "search": "Global Search",
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "strikethrough": "Strikethrough",
+        "inlineCode": "Inline Code",
+        "link": "Insert Link",
+        "paragraph": "Paragraph",
+        "heading1": "Heading 1",
+        "heading2": "Heading 2",
+        "heading3": "Heading 3",
+        "heading4": "Heading 4",
+        "heading5": "Heading 5",
+        "heading6": "Heading 6",
+        "bulletList": "Bulleted List",
+        "numberList": "Numbered List",
+        "codeBlock": "Code Block",
+        "divider": "Divider",
+        "alignLeft": "Align Left",
+        "alignCenter": "Align Center",
+        "alignRight": "Align Right",
+        "toggleSidebar": "Toggle Sidebar",
+        "toggleSource": "Toggle Source Mode",
+        "zoomIn": "Zoom In",
+        "zoomOut": "Zoom Out",
+        "zoomReset": "Reset Zoom",
+        "openSettings": "Open Settings"
+      }
+    }
+  },
+  "sidebar": {
+    "files": "Files",
+    "outline": "Outline",
+    "toggle": "Toggle sidebar"
+  },
+  "fileTree": {
+    "noWorkspace": "No workspace folder open",
+    "openFolder": "Open Folder",
+    "refresh": "Refresh",
+    "closeWorkspace": "Close Workspace",
+    "loading": "Loading...",
+    "noFiles": "No markdown files found",
+    "contextMenu": {
+      "rename": "Rename",
+      "delete": "Delete",
+      "reveal": "Reveal in System Explorer",
+      "copyPath": "Copy Path",
+      "newFile": "New File",
+      "newFolder": "New Folder"
+    },
+    "deleteConfirm": "Are you sure you want to delete \"{{path}}\" ?"
+  },
+  "outline": {
+    "title": "Outline",
+    "noDocument": "No document open",
+    "noHeadings": "No headings found",
+    "hint": "Add headings (# H1, ## H2, etc.) to create an outline"
+  },
+  "tabs": {
+    "revealInFileTree": "Reveal in File Tree",
+    "newTab": "New Tab",
+    "closeTab": "Close Tab",
+    "contextMenu": {
+      "close": "Close Tab",
+      "closeOthers": "Close Other Tabs",
+      "closeToRight": "Close Tabs to the Right",
+      "closeAll": "Close All Tabs"
+    }
+  },
+  "search": {
+    "placeholder": "Search files...",
+    "noResults": "No results found",
+    "placeholderWithFolder": "Search files and content...",
+    "placeholderNoFolder": "Open a folder to search",
+    "openFolderHint": "Open a folder to enable search",
+    "noResultsFor": "No results found for \"{{query}}\"",
+    "searching": "Searching...",
+    "typeToSearch": "Type to search files and content",
+    "shortcuts": {
+      "navigate": "navigate",
+      "open": "open",
+      "close": "close"
+    },
+    "badge": {
+      "nameMatch": "name match",
+      "moreMatches": "+{{count}} more matches"
+    }
+  },
+  "findReplace": {
+    "findPlaceholder": "Find",
+    "replacePlaceholder": "Replace",
+    "matchCase": "Match Case (Alt+C)",
+    "useRegex": "Use Regular Expression (Alt+R)",
+    "noResults": "No results",
+    "count": "{{current}} of {{total}}",
+    "prevMatch": "Previous Match (Shift+Enter)",
+    "nextMatch": "Next Match (Enter)",
+    "close": "Close (Escape)",
+    "replace": "Replace",
+    "replaceAll": "Replace All"
+  },
+  "fileDialog": {
+    "markdown": "Markdown",
+    "html": "HTML",
+    "allFiles": "All Files"
+  },
+  "messages": {
+    "fileSaved": "File saved",
+    "fileOpened": "File opened",
+    "error": "Error",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "unsavedChanges": {
+      "title": "Unsaved Changes",
+      "singleFile": "Do you want to save the changes to \"{{filename}}\" ?",
+      "multipleFiles": "{{count}} files have unsaved changes. Do you want to save them before closing?",
+      "warning": "Your changes will be lost if you don't save them.",
+      "save": "Save",
+      "saveAll": "Save All",
+      "dontSave": "Don't Save",
+      "cancel": "Cancel"
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "text": "Type '/' for commands",
+      "h1": "Heading 1",
+      "h2": "Heading 2",
+      "h3": "Heading 3",
+      "h4": "Heading 4",
+      "h5": "Heading 5",
+      "h6": "Heading 6",
+      "quote": ""
+    },
+    "docStats": {
+      "title": "Document Statistics",
+      "wordCount": "Words",
+      "lineCount": "Lines",
+      "charCount": "Characters",
+      "wordUnit": "words"
+    },
+    "slashMenu": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "yesterday": "Yesterday",
+      "now": "Now",
+      "emoji": "Emoji",
+      "emojiDesc": "Insert an emoji.",
+      "link": "Link",
+      "linkDesc": "Insert a hyperlink.",
+      "table": "Table",
+      "tableDesc": "Create a simple table.",
+      "moveUp": "Move Up",
+      "moveUpDesc": "Shift this line up.",
+      "moveDown": "Move Down",
+      "moveDownDesc": "Shift this line down.",
+      "copy": "Copy",
+      "copyDesc": "Copy this line to clipboard.",
+      "duplicate": "Duplicate",
+      "duplicateDesc": "Create a duplicate of this line.",
+      "delete": "Delete",
+      "deleteDesc": "Remove this line permanently."
+    },
+    "emoji": {
+      "searchEmoji": "Search emoji...",
+      "recent": "Recent",
+      "searchResults": "Search Results",
+      "noEmojisFound": "No emojis found",
+      "removeIcon": "Remove Icon"
+    },
+    "toast": {
+      "copiedToClipboard": "Copied to clipboard"
+    },
+    "link": {
+      "pasteOrTypeLink": "Paste or type a link",
+      "enterText": "Enter text",
+      "enterLinkText": "Enter link text",
+      "text": "Text",
+      "link": "Link",
+      "copyLink": "Copy link",
+      "edit": "Edit",
+      "copiedLinkToClipboard": "Copied link to clipboard",
+      "inlineView": "Inline view",
+      "cardView": "Card view",
+      "embedView": "Embed view",
+      "removeLink": "Remove link",
+      "delete": "Delete"
+    },
+    "caption": {
+      "writeCaption": "Write a caption"
+    },
+    "code": {
+      "searchLanguage": "Search for a language",
+      "more": "More",
+      "viewCode": "Code",
+      "viewPreview": "Preview",
+      "copy": "Copy code",
+      "caption": "Caption",
+      "comment": "Comment",
+      "wrap": "Wrap",
+      "cancelWrap": "Cancel wrap",
+      "lineNumber": "Line number",
+      "cancelLineNumber": "Cancel line number",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
+    },
+    "table": {
+      "backgroundColor": "Background color",
+      "default": "Default",
+      "clearColumnStyle": "Clear column style",
+      "insertLeft": "Insert Left",
+      "insertRight": "Insert Right",
+      "moveLeft": "Move Left",
+      "moveRight": "Move Right",
+      "duplicate": "Duplicate",
+      "clearColumnContents": "Clear column contents",
+      "delete": "Delete",
+      "deleteTable": "Delete entire table",
+      "clearRowStyle": "Clear row style",
+      "insertAbove": "Insert Above",
+      "insertBelow": "Insert Below",
+      "moveUp": "Move Up",
+      "moveDown": "Move Down",
+      "clearRowContents": "Clear row contents",
+      "copy": "Copy",
+      "paste": "Paste",
+      "clearContents": "Clear contents"
+    },
+    "latex": {
+      "equation": "Equation",
+      "errorEquation": "Error equation"
+    },
+    "toolbar": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "strikethrough": "Strikethrough",
+      "code": "Code",
+      "link": "Link"
+    },
+    "toolbarAction": {
+      "turnInto": "Turn into",
+      "align": "Align",
+      "delete": "Delete",
+      "deleteTable": "Delete table",
+      "copiedToClipboard": "Copied to clipboard"
+    },
+    "conversion": {
+      "text": "Text",
+      "textDesc": "Start typing with plain text.",
+      "heading1": "Heading 1",
+      "heading1Desc": "Headings in the largest font.",
+      "heading2": "Heading 2",
+      "heading2Desc": "Headings in the 2nd font size.",
+      "heading3": "Heading 3",
+      "heading3Desc": "Headings in the 3rd font size.",
+      "heading4": "Heading 4",
+      "heading4Desc": "Headings in the 4th font size.",
+      "heading5": "Heading 5",
+      "heading5Desc": "Headings in the 5th font size.",
+      "heading6": "Heading 6",
+      "heading6Desc": "Headings in the 6th font size.",
+      "bulletedList": "Bulleted List",
+      "bulletedListDesc": "Create a bulleted list.",
+      "numberedList": "Numbered List",
+      "numberedListDesc": "Create a numbered list.",
+      "todoList": "To-do List",
+      "todoListDesc": "Add tasks to a to-do list.",
+      "codeBlock": "Code Block",
+      "codeBlockDesc": "Code snippet with formatting.",
+      "quote": "Quote",
+      "quoteDesc": "Add a blockquote for emphasis.",
+      "divider": "Divider",
+      "dividerDesc": "Visually separate content."
+    },
+    "align": {
+      "alignLeft": "Align left",
+      "alignCenter": "Align center",
+      "alignRight": "Align right"
+    },
+    "highlight": {
+      "highlight": "Highlight",
+      "color": "Color",
+      "background": "Background",
+      "defaultColor": "default color",
+      "defaultBackground": "default background",
+      "default": "default",
+      "red": "red",
+      "orange": "orange",
+      "yellow": "yellow",
+      "green": "green",
+      "blue": "blue",
+      "purple": "purple",
+      "pink": "pink",
+      "grey": "grey",
+      "teal": "teal"
+    },
+    "clipboard": {
+      "copy": "Copy",
+      "duplicate": "Duplicate"
+    },
+    "image": {
+      "download": "Download",
+      "caption": "Caption",
+      "turnIntoCardView": "Turn into card view"
+    },
+    "attachment": {
+      "cardView": "Card view",
+      "embedView": "Embed view",
+      "replaceAttachment": "Replace attachment",
+      "download": "Download",
+      "caption": "Caption",
+      "rename": "Rename",
+      "horizontalStyle": "Horizontal style",
+      "verticalStyle": "Vertical style",
+    "reload": "Reload"
+  },
+  "note": {
+    "slicer": "Slicer",
+    "size": "Size",
+    "viewInToc": "View in Toc"
+  },
+    "search": "Search"
+  },
+  "updater": {
+    "title": "Update Available",
+    "message": "Version {{version}} is available.",
+    "releaseNotes": "Release Notes:",
+    "noReleaseNotes": "No release notes provided.",
+    "installConfirm": "Do you want to install it now?",
+    "installAndRestart": "Install & Restart",
+    "later": "Later",
+    "downloading": "Downloading update...",
+    "downloaded": "Update downloaded. Restarting...",
+    "noUpdates": "No Updates",
+    "latestVersion": "You are running the latest version.",
+    "error": "Error",
+    "checkFailed": "Failed to check for updates: {{error}}",
+    "networkError": "Could not check for updates. Please check your internet connection and try again.",
+    "invalidJson": "Could not verify update information. The server might be configured incorrectly."
+  }
+}

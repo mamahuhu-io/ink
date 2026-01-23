@@ -1,0 +1,16 @@
+import { html } from 'lit';
+const Mindmap =
+  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
+    html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path fill='currentColor' fill-rule="evenodd" d="M10.458 5.95H8.5c-.69 0-1.25.56-1.25 1.25V10c0 .45-.108.875-.3 1.25h3.467a2.5 2.5 0 0 1 2.333-1.6h5.5a2.5 2.5 0 0 1 0 5h-5.5a2.5 2.5 0 0 1-2.427-1.9H6.95c.192.375.3.8.3 1.25v2.809c0 .69.56 1.25 1.25 1.25h1.914a2.5 2.5 0 0 1 2.336-1.609h5.5a2.5 2.5 0 0 1 0 5h-5.5a2.5 2.5 0 0 1-2.425-1.891H8.5a2.75 2.75 0 0 1-2.75-2.75V14c0-.69-.56-1.25-1.25-1.25H2v-1.5h2.512A1.25 1.25 0 0 0 5.75 10V7.2A2.75 2.75 0 0 1 8.5 4.45h1.8a2.5 2.5 0 0 1 2.45-2h5.5a2.5 2.5 0 0 1 0 5h-5.5a2.5 2.5 0 0 1-2.292-1.5m1.292-1a1 1 0 0 1 1-1h5.5a1 1 0 1 1 0 2h-5.5a1 1 0 0 1-1-1m0 7.2a1 1 0 0 1 1-1h5.5a1 1 0 1 1 0 2h-5.5a1 1 0 0 1-1-1m1 5.8a1 1 0 1 0 0 2h5.5a1 1 0 1 0 0-2z" clip-rule="evenodd"/>
+  </svg>
+`;
+export default Mindmap;

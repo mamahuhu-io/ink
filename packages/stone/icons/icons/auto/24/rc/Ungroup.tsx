@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const UngroupIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M5.286 4.75c-.346 0-.536.25-.536.45v3.6c0 .2.19.45.536.45h6.428c.346 0 .536-.25.536-.45V5.2c0-.2-.19-.45-.536-.45zM3.25 5.2c0-1.125.961-1.95 2.036-1.95h6.428c1.075 0 2.036.825 2.036 1.95v3.6c0 1.125-.961 1.95-2.036 1.95H5.286c-1.075 0-2.036-.825-2.036-1.95zM12.286 14.75c-.346 0-.536.25-.536.45v3.6c0 .2.19.45.536.45h6.428c.346 0 .536-.25.536-.45v-3.6c0-.2-.19-.45-.536-.45zm-2.036.45c0-1.125.961-1.95 2.036-1.95h6.428c1.075 0 2.036.825 2.036 1.95v3.6c0 1.125-.961 1.95-2.036 1.95h-6.428c-1.075 0-2.036-.825-2.036-1.95z" clipRule="evenodd" /></svg>;
+export default UngroupIcon;

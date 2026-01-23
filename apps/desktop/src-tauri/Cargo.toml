@@ -1,0 +1,61 @@
+[package]
+name = "Ink"
+version = "0.1.0"
+description = "A modern Markdown editor"
+authors = ["you"]
+license = "MIT"
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "ink_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-shell = "2"
+dirs = "5"
+notify = { version = "6", features = ["serde"] }
+parking_lot = "0.12"
+tauri-plugin-updater = "2.9.0"
+tauri-plugin-process = "2.3.1"
+tokio = { version = "1", features = ["rt", "fs"] }
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+anyhow = "1.0"
+ignore = "0.4"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSString", "NSArray", "NSRange", "NSUserDefaults"] }
+objc2-app-kit = { version = "0.3", features = ["NSResponder", "NSWindow", "NSView", "NSButton", "NSControl", "NSAppearance", "NSApplication", "NSSpellChecker"] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Dwm",
+    "Win32_UI_Controls",
+    "Win32_Globalization",
+    "Win32_System_Com",
+] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+
+[features]
+devtools = []

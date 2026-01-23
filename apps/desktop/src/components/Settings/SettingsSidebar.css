@@ -1,0 +1,64 @@
+.settings-sidebar {
+  width: 200px;
+  min-width: 200px;
+  background: var(--ink-background-secondary-color);
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-right: 1px solid var(--ink-border-color);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.settings-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink-text-primary-color);
+  padding: 0 8px;
+}
+
+.settings-sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+  color: var(--ink-text-secondary-color);
+}
+
+.settings-sidebar-item:hover {
+  background: var(--ink-hover-color);
+  color: var(--ink-text-primary-color);
+}
+
+.settings-sidebar-item.active {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-text-primary-color);
+}
+
+.settings-sidebar-item-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-sidebar-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,130 @@
+/**
+ * GitHub Light Theme
+ * Based on GitHub's light color scheme
+ */
+:root {
+  /* Brand colors */
+  --ink-brand-color: #0969da;
+  --ink-primary-color: #0969da;
+  --ink-secondary-color: #8250df;
+
+  /* Background colors */
+  --ink-background-primary-color: #ffffff;
+  --ink-background-secondary-color: #f6f8fa;
+  --ink-background-tertiary-color: #eaeef2;
+  --ink-background-code-block: #f6f8fa;
+  --ink-background-overlay-panel-color: #ffffff;
+  --ink-background-error-color: #ffebe9;
+  --ink-background-warning-color: #fff8c5;
+  --ink-background-success-color: #dafbe1;
+  --ink-background-processing-color: #ddf4ff;
+
+  /* Hover colors */
+  --ink-hover-color: rgba(208, 215, 222, 0.32);
+  --ink-hover-color-filled: #eaeef2;
+
+  /* Text colors */
+  --ink-text-primary-color: #1f2328;
+  --ink-text-secondary-color: #656d76;
+  --ink-text-emphasis-color: #1f2328;
+  --ink-text-disable-color: #8c959f;
+  --ink-placeholder-color: #6e7781;
+  --ink-quote-color: #656d76;
+  --ink-link-color: #0969da;
+  --ink-icon-color: #636c76;
+  --ink-icon-secondary: #8c959f;
+
+  /* Border & divider */
+  --ink-border-color: #d0d7de;
+  --ink-divider-color: #d8dee4;
+
+  /* Editor specific */
+  --ink-editor-width: 800px;
+  --ink-editor-side-padding: 24px;
+
+  /* Font */
+  --ink-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  --ink-font-code-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Code syntax highlighting - GitHub style */
+  --ink-code-color: #1f2328;
+  --ink-code-block-background: #f6f8fa;
+  --ink-code-comment: #6e7781;
+  --ink-code-keyword: #cf222e;
+  --ink-code-string: #0a3069;
+  --ink-code-number: #0550ae;
+  --ink-code-function: #8250df;
+  --ink-code-variable: #953800;
+  --ink-code-operator: #1f2328;
+
+  /* Shadow */
+  --ink-shadow-1: 0 1px 0 rgba(31, 35, 40, 0.04);
+  --ink-shadow-2: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --ink-shadow-3: 0 8px 24px rgba(140, 149, 159, 0.2);
+
+  /* Tooltip */
+  --ink-tooltip-background: #1f2328;
+  --ink-tooltip-color: #ffffff;
+
+  /* Button colors */
+  --ink-button-primary-background: #1f883d;
+  --ink-button-primary-color: #ffffff;
+  --ink-button-secondary-background: #f6f8fa;
+  --ink-button-secondary-color: #1f2328;
+
+  /* Status colors */
+  --ink-error-color: #cf222e;
+  --ink-warning-color: #9a6700;
+  --ink-success-color: #1a7f37;
+  --ink-info-color: #0969da;
+
+  /* Tag colors */
+  --ink-tag-red: #cf222e;
+  --ink-tag-orange: #bc4c00;
+  --ink-tag-yellow: #9a6700;
+  --ink-tag-green: #1a7f37;
+  --ink-tag-teal: #0969da;
+  --ink-tag-blue: #0550ae;
+  --ink-tag-purple: #8250df;
+  --ink-tag-pink: #bf3989;
+  --ink-tag-gray: #656d76;
+
+  /* Palette */
+  --ink-palette-line-yellow: #9a6700;
+  --ink-palette-line-orange: #bc4c00;
+  --ink-palette-line-tangerine: #cf222e;
+  --ink-palette-line-red: #a40e26;
+  --ink-palette-line-magenta: #bf3989;
+  --ink-palette-line-purple: #8250df;
+  --ink-palette-line-navy: #0550ae;
+  --ink-palette-line-blue: #0969da;
+  --ink-palette-line-teal: #1b7c83;
+  --ink-palette-line-green: #1a7f37;
+  --ink-palette-line-black: #1f2328;
+  --ink-palette-line-grey: #656d76;
+  --ink-palette-line-white: #ffffff;
+
+  --ink-palette-shape-yellow: #fff8c5;
+  --ink-palette-shape-orange: #fff1e5;
+  --ink-palette-shape-tangerine: #ffebe9;
+  --ink-palette-shape-red: #ffcecb;
+  --ink-palette-shape-magenta: #ffeff7;
+  --ink-palette-shape-purple: #fbefff;
+  --ink-palette-shape-navy: #ddf4ff;
+  --ink-palette-shape-blue: #ddf4ff;
+  --ink-palette-shape-teal: #ddf4ff;
+  --ink-palette-shape-green: #dafbe1;
+  --ink-palette-shape-black: #f6f8fa;
+  --ink-palette-shape-grey: #eaeef2;
+  --ink-palette-shape-white: #ffffff;
+
+  /* Scrollbar */
+  --ink-scrollbar-track: transparent;
+  --ink-scrollbar-thumb: rgba(31, 35, 40, 0.2);
+  --ink-scrollbar-thumb-hover: rgba(31, 35, 40, 0.35);
+
+  /* Accent background (for selected items) */
+  --ink-accent-bg: rgba(9, 105, 218, 0.1);
+
+  color-scheme: light;
+}

@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const AttachmentIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="m12.218 5.608-6.04 6.04a4.65 4.65 0 0 0 0 6.704c1.913 1.864 5.025 1.864 6.939 0l5.89-5.723a.75.75 0 1 1 1.045 1.076l-5.889 5.721c-2.496 2.432-6.536 2.432-9.032 0a6.15 6.15 0 0 1-.004-8.849l6.04-6.04c1.762-1.716 4.61-1.716 6.371 0a4.35 4.35 0 0 1 .004 6.256l-6.04 6.04c-1.027 1-2.683 1-3.71 0a2.55 2.55 0 0 1 0-3.667l6.2-6.037a.75.75 0 0 1 1.046 1.075l-6.199 6.037a1.05 1.05 0 0 0 0 1.518 1.17 1.17 0 0 0 1.613.003l6.04-6.04a2.85 2.85 0 0 0 0-4.11 3.086 3.086 0 0 0-4.275-.004" clipRule="evenodd" /></svg>;
+export default AttachmentIcon;

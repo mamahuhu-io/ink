@@ -1,0 +1,531 @@
+{
+  "app": {
+    "name": "Ink",
+    "untitled": "无标题"
+  },
+  "menu": {
+    "file": "文件",
+    "file.new_window": "新建窗口",
+    "file.new_tab": "新建标签页",
+    "file.open": "打开",
+    "file.open_recent": "最近打开",
+    "file.no_recent": "无最近项目",
+    "file.clear_recent": "清除菜单",
+    "file.save": "保存",
+    "file.save_as": "另存为",
+    "file.import": "导入",
+    "file.export": "导出",
+    "file.export.html": "导出为 HTML",
+    "file.export.pdf": "导出为 PDF",
+    "file.export.docx": "导出为 Word",
+    "file.export.image": "导出为图片",
+    "file.close_tab": "关闭标签页",
+    "file.quit": "退出",
+    "edit": "编辑",
+    "edit.undo": "撤销",
+    "edit.redo": "重做",
+    "edit.find": "查找",
+    "edit.find_replace": "查找和替换",
+    "edit.search_files": "搜索文件",
+    "edit.preferences": "首选项",
+    "view": "视图",
+    "view.toggle_sidebar": "切换侧边栏",
+    "view.toggle_source": "切换源码模式",
+    "view.zoom_in": "放大",
+    "view.zoom_out": "缩小",
+    "view.actual_size": "实际大小",
+    "view.fullscreen": "全屏",
+    "themes": "主题",
+    "themes.open_folder": "打开主题文件夹",
+    "themes.refresh": "刷新主题",
+    "help": "帮助",
+    "help.website": "官网",
+    "help.about": "关于"
+  },
+  "settings": {
+    "title": "设置",
+    "tabs": {
+      "editor": "编辑器",
+      "general": "常规",
+      "appearance": "外观",
+      "shortcuts": "快捷键",
+      "about": "关于"
+    },
+    "editor": {
+      "title": "编辑器设置",
+      "subtitle": "自定义您的编辑体验",
+      "autoSave": {
+        "title": "自动保存",
+        "enable": "启用自动保存",
+        "enableDesc": "自动保存文档更改",
+        "delay": "保存延迟",
+        "delayDesc": "自动保存前的等待时间（秒）"
+      },
+      "text": {
+        "title": "文本",
+        "fontSize": "字体大小",
+        "fontSizeDesc": "编辑器字体大小（像素）",
+        "lineHeight": "行高",
+        "lineHeightDesc": "文本行间距",
+        "spellCheck": "拼写检查",
+        "spellCheckDesc": "在编辑器中高亮拼写错误"
+      },
+      "code": {
+        "title": "代码块",
+        "lineNumbers": "显示行号",
+        "lineNumbersDesc": "在代码块中显示行号",
+        "wordWrap": "自动换行",
+        "wordWrapDesc": "在代码块中自动换行长行"
+      }
+    },
+    "general": {
+      "title": "常规设置",
+      "subtitle": "配置常规应用程序行为",
+      "files": {
+        "title": "文件",
+        "defaultLocation": "默认保存位置",
+        "defaultLocationDesc": "新文档的默认文件夹",
+        "chooseButton": "选择...",
+        "recentLimit": "最近文件限制",
+        "recentLimitDesc": "要记住的最近文件最大数量"
+      },
+      "behavior": {
+        "title": "行为",
+        "confirmDelete": "删除前确认",
+        "confirmDeleteDesc": "删除文件前显示确认对话框",
+        "openLastFile": "启动时打开最后的文件",
+        "openLastFileDesc": "启动时自动打开最后编辑的文件"
+      },
+      "language": {
+        "title": "语言",
+        "select": "显示语言",
+        "selectDesc": "选择用户界面语言"
+      }
+    },
+    "appearance": {
+      "title": "外观",
+      "subtitle": "自定义 Ink 的外观",
+      "theme": {
+        "title": "主题",
+        "colorMode": "颜色模式",
+        "colorModeDesc": "选择浅色或深色模式",
+        "system": "系统",
+        "light": "浅色",
+        "dark": "深色",
+        "openFolder": "打开文件夹",
+        "getThemes": "获取主题"
+      },
+      "export": {
+        "title": "导出",
+        "theme": "导出主题",
+        "themeDesc": "导出文档时使用的主题",
+        "auto": "自动（与当前一致）"
+      },
+      "window": {
+        "title": "窗口",
+        "sidebarPosition": "侧边栏位置",
+        "sidebarPositionDesc": "文件侧边栏的位置",
+        "left": "左",
+        "right": "右"
+      },
+      "display": {
+        "title": "显示",
+        "showDocStats": "显示文档统计信息",
+        "showDocStatsDesc": "显示文档统计信息: 字数、字数统计、字符数"
+      }
+    },
+    "about": {
+      "title": "关于 Ink",
+      "subtitle": "本地优先、可扩展的 Markdown 工作区",
+      "version": {
+        "title": "版本",
+        "autoCheck": "自动检查更新",
+        "autoCheckDesc": "应用程序启动时检查更新",
+        "checkUpdates": "检查更新",
+        "checkUpdatesDesc": "检查是否有新版本可用",
+        "checkNow": "立即检查"
+      },
+      "resources": {
+        "title": "资源",
+        "website": "网站",
+        "websiteDesc": "访问我们的官方网站",
+        "github": "GitHub",
+        "githubDesc": "查看源代码并报告问题",
+        "documentation": "文档",
+        "documentationDesc": "阅读用户指南和文档"
+      },
+      "data": {
+        "title": "数据",
+        "reset": "重置所有设置",
+        "resetDesc": "将所有设置恢复为默认值",
+        "resetButton": "重置"
+      }
+    },
+    "shortcuts": {
+      "title": "键盘快捷键",
+      "subtitle": "查看 Ink 中所有可用的快捷键",
+      "categories": {
+        "file": "文件",
+        "edit": "编辑",
+        "format": "文本格式",
+        "blocks": "区块",
+        "align": "对齐",
+        "view": "视图"
+      },
+      "actions": {
+        "newWindow": "新窗口",
+        "newTab": "新标签页",
+        "openFile": "打开文件",
+        "save": "保存",
+        "saveAs": "另存为",
+        "closeTab": "关闭标签页",
+        "undo": "撤销",
+        "redo": "重做",
+        "cut": "剪切",
+        "copy": "复制",
+        "paste": "粘贴",
+        "selectAll": "全选",
+        "find": "查找",
+        "replace": "查找并替换",
+        "search": "全局搜索",
+        "bold": "加粗",
+        "italic": "斜体",
+        "underline": "下划线",
+        "strikethrough": "删除线",
+        "inlineCode": "行内代码",
+        "link": "插入链接",
+        "paragraph": "段落",
+        "heading1": "标题 1",
+        "heading2": "标题 2",
+        "heading3": "标题 3",
+        "heading4": "标题 4",
+        "heading5": "标题 5",
+        "heading6": "标题 6",
+        "bulletList": "无序列表",
+        "numberList": "有序列表",
+        "codeBlock": "代码块",
+        "divider": "分割线",
+        "alignLeft": "左对齐",
+        "alignCenter": "居中对齐",
+        "alignRight": "右对齐",
+        "toggleSidebar": "切换侧边栏",
+        "toggleSource": "切换源码模式",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "zoomReset": "重置缩放",
+        "openSettings": "打开设置"
+      }
+    }
+  },
+  "sidebar": {
+    "files": "文件",
+    "outline": "大纲",
+    "toggle": "切换侧边栏"
+  },
+  "fileTree": {
+    "noWorkspace": "未打开工作区文件夹",
+    "openFolder": "打开文件夹",
+    "refresh": "刷新",
+    "closeWorkspace": "关闭工作区",
+    "loading": "加载中...",
+    "noFiles": "未找到 markdown 文件",
+    "contextMenu": {
+      "rename": "重命名",
+      "delete": "删除",
+      "reveal": "在系统资源管理器中显示",
+      "copyPath": "复制路径",
+      "newFile": "新建文件",
+      "newFolder": "新建文件夹"
+    },
+    "deleteConfirm": "确定要删除 \"{{path}}\" 吗？"
+  },
+  "outline": {
+    "title": "大纲",
+    "noDocument": "未打开文档",
+    "noHeadings": "未找到标题",
+    "hint": "添加标题（# H1, ## H2 等）以创建大纲"
+  },
+  "tabs": {
+    "revealInFileTree": "在文件树中显示",
+    "newTab": "新标签页",
+    "closeTab": "关闭标签页",
+    "contextMenu": {
+      "close": "关闭标签页",
+      "closeOthers": "关闭其他标签页",
+      "closeToRight": "关闭右侧标签页",
+      "closeAll": "关闭所有标签页"
+    }
+  },
+  "search": {
+    "placeholder": "搜索文件...",
+    "noResults": "未找到结果",
+    "placeholderWithFolder": "搜索文件和内容...",
+    "placeholderNoFolder": "打开文件夹以进行搜索",
+    "openFolderHint": "打开文件夹以启用搜索",
+    "noResultsFor": "未找到 \"{{query}}\" 的结果",
+    "searching": "正在搜索...",
+    "typeToSearch": "输入以搜索文件和内容",
+    "shortcuts": {
+      "navigate": "导航",
+      "open": "打开",
+      "close": "关闭"
+    },
+    "badge": {
+      "nameMatch": "名称匹配",
+      "moreMatches": "还有 {{count}} 个匹配"
+    }
+  },
+  "findReplace": {
+    "findPlaceholder": "查找",
+    "replacePlaceholder": "替换",
+    "matchCase": "区分大小写 (Alt+C)",
+    "useRegex": "使用正则表达式 (Alt+R)",
+    "noResults": "无结果",
+    "count": "{{current}} / {{total}}",
+    "prevMatch": "上一个匹配 (Shift+Enter)",
+    "nextMatch": "下一个匹配 (Enter)",
+    "close": "关闭 (Escape)",
+    "replace": "替换",
+    "replaceAll": "全部替换"
+  },
+  "fileDialog": {
+    "markdown": "Markdown",
+    "html": "HTML",
+    "allFiles": "所有文件"
+  },
+  "messages": {
+    "fileSaved": "文件已保存",
+    "fileOpened": "文件已打开",
+    "error": "错误",
+    "confirm": "确认",
+    "cancel": "取消",
+    "unsavedChanges": {
+      "title": "未保存的更改",
+      "singleFile": "是否保存对 \"{{filename}}\" 的更改？",
+      "multipleFiles": "有 {{count}} 个文件有未保存的更改。是否在关闭前保存？",
+      "warning": "如果不保存，您的更改将丢失。",
+      "save": "保存",
+      "saveAll": "全部保存",
+      "dontSave": "不保存",
+      "cancel": "取消"
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "text": "输入 '/' 使用命令",
+      "h1": "标题 1",
+      "h2": "标题 2",
+      "h3": "标题 3",
+      "h4": "标题 4",
+      "h5": "标题 5",
+      "h6": "标题 6",
+      "quote": ""
+    },
+    "docStats": {
+      "title": "文档统计",
+      "wordCount": "字数",
+      "lineCount": "行数",
+      "charCount": "字符数",
+      "wordUnit": "字"
+    },
+    "slashMenu": {
+      "today": "今天",
+      "tomorrow": "明天",
+      "yesterday": "昨天",
+      "now": "现在",
+      "emoji": "表情",
+      "emojiDesc": "插入表情符号。",
+      "link": "链接",
+      "linkDesc": "插入超链接。",
+      "table": "表格",
+      "tableDesc": "创建一个简单表格。",
+      "moveUp": "上移",
+      "moveUpDesc": "上移此行。",
+      "moveDown": "下移",
+      "moveDownDesc": "下移此行。",
+      "copy": "复制",
+      "copyDesc": "复制此行到剪贴板。",
+      "duplicate": "复制副本",
+      "duplicateDesc": "创建此行的副本。",
+      "delete": "删除",
+      "deleteDesc": "永久删除此行。"
+    },
+    "emoji": {
+      "searchEmoji": "搜索表情...",
+      "recent": "最近使用",
+      "searchResults": "搜索结果",
+      "noEmojisFound": "未找到表情",
+      "removeIcon": "移除图标"
+    },
+    "toast": {
+      "copiedToClipboard": "已复制到剪贴板"
+    },
+    "link": {
+      "pasteOrTypeLink": "粘贴或输入链接",
+      "enterText": "输入文本",
+      "enterLinkText": "输入链接文本",
+      "text": "文本",
+      "link": "链接",
+      "copyLink": "复制链接",
+      "edit": "编辑",
+      "copiedLinkToClipboard": "链接已复制到剪贴板",
+      "inlineView": "内联视图",
+      "cardView": "卡片视图",
+      "embedView": "嵌入视图",
+      "removeLink": "移除链接",
+      "delete": "删除"
+    },
+    "caption": {
+      "writeCaption": "编写说明"
+    },
+    "code": {
+      "searchLanguage": "搜索语言",
+      "more": "更多",
+      "viewCode": "代码",
+      "viewPreview": "预览",
+      "copy": "复制代码",
+      "caption": "说明",
+      "comment": "评论",
+      "wrap": "换行",
+      "cancelWrap": "取消换行",
+      "lineNumber": "行号",
+      "cancelLineNumber": "取消行号",
+      "duplicate": "创建副本",
+      "delete": "删除"
+    },
+    "table": {
+      "backgroundColor": "背景颜色",
+      "default": "默认",
+      "clearColumnStyle": "清除列样式",
+      "insertLeft": "向左插入",
+      "insertRight": "向右插入",
+      "moveLeft": "左移",
+      "moveRight": "右移",
+      "duplicate": "复制副本",
+      "clearColumnContents": "清除列内容",
+      "delete": "删除",
+      "deleteTable": "删除整张表格",
+      "clearRowStyle": "清除行样式",
+      "insertAbove": "向上插入",
+      "insertBelow": "向下插入",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "clearRowContents": "清除行内容",
+      "copy": "复制",
+      "paste": "粘贴",
+      "clearContents": "清除内容"
+    },
+    "latex": {
+      "equation": "公式",
+      "errorEquation": "公式错误"
+    },
+    "toolbar": {
+      "bold": "加粗",
+      "italic": "斜体",
+      "underline": "下划线",
+      "strikethrough": "删除线",
+      "code": "代码",
+      "link": "链接"
+    },
+    "toolbarAction": {
+      "turnInto": "转换为",
+      "align": "对齐",
+      "delete": "删除",
+      "deleteTable": "删除表格",
+      "copiedToClipboard": "已复制到剪贴板"
+    },
+    "conversion": {
+      "text": "文本",
+      "textDesc": "开始输入纯文本。",
+      "heading1": "标题 1",
+      "heading1Desc": "最大字体的标题。",
+      "heading2": "标题 2",
+      "heading2Desc": "第二级字体的标题。",
+      "heading3": "标题 3",
+      "heading3Desc": "第三级字体的标题。",
+      "heading4": "标题 4",
+      "heading4Desc": "第四级字体的标题。",
+      "heading5": "标题 5",
+      "heading5Desc": "第五级字体的标题。",
+      "heading6": "标题 6",
+      "heading6Desc": "第六级字体的标题。",
+      "bulletedList": "无序列表",
+      "bulletedListDesc": "创建无序列表。",
+      "numberedList": "有序列表",
+      "numberedListDesc": "创建有序列表。",
+      "todoList": "待办事项",
+      "todoListDesc": "添加待办事项任务。",
+      "codeBlock": "代码块",
+      "codeBlockDesc": "带格式的代码片段。",
+      "quote": "引用",
+      "quoteDesc": "添加块引用以强调。",
+      "divider": "分割线",
+      "dividerDesc": "视觉分隔内容。"
+    },
+    "align": {
+      "alignLeft": "左对齐",
+      "alignCenter": "居中对齐",
+      "alignRight": "右对齐"
+    },
+    "highlight": {
+      "highlight": "高亮",
+      "color": "颜色",
+      "background": "背景",
+      "defaultColor": "默认颜色",
+      "defaultBackground": "默认背景",
+      "default": "默认",
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "blue": "蓝色",
+      "purple": "紫色",
+      "pink": "粉色",
+      "grey": "灰色",
+      "teal": "青色"
+    },
+    "clipboard": {
+      "copy": "复制",
+      "duplicate": "复制副本"
+    },
+    "image": {
+      "download": "下载",
+      "caption": "说明",
+      "turnIntoCardView": "转换为卡片视图"
+    },
+    "attachment": {
+      "cardView": "卡片视图",
+      "embedView": "嵌入视图",
+      "replaceAttachment": "替换附件",
+      "download": "下载",
+      "caption": "说明",
+      "rename": "重命名",
+      "horizontalStyle": "横向样式",
+      "verticalStyle": "纵向样式",
+    "reload": "重新加载"
+  },
+  "note": {
+    "slicer": "切片器",
+    "size": "尺寸",
+    "viewInToc": "在目录中查看"
+  },
+    "search": "搜索"
+  },
+  "updater": {
+    "title": "可用更新",
+    "message": "版本 {{version}} 可用。",
+    "releaseNotes": "发布说明：",
+    "noReleaseNotes": "未提供发布说明。",
+    "installConfirm": "是否立即安装？",
+    "installAndRestart": "安装并重启",
+    "later": "稍后",
+    "downloading": "正在下载更新...",
+    "downloaded": "更新已下载。正在重启...",
+    "noUpdates": "无更新",
+    "latestVersion": "您正在运行最新版本。",
+    "error": "错误",
+    "checkFailed": "检查更新失败：{{error}}",
+    "networkError": "无法检查更新。请检查您的网络连接并重试。",
+    "invalidJson": "无法验证更新信息。服务器配置可能不正确。"
+  }
+}

@@ -1,0 +1,116 @@
+/*
+ * Nord Theme - Ink
+ * Arctic, north-bluish color palette
+ * Based on https://www.nordtheme.com/
+ */
+
+:root {
+  /* Nord Palette Reference:
+   * Polar Night: #2E3440, #3B4252, #434C5E, #4C566A
+   * Snow Storm: #D8DEE9, #E5E9F0, #ECEFF4
+   * Frost: #8FBCBB, #88C0D0, #81A1C1, #5E81AC
+   * Aurora: #BF616A, #D08770, #EBCB8B, #A3BE8C, #B48EAD
+   */
+
+  /* Primary colors */
+  --ink-brand-color: #88C0D0;
+  --ink-primary-color: #88C0D0;
+  --ink-secondary-color: #81A1C1;
+  --ink-tertiary-color: rgba(67, 76, 94, 0.8);
+
+  /* Background colors */
+  --ink-background-primary-color: #2E3440;
+  --ink-background-secondary-color: #3B4252;
+  --ink-background-tertiary-color: #434C5E;
+  --ink-background-code-block: #3B4252;
+  --ink-background-modal-color: rgba(46, 52, 64, 0.9);
+  --ink-background-overlay-panel-color: #3B4252;
+  --ink-background-error-color: rgba(191, 97, 106, 0.2);
+  --ink-background-warning-color: rgba(235, 203, 139, 0.2);
+  --ink-background-success-color: rgba(163, 190, 140, 0.2);
+  --ink-background-processing-color: rgba(129, 161, 193, 0.2);
+  --ink-hover-color: rgba(136, 192, 208, 0.1);
+  --ink-hover-color-filled: #434C5E;
+
+  /* Text colors */
+  --ink-text-primary-color: #ECEFF4;
+  --ink-text-secondary-color: #D8DEE9;
+  --ink-text-emphasis-color: #88C0D0;
+  --ink-text-disable-color: #4C566A;
+  --ink-link-color: #88C0D0;
+  --ink-placeholder-color: #4C566A;
+  --ink-quote-color: #D8DEE9;
+  --ink-icon-color: #D8DEE9;
+  --ink-icon-secondary: #D8DEE9;
+
+  /* Divider & border */
+  --ink-divider-color: #4C566A;
+  --ink-border-color: #4C566A;
+
+  /* Shadows */
+  --ink-shadow-1: 0px 0px 6px 0px rgba(0, 0, 0, 0.3);
+  --ink-shadow-2: 0px 0px 14px 0px rgba(0, 0, 0, 0.4);
+  --ink-shadow-3: 0px 0px 24px 0px rgba(0, 0, 0, 0.5);
+  --ink-button-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25), 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  --ink-overlay-panel-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3), 0px 10px 18px rgba(0, 0, 0, 0.2);
+  --ink-menu-shadow: 0px 12px 22px rgba(0, 0, 0, 0.3), 0px -2px 14px rgba(0, 0, 0, 0.15);
+  --ink-toolbar-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+  --ink-float-button-shadow: 0px 0px 12px rgba(0, 0, 0, 0.15), 0px 0px 0px 1px rgba(136, 192, 208, 0.1);
+
+  /* Highlight colors - Nord Aurora */
+  --ink-highlight-pink: rgba(180, 142, 173, 0.4);
+  --ink-highlight-red: rgba(191, 97, 106, 0.4);
+  --ink-highlight-orange: rgba(208, 135, 112, 0.4);
+  --ink-highlight-yellow: rgba(235, 203, 139, 0.4);
+  --ink-highlight-green: rgba(163, 190, 140, 0.4);
+  --ink-highlight-teal: rgba(143, 188, 187, 0.4);
+  --ink-highlight-blue: rgba(136, 192, 208, 0.4);
+  --ink-highlight-purple: rgba(180, 142, 173, 0.4);
+  --ink-highlight-grey: rgba(76, 86, 106, 0.5);
+
+  /* Text highlight background colors */
+  --ink-text-highlight-red: rgba(191, 97, 106, 0.5);
+  --ink-text-highlight-orange: rgba(208, 135, 112, 0.5);
+  --ink-text-highlight-yellow: rgba(235, 203, 139, 0.5);
+  --ink-text-highlight-green: rgba(163, 190, 140, 0.5);
+  --ink-text-highlight-blue: rgba(136, 192, 208, 0.5);
+  --ink-text-highlight-purple: rgba(180, 142, 173, 0.5);
+  --ink-text-highlight-pink: rgba(180, 142, 173, 0.5);
+  --ink-text-highlight-grey: rgba(76, 86, 106, 0.6);
+
+  /* Text highlight foreground colors */
+  --ink-text-highlight-foreground-red: #BF616A;
+  --ink-text-highlight-foreground-orange: #D08770;
+  --ink-text-highlight-foreground-yellow: #EBCB8B;
+  --ink-text-highlight-foreground-green: #A3BE8C;
+  --ink-text-highlight-foreground-blue: #88C0D0;
+  --ink-text-highlight-foreground-purple: #B48EAD;
+  --ink-text-highlight-foreground-pink: #B48EAD;
+  --ink-text-highlight-foreground-grey: #D8DEE9;
+
+  /* Layer variables */
+  --ink-layer-background-overlayPanel: #3B4252;
+  --ink-layer-insideBorder-border: rgba(136, 192, 208, 0.2);
+  --ink-layer-insideBorder-blackBorder: rgba(136, 192, 208, 0.2);
+  --ink-layer-background-primary: #2E3440;
+  --layer-background-overlayPanel: #3B4252;
+  --layer-background-primary: #2E3440;
+  --layer-insideBorder-border: rgba(136, 192, 208, 0.2);
+
+  /* Tooltip */
+  --ink-tooltip: #ECEFF4;
+  --ink-tooltip-background: #4C566A;
+  --ink-tooltip-text-color: #ECEFF4;
+  --ink-white: #ECEFF4;
+  --ink-black: #2E3440;
+
+  /* Accent background (for selected items) */
+  --ink-accent-bg: rgba(136, 192, 208, 0.15);
+
+  /* Scrollbar */
+  --ink-scrollbar-thumb: rgba(136, 192, 208, 0.3);
+  --ink-scrollbar-thumb-hover: rgba(136, 192, 208, 0.5);
+
+  /* Color scheme */
+  color-scheme: dark;
+}

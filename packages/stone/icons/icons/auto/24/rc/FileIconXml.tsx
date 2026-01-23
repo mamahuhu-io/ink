@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const FileIconXmlIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="#fff" d="M4.2 2.4A2.4 2.4 0 0 1 6.6 0h9.6c.192 0 .376.076.512.212l6.476 6.476c.136.136.212.32.212.512v14.4A2.4 2.4 0 0 1 21 24H6.6a2.4 2.4 0 0 1-2.4-2.4z" /><path fill="#CDCDCD" fillRule="evenodd" d="M6.6 23.1H21a1.5 1.5 0 0 0 1.5-1.5V7.273L16.127.9H6.6a1.5 1.5 0 0 0-1.5 1.5v19.2a1.5 1.5 0 0 0 1.5 1.5M6.6 0a2.4 2.4 0 0 0-2.4 2.4v19.2A2.4 2.4 0 0 0 6.6 24H21a2.4 2.4 0 0 0 2.4-2.4V7.2a.72.72 0 0 0-.212-.512L16.712.212A.72.72 0 0 0 16.2 0z" clipRule="evenodd" /><path fill="#CDCDCD" fillRule="evenodd" d="M15.75 4.8V.3h.9v4.5a1.95 1.95 0 0 0 1.95 1.95h4.5v.9h-4.5a2.85 2.85 0 0 1-2.85-2.85" clipRule="evenodd" /><rect width={16.8} height={9.6} x={0.6} y={10.8} fill="#0077CB" rx={1.2} /><path fill="#fff" d="m4.053 13.636.88 1.488h.034l.884-1.488h1.042L5.56 15.818 6.923 18H5.862l-.895-1.49h-.034L4.038 18H2.98l1.366-2.182-1.34-2.182zM7.477 13.636h1.137l1.202 2.932h.051l1.202-2.932h1.138V18h-.895v-2.84h-.036l-1.13 2.819h-.609l-1.13-2.83h-.035V18h-.895zM12.967 18v-4.364h.922v3.603h1.871V18z" /></svg>;
+export default FileIconXmlIcon;

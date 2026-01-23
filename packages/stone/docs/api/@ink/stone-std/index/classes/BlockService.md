@@ -1,0 +1,19 @@
+[**InkStone API Documentation**](../../../../README.md)
+
+***
+
+[InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [index](../README.md) / BlockService
+
+# ~~Abstract Class: BlockService~~
+
+## Deprecated
+
+BlockService is deprecated. You should reconsider where to put your feature.
+
+BlockService is a legacy extension that is used to provide services to the block.
+In the previous version of InkStone, block service provides a way to extend the block.
+However, in the new version, we recommend using the new extension system.
+
+## Extends
+
+- [`Extension`](../../../stone-store/classes/Extension.md)

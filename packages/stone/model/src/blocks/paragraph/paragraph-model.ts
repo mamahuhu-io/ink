@@ -1,0 +1,64 @@
+import {
+  BlockModel,
+  BlockSchemaExtension,
+  defineBlockSchema,
+  type Text,
+} from '@ink/stone-store';
+
+import type { TextAlign } from '../../consts';
+import type { BlockMeta } from '../../utils/types';
+
+export type ParagraphType =
+  | 'text'
+  | 'quote'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6';
+
+export type ParagraphProps = {
+  type: ParagraphType;
+  textAlign?: TextAlign;
+  text: Text;
+  collapsed: boolean;
+  comments?: Record<string, boolean>;
+} & BlockMeta;
+
+export const ParagraphBlockSchema = defineBlockSchema({
+  flavour: 'ink:paragraph',
+  props: (internal): ParagraphProps => ({
+    type: 'text',
+    text: internal.Text(),
+    textAlign: undefined,
+    collapsed: false,
+    comments: undefined,
+    'meta:createdAt': undefined,
+    'meta:createdBy': undefined,
+    'meta:updatedAt': undefined,
+    'meta:updatedBy': undefined,
+  }),
+  metadata: {
+    version: 1,
+    role: 'content',
+    parent: [
+      'ink:note',
+      'ink:database',
+      'ink:paragraph',
+      'ink:list',
+      'ink:edgeless-text',
+      'ink:transcription',
+    ],
+  },
+  toModel: () => new ParagraphBlockModel(),
+});
+
+export const ParagraphBlockSchemaExtension =
+  BlockSchemaExtension(ParagraphBlockSchema);
+
+export class ParagraphBlockModel extends BlockModel<ParagraphProps> {
+  override isEmpty(): boolean {
+    return this.props.text$.value.length === 0 && this.children.length === 0;
+  }
+}

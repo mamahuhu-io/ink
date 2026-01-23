@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const StrikeThroughIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M8.406 7.464a3.468 3.468 0 0 1 6.59-1.513.77.77 0 0 0 1.385-.673 5.009 5.009 0 0 0-9.05 4.3h1.793a3.45 3.45 0 0 1-.718-2.114m6.512 8.476c0-.795-.268-1.528-.718-2.113h1.792a5.008 5.008 0 0 1-9.05 4.299.77.77 0 1 1 1.387-.673 3.468 3.468 0 0 0 6.589-1.513M4.297 10.905a.797.797 0 0 0 0 1.594h15.406a.797.797 0 0 0 0-1.594z" clipRule="evenodd" /></svg>;
+export default StrikeThroughIcon;

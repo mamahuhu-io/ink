@@ -1,0 +1,16 @@
+import { html } from 'lit';
+const FileIconHtml =
+  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
+    html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path fill="#fff" d="M4.2 2.4A2.4 2.4 0 0 1 6.6 0h9.6c.192 0 .376.076.512.212l6.476 6.476c.136.136.212.32.212.512v14.4A2.4 2.4 0 0 1 21 24H6.6a2.4 2.4 0 0 1-2.4-2.4z"/><path fill="#CDCDCD" fill-rule="evenodd" d="M6.6 23.1H21a1.5 1.5 0 0 0 1.5-1.5V7.273L16.127.9H6.6a1.5 1.5 0 0 0-1.5 1.5v19.2a1.5 1.5 0 0 0 1.5 1.5M6.6 0a2.4 2.4 0 0 0-2.4 2.4v19.2A2.4 2.4 0 0 0 6.6 24H21a2.4 2.4 0 0 0 2.4-2.4V7.2a.72.72 0 0 0-.212-.512L16.712.212A.72.72 0 0 0 16.2 0z" clip-rule="evenodd"/><path fill="#CDCDCD" fill-rule="evenodd" d="M15.75 4.8V.3h.9v4.5a1.95 1.95 0 0 0 1.95 1.95h4.5v.9h-4.5a2.85 2.85 0 0 1-2.85-2.85" clip-rule="evenodd"/><rect width="21" height="9.6" x=".6" y="10.8" fill="#0077CB" rx="1.2"/><path fill="#fff" d="M3.09 18v-4.364h.922v1.8h1.873v-1.8h.92V18h-.92v-1.803H4.012V18zM7.4 14.397v-.76h3.584v.76H9.648V18h-.912v-3.603zM11.574 13.636h1.138l1.202 2.932h.05l1.202-2.932h1.138V18h-.895v-2.84h-.036l-1.129 2.819h-.61l-1.129-2.83h-.036V18h-.895zM17.065 18v-4.364h.922v3.603h1.87V18z"/>
+  </svg>
+`;
+export default FileIconHtml;

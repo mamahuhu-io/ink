@@ -1,0 +1,16 @@
+import { html } from 'lit';
+const UsbPanel =
+  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
+    html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path fill='currentColor' fill-rule="evenodd" d="M9 2.75A1.75 1.75 0 0 0 7.25 4.5v5H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2.25v-5A1.75 1.75 0 0 0 15 2.75zm6.25 6.75v-5a.25.25 0 0 0-.25-.25H9a.25.25 0 0 0-.25.25v5zm-5.525-2v-2h1.55v2zm3-2v2h1.55v-2z" clip-rule="evenodd"/>
+  </svg>
+`;
+export default UsbPanel;

@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const VolumnPanelIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" d="M9.215 7.7h-2.79C5.638 7.7 5 8.338 5 9.125v5.7c0 .787.638 1.425 1.425 1.425h2.803c.306 0 .605.098.85.281l4.759 3.54c.94.7 2.275.03 2.275-1.143V4.893c0-1.182-1.356-1.85-2.293-1.13l-4.735 3.641c-.25.192-.554.296-.869.296" /></svg>;
+export default VolumnPanelIcon;

@@ -1,0 +1,1513 @@
+/* Import themes */
+@import './themes/index.css';
+
+/* KaTeX Math Rendering - Hide MathML for visual display */
+/* This ensures only one formula is displayed (HTML version) while keeping MathML for screen readers */
+.katex .katex-mathml {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  /* Ensure no containing block is created for fixed elements */
+  transform: none !important;
+  perspective: none !important;
+  filter: none !important;
+  contain: none !important;
+}
+
+body {
+  font-family: var(--ink-font-family);
+  font-size: var(--ink-font-base);
+  line-height: var(--ink-line-height);
+  color: var(--ink-text-primary-color);
+  background: var(--ink-background-primary-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================
+   macOS Transparent Title Bar Support
+   ========================================== */
+
+/* App root container */
+.app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* App layout */
+.app-layout {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  min-height: 0; /* Allow shrinking */
+}
+
+/* Sidebar */
+.sidebar-container {
+  height: 100%;
+  flex-shrink: 0; /* Don't shrink */
+  overflow: hidden; /* Prevent content overflow */
+}
+
+.sidebar {
+  width: 100%; /* Fill parent container width */
+  height: 100%;
+  background: var(--ink-background-overlay-panel-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent content overflow */
+}
+
+/* Resize Handle */
+.resize-handle {
+  width: 2px;
+  height: 100%;
+  cursor: col-resize;
+  background: var(--ink-border-color);
+  position: relative;
+  flex-shrink: 0;
+  z-index: 10;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.resizing {
+  background: var(--ink-brand-color);
+}
+
+/* Sidebar drag region at top */
+.sidebar-drag-region {
+  height: 38px;
+  min-height: 38px;
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+}
+
+/* Sidebar header - contains drag region and toggle button */
+.sidebar-header {
+  height: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  overflow: hidden; /* Prevent overflow */
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px; /* Prevent shrinking */
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ink-text-secondary-color);
+  transition: all 0.15s ease;
+  flex-shrink: 0; /* Never shrink */
+}
+
+.sidebar-toggle-btn:hover {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-text-primary-color);
+}
+
+.sidebar-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* Toggle button in tab bar when sidebar is hidden */
+.tab-bar-sidebar-toggle {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.sidebar-title {
+  font-size: var(--ink-font-sm);
+  font-weight: 600;
+  color: var(--ink-text-primary-color);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px 12px 12px;
+}
+
+/* Activity Bar - VS Code style vertical icon bar */
+.activity-bar {
+  width: 40px;
+  min-width: 40px;
+  height: 100%;
+  background: var(--ink-background-overlay-panel-color); /* Same as sidebar */
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-bar-top {
+  display: flex;
+  flex-direction: column;
+  padding-top: 38px; /* Align with traffic lights / title bar */
+}
+
+.activity-bar-bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+}
+
+.activity-separator {
+  height: 1px;
+  margin: 8px 10px;
+  background: var(--ink-border-color);
+}
+
+.activity-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-text-secondary-color);
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.activity-item:hover {
+  color: var(--ink-text-primary-color);
+}
+
+.activity-item.active {
+  color: var(--ink-text-primary-color);
+}
+
+/* Active indicator - left border */
+.activity-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--ink-brand-color);
+  border-radius: 0 2px 2px 0;
+}
+
+.sidebar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--ink-text-secondary-color);
+  font-size: var(--ink-font-sm);
+}
+
+/* File Tree */
+.file-tree {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.file-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 4px 8px 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--ink-border-color);
+}
+
+.workspace-name {
+  font-size: var(--ink-font-sm);
+  font-weight: 600;
+  color: var(--ink-text-primary-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.file-tree-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.file-tree-action-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.file-tree-action-btn:hover {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-text-primary-color);
+}
+
+.file-tree-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-tree-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.file-tree-item:hover {
+  background: var(--ink-hover-color-filled);
+}
+
+.file-tree-item.selected {
+  background: var(--ink-accent-bg);
+  color: var(--ink-brand-color);
+}
+
+.file-tree-icon {
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.folder-icon {
+  color: var(--ink-text-secondary-color);
+}
+
+.file-icon {
+  font-size: 14px;
+}
+
+.file-tree-name {
+  font-size: var(--ink-font-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-tree-children {
+  /* Children are indented via paddingLeft in component */
+}
+
+.file-tree-empty,
+.file-tree-loading {
+  padding: 12px 8px;
+  color: var(--ink-text-secondary-color);
+  font-size: var(--ink-font-xs);
+  text-align: center;
+}
+
+.file-tree-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  color: var(--ink-text-secondary-color);
+  font-size: var(--ink-font-sm);
+  text-align: center;
+  padding: 20px;
+}
+
+.open-folder-btn {
+  padding: 8px 16px;
+  background: var(--ink-brand-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: var(--ink-font-sm);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.open-folder-btn:hover {
+  opacity: 0.9;
+}
+
+/* Outline Panel */
+.outline {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.outline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 4px 8px 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--ink-border-color);
+}
+
+.outline-title {
+  font-size: var(--ink-font-sm);
+  font-weight: 600;
+  color: var(--ink-text-primary-color);
+}
+
+.outline-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.outline-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.outline-item:hover {
+  background: var(--ink-hover-color-filled);
+}
+
+.outline-item.active {
+  background: var(--ink-accent-bg);
+  color: var(--ink-brand-color);
+}
+
+.outline-item-text {
+  font-size: var(--ink-font-sm);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Heading level styling */
+.outline-level-1 .outline-item-text {
+  font-weight: 600;
+}
+
+.outline-level-2 .outline-item-text {
+  font-weight: 500;
+}
+
+.outline-level-3 .outline-item-text,
+.outline-level-4 .outline-item-text,
+.outline-level-5 .outline-item-text,
+.outline-level-6 .outline-item-text {
+  font-weight: 400;
+  color: var(--ink-text-secondary-color);
+}
+
+.outline-item.active .outline-item-text {
+  color: var(--ink-brand-color);
+}
+
+.outline-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+  color: var(--ink-text-secondary-color);
+  font-size: var(--ink-font-sm);
+  text-align: center;
+  padding: 20px;
+}
+
+.outline-hint {
+  font-size: var(--ink-font-xs);
+  opacity: 0.8;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink-background-primary-color);
+}
+
+/* Workspace Container */
+.workspace-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Tab Bar */
+.tab-bar {
+  height: var(--tab-bar-height);
+  min-height: var(--tab-bar-height);
+  background: var(--ink-background-secondary-color);
+  border-bottom: 1px solid var(--ink-border-color);
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  gap: 4px;
+}
+
+/* When sidebar is hidden on macOS, add padding for traffic lights */
+.app-layout.sidebar-hidden .tab-bar {
+  padding-left: 78px; /* Space for traffic lights, toggle button has its own margin */
+}
+
+/* Toggle button positioning in tab-bar on macOS */
+.app-layout.sidebar-hidden .tab-bar-sidebar-toggle {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+/* Windows platform adjustments - no traffic lights */
+body.platform-windows .activity-bar-top {
+  padding-top: 8px;
+}
+
+body.platform-windows .app-layout.sidebar-hidden .tab-bar {
+  padding-left: 8px;
+}
+
+/* Linux platform adjustments - no traffic lights, standard title bar */
+body.platform-linux .activity-bar-top {
+  padding-top: 8px;
+}
+
+body.platform-linux .app-layout.sidebar-hidden .tab-bar {
+  padding-left: 8px;
+}
+
+/* Tabs container - only takes space needed for tabs */
+.tabs-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 2px;
+}
+
+/* Tab bar drag region - fills remaining space */
+.tab-bar-drag-region {
+  flex: 1;
+  height: 100%;
+  min-width: 20px;
+}
+
+.tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tab */
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  max-width: 200px;
+  min-width: 100px;
+}
+
+.tab:hover {
+  background: var(--ink-hover-color-filled);
+}
+
+.tab.active {
+  background: var(--ink-background-primary-color);
+  box-shadow: var(--ink-shadow-1);
+}
+
+.tab-title {
+  flex: 1;
+  font-size: var(--ink-font-sm);
+  color: var(--ink-text-primary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tab-modified {
+  color: var(--ink-brand-color);
+  font-size: 10px;
+}
+
+.tab-close {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0;
+  transition: all 0.15s ease;
+}
+
+.tab:hover .tab-close {
+  opacity: 1;
+}
+
+.tab-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--ink-text-primary-color);
+}
+
+/* Tab dragging states */
+.tab.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  z-index: 1000;
+}
+
+.tab:not(.dragging) {
+  cursor: grab;
+}
+
+.tab:not(.dragging):active {
+  cursor: grabbing;
+}
+
+/* Smooth transitions for drag and drop */
+.tabs-container .tab {
+  transition: transform 0.2s ease, opacity 0.15s ease;
+}
+
+.add-tab-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  -webkit-app-region: no-drag;
+}
+
+.add-tab-btn:hover {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-text-primary-color);
+}
+
+/* Document Statistics */
+.doc-stats {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  font-size: 12px;
+  color: var(--ink-text-secondary-color);
+  user-select: none;
+  -webkit-app-region: no-drag;
+  cursor: default;
+}
+
+/* 触发器 */
+.doc-stats-trigger {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 4px 2px;
+  border-radius: 6px;
+  opacity: 0.7;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.doc-stats-trigger:hover {
+  opacity: 1;
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-text-primary-color);
+}
+
+.doc-stats-trigger svg {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.doc-stats:hover .doc-stats-trigger svg {
+  transform: scale(1.1);
+}
+
+/* 详细统计弹出层 - 现代化设计 */
+.doc-stats-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--ink-background-secondary-color);
+  border: 1px solid var(--ink-border-color);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 0;
+  min-width: 180px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: doc-stats-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 增强的淡入动画 */
+@keyframes doc-stats-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 弹出层标题 */
+.doc-stats-header {
+  padding: 10px 16px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ink-text-secondary-color);
+  opacity: 0.6;
+  border-bottom: 1px solid var(--ink-border-color);
+}
+
+/* 统计项容器 */
+.doc-stats-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 20px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.doc-stats-item:hover {
+  background: var(--ink-hover-color-filled);
+}
+
+.doc-stats-item:hover .doc-stats-icon {
+  transform: scale(1.15);
+  color: var(--ink-text-primary-color);
+}
+
+.doc-stats-item:hover .doc-stats-value {
+  transform: translateX(2px);
+  font-weight: 600;
+}
+
+/* 左侧：图标+标签 */
+.doc-stats-item-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 图标 */
+.doc-stats-icon {
+  color: var(--ink-text-secondary-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* 标签 */
+.doc-stats-label {
+  font-size: 11px;
+  color: var(--ink-text-secondary-color);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* 数值 - 更突出 */
+.doc-stats-value {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-text-primary-color);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 分隔线 */
+.doc-stats-divider {
+  height: 1px;
+  background: var(--ink-border-color);
+  margin: 0 12px;
+  opacity: 0.5;
+}
+
+/* Tab Panel */
+.tab-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tab-panel-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--ink-text-secondary-color);
+}
+
+.empty-state h2 {
+  font-size: var(--ink-font-h-5);
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--ink-text-primary-color);
+}
+
+.empty-state p {
+  font-size: var(--ink-font-sm);
+}
+
+/* Editor Container */
+.editor-container {
+  height: 100%;
+  background: var(--ink-background-primary-color);
+  position: relative;
+}
+
+/* Editor Loading */
+.editor-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink-text-secondary-color);
+  font-size: var(--ink-font-sm);
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--ink-border-color);
+  border-top-color: var(--ink-brand-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   InkStone Editor Style Overrides
+   NOTE: Keep overrides minimal to avoid breaking editor functionality
+   ========================================== */
+
+/* Editor Container - only set basic properties */
+ink-editor-container {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* ==========================================
+   Table Styles - Minimalist Modern Design
+   ========================================== */
+
+/* Base table styling */
+ink-editor-container table,
+.ink-editor table,
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 16px 0;
+  font-size: var(--ink-font-sm);
+  line-height: 1.6;
+  border-radius: 4px;
+  overflow: hidden;
+  /* Add subtle outer border for complete visual frame */
+  border: 1px solid var(--ink-table-border-color);
+}
+
+/* Table header */
+ink-editor-container thead,
+.ink-editor thead,
+thead {
+  background: var(--ink-table-header-bg);
+}
+
+ink-editor-container th,
+.ink-editor th,
+th {
+  padding: var(--ink-table-cell-padding);
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink-table-header-text);
+  border-bottom: 1px solid var(--ink-table-header-border);
+  user-select: none;
+}
+
+/* Table cells */
+ink-editor-container td,
+.ink-editor td,
+td {
+  padding: var(--ink-table-cell-padding);
+  border-bottom: 1px solid var(--ink-table-border-color);
+  color: var(--ink-text-primary-color);
+}
+
+/* Zebra striping for better readability */
+ink-editor-container tbody tr:nth-child(even),
+.ink-editor tbody tr:nth-child(even),
+tbody tr:nth-child(even) {
+  background: var(--ink-table-row-even-bg);
+}
+
+/* Hover effect for interactive feedback */
+ink-editor-container tbody tr:hover,
+.ink-editor tbody tr:hover,
+tbody tr:hover {
+  background: var(--ink-table-row-hover-bg);
+  transition: background-color 0.2s ease;
+}
+
+/* Cell alignment classes */
+ink-editor-container td[align="center"],
+ink-editor-container th[align="center"],
+.ink-editor td[align="center"],
+.ink-editor th[align="center"],
+td[align="center"],
+th[align="center"] {
+  text-align: center;
+}
+
+ink-editor-container td[align="right"],
+ink-editor-container th[align="right"],
+.ink-editor td[align="right"],
+.ink-editor th[align="right"],
+td[align="right"],
+th[align="right"] {
+  text-align: right;
+}
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+  ink-editor-container table,
+  .ink-editor table,
+  table {
+    border: 2px solid var(--ink-border-color);
+  }
+
+  ink-editor-container th,
+  ink-editor-container td,
+  .ink-editor th,
+  .ink-editor td,
+  th,
+  td {
+    border: 1px solid var(--ink-border-color);
+  }
+}
+
+/* Responsive table wrapper (for narrow screens) */
+@media (max-width: 768px) {
+  ink-editor-container table,
+  .ink-editor table,
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ==========================================
+   Floating Toolbar / Format Bar Styles
+   ========================================== */
+
+/* Editor Toolbar Base */
+editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px;
+  height: 36px;
+  border-radius: 8px;
+  border: 0.5px solid var(--ink-border-color);
+  background: var(--ink-background-overlay-panel-color);
+  box-shadow: var(--ink-overlay-panel-shadow);
+  color: var(--ink-icon-color);
+  z-index: 10;
+}
+
+/* Editor Icon Button */
+editor-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--ink-icon-color);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+editor-icon-button:hover {
+  background: var(--ink-hover-color);
+  color: var(--ink-text-primary-color);
+}
+
+editor-icon-button[data-active="true"],
+editor-icon-button.active {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-primary-color);
+}
+
+editor-icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Editor Menu Button */
+editor-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: var(--ink-icon-color);
+  cursor: pointer;
+  font-size: 12px;
+  gap: 4px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+editor-menu-button:hover {
+  background: var(--ink-hover-color);
+  color: var(--ink-text-primary-color);
+}
+
+/* Toolbar Separator */
+editor-toolbar-separator,
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background: var(--ink-divider-color);
+  margin: 0 4px;
+}
+
+/* Format Bar Popover Container */
+ink-format-bar-widget,
+.ink-format-bar-widget {
+  z-index: var(--ink-z-index-popover, 10);
+}
+
+/* Popover Animation */
+@keyframes ink-popover-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Panel/Popover Base Styles */
+.ink-popover,
+[data-radix-popper-content-wrapper] > div,
+.ink-portal {
+  animation: ink-popover-fade-in 0.15s ease-out;
+}
+
+/* Fix InkStone portal z-index */
+.ink-portal {
+  z-index: var(--ink-z-index-popover, 1000) !important;
+}
+
+/* Link Popup */
+.ink-link-popover,
+ink-link-popup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ink-background-overlay-panel-color);
+  box-shadow: var(--ink-overlay-panel-shadow);
+  border: 0.5px solid var(--ink-border-color);
+}
+
+ink-link-popup input {
+  border: 1px solid var(--ink-border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: var(--ink-background-primary-color);
+  color: var(--ink-text-primary-color);
+  outline: none;
+}
+
+ink-link-popup input:focus {
+  border-color: var(--ink-primary-color);
+}
+
+/* Inline Edit Popup / Reference Popup */
+ink-reference-popup,
+.reference-popup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ink-background-overlay-panel-color);
+  box-shadow: var(--ink-overlay-panel-shadow);
+  border: 0.5px solid var(--ink-border-color);
+}
+
+/* Dropdown Menu */
+ink-menu,
+.ink-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--ink-background-overlay-panel-color);
+  box-shadow: var(--ink-menu-shadow);
+  border: 0.5px solid var(--ink-border-color);
+  min-width: 180px;
+}
+
+ink-menu-item,
+.ink-menu-item,
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink-text-primary-color);
+  transition: background 0.15s ease;
+}
+
+ink-menu-item:hover,
+.ink-menu-item:hover,
+.menu-item:hover {
+  background: var(--ink-hover-color);
+}
+
+ink-menu-item svg,
+.menu-item svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-icon-color);
+}
+
+/* Color Picker Panel */
+.color-picker,
+ink-color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+}
+
+.color-picker-item,
+.color-unit {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.color-picker-item:hover,
+.color-unit:hover {
+  transform: scale(1.1);
+}
+
+.color-picker-item.active,
+.color-unit[data-active="true"] {
+  border-color: var(--ink-primary-color);
+}
+
+/* Slash Menu - Note: InkStone's slash menu uses shadow DOM,
+   these styles are for any light DOM fallback elements */
+.slash-menu-group-name {
+  padding: 8px 12px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-text-secondary-color);
+  text-transform: uppercase;
+}
+
+/* Tooltip */
+ink-tooltip,
+.ink-tooltip {
+  box-sizing: border-box;
+  max-width: 280px;
+  min-height: 32px;
+  font-family: var(--ink-font-family);
+  font-size: var(--ink-font-sm);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: var(--ink-white);
+  background: var(--ink-tooltip);
+  box-shadow: var(--ink-shadow-2);
+  overflow-wrap: anywhere;
+  white-space: normal;
+  word-break: break-word;
+  z-index: var(--ink-z-index-popover);
+}
+
+/* Z-index for popovers */
+:root {
+  --ink-z-index-popover: 1000;
+  --ink-z-index-modal: 1100;
+}
+
+/* Selection */
+::selection {
+  background: var(--ink-highlight-blue);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-scrollbar-thumb, rgba(0, 0, 0, 0.2));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-scrollbar-thumb-hover, rgba(0, 0, 0, 0.3));
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--ink-brand-color);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animation utilities */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================
+   Print Styles - WYSIWYG PDF Export
+   ========================================== */
+@media print {
+  /* Reset page margins to 0 - move margin to body padding instead
+     This allows theme background color to fill the entire page */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* Hide non-content elements */
+  .activity-bar,
+  .sidebar,
+  .sidebar-container,
+  .resize-handle,
+  .tab-bar,
+  .file-tree,
+  .sidebar-header,
+  .add-tab-btn,
+  .tab-close,
+  .editor-loading,
+  .loading-spinner {
+    display: none !important;
+  }
+
+  /* Reset html and root - preserve theme colors */
+  html, #root {
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Body fills entire page with theme background and internal padding */
+  body {
+    margin: 0 !important;
+    /* Use padding instead of @page margin so background color fills entire page */
+    padding: 15mm !important;
+    background: var(--ink-background-primary-color, white) !important;
+    min-height: 100vh !important;
+  }
+
+  /* Create a full-page background layer to ensure theme color fills entire page */
+  body::before {
+    content: '' !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: var(--ink-background-primary-color, white) !important;
+    z-index: -9999 !important;
+    pointer-events: none !important;
+  }
+
+  /* App layout - fill entire page */
+  .app-layout {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Main content takes full width and height */
+  .main-content {
+    width: 100% !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Workspace container - fill parent */
+  .workspace-container {
+    width: 100% !important;
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Tab panel - fill parent */
+  .tab-panel {
+    width: 100% !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Editor container - fill parent */
+  .editor-container {
+    width: 100% !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: var(--ink-background-primary-color, white) !important;
+    position: relative !important;
+  }
+
+  /* InkStone editor - fill parent */
+  ink-editor-container {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    overflow: visible !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Remove editor width constraints for full-width printing */
+  .ink-page-root-block-container {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Doc title also needs to be full width */
+  ink-doc-title {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Note block container */
+  .ink-note-block-container,
+  ink-note {
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Ensure all viewport and scroll containers have theme background and fill page */
+  .ink-viewport,
+  .ink-editor-viewport,
+  .ink-doc-page-viewport,
+  .ink-scroll-container,
+  [class*="viewport"],
+  [class*="scroll-container"] {
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* InkStone page root block */
+  ink-page-root {
+    display: block !important;
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Any scrollable wrapper inside editor */
+  .ink-page-viewport {
+    min-height: 100% !important;
+    background: var(--ink-background-primary-color, white) !important;
+  }
+
+  /* Ensure proper colors for print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Preserve theme text colors - use CSS variables with fallback */
+  body, p, span, div, h1, h2, h3, h4, h5, h6, li {
+    color: var(--ink-text-primary-color, #000) !important;
+  }
+
+  /* Links styling for print - preserve theme link color */
+  a {
+    color: var(--ink-text-link-color, #0066cc) !important;
+    text-decoration: underline !important;
+  }
+
+  /* Code blocks - preserve theme code background */
+  pre, code {
+    background: var(--ink-background-code-block-color, #f5f5f5) !important;
+    border: 1px solid var(--ink-border-color, #ddd) !important;
+  }
+
+  /* Images - ensure they fit and don't break across pages */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Avoid page breaks inside these elements */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  pre, blockquote, figure, table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Hide scrollbars in print */
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+/* Additional styles when .printing class is added (before print) */
+body.printing {
+  /* Can be used for pre-print preparation if needed */
+}

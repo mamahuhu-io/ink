@@ -1,0 +1,16 @@
+import { html } from 'lit';
+const Text =
+  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
+    html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path fill='currentColor' fill-rule="evenodd" d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 .75.75v2.667a.75.75 0 0 1-1.5 0V4.75h-6.5v14.5H16a.75.75 0 0 1 0 1.5H8a.75.75 0 0 1 0-1.5h3.25V4.75h-6.5v1.917a.75.75 0 0 1-1.5 0z" clip-rule="evenodd"/>
+  </svg>
+`;
+export default Text;

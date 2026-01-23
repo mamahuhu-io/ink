@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const InformationFillDuotoneIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25M12 7a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm1 4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0z" clipRule="evenodd" /></svg>;
+export default InformationFillDuotoneIcon;

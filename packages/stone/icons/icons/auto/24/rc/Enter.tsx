@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const EnterIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M13.5 5a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75H6.547l3.352 3.39a.75.75 0 1 1-1.067 1.054l-4.615-4.667a.75.75 0 0 1 0-1.054l4.615-4.667A.75.75 0 0 1 9.9 9.36L6.547 12.75H18v-7h-3.75A.75.75 0 0 1 13.5 5" clipRule="evenodd" /></svg>;
+export default EnterIcon;

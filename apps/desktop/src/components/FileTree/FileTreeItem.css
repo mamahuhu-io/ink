@@ -1,0 +1,69 @@
+.file-tree-item-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--ink-text-secondary-color);
+  transition: background-color 0.1s ease;
+  min-height: 24px;
+}
+
+.file-tree-item:hover {
+  background-color: var(--ink-hover-color);
+  color: var(--ink-text-primary-color);
+}
+
+.file-tree-item.selected {
+  background-color: var(--ink-selection-background);
+  color: var(--ink-text-primary-color);
+}
+
+.file-tree-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  opacity: 0.8;
+}
+
+.file-tree-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.file-tree-children {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-tree-empty {
+  font-size: 12px;
+  color: var(--ink-text-tertiary-color);
+  padding: 4px 8px;
+  font-style: italic;
+}
+
+/* Rename Input */
+.file-tree-rename-input {
+  flex: 1;
+  background: var(--ink-background-primary-color);
+  border: 1px solid var(--ink-brand-color);
+  color: var(--ink-text-primary-color);
+  font-size: 13px;
+  padding: 0 4px;
+  margin: -1px 0; /* Adjust to match text height */
+  outline: none;
+  border-radius: 2px;
+  min-width: 0;
+  height: 20px;
+  line-height: 20px;
+}

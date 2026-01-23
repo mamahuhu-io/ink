@@ -1,0 +1,97 @@
+import { FileDropExtension } from '@ink/stone-components/drop-indicator';
+import {
+  PeekViewExtension,
+  type PeekViewService,
+} from '@ink/stone-components/peek';
+import {
+  type ViewExtensionContext,
+  ViewExtensionProvider,
+} from '@ink/stone-ext-loader';
+import {
+  AutoClearSelectionService,
+  BlockElementCommentManager,
+  CitationService,
+  DefaultOpenDocExtension,
+  DNDAPIExtension,
+  DocDisplayMetaService,
+  DocModeService,
+  EditPropsStore,
+  EmbedOptionService,
+  FileSizeLimitService,
+  FontConfigExtension,
+  fontConfigSchema,
+  FontLoaderService,
+  IconPickerServiceExtension,
+  PageViewportServiceExtension,
+  TelemetryExtension,
+  type TelemetryService,
+  ThemeService,
+  ToolbarRegistryExtension,
+} from '@ink/stone-shared/services';
+import { InteractivityManager, ToolController } from '@ink/stone-std/gfx';
+import { z } from 'zod';
+
+import { clipboardConfigs } from './clipboard';
+import { effects } from './effects';
+
+const optionsSchema = z.object({
+  fontConfig: z.optional(z.array(fontConfigSchema)),
+  telemetry: z.optional(z.custom<TelemetryService>()),
+  peekView: z.optional(z.custom<PeekViewService>()),
+});
+
+export type FoundationViewExtensionOptions = z.infer<typeof optionsSchema>;
+
+export class FoundationViewExtension extends ViewExtensionProvider<FoundationViewExtensionOptions> {
+  override name = 'foundation';
+
+  override schema = optionsSchema;
+
+  override effect() {
+    super.effect();
+    effects();
+  }
+
+  override setup(
+    context: ViewExtensionContext,
+    options?: FoundationViewExtensionOptions
+  ) {
+    super.setup(context, options);
+    context.register([
+      DocDisplayMetaService,
+      EditPropsStore,
+      DefaultOpenDocExtension,
+      FontLoaderService,
+
+      DocModeService,
+      ThemeService,
+      EmbedOptionService,
+      PageViewportServiceExtension,
+      DNDAPIExtension,
+      FileDropExtension,
+      ToolbarRegistryExtension,
+      AutoClearSelectionService,
+      FileSizeLimitService,
+      CitationService,
+      BlockElementCommentManager,
+    ]);
+    // Register IconPickerService for callout icon selection
+    context.register(IconPickerServiceExtension());
+    context.register(clipboardConfigs);
+    if (this.isEdgeless(context.scope)) {
+      context.register([InteractivityManager, ToolController]);
+    }
+    const fontConfig = options?.fontConfig;
+    if (fontConfig) {
+      context.register(FontConfigExtension(fontConfig));
+    }
+    const telemetry = options?.telemetry;
+    if (telemetry) {
+      context.register(TelemetryExtension(telemetry));
+    }
+    const peekView = options?.peekView;
+    if (peekView) {
+      context.register(PeekViewExtension(peekView));
+    }
+  }
+}

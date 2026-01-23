@@ -1,0 +1,7 @@
+import * as React from "react";
+import type { SVGProps } from "react";
+const SelectAreaIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
+  userSelect: "none",
+  flexShrink: 0
+}} {...props}><path fill="currentColor" fillRule="evenodd" d="M3 6a3 3 0 0 1 5.92-.692h6.16a3.001 3.001 0 1 1 3.612 3.612v6.16a3.001 3.001 0 1 1-3.612 3.612H8.92a3.001 3.001 0 1 1-3.612-3.612V8.92A3 3 0 0 1 3 6m3.692 2.92v6.16a3 3 0 0 1 2.228 2.228h6.16a3 3 0 0 1 2.228-2.228V8.92a3 3 0 0 1-2.228-2.228H8.92A3 3 0 0 1 6.692 8.92M6 4.385a1.615 1.615 0 1 0 0 3.23 1.615 1.615 0 0 0 0-3.23m12 0a1.615 1.615 0 1 0 0 3.23 1.615 1.615 0 0 0 0-3.23m-12 12a1.615 1.615 0 1 0 0 3.23 1.615 1.615 0 0 0 0-3.23m12 0a1.615 1.615 0 1 0 0 3.23 1.615 1.615 0 0 0 0-3.23" clipRule="evenodd" /></svg>;
+export default SelectAreaIcon;

@@ -1,0 +1,16 @@
+import { html } from 'lit';
+const LockPanel =
+  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
+    html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path fill='currentColor' fill-rule="evenodd" d="M12 3.25A3.25 3.25 0 0 0 8.75 6.5V10H7.5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1.25V6.5A3.25 3.25 0 0 0 12 3.25M13.75 10V6.5a1.75 1.75 0 1 0-3.5 0V10zM12 12.75a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3a.75.75 0 0 1 .75-.75" clip-rule="evenodd"/>
+  </svg>
+`;
+export default LockPanel;

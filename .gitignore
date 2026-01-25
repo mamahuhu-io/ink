@@ -94,3 +94,6 @@ af.cmd
 
 # playwright
 storageState.json
+
+keys.pem
+keys.pem.pub

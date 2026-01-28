@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [index](../README.md) / WidgetViewExtension
 
@@ -42,4 +42,9 @@ For every target block, it's view will be rendered with the widget view.
 ```ts
 import { WidgetViewExtension } from '@ink/stone-std';
 
-const MyWidgetViewExtension = WidgetViewExtension('my-flavour', 'my-widget', literal`my-widget-view`);
+const MyWidgetViewExtension = WidgetViewExtension(
+  'my-flavour',
+  'my-widget',
+  literal`my-widget-view`,
+);
+```

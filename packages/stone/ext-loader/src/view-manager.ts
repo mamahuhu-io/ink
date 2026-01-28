@@ -40,7 +40,7 @@ export class ViewExtensionManager extends ExtensionManager<ViewScope> {
   override get(scope: ViewScope) {
     const extensions = super.get(scope);
     const selfExtension: ExtensionType = {
-      setup: di => {
+      setup: (di) => {
         di.addImpl(ViewExtensionManagerIdentifier, () => this);
       },
     };

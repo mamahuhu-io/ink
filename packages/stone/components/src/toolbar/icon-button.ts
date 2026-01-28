@@ -1,5 +1,5 @@
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import type { Placement } from '@floating-ui/dom';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import type { TemplateResult } from 'lit';
 import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -87,7 +87,7 @@ export class EditorIconButton extends LitElement {
     super();
 
     // Allow activate button by pressing Enter key
-    this.addEventListener('keypress', event => {
+    this.addEventListener('keypress', (event) => {
       if (this.disabled) {
         return;
       }
@@ -99,13 +99,13 @@ export class EditorIconButton extends LitElement {
     // Prevent click event when disabled
     this.addEventListener(
       'click',
-      event => {
+      (event) => {
         if (this.disabled) {
           event.stopPropagation();
           event.preventDefault();
         }
       },
-      { capture: true }
+      { capture: true },
     );
   }
 
@@ -123,7 +123,7 @@ export class EditorIconButton extends LitElement {
       '--icon-container-width': this.iconContainerWidth,
       '--icon-container-height': this.iconContainerHeight,
       '--icon-container-padding': Array.isArray(padding)
-        ? padding.map(v => `${v}px`).join(' ')
+        ? padding.map((v) => `${v}px`).join(' ')
         : `${padding}px`,
       '--icon-size': this.iconSize,
       '--justify': this.justify,
@@ -152,7 +152,7 @@ export class EditorIconButton extends LitElement {
                 .offset=${this.tooltipOffset}
                 >${tooltip}</ink-tooltip
               >`
-            : nothing
+            : nothing,
         )}
       </div>
     `;

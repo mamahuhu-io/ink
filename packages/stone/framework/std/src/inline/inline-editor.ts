@@ -1,5 +1,5 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { BaseTextAttributes, DeltaInsert } from '@ink/stone-store';
 import { type Signal, signal } from '@preact/signals-core';
 import { nothing, render, type TemplateResult } from 'lit';
@@ -9,21 +9,14 @@ import type * as Y from 'yjs';
 import type { VLine } from './components/v-line.js';
 import { INLINE_ROOT_ATTR } from './consts.js';
 import { InlineHookService } from './services/hook.js';
-import {
-  AttributeService,
-  DeltaService,
-  EventService,
-  RangeService,
-} from './services/index.js';
+import { AttributeService, DeltaService, EventService, RangeService } from './services/index.js';
 import { RenderService } from './services/render.js';
 import { InlineTextService } from './services/text.js';
 import type { InlineRange } from './types.js';
 import { nativePointToTextPoint, textPointToDomPoint } from './utils/index.js';
 import { getTextNodesFromElement } from './utils/text.js';
 
-export type InlineRootElement<
-  T extends BaseTextAttributes = BaseTextAttributes,
-> = HTMLElement & {
+export type InlineRootElement<T extends BaseTextAttributes = BaseTextAttributes> = HTMLElement & {
   inlineEditor: InlineEditor<T>;
 };
 
@@ -32,9 +25,7 @@ export interface InlineRangeProvider {
   setInlineRange(inlineRange: InlineRange | null): void;
 }
 
-export class InlineEditor<
-  TextAttributes extends BaseTextAttributes = BaseTextAttributes,
-> {
+export class InlineEditor<TextAttributes extends BaseTextAttributes = BaseTextAttributes> {
   static getTextNodesFromElement = getTextNodesFromElement;
 
   static nativePointToTextPoint = nativePointToTextPoint;
@@ -55,8 +46,9 @@ export class InlineEditor<
     return this.attributeService.marks;
   }
 
-  readonly textService: InlineTextService<TextAttributes> =
-    new InlineTextService<TextAttributes>(this);
+  readonly textService: InlineTextService<TextAttributes> = new InlineTextService<TextAttributes>(
+    this,
+  );
   deleteText = this.textService.deleteText;
   formatText = this.textService.formatText;
   insertLineBreak = this.textService.insertLineBreak;
@@ -64,8 +56,7 @@ export class InlineEditor<
   resetText = this.textService.resetText;
   setText = this.textService.setText;
 
-  readonly deltaService: DeltaService<TextAttributes> =
-    new DeltaService<TextAttributes>(this);
+  readonly deltaService: DeltaService<TextAttributes> = new DeltaService<TextAttributes>(this);
   getDeltaByRangeIndex = this.deltaService.getDeltaByRangeIndex;
   getDeltasByInlineRange = this.deltaService.getDeltasByInlineRange;
   mapDeltasInInlineRange = this.deltaService.mapDeltasInInlineRange;
@@ -73,8 +64,7 @@ export class InlineEditor<
     return this.deltaService.embedDeltas;
   }
 
-  readonly rangeService: RangeService<TextAttributes> =
-    new RangeService<TextAttributes>(this);
+  readonly rangeService: RangeService<TextAttributes> = new RangeService<TextAttributes>(this);
   focusEnd = this.rangeService.focusEnd;
   focusIndex = this.rangeService.focusIndex;
   focusStart = this.rangeService.focusStart;
@@ -97,14 +87,12 @@ export class InlineEditor<
     return this.rangeService.lastEndRelativePosition;
   }
 
-  readonly eventService: EventService<TextAttributes> =
-    new EventService<TextAttributes>(this);
+  readonly eventService: EventService<TextAttributes> = new EventService<TextAttributes>(this);
   get isComposing() {
     return this.eventService.isComposing;
   }
 
-  readonly renderService: RenderService<TextAttributes> =
-    new RenderService<TextAttributes>(this);
+  readonly renderService: RenderService<TextAttributes> = new RenderService<TextAttributes>(this);
   waitForUpdate = this.renderService.waitForUpdate;
   rerenderWholeEditor = this.renderService.rerenderWholeEditor;
   render = this.renderService.render;
@@ -143,7 +131,7 @@ export class InlineEditor<
   }
   readonly inlineRangeProvider: InlineRangeProvider = {
     inlineRange$: signal(null),
-    setInlineRange: inlineRange => {
+    setInlineRange: (inlineRange) => {
       this.inlineRange$.value = inlineRange;
     },
   };
@@ -196,28 +184,20 @@ export class InlineEditor<
       hooks?: InlineHookService<TextAttributes>['hooks'];
       inlineRangeProvider?: InlineRangeProvider;
       vLineRenderer?: (vLine: VLine) => TemplateResult;
-    } = {}
+    } = {},
   ) {
     if (!yText.doc) {
-      throw new InkStoneError(
-        ErrorCode.InlineEditorError,
-        'yText must be attached to a Y.Doc'
-      );
+      throw new InkStoneError(ErrorCode.InlineEditorError, 'yText must be attached to a Y.Doc');
     }
 
     if (yText.toString().includes('\r')) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'yText must not contain "\\r" because it will break the range synchronization'
+        'yText must not contain "\\r" because it will break the range synchronization',
       );
     }
 
-    const {
-      isEmbed = () => false,
-      hooks = {},
-      inlineRangeProvider,
-      vLineRenderer = null,
-    } = ops;
+    const { isEmbed = () => false, hooks = {}, inlineRangeProvider, vLineRenderer = null } = ops;
     this._inlineRangeProviderOverride = false;
     this.yText = yText;
     this.isEmbed = isEmbed;
@@ -229,11 +209,7 @@ export class InlineEditor<
     }
   }
 
-  mount(
-    rootElement: HTMLElement,
-    eventSource: HTMLElement = rootElement,
-    isReadonly = false
-  ) {
+  mount(rootElement: HTMLElement, eventSource: HTMLElement = rootElement, isReadonly = false) {
     const inlineRoot = rootElement as InlineRootElement<TextAttributes>;
     inlineRoot.inlineEditor = this;
     this._rootElement = inlineRoot;
@@ -285,10 +261,7 @@ export class InlineEditor<
   transact(fn: () => void, withoutTransact = false): void {
     const doc = this.yText.doc;
     if (!doc) {
-      throw new InkStoneError(
-        ErrorCode.InlineEditorError,
-        'yText is not attached to a doc'
-      );
+      throw new InkStoneError(ErrorCode.InlineEditorError, 'yText is not attached to a doc');
     }
 
     doc.transact(fn, withoutTransact ? null : doc.clientID);

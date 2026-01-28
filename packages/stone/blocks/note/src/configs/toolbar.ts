@@ -1,6 +1,13 @@
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { EdgelessLegacySlotIdentifier } from '@ink/stone-block-surface';
-import { NoteBlockModel, NoteDisplayMode } from "@ink/stone-model";
+import { Bound } from '@ink/stone-global/gfx';
+import {
+  AutoHeightIcon,
+  CustomizedHeightIcon,
+  InsertIntoPageIcon,
+  ScissorsIcon,
+} from '@ink/stone-icons/lit';
+import { NoteBlockModel, NoteDisplayMode } from '@ink/stone-model';
 import {
   NotificationProvider,
   SidebarExtensionIdentifier,
@@ -8,36 +15,28 @@ import {
   type ToolbarContext,
   type ToolbarModuleConfig,
   ToolbarModuleExtension,
-} from "@ink/stone-shared/services";
-import { Bound } from "@ink/stone-global/gfx";
-import {
-  AutoHeightIcon,
-  CustomizedHeightIcon,
-  InsertIntoPageIcon,
-  ScissorsIcon,
-} from "@ink/stone-icons/lit";
-import { BlockFlavourIdentifier } from "@ink/stone-std";
-import type { ExtensionType } from "@ink/stone-store";
+} from '@ink/stone-shared/services';
+import { BlockFlavourIdentifier } from '@ink/stone-std';
+import type { ExtensionType } from '@ink/stone-store';
+import { computed } from '@preact/signals-core';
+import { html } from 'lit';
 
-import { t } from "./i18n";
-import { computed } from "@preact/signals-core";
-import { html } from "lit";
-
-import { changeNoteDisplayMode } from "../commands";
-import { NoteConfigExtension } from "../config";
+import { changeNoteDisplayMode } from '../commands';
+import { NoteConfigExtension } from '../config';
+import { t } from './i18n';
 
 const trackBaseProps = {
-  category: "note",
+  category: 'note',
 };
 
 const builtinSurfaceToolbarConfig = {
   actions: [
     {
-      id: "a.show-in",
+      id: 'a.show-in',
       when(ctx) {
         return (
           ctx.getSurfaceModelsByType(NoteBlockModel).length === 1 &&
-          ctx.features.getFlag("enable_advanced_block_visibility")
+          ctx.features.getFlag('enable_advanced_block_visibility')
         );
       },
       content(ctx) {
@@ -63,13 +62,13 @@ const builtinSurfaceToolbarConfig = {
       },
     },
     {
-      id: "b.display-in-page",
+      id: 'b.display-in-page',
       when(ctx) {
         const elements = ctx.getSurfaceModelsByType(NoteBlockModel);
         return (
           elements.length === 1 &&
           !elements[0].isPageBlock() &&
-          !ctx.features.getFlag("enable_advanced_block_visibility")
+          !ctx.features.getFlag('enable_advanced_block_visibility')
         );
       },
       generate(ctx) {
@@ -78,14 +77,12 @@ const builtinSurfaceToolbarConfig = {
 
         const firstModel = models[0];
         const shouldShowTooltip$ = computed(
-          () =>
-            firstModel.props.displayMode$.value ===
-            NoteDisplayMode.DocAndEdgeless
+          () => firstModel.props.displayMode$.value === NoteDisplayMode.DocAndEdgeless,
         );
         const label$ = computed(() =>
           firstModel.props.displayMode$.value === NoteDisplayMode.EdgelessOnly
-            ? "Display in Page"
-            : "Displayed in Page"
+            ? 'Display in Page'
+            : 'Displayed in Page',
         );
         const onSelect = () => {
           const newMode =
@@ -94,15 +91,13 @@ const builtinSurfaceToolbarConfig = {
               : NoteDisplayMode.EdgelessOnly;
           setDisplayMode(ctx, firstModel, newMode);
 
-          ctx.track("BlockCreated", {
-            page: "whiteboard editor",
-            module: "toolbar",
-            segment: "toolbar",
-            blockType: "ink:note",
-            control: "toolbar:general",
-            other: `display in page: ${
-              newMode === NoteDisplayMode.EdgelessOnly ? "off" : "on"
-            }`,
+          ctx.track('BlockCreated', {
+            page: 'whiteboard editor',
+            module: 'toolbar',
+            segment: 'toolbar',
+            blockType: 'ink:note',
+            control: 'toolbar:general',
+            other: `display in page: ${newMode === NoteDisplayMode.EdgelessOnly ? 'off' : 'on'}`,
           });
         };
 
@@ -110,7 +105,7 @@ const builtinSurfaceToolbarConfig = {
           content: html`<editor-icon-button
             aria-label="${label$.value}"
             .showTooltip="${shouldShowTooltip$.value}"
-            .tooltip="${"This note is part of Page Mode. Click to remove it from the page."}"
+            .tooltip="${'This note is part of Page Mode. Click to remove it from the page.'}"
             data-testid="display-in-page"
             @click=${() => onSelect()}
           >
@@ -121,23 +116,17 @@ const builtinSurfaceToolbarConfig = {
       },
     },
     {
-      id: "d.style",
+      id: 'd.style',
       when(ctx) {
         const elements = ctx.getSurfaceModelsByType(NoteBlockModel);
-        return (
-          elements.length > 0 &&
-          elements[0].props.displayMode !== NoteDisplayMode.DocOnly
-        );
+        return elements.length > 0 && elements[0].props.displayMode !== NoteDisplayMode.DocOnly;
       },
       actions: [
         {
-          id: "b.style",
+          id: 'b.style',
           when: (ctx) => {
             const models = ctx.getSurfaceModels();
-            return (
-              models.length > 0 &&
-              models.every((model) => model instanceof NoteBlockModel)
-            );
+            return models.length > 0 && models.every((model) => model instanceof NoteBlockModel);
           },
           content(ctx) {
             const notes = ctx.getSurfaceModelsByType(NoteBlockModel);
@@ -150,15 +139,15 @@ const builtinSurfaceToolbarConfig = {
       ],
     },
     {
-      id: "e.slicer",
-      label: t("slicer", "Slicer"),
+      id: 'e.slicer',
+      label: t('slicer', 'Slicer'),
       icon: ScissorsIcon(),
       tooltip: html`<ink-tooltip-content-with-shortcut
-        data-tip="${"Cutting mode"}"
-        data-shortcut="${"-"}"
+        data-tip="${'Cutting mode'}"
+        data-shortcut="${'-'}"
       ></ink-tooltip-content-with-shortcut>`,
       active: false,
-      when(ctx) {
+      when(_ctx) {
         // [REMOVED] Edgeless blocks - this toolbar action is for Edgeless mode only
         return false;
         // return (
@@ -166,21 +155,20 @@ const builtinSurfaceToolbarConfig = {
         //   ctx.features.getFlag('enable_advanced_block_visibility')
         // );
       },
-      run(ctx) {
+      run(_ctx) {
         // [REMOVED] Edgeless blocks - not needed for Page mode
         // ctx.std.get(EdgelessLegacySlotIdentifier).toggleNoteSlicer.next();
       },
     },
     {
-      id: "f.auto-height",
-      label: t("size", "Size"),
+      id: 'f.auto-height',
+      label: t('size', 'Size'),
       when(ctx) {
         const elements = ctx.getSurfaceModelsByType(NoteBlockModel);
         return (
           elements.length > 0 &&
           (!elements[0].isPageBlock() ||
-            !ctx.std.getOptional(NoteConfigExtension.identifier)
-              ?.edgelessNoteHeader)
+            !ctx.std.getOptional(NoteConfigExtension.identifier)?.edgelessNoteHeader)
         );
       },
       generate(ctx) {
@@ -189,13 +177,13 @@ const builtinSurfaceToolbarConfig = {
 
         const firstModel = models[0];
         const { collapse } = firstModel.props.edgeless$.value;
-        const options: Pick<ToolbarAction, "tooltip" | "icon"> = collapse
+        const options: Pick<ToolbarAction, 'tooltip' | 'icon'> = collapse
           ? {
-              tooltip: "Auto height",
+              tooltip: 'Auto height',
               icon: AutoHeightIcon(),
             }
           : {
-              tooltip: "Customized height",
+              tooltip: 'Customized height',
               icon: CustomizedHeightIcon(),
             };
 
@@ -230,7 +218,7 @@ const builtinSurfaceToolbarConfig = {
       },
     },
     {
-      id: "g.scale",
+      id: 'g.scale',
       content(ctx) {
         const models = ctx.getSurfaceModelsByType(NoteBlockModel);
         if (!models.length) return null;
@@ -259,9 +247,9 @@ const builtinSurfaceToolbarConfig = {
             });
           });
 
-          ctx.track("SelectedCardScale", {
+          ctx.track('SelectedCardScale', {
             ...trackBaseProps,
-            control: "select card scale",
+            control: 'select card scale',
           });
         };
         const onToggle = (e: CustomEvent<boolean>) => {
@@ -270,9 +258,9 @@ const builtinSurfaceToolbarConfig = {
           const opened = e.detail;
           if (!opened) return;
 
-          ctx.track("OpenedCardScaleSelector", {
+          ctx.track('OpenedCardScaleSelector', {
             ...trackBaseProps,
-            control: "switch card scale",
+            control: 'switch card scale',
           });
         };
         const format = (value: number) => `${value}%`;
@@ -290,11 +278,7 @@ const builtinSurfaceToolbarConfig = {
   when: (ctx) => ctx.getSurfaceModelsByType(NoteBlockModel).length > 0,
 } as const satisfies ToolbarModuleConfig;
 
-function setDisplayMode(
-  ctx: ToolbarContext,
-  model: NoteBlockModel,
-  newMode: NoteDisplayMode
-) {
+function setDisplayMode(ctx: ToolbarContext, model: NoteBlockModel, newMode: NoteDisplayMode) {
   const displayMode = model.props.displayMode;
 
   ctx.command.exec(changeNoteDisplayMode, {
@@ -311,43 +295,41 @@ function setDisplayMode(
   const data =
     newMode === NoteDisplayMode.EdgelessOnly
       ? {
-          title: "Note removed from Page Mode",
-          message: "Content removed from your page.",
+          title: 'Note removed from Page Mode',
+          message: 'Content removed from your page.',
         }
       : {
-          title: "Note displayed in Page Mode",
-          message: "Content added to your page.",
+          title: 'Note displayed in Page Mode',
+          message: 'Content added to your page.',
         };
 
   const notification = ctx.std.getOptional(NotificationProvider);
   notification?.notifyWithUndoAction({
     title: data.title,
     message: `${data.message} Find it in the TOC for quick navigation.`,
-    accent: "success",
+    accent: 'success',
     duration: 5 * 1000,
     actions: [
       {
-        key: "view-in-toc",
-        label: t("viewInToc", "View in Toc"),
+        key: 'view-in-toc',
+        label: t('viewInToc', 'View in Toc'),
         onClick: () => {
           const sidebar = ctx.std.getOptional(SidebarExtensionIdentifier);
-          sidebar?.open("outline");
+          sidebar?.open('outline');
         },
       },
     ],
   });
 
-  ctx.track("NoteDisplayModeChanged", {
+  ctx.track('NoteDisplayModeChanged', {
     ...trackBaseProps,
-    control: "display mode",
+    control: 'display mode',
     other: `from ${displayMode} to ${newMode}`,
   });
 }
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
-  const name = flavour.split(":").pop();
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
+  const name = flavour.split(':').pop();
 
   return [
     ToolbarModuleExtension({

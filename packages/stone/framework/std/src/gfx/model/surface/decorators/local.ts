@@ -12,7 +12,7 @@ import { getDerivedProps, updateDerivedProps } from './derive.js';
 export function local<V, T extends GfxPrimitiveElementModel>() {
   return function localDecorator(
     _target: ClassAccessorDecoratorTarget<T, V>,
-    context: ClassAccessorDecoratorContext
+    context: ClassAccessorDecoratorContext,
   ) {
     const prop = context.name;
 
@@ -30,9 +30,7 @@ export function local<V, T extends GfxPrimitiveElementModel>() {
         const oldValue = this._local.get(prop);
         // When state is creating, the value is considered as default value
         // hence there's no need to convert it
-        const newVal = isCreating
-          ? originalValue
-          : convertProps(prop, originalValue, this);
+        const newVal = isCreating ? originalValue : convertProps(prop, originalValue, this);
 
         const derivedProps = getDerivedProps(prop, originalValue, this);
 

@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Bound } from '@ink/stone-global/gfx';
 import { computed, effect, signal } from '@preact/signals-core';
 import { nothing } from 'lit';
@@ -14,9 +14,7 @@ import type { GfxBlockElementModel } from '../../gfx/model/gfx-block-model.js';
 import { SurfaceSelection } from '../../selection/index.js';
 import { BlockComponent } from './block-component.js';
 
-export function isGfxBlockComponent(
-  element: unknown
-): element is GfxBlockComponent {
+export function isGfxBlockComponent(element: unknown): element is GfxBlockComponent {
   return (element as GfxBlockComponent)?.[GfxElementSymbol] === true;
 }
 
@@ -51,7 +49,7 @@ function handleGfxConnection(instance: GfxBlockComponent) {
   instance.disposables.add(
     instance.gfx.viewport.viewportUpdated.subscribe(() => {
       updateTransform(instance);
-    })
+    }),
   );
 
   instance.disposables.add(
@@ -59,22 +57,22 @@ function handleGfxConnection(instance: GfxBlockComponent) {
       if (id === instance.model.id && type === 'update') {
         updateTransform(instance);
       }
-    })
+    }),
   );
 
   instance.disposables.add(
     effect(() => {
       updateBlockVisibility(instance);
       updateTransform(instance);
-    })
+    }),
   );
 }
 
 export abstract class GfxBlockComponent<
-    Model extends GfxBlockElementModel = GfxBlockElementModel,
-    Service extends BlockService = BlockService,
-    WidgetName extends string = string,
-  >
+  Model extends GfxBlockElementModel = GfxBlockElementModel,
+  Service extends BlockService = BlockService,
+  WidgetName extends string = string,
+>
   extends BlockComponent<Model, Service, WidgetName>
   implements GfxViewTransformInterface
 {
@@ -124,7 +122,7 @@ export abstract class GfxBlockComponent<
     if (!xywh$) {
       throw new InkStoneError(
         ErrorCode.GfxBlockElementError,
-        `Error on rendering '${this.model.flavour}': Gfx block's model should have 'xywh' property.`
+        `Error on rendering '${this.model.flavour}': Gfx block's model should have 'xywh' property.`,
       );
     }
 
@@ -159,9 +157,7 @@ export abstract class GfxBlockComponent<
     if (this.hasUpdated || !parent || !('scheduleUpdateChildren' in parent)) {
       return super.scheduleUpdate();
     } else {
-      await (parent.scheduleUpdateChildren as (id: string) => Promise<void>)(
-        this.model.id
-      );
+      await (parent.scheduleUpdateChildren as (id: string) => Promise<void>)(this.model.id);
 
       return super.scheduleUpdate();
     }
@@ -190,7 +186,7 @@ export function toGfxBlockComponent<
 
     override selected$ = computed(() => {
       const selection = this.std.selection.value.find(
-        selection => selection.blockId === this.model?.id
+        (selection) => selection.blockId === this.model?.id,
       );
       if (!selection) return false;
       return selection.is(SurfaceSelection);
@@ -219,7 +215,6 @@ export function toGfxBlockComponent<
       handleGfxConnection(this);
     }
 
-    // eslint-disable-next-line sonarjs/no-identical-functions
     getCSSTransform() {
       const viewport = this.gfx.viewport;
       const { translateX, translateY, zoom } = viewport;
@@ -233,7 +228,6 @@ export function toGfxBlockComponent<
       return `translate(${translateX + deltaX}px, ${translateY + deltaY}px) scale(${zoom})`;
     }
 
-    // eslint-disable-next-line sonarjs/no-identical-functions
     getRenderingRect(): {
       x: number;
       y: number;
@@ -246,7 +240,7 @@ export function toGfxBlockComponent<
       if (!xywh$) {
         throw new InkStoneError(
           ErrorCode.GfxBlockElementError,
-          `Error on rendering '${this.model.flavour}': Gfx block's model should have 'xywh' property.`
+          `Error on rendering '${this.model.flavour}': Gfx block's model should have 'xywh' property.`,
         );
       }
 
@@ -275,16 +269,13 @@ export function toGfxBlockComponent<
       return super.renderBlock();
     }
 
-    // eslint-disable-next-line sonarjs/no-identical-functions
     override async scheduleUpdate() {
       const parent = this.parentElement;
 
       if (this.hasUpdated || !parent || !('scheduleUpdateChildren' in parent)) {
         return super.scheduleUpdate();
       } else {
-        await (parent.scheduleUpdateChildren as (id: string) => Promise<void>)(
-          this.model.id
-        );
+        await (parent.scheduleUpdateChildren as (id: string) => Promise<void>)(this.model.id);
 
         return super.scheduleUpdate();
       }

@@ -5,37 +5,38 @@
  * - Linux: Not supported
  */
 
-import { invoke } from '@tauri-apps/api/core'
-import { isTauri } from './index'
+import { invoke } from '@tauri-apps/api/core';
+
+import { isTauri } from './index';
 
 export interface SpellingError {
-  start: number
-  length: number
-  word: string
-  suggestions: string[]
+  start: number;
+  length: number;
+  word: string;
+  suggestions: string[];
 }
 
-let availabilityCache: boolean | null = null
+let availabilityCache: boolean | null = null;
 
 /**
  * Check if spell checking is available on this platform
  */
 export async function isSpellCheckAvailable(): Promise<boolean> {
   if (!isTauri()) {
-    return false
+    return false;
   }
 
   if (availabilityCache !== null) {
-    return availabilityCache
+    return availabilityCache;
   }
 
   try {
-    availabilityCache = await invoke<boolean>('spellcheck_available')
-    return availabilityCache
+    availabilityCache = await invoke<boolean>('spellcheck_available');
+    return availabilityCache;
   } catch (e) {
-    console.error('[SpellCheck] Failed to check availability:', e)
-    availabilityCache = false
-    return false
+    console.error('[SpellCheck] Failed to check availability:', e);
+    availabilityCache = false;
+    return false;
   }
 }
 
@@ -44,14 +45,14 @@ export async function isSpellCheckAvailable(): Promise<boolean> {
  */
 export async function checkSpelling(text: string): Promise<SpellingError[]> {
   if (!isTauri()) {
-    return []
+    return [];
   }
 
   try {
-    return await invoke<SpellingError[]>('check_spelling', { text })
+    return await invoke<SpellingError[]>('check_spelling', { text });
   } catch (e) {
-    console.error('[SpellCheck] Failed to check spelling:', e)
-    return []
+    console.error('[SpellCheck] Failed to check spelling:', e);
+    return [];
   }
 }
 
@@ -60,14 +61,14 @@ export async function checkSpelling(text: string): Promise<SpellingError[]> {
  */
 export async function getSpellLanguages(): Promise<string[]> {
   if (!isTauri()) {
-    return []
+    return [];
   }
 
   try {
-    return await invoke<string[]>('get_spell_languages')
+    return await invoke<string[]>('get_spell_languages');
   } catch (e) {
-    console.error('[SpellCheck] Failed to get languages:', e)
-    return []
+    console.error('[SpellCheck] Failed to get languages:', e);
+    return [];
   }
 }
 
@@ -76,13 +77,13 @@ export async function getSpellLanguages(): Promise<string[]> {
  */
 export async function learnWord(word: string): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    await invoke('learn_spelling', { word })
+    await invoke('learn_spelling', { word });
   } catch (e) {
-    console.error('[SpellCheck] Failed to learn word:', e)
+    console.error('[SpellCheck] Failed to learn word:', e);
   }
 }
 
@@ -91,13 +92,13 @@ export async function learnWord(word: string): Promise<void> {
  */
 export async function unlearnWord(word: string): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    await invoke('unlearn_spelling', { word })
+    await invoke('unlearn_spelling', { word });
   } catch (e) {
-    console.error('[SpellCheck] Failed to unlearn word:', e)
+    console.error('[SpellCheck] Failed to unlearn word:', e);
   }
 }
 
@@ -106,12 +107,12 @@ export async function unlearnWord(word: string): Promise<void> {
  */
 export async function ignoreWord(word: string): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    await invoke('ignore_spelling', { word })
+    await invoke('ignore_spelling', { word });
   } catch (e) {
-    console.error('[SpellCheck] Failed to ignore word:', e)
+    console.error('[SpellCheck] Failed to ignore word:', e);
   }
 }

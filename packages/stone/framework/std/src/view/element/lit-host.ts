@@ -1,14 +1,6 @@
-import {
-  InkStoneError,
-  ErrorCode,
-  handleError,
-} from '@ink/stone-global/exceptions';
+import { ErrorCode, handleError, InkStoneError } from '@ink/stone-global/exceptions';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  type BlockModel,
-  Store,
-  type StoreSelectionExtension,
-} from '@ink/stone-store';
+import { type BlockModel, Store, type StoreSelectionExtension } from '@ink/stone-store';
 import { createContext, provide } from '@lit/context';
 import { css, LitElement, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -47,9 +39,7 @@ function isMatchFlavour(widgetFlavour: string, block: BlockModel) {
   store: PropTypes.instanceOf(Store),
   std: PropTypes.object,
 })
-export class EditorHost extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class EditorHost extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     editor-host {
       outline: none;
@@ -82,7 +72,7 @@ export class EditorHost extends SignalWatcher(
         }
         return mapping;
       },
-      {} as Record<string, TemplateResult>
+      {} as Record<string, TemplateResult>,
     );
 
     const tag = typeof view === 'function' ? view(model) : view;
@@ -93,14 +83,11 @@ export class EditorHost extends SignalWatcher(
     ></${tag}>`;
   };
 
-  renderChildren = (
-    model: BlockModel,
-    filter?: (model: BlockModel) => boolean
-  ): TemplateResult => {
+  renderChildren = (model: BlockModel, filter?: (model: BlockModel) => boolean): TemplateResult => {
     return html`${repeat(
       model.children.filter(filter ?? (() => true)),
-      child => child.id,
-      child => this._renderModel(child)
+      (child) => child.id,
+      (child) => this._renderModel(child),
     )}`;
   };
 
@@ -130,7 +117,7 @@ export class EditorHost extends SignalWatcher(
     if (!this.store.root) {
       throw new InkStoneError(
         ErrorCode.NoRootModelError,
-        'This doc is missing root block. Please initialize the default block structure before connecting the editor to DOM.'
+        'This doc is missing root block. Please initialize the default block structure before connecting the editor to DOM.',
       );
     }
 
@@ -152,9 +139,7 @@ export class EditorHost extends SignalWatcher(
       const view = this.std.getView(rootModel.flavour);
       if (!view) return result;
 
-      const widgetViews = this.std.provider.getAll(
-        WidgetViewIdentifier(rootModel.flavour)
-      );
+      const widgetViews = this.std.provider.getAll(WidgetViewIdentifier(rootModel.flavour));
       const widgetTags = Object.entries(widgetViews).reduce(
         (mapping, [key, tag]) => {
           const [widgetFlavour, id] = key.split('|');
@@ -163,20 +148,20 @@ export class EditorHost extends SignalWatcher(
           }
           return mapping;
         },
-        {} as Record<string, StaticValue>
+        {} as Record<string, StaticValue>,
       );
       const elementsTags: StaticValue[] = [
         typeof view === 'function' ? view(rootModel) : view,
         ...Object.values(widgetTags),
       ];
       await Promise.all(
-        elementsTags.map(tag => {
+        elementsTags.map((tag) => {
           const element = this.renderRoot.querySelector(tag._$litStatic$);
           if (element instanceof LitElement) {
             return element.updateComplete;
           }
           return null;
-        })
+        }),
       );
       return result;
     } catch (e) {

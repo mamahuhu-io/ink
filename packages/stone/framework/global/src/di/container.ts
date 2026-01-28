@@ -99,10 +99,7 @@ import type {
  * ```
  */
 export class Container {
-  private readonly services = new Map<
-    string,
-    Map<string, Map<ServiceVariant, ServiceFactory>>
-  >();
+  private readonly services = new Map<string, Map<string, Map<ServiceVariant, ServiceFactory>>>();
 
   /**
    * @see {@link ContainerEditor.add}
@@ -160,17 +157,15 @@ export class Container {
   addFactory<T>(
     identifier: GeneralServiceIdentifier<T>,
     factory: ServiceFactory<T>,
-    { scope, override }: { scope?: ServiceScope; override?: boolean } = {}
+    { scope, override }: { scope?: ServiceScope; override?: boolean } = {},
   ) {
     // convert scope to string
     const normalizedScope = stringifyScope(scope ?? ROOT_SCOPE);
     const normalizedIdentifier = parseIdentifier(identifier);
-    const normalizedVariant =
-      normalizedIdentifier.variant ?? DEFAULT_SERVICE_VARIANT;
+    const normalizedVariant = normalizedIdentifier.variant ?? DEFAULT_SERVICE_VARIANT;
 
     const services =
-      this.services.get(normalizedScope) ??
-      new Map<string, Map<ServiceVariant, ServiceFactory>>();
+      this.services.get(normalizedScope) ?? new Map<string, Map<ServiceVariant, ServiceFactory>>();
 
     const variants =
       services.get(normalizedIdentifier.identifierName) ??
@@ -191,16 +186,12 @@ export class Container {
   addValue<T>(
     identifier: GeneralServiceIdentifier<T>,
     value: T,
-    { scope, override }: { scope?: ServiceScope; override?: boolean } = {}
+    { scope, override }: { scope?: ServiceScope; override?: boolean } = {},
   ) {
-    this.addFactory(
-      parseIdentifier(identifier) as ServiceIdentifier<T>,
-      () => value,
-      {
-        scope,
-        override,
-      }
-    );
+    this.addFactory(parseIdentifier(identifier) as ServiceIdentifier<T>, () => value, {
+      scope,
+      override,
+    });
   }
 
   /**
@@ -227,7 +218,7 @@ export class Container {
    */
   getFactory(
     identifier: ServiceIdentifierValue,
-    scope: ServiceScope = ROOT_SCOPE
+    scope: ServiceScope = ROOT_SCOPE,
   ): ServiceFactory | undefined {
     return this.services
       .get(stringifyScope(scope))
@@ -240,11 +231,9 @@ export class Container {
    */
   getFactoryAll(
     identifier: ServiceIdentifierValue,
-    scope: ServiceScope = ROOT_SCOPE
+    scope: ServiceScope = ROOT_SCOPE,
   ): Map<ServiceVariant, ServiceFactory> {
-    return new Map(
-      this.services.get(stringifyScope(scope))?.get(identifier.identifierName)
-    );
+    return new Map(this.services.get(stringifyScope(scope))?.get(identifier.identifierName));
   }
 
   /**
@@ -261,7 +250,7 @@ export class Container {
    */
   provider(
     scope: ServiceScope = ROOT_SCOPE,
-    parent: ServiceProvider | null = null
+    parent: ServiceProvider | null = null,
   ): ServiceProvider {
     return new BasicServiceProvider(this, scope, parent);
   }
@@ -292,11 +281,9 @@ class ContainerEditor {
     cls: T,
     ...[deps]: Deps extends [] ? [] : [Deps]
   ): this => {
-    this.container.addFactory<any>(
-      cls as any,
-      dependenciesToFactory(cls, deps as any),
-      { scope: this.currentScope }
-    );
+    this.container.addFactory<any>(cls as any, dependenciesToFactory(cls, deps as any), {
+      scope: this.currentScope,
+    });
 
     return this;
   };
@@ -319,11 +306,8 @@ class ContainerEditor {
     Arg1 extends ServiceIdentifier<any>,
     Arg2 extends Type<Trait> | ServiceFactory<Trait> | Trait,
     Trait = ServiceIdentifierType<Arg1>,
-    Deps extends Arg2 extends Type<Trait>
-      ? TypesToDeps<ConstructorParameters<Arg2>>
-      : [] = Arg2 extends Type<Trait>
-      ? TypesToDeps<ConstructorParameters<Arg2>>
-      : [],
+    Deps extends Arg2 extends Type<Trait> ? TypesToDeps<ConstructorParameters<Arg2>> : [] =
+      Arg2 extends Type<Trait> ? TypesToDeps<ConstructorParameters<Arg2>> : [],
     Arg3 extends Deps = Deps,
   >(
     identifier: Arg1,
@@ -331,11 +315,9 @@ class ContainerEditor {
     ...[arg3]: Arg3 extends [] ? [] : [Arg3]
   ): this => {
     if (arg2 instanceof Function) {
-      this.container.addFactory<any>(
-        identifier,
-        dependenciesToFactory(arg2, arg3 as any[]),
-        { scope: this.currentScope }
-      );
+      this.container.addFactory<any>(identifier, dependenciesToFactory(arg2, arg3 as any[]), {
+        scope: this.currentScope,
+      });
     } else {
       this.container.addValue(identifier, arg2 as any, {
         scope: this.currentScope,
@@ -365,11 +347,8 @@ class ContainerEditor {
     Arg1 extends ServiceIdentifier<any>,
     Arg2 extends Type<Trait> | ServiceFactory<Trait> | Trait,
     Trait = ServiceIdentifierType<Arg1>,
-    Deps extends Arg2 extends Type<Trait>
-      ? TypesToDeps<ConstructorParameters<Arg2>>
-      : [] = Arg2 extends Type<Trait>
-      ? TypesToDeps<ConstructorParameters<Arg2>>
-      : [],
+    Deps extends Arg2 extends Type<Trait> ? TypesToDeps<ConstructorParameters<Arg2>> : [] =
+      Arg2 extends Type<Trait> ? TypesToDeps<ConstructorParameters<Arg2>> : [],
     Arg3 extends Deps = Deps,
   >(
     identifier: Arg1,
@@ -377,11 +356,10 @@ class ContainerEditor {
     ...[arg3]: Arg3 extends [] ? [] : [Arg3]
   ): this => {
     if (arg2 instanceof Function) {
-      this.container.addFactory<any>(
-        identifier,
-        dependenciesToFactory(arg2, arg3 as any[]),
-        { scope: this.currentScope, override: true }
-      );
+      this.container.addFactory<any>(identifier, dependenciesToFactory(arg2, arg3 as any[]), {
+        scope: this.currentScope,
+        override: true,
+      });
     } else {
       this.container.addValue(identifier, arg2 as any, {
         scope: this.currentScope,
@@ -414,10 +392,7 @@ class ContainerEditor {
 /**
  * Convert dependencies definition to a factory function.
  */
-function dependenciesToFactory(
-  cls: any,
-  deps: any[] = []
-): ServiceFactory<any> {
+function dependenciesToFactory(cls: any, deps: any[] = []): ServiceFactory<any> {
   return (provider: ServiceProvider) => {
     const args = [];
     for (const dep of deps) {

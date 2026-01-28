@@ -1,4 +1,5 @@
 import { getDocTitleByEditorHost } from '@ink/stone-fragment-doc-title';
+import { IS_MOBILE } from '@ink/stone-global/env';
 import type { RootBlockModel } from '@ink/stone-model';
 import {
   FeatureFlagService,
@@ -6,16 +7,12 @@ import {
   VirtualKeyboardProvider,
   type VirtualKeyboardProviderWithAction,
 } from '@ink/stone-shared/services';
-import { IS_MOBILE } from '@ink/stone-global/env';
 import { WidgetComponent, WidgetViewExtension } from '@ink/stone-std';
 import { effect, signal } from '@preact/signals-core';
 import { html, nothing } from 'lit';
 import { literal, unsafeStatic } from 'lit/static-html.js';
 
-import {
-  defaultKeyboardToolbarConfig,
-  KeyboardToolbarConfigExtension,
-} from './config.js';
+import { defaultKeyboardToolbarConfig, KeyboardToolbarConfigExtension } from './config.js';
 
 export const INK_KEYBOARD_TOOLBAR_WIDGET = 'ink-keyboard-toolbar-widget';
 
@@ -64,7 +61,7 @@ export class InkKeyboardToolbarWidget extends WidgetComponent<RootBlockModel> {
     this.disposables.add(
       effect(() => {
         this._show$.value = this.std.event.active$.value;
-      })
+      }),
     );
 
     const rootComponent = this.block?.rootComponent;
@@ -79,7 +76,7 @@ export class InkKeyboardToolbarWidget extends WidgetComponent<RootBlockModel> {
           if (!this._show$.value) {
             rootComponent.inputMode = this._initialInputMode;
           }
-        })
+        }),
       );
     }
 
@@ -98,9 +95,7 @@ export class InkKeyboardToolbarWidget extends WidgetComponent<RootBlockModel> {
     if (
       this.store.readonly ||
       !IS_MOBILE ||
-      !this.store
-        .get(FeatureFlagService)
-        .getFlag('enable_mobile_keyboard_toolbar')
+      !this.store.get(FeatureFlagService).getFlag('enable_mobile_keyboard_toolbar')
     )
       return nothing;
 
@@ -122,7 +117,7 @@ export class InkKeyboardToolbarWidget extends WidgetComponent<RootBlockModel> {
 export const keyboardToolbarWidget = WidgetViewExtension(
   'ink:page',
   INK_KEYBOARD_TOOLBAR_WIDGET,
-  literal`${unsafeStatic(INK_KEYBOARD_TOOLBAR_WIDGET)}`
+  literal`${unsafeStatic(INK_KEYBOARD_TOOLBAR_WIDGET)}`,
 );
 
 declare global {

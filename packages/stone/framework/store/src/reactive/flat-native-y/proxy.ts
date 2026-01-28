@@ -5,13 +5,7 @@ import { native2Y } from '../native-y';
 import type { UnRecord } from '../types';
 import { signalUpdater } from './signal-updater';
 import type { CreateProxyOptions } from './types';
-import {
-  bindOnChangeIfNeed,
-  getFirstKey,
-  isProxy,
-  keyWithPrefix,
-  markProxy,
-} from './utils';
+import { bindOnChangeIfNeed, getFirstKey, isProxy, keyWithPrefix, markProxy } from './utils';
 import { yMapUpdater } from './y-map-updater';
 
 export function createProxy(options: CreateProxyOptions): UnRecord {
@@ -47,12 +41,7 @@ function initializeProxy(options: CreateProxyOptions) {
   });
 }
 
-function updateSignal(
-  value: unknown,
-  prop: string,
-  receiver: any,
-  options: CreateProxyOptions
-) {
+function updateSignal(value: unknown, prop: string, receiver: any, options: CreateProxyOptions) {
   const {
     root,
     shouldByPassSignal,
@@ -83,7 +72,7 @@ function updateSignal(
 
       const signalData = signal(value);
       root[signalKey] = signalData;
-      const unsubscribe = signalData.subscribe(next => {
+      const unsubscribe = signalData.subscribe((next) => {
         if (!initialized()) {
           return;
         }
@@ -100,18 +89,8 @@ function updateSignal(
   });
 }
 
-function createProxyHandler(
-  options: CreateProxyOptions
-): ProxyHandler<UnRecord> {
-  const {
-    yMap,
-    shouldByPassYjs,
-    basePath,
-    onChange,
-    initialized,
-    transform,
-    stashed,
-  } = options;
+function createProxyHandler(options: CreateProxyOptions): ProxyHandler<UnRecord> {
+  const { yMap, shouldByPassYjs, basePath, onChange, initialized, transform, stashed } = options;
 
   return {
     has: (target, p) => {
@@ -163,7 +142,7 @@ function createProxyHandler(
             () => {
               yMap.set(keyWithPrefix(fullPath), yValue);
             },
-            { proxy: true }
+            { proxy: true },
           );
         }
 
@@ -189,7 +168,7 @@ function createProxyHandler(
                 }
               });
             },
-            { proxy: true }
+            { proxy: true },
           );
         }
 

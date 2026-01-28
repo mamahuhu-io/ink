@@ -1,24 +1,9 @@
-import {
-  LinkedDocIcon,
-  LinkedEdgelessIcon,
-  NewDocIcon,
-} from '@ink/stone-components/icons';
+import { LinkedDocIcon, LinkedEdgelessIcon, NewDocIcon } from '@ink/stone-components/icons';
 import { insertLinkedNode } from '@ink/stone-inline-reference';
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
 import type { InkInlineEditor } from '@ink/stone-shared/types';
-import {
-  createDefaultDoc,
-  isFuzzyMatch,
-  type Signal,
-} from '@ink/stone-shared/utils';
-import {
-  type BlockStdScope,
-  ConfigExtensionFactory,
-  type EditorHost,
-} from '@ink/stone-std';
+import { createDefaultDoc, isFuzzyMatch, type Signal } from '@ink/stone-shared/utils';
+import { type BlockStdScope, ConfigExtensionFactory, type EditorHost } from '@ink/stone-std';
 import type { InlineRange } from '@ink/stone-std/inline';
 import type { TemplateResult } from 'lit';
 
@@ -71,7 +56,7 @@ export function createLinkedDocMenuGroup(
   query: string,
   abort: () => void,
   editorHost: EditorHost,
-  inlineEditor: InkInlineEditor
+  inlineEditor: InkInlineEditor,
 ) {
   const doc = editorHost.store;
   const { docMetas } = doc.workspace.meta;
@@ -82,12 +67,11 @@ export function createLinkedDocMenuGroup(
 
   return {
     name: 'Link to Doc',
-    items: filteredDocList.map(doc => ({
+    items: filteredDocList.map((doc) => ({
       key: doc.id,
       name: doc.title || DEFAULT_DOC_NAME,
       icon:
-        editorHost.std.get(DocModeProvider).getPrimaryMode(doc.id) ===
-        'edgeless'
+        editorHost.std.get(DocModeProvider).getPrimaryMode(doc.id) === 'edgeless'
           ? LinkedEdgelessIcon
           : LinkedDocIcon,
       action: () => {
@@ -96,14 +80,12 @@ export function createLinkedDocMenuGroup(
           inlineEditor,
           docId: doc.id,
         });
-        editorHost.std
-          .getOptional(TelemetryProvider)
-          ?.track('LinkedDocCreated', {
-            control: 'linked doc',
-            module: 'inline @',
-            type: 'doc',
-            other: 'existing doc',
-          });
+        editorHost.std.getOptional(TelemetryProvider)?.track('LinkedDocCreated', {
+          control: 'linked doc',
+          module: 'inline @',
+          type: 'doc',
+          other: 'existing doc',
+        });
       },
     })),
     maxDisplay: MAX_DOCS,
@@ -115,13 +97,12 @@ export function createNewDocMenuGroup(
   query: string,
   abort: () => void,
   editorHost: EditorHost,
-  inlineEditor: InkInlineEditor
+  inlineEditor: InkInlineEditor,
 ): LinkedMenuGroup {
   const doc = editorHost.store;
   const docName = query || DEFAULT_DOC_NAME;
   const displayDocName =
-    docName.slice(0, DISPLAY_NAME_LENGTH) +
-    (docName.length > DISPLAY_NAME_LENGTH ? '..' : '');
+    docName.slice(0, DISPLAY_NAME_LENGTH) + (docName.length > DISPLAY_NAME_LENGTH ? '..' : '');
 
   const items: LinkedMenuItem[] = [
     {
@@ -164,7 +145,7 @@ export function getMenus(
   query: string,
   abort: () => void,
   editorHost: EditorHost,
-  inlineEditor: InkInlineEditor
+  inlineEditor: InkInlineEditor,
 ): Promise<LinkedMenuGroup[]> {
   return Promise.resolve([
     createLinkedDocMenuGroup(query, abort, editorHost, inlineEditor),
@@ -179,6 +160,5 @@ export const LinkedWidgetUtils = {
 
 export const INK_LINKED_DOC_WIDGET = 'ink-linked-doc-widget';
 
-export const LinkedWidgetConfigExtension = ConfigExtensionFactory<
-  Partial<LinkedWidgetConfig>
->('ink:widget-linked-doc');
+export const LinkedWidgetConfigExtension =
+  ConfigExtensionFactory<Partial<LinkedWidgetConfig>>('ink:widget-linked-doc');

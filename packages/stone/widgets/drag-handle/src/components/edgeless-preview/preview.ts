@@ -1,11 +1,5 @@
+import { EmbedIcon, FrameIcon, ImageIcon, PageIcon, ShapeIcon } from '@ink/stone-icons/lit';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import {
-  EmbedIcon,
-  FrameIcon,
-  ImageIcon,
-  PageIcon,
-  ShapeIcon,
-} from '@ink/stone-icons/lit';
 import { css, html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -67,10 +61,7 @@ export class EdgelessDndPreviewElement extends LitElement {
       box-sizing: border-box;
 
       border-radius: 8px;
-      background-color: ${unsafeCSSVarV2(
-        'layer/background/overlayPanel',
-        '#FBFBFC'
-      )};
+      background-color: ${unsafeCSSVarV2('layer/background/overlayPanel', '#FBFBFC')};
 
       padding: 8px 20px;
       gap: 8px;

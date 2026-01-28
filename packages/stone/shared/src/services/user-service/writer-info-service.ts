@@ -7,13 +7,9 @@ export interface WriterInfoService {
   getWriterInfo(): InkUserInfo | null;
 }
 
-export const WriterInfoProvider = createIdentifier<WriterInfoService>(
-  'ink-writer-info-service'
-);
+export const WriterInfoProvider = createIdentifier<WriterInfoService>('ink-writer-info-service');
 
-export function WriterInfoServiceExtension(
-  service: WriterInfoService
-): ExtensionType {
+export function WriterInfoServiceExtension(service: WriterInfoService): ExtensionType {
   return {
     setup(di) {
       di.addImpl(WriterInfoProvider, () => service);

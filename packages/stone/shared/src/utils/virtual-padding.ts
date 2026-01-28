@@ -1,5 +1,5 @@
-import type { BlockComponent } from '@ink/stone-std';
 import { autoUpdate } from '@floating-ui/dom';
+import type { BlockComponent } from '@ink/stone-std';
 import { signal } from '@preact/signals-core';
 import type { ReactiveController } from 'lit';
 
@@ -26,10 +26,9 @@ export class VirtualPaddingController implements ReactiveController {
     this.block.disposables.add(
       autoUpdate(this.host, this.block, () => {
         const padding =
-          this.block.getBoundingClientRect().left -
-          this.host.getBoundingClientRect().left;
+          this.block.getBoundingClientRect().left - this.host.getBoundingClientRect().left;
         this.virtualPadding$.value = Math.max(0, padding - 72);
-      })
+      }),
     );
   }
 }

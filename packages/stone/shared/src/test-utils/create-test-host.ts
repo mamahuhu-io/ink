@@ -39,7 +39,7 @@ class MockSelectionStore {
   }
 
   setGroup(group: string, selections: any[]) {
-    this._selections = this._selections.filter(s => s.group !== group);
+    this._selections = this._selections.filter((s) => s.group !== group);
     this._selections.push(...selections);
     return this;
   }
@@ -50,11 +50,11 @@ class MockSelectionStore {
   }
 
   find(type: any) {
-    return this._selections.find(s => s instanceof type);
+    return this._selections.find((s) => s instanceof type);
   }
 
   filter(type: any) {
-    return this._selections.filter(s => s instanceof type);
+    return this._selections.filter((s) => s instanceof type);
   }
 
   clear() {
@@ -162,9 +162,7 @@ class MockViewStore {
       if (parentComponent) {
         component.parentElement = parentComponent;
 
-        if (
-          !parentComponent.children.find(child => child.id === component.id)
-        ) {
+        if (!parentComponent.children.find((child) => child.id === component.id)) {
           parentComponent.children.push(component);
         }
       }
@@ -173,18 +171,15 @@ class MockViewStore {
     try {
       const childIds =
         (component.model as any).children?.map((child: any) =>
-          typeof child === 'string' ? child : child.id
+          typeof child === 'string' ? child : child.id,
         ) || [];
 
       for (const childId of childIds) {
         const childBlock = this.doc.getBlock(childId);
         if (childBlock) {
           const childComponent =
-            this.getBlock(childId) ||
-            this._createMockBlockComponent(childBlock);
-          if (
-            !component.children.find(child => child.id === childComponent.id)
-          ) {
+            this.getBlock(childId) || this._createMockBlockComponent(childBlock);
+          if (!component.children.find((child) => child.id === childComponent.id)) {
             component.children.push(childComponent);
             childComponent.parentElement = component;
           }

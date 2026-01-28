@@ -1,7 +1,24 @@
-import * as React from "react";
-import type { SVGProps } from "react";
-const MicPanelIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
-  userSelect: "none",
-  flexShrink: 0
-}} {...props}><path fill="currentColor" fillRule="evenodd" d="M12.25 2a3.26 3.26 0 0 0-3.26 3.26v5.76a3.26 3.26 0 0 0 6.52 0V5.26c0-1.8-1.46-3.26-3.26-3.26M7.63 9.934a.815.815 0 1 0-1.63 0v1.087a6.25 6.25 0 0 0 5.435 6.197v2.77h-1.359a.815.815 0 1 0 0 1.63h4.348a.815.815 0 0 0 0-1.63h-1.359v-2.77a6.25 6.25 0 0 0 5.435-6.197V9.934a.815.815 0 0 0-1.63 0v1.087a4.62 4.62 0 0 1-9.24 0z" clipRule="evenodd" /></svg>;
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const MicPanelIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M12.25 2a3.26 3.26 0 0 0-3.26 3.26v5.76a3.26 3.26 0 0 0 6.52 0V5.26c0-1.8-1.46-3.26-3.26-3.26M7.63 9.934a.815.815 0 1 0-1.63 0v1.087a6.25 6.25 0 0 0 5.435 6.197v2.77h-1.359a.815.815 0 1 0 0 1.63h4.348a.815.815 0 0 0 0-1.63h-1.359v-2.77a6.25 6.25 0 0 0 5.435-6.197V9.934a.815.815 0 0 0-1.63 0v1.087a4.62 4.62 0 0 1-9.24 0z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
 export default MicPanelIcon;

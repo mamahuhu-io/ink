@@ -23,11 +23,7 @@ export class Schema {
    * @param childFlavours - The child block flavours (optional).
    * @returns True if the schema relationship is valid, false otherwise.
    */
-  safeValidate = (
-    flavour: string,
-    parentFlavour?: string,
-    childFlavours?: string[]
-  ): boolean => {
+  safeValidate = (flavour: string, parentFlavour?: string, childFlavours?: string[]): boolean => {
     try {
       this.validate(flavour, parentFlavour, childFlavours);
       return true;
@@ -55,18 +51,14 @@ export class Schema {
    * @param childFlavours - The child block flavours (optional).
    * @throws {SchemaValidateError} If the schema relationship is invalid.
    */
-  validate = (
-    flavour: string,
-    parentFlavour?: string,
-    childFlavours?: string[]
-  ): void => {
+  validate = (flavour: string, parentFlavour?: string, childFlavours?: string[]): void => {
     const schema = this.flavourSchemaMap.get(flavour);
     if (!schema) {
       throw new SchemaValidateError(flavour, SCHEMA_NOT_FOUND_MESSAGE);
     }
 
     const validateChildren = () => {
-      childFlavours?.forEach(childFlavour => {
+      childFlavours?.forEach((childFlavour) => {
         const childSchema = this.flavourSchemaMap.get(childFlavour);
         if (!childSchema) {
           throw new SchemaValidateError(childFlavour, SCHEMA_NOT_FOUND_MESSAGE);
@@ -77,10 +69,7 @@ export class Schema {
 
     if (schema.model.role === 'root') {
       if (parentFlavour) {
-        throw new SchemaValidateError(
-          schema.model.flavour,
-          'Root block cannot have parent.'
-        );
+        throw new SchemaValidateError(schema.model.flavour, 'Root block cannot have parent.');
       }
 
       validateChildren();
@@ -88,10 +77,7 @@ export class Schema {
     }
 
     if (!parentFlavour) {
-      throw new SchemaValidateError(
-        schema.model.flavour,
-        'None root block must have parent.'
-      );
+      throw new SchemaValidateError(schema.model.flavour, 'None root block must have parent.');
     }
 
     const parentSchema = this.flavourSchemaMap.get(parentFlavour);
@@ -107,9 +93,10 @@ export class Schema {
    */
   get versions() {
     return Object.fromEntries(
-      Array.from(this.flavourSchemaMap.values()).map(
-        (schema): [string, number] => [schema.model.flavour, schema.version]
-      )
+      Array.from(this.flavourSchemaMap.values()).map((schema): [string, number] => [
+        schema.model.flavour,
+        schema.version,
+      ]),
     );
   }
 
@@ -121,10 +108,7 @@ export class Schema {
    * @returns True if the flavours match, false otherwise.
    */
   private _matchFlavour(childFlavour: string, parentFlavour: string) {
-    return (
-      minimatch(childFlavour, parentFlavour) ||
-      minimatch(parentFlavour, childFlavour)
-    );
+    return minimatch(childFlavour, parentFlavour) || minimatch(parentFlavour, childFlavour);
   }
 
   /**
@@ -140,7 +124,7 @@ export class Schema {
     childValue: string,
     parentValue: string,
     childRole: string,
-    parentRole: string
+    parentRole: string,
   ): boolean {
     // Check if either value starts with '@' indicating it's a role
     const isChildRole = childValue.startsWith('@');
@@ -169,10 +153,7 @@ export class Schema {
    * @param parent - The parent block schema.
    * @returns True if the parent is valid for the child, false otherwise.
    */
-  private _validateParent(
-    child: BlockSchemaType,
-    parent: BlockSchemaType
-  ): boolean {
+  private _validateParent(child: BlockSchemaType, parent: BlockSchemaType): boolean {
     const _childFlavour = child.model.flavour;
     const _parentFlavour = parent.model.flavour;
     const _childRole = child.model.role;
@@ -181,12 +162,9 @@ export class Schema {
     const childValidFlavourOrRole = child.model.parent || ['*'];
     const parentValidFlavourOrRole = parent.model.children || ['*'];
 
-    return parentValidFlavourOrRole.some(parentValidFlavourOrRole => {
-      return childValidFlavourOrRole.some(childValidFlavourOrRole => {
-        if (
-          parentValidFlavourOrRole === '*' &&
-          childValidFlavourOrRole === '*'
-        ) {
+    return parentValidFlavourOrRole.some((parentValidFlavourOrRole) => {
+      return childValidFlavourOrRole.some((childValidFlavourOrRole) => {
+        if (parentValidFlavourOrRole === '*' && childValidFlavourOrRole === '*') {
           return true;
         }
 
@@ -195,7 +173,7 @@ export class Schema {
             childValidFlavourOrRole,
             _parentFlavour,
             _childRole,
-            _parentRole
+            _parentRole,
           );
         }
 
@@ -204,7 +182,7 @@ export class Schema {
             _childFlavour,
             parentValidFlavourOrRole,
             _childRole,
-            _parentRole
+            _parentRole,
           );
         }
 
@@ -213,14 +191,9 @@ export class Schema {
             _childFlavour,
             parentValidFlavourOrRole,
             _childRole,
-            _parentRole
+            _parentRole,
           ) &&
-          this._matchFlavourOrRole(
-            childValidFlavourOrRole,
-            _parentFlavour,
-            _childRole,
-            _parentRole
-          )
+          this._matchFlavourOrRole(childValidFlavourOrRole, _parentFlavour, _childRole, _parentRole)
         );
       });
     });
@@ -242,7 +215,7 @@ export class Schema {
     if (childRole === 'root') {
       throw new SchemaValidateError(
         childFlavour,
-        `Root block cannot have parent: ${parentFlavour}.`
+        `Root block cannot have parent: ${parentFlavour}.`,
       );
     }
   }
@@ -275,7 +248,7 @@ export class Schema {
    * @returns The Schema instance (for chaining).
    */
   register(blockSchema: BlockSchemaType[]) {
-    blockSchema.forEach(schema => {
+    blockSchema.forEach((schema) => {
       BlockSchema.parse(schema);
       this.flavourSchemaMap.set(schema.model.flavour, schema);
     });
@@ -297,8 +270,8 @@ export class Schema {
             parent: schema.model.parent,
             children: schema.model.children,
           },
-        ]
-      )
+        ],
+      ),
     );
   }
 
@@ -318,7 +291,7 @@ export class Schema {
     if (!relationCheckSuccess) {
       throw new SchemaValidateError(
         child.model.flavour,
-        `Block cannot have parent: ${parent.model.flavour}.`
+        `Block cannot have parent: ${parent.model.flavour}.`,
       );
     }
   }

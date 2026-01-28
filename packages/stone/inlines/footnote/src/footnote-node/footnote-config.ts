@@ -1,23 +1,20 @@
-import type { FootNote } from '@ink/stone-model';
 import { createIdentifier } from '@ink/stone-global/di';
+import type { FootNote } from '@ink/stone-model';
 import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 import type { TemplateResult } from 'lit';
 
-type FootNoteNodeRenderer = (
-  footnote: FootNote,
-  std: BlockStdScope
-) => TemplateResult<1>;
+type FootNoteNodeRenderer = (footnote: FootNote, std: BlockStdScope) => TemplateResult<1>;
 
 type FootNotePopupRenderer = (
   footnote: FootNote,
   std: BlockStdScope,
-  abortController: AbortController
+  abortController: AbortController,
 ) => TemplateResult<1>;
 
 export type FootNotePopupClickHandler = (
   footnote: FootNote,
-  abortController: AbortController
+  abortController: AbortController,
 ) => void;
 
 export interface FootNoteNodeConfig {
@@ -67,7 +64,7 @@ export class FootNoteNodeConfigProvider {
 
   constructor(
     config: FootNoteNodeConfig,
-    readonly std: BlockStdScope
+    readonly std: BlockStdScope,
   ) {
     this._customNodeRenderer = config.customNodeRenderer;
     this._customPopupRenderer = config.customPopupRenderer;
@@ -105,15 +102,12 @@ export class FootNoteNodeConfigProvider {
 export const FootNoteNodeConfigIdentifier =
   createIdentifier<FootNoteNodeConfigProvider>('InkFootNoteNodeConfig');
 
-export function FootNoteNodeConfigExtension(
-  config: FootNoteNodeConfig
-): ExtensionType {
+export function FootNoteNodeConfigExtension(config: FootNoteNodeConfig): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(
         FootNoteNodeConfigIdentifier,
-        provider =>
-          new FootNoteNodeConfigProvider(config, provider.get(StdIdentifier))
+        (provider) => new FootNoteNodeConfigProvider(config, provider.get(StdIdentifier)),
       );
     },
   };

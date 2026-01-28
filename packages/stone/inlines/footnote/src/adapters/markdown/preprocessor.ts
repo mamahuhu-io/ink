@@ -29,26 +29,24 @@ function isUrl(str: string): boolean {
  * ```
  */
 export function preprocessFootnoteReference(content: string) {
-  return content.replace(
-    /([^\s]+?)(\[\^[^\]]+\])(?!:)/g,
-    (match, prevText, footnoteRef) => {
-      // Only add space if the previous text is a URL
-      if (isUrl(prevText)) {
-        return prevText + ' ' + footnoteRef;
-      }
-      // Otherwise return the original match
-      return match;
+  return content.replace(/([^\s]+?)(\[\^[^\]]+\])(?!:)/g, (match, prevText, footnoteRef) => {
+    // Only add space if the previous text is a URL
+    if (isUrl(prevText)) {
+      return prevText + ' ' + footnoteRef;
     }
-  );
+    // Otherwise return the original match
+    return match;
+  });
 }
 
 const footnoteReferencePreprocessor: MarkdownAdapterPreprocessor = {
   name: 'footnote-reference',
   levels: ['block', 'slice', 'doc'],
-  preprocess: content => {
+  preprocess: (content) => {
     return preprocessFootnoteReference(content);
   },
 };
 
-export const FootnoteReferenceMarkdownPreprocessorExtension =
-  MarkdownPreprocessorExtension(footnoteReferencePreprocessor);
+export const FootnoteReferenceMarkdownPreprocessorExtension = MarkdownPreprocessorExtension(
+  footnoteReferencePreprocessor,
+);

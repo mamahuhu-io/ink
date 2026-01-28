@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { NoopLogger } from '@ink/stone-global/utils';
 import {
   AwarenessEngine,
@@ -14,12 +14,7 @@ import { Subject } from 'rxjs';
 import { Awareness } from 'y-protocols/awareness.js';
 import * as Y from 'yjs';
 
-import type {
-  Doc,
-  ExtensionType,
-  Workspace,
-  WorkspaceMeta,
-} from '../extension/index.js';
+import type { Doc, ExtensionType, Workspace, WorkspaceMeta } from '../extension/index.js';
 import { type IdGenerator, nanoid } from '../utils/id-generator.js';
 import { AwarenessStore } from '../yjs/index.js';
 import { TestDoc } from './test-doc.js';
@@ -90,21 +85,9 @@ export class TestWorkspace implements Workspace {
 
     const logger = new NoopLogger();
 
-    this.awarenessSync = new AwarenessEngine(
-      this.awarenessStore.awareness,
-      awarenessSources
-    );
-    this.docSync = new DocEngine(
-      this.doc,
-      docSources.main,
-      docSources.shadows ?? [],
-      logger
-    );
-    this.blobSync = new BlobEngine(
-      blobSources.main,
-      blobSources.shadows ?? [],
-      logger
-    );
+    this.awarenessSync = new AwarenessEngine(this.awarenessStore.awareness, awarenessSources);
+    this.docSync = new DocEngine(this.doc, docSources.main, docSources.shadows ?? [], logger);
+    this.blobSync = new BlobEngine(blobSources.main, blobSources.shadows ?? [], logger);
 
     this.idGenerator = idGenerator ?? nanoid;
 
@@ -113,7 +96,7 @@ export class TestWorkspace implements Workspace {
   }
 
   private _bindDocMetaEvents() {
-    this.meta.docMetaAdded.subscribe(docId => {
+    this.meta.docMetaAdded.subscribe((docId) => {
       const doc = new TestDoc({
         id: docId,
         collection: this,
@@ -125,7 +108,7 @@ export class TestWorkspace implements Workspace {
 
     this.meta.docMetaUpdated.subscribe(() => this.slots.docListUpdated.next());
 
-    this.meta.docMetaRemoved.subscribe(id => {
+    this.meta.docMetaRemoved.subscribe((id) => {
       const space = this.getBlockCollection(id);
       if (!space) return;
       this.blockCollections.delete(id);
@@ -153,10 +136,7 @@ export class TestWorkspace implements Workspace {
   createDoc(docId?: string): Doc {
     const id = docId ?? this.idGenerator();
     if (this._hasDoc(id)) {
-      throw new InkStoneError(
-        ErrorCode.DocCollectionError,
-        'doc already exists'
-      );
+      throw new InkStoneError(ErrorCode.DocCollectionError, 'doc already exists');
     }
 
     this.meta.addDocMeta({
@@ -195,10 +175,7 @@ export class TestWorkspace implements Workspace {
   removeDoc(docId: string) {
     const docMeta = this.meta.getDocMeta(docId);
     if (!docMeta) {
-      throw new InkStoneError(
-        ErrorCode.DocCollectionError,
-        `doc meta not found: ${docId}`
-      );
+      throw new InkStoneError(ErrorCode.DocCollectionError, `doc meta not found: ${docId}`);
     }
 
     const blockCollection = this.getBlockCollection(docId);

@@ -12,11 +12,7 @@ type InitializeDataOptions = Pick<CreateProxyOptions, 'transform' | 'yMap'> & {
 };
 
 // Create default data object from yjs map
-export const initializeData = ({
-  getProxy,
-  transform,
-  yMap,
-}: InitializeDataOptions): UnRecord => {
+export const initializeData = ({ getProxy, transform, yMap }: InitializeDataOptions): UnRecord => {
   const root: UnRecord = {};
   Array.from(yMap.entries()).forEach(([key, value]) => {
     if (key.startsWith('sys')) {
@@ -36,7 +32,7 @@ export const initializeData = ({
     } else if (value instanceof YMap) {
       throw new InkStoneError(
         InkStoneError.ErrorCode.ReactiveProxyError,
-        'flatY2Native does not support Y.Map as value of Y.Map'
+        'flatY2Native does not support Y.Map as value of Y.Map',
       );
     } else {
       finalData = transform(firstKey, value, value);

@@ -1,9 +1,4 @@
-import type {
-  Doc,
-  ExtensionType,
-  GetStoreOptions,
-  RemoveStoreOptions,
-} from '../extension';
+import type { Doc, ExtensionType, GetStoreOptions, RemoveStoreOptions } from '../extension';
 import { DocIdentifier } from '../extension/workspace';
 import { type Query, Store } from './store';
 
@@ -12,13 +7,7 @@ export class StoreContainer {
 
   constructor(readonly doc: Doc) {}
 
-  getStore = ({
-    readonly,
-    query,
-    provider,
-    extensions,
-    id,
-  }: GetStoreOptions = {}) => {
+  getStore = ({ readonly, query, provider, extensions, id }: GetStoreOptions = {}) => {
     let idOrOptions: string | { readonly?: boolean; query?: Query };
     if (readonly || query) {
       idOrOptions = { readonly, query };
@@ -34,7 +23,7 @@ export class StoreContainer {
     }
 
     const storeExtension: ExtensionType = {
-      setup: di => {
+      setup: (di) => {
         di.addImpl(DocIdentifier, () => this.doc);
       },
     };
@@ -65,9 +54,7 @@ export class StoreContainer {
     this._storeMap.delete(key);
   };
 
-  private readonly _getQueryKey = (
-    idOrOptions: string | { readonly?: boolean; query?: Query }
-  ) => {
+  private readonly _getQueryKey = (idOrOptions: string | { readonly?: boolean; query?: Query }) => {
     if (typeof idOrOptions === 'string') {
       return idOrOptions;
     }

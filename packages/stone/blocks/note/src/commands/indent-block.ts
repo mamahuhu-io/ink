@@ -1,8 +1,5 @@
 import { ListBlockModel, ParagraphBlockModel } from '@ink/stone-model';
-import {
-  calculateCollapsedSiblings,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { calculateCollapsedSiblings, matchModels } from '@ink/stone-shared/utils';
 import type { Command } from '@ink/stone-std';
 
 /**
@@ -61,10 +58,7 @@ export const indentBlock: Command<{
   }
 
   // update collapsed state of ink list
-  if (
-    matchModels(previousSibling, [ListBlockModel]) &&
-    previousSibling.props.collapsed
-  ) {
+  if (matchModels(previousSibling, [ListBlockModel]) && previousSibling.props.collapsed) {
     store.updateBlock(previousSibling, {
       collapsed: false,
     });

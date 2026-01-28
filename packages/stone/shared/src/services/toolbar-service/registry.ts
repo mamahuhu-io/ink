@@ -9,15 +9,16 @@ import { Flags } from './flags';
 import type { ToolbarModule } from './module';
 
 export const ToolbarModuleIdentifier = createIdentifier<ToolbarModule>(
-  'InkToolbarModuleIdentifier'
+  'InkToolbarModuleIdentifier',
 );
 
-export const ToolbarRegistryIdentifier =
-  createIdentifier<ToolbarRegistryExtension>('InkToolbarRegistryIdentifier');
+export const ToolbarRegistryIdentifier = createIdentifier<ToolbarRegistryExtension>(
+  'InkToolbarRegistryIdentifier',
+);
 
 export function ToolbarModuleExtension(module: ToolbarModule): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(ToolbarModuleIdentifier(module.id.variant), module);
     },
   };

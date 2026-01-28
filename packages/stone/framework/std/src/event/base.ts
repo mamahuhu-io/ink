@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 
 type MatchEvent<T extends string> = T extends UIEventStateType
   ? InkStoneUIEventState[T]
@@ -23,14 +23,12 @@ export class UIEventStateContext {
     this._map[name] = state;
   };
 
-  get = <Type extends UIEventStateType = UIEventStateType>(
-    type: Type
-  ): MatchEvent<Type> => {
+  get = <Type extends UIEventStateType = UIEventStateType>(type: Type): MatchEvent<Type> => {
     const state = this._map[type];
     if (!state) {
       throw new InkStoneError(
         ErrorCode.EventDispatcherError,
-        `UIEventStateContext: state ${type} not found`
+        `UIEventStateContext: state ${type} not found`,
       );
     }
     return state as MatchEvent<Type>;
@@ -42,16 +40,14 @@ export class UIEventStateContext {
 
   static from(...states: UIEventState[]) {
     const context = new UIEventStateContext();
-    states.forEach(state => {
+    states.forEach((state) => {
       context.add(state);
     });
     return context;
   }
 }
 
-export type UIEventHandler = (
-  context: UIEventStateContext
-) => boolean | null | undefined | void;
+export type UIEventHandler = (context: UIEventStateContext) => boolean | null | undefined | void;
 
 declare global {
   interface InkStoneUIEventState {

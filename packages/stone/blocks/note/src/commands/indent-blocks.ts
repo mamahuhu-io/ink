@@ -21,14 +21,14 @@ export const indentBlocks: Command<{
     const nativeRange = range.value;
     if (nativeRange) {
       const topBlocks = range.getSelectedBlockComponentsByRange(nativeRange, {
-        match: el => el.model.role === 'content',
+        match: (el) => el.model.role === 'content',
         mode: 'highest',
       });
       if (topBlocks.length > 0) {
-        blockIds = topBlocks.map(block => block.blockId);
+        blockIds = topBlocks.map((block) => block.blockId);
       }
     } else {
-      blockIds = std.selection.getGroup('note').map(sel => sel.blockId);
+      blockIds = std.selection.getGroup('note').map((sel) => sel.blockId);
     }
   }
 
@@ -39,11 +39,7 @@ export const indentBlocks: Command<{
   for (let i = 0; i < blockIds.length; i++) {
     const previousSibling = store.getPrev(blockIds[i]);
     const model = store.getBlock(blockIds[i])?.model;
-    if (
-      model &&
-      previousSibling &&
-      schema.isValid(model.flavour, previousSibling.flavour)
-    ) {
+    if (model && previousSibling && schema.isValid(model.flavour, previousSibling.flavour)) {
       firstIndentIndex = i;
       break;
     }
@@ -55,7 +51,7 @@ export const indentBlocks: Command<{
   if (stopCapture) store.captureSync();
 
   const collapsedIds: string[] = [];
-  blockIds.slice(firstIndentIndex).forEach(id => {
+  blockIds.slice(firstIndentIndex).forEach((id) => {
     const model = store.getBlock(id)?.model;
     if (!model) return;
     if (
@@ -64,13 +60,11 @@ export const indentBlocks: Command<{
       model.props.collapsed
     ) {
       const collapsedSiblings = calculateCollapsedSiblings(model);
-      collapsedIds.push(...collapsedSiblings.map(sibling => sibling.id));
+      collapsedIds.push(...collapsedSiblings.map((sibling) => sibling.id));
     }
   });
   // Models waiting to be indented
-  const indentIds = blockIds
-    .slice(firstIndentIndex)
-    .filter(id => !collapsedIds.includes(id));
+  const indentIds = blockIds.slice(firstIndentIndex).filter((id) => !collapsedIds.includes(id));
   const firstModel = store.getBlock(indentIds[0])?.model;
   if (!firstModel) return;
 
@@ -91,7 +85,7 @@ export const indentBlocks: Command<{
     }
   }
 
-  indentIds.forEach(id => {
+  indentIds.forEach((id) => {
     std.command.exec(indentBlock, { blockId: id, stopCapture: false });
   });
 

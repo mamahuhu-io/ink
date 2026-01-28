@@ -18,36 +18,26 @@ export const duplicateSelectedModelsCommand: Command<{
   let { parentModel, index } = ctx;
   if (!selectedModels) return;
 
-  const [_, { draftedModels }] = ctx.std.command.exec(
-    draftSelectedModelsCommand,
-    { selectedModels }
-  );
+  const [_, { draftedModels }] = ctx.std.command.exec(draftSelectedModelsCommand, {
+    selectedModels,
+  });
   if (!draftedModels) return;
 
   if (parentModel) {
-    if (
-      index === undefined ||
-      index < 0 ||
-      index >= parentModel.children.length
-    ) {
+    if (index === undefined || index < 0 || index >= parentModel.children.length) {
       index = parentModel.children.length;
     }
   } else {
     const model = selectedModels[selectedModels.length - 1];
     parentModel = std.store.getParent(model.id) ?? undefined;
     if (!parentModel) return;
-    index = parentModel.children.findIndex(x => x.id === model.id) + 1;
+    index = parentModel.children.findIndex((x) => x.id === model.id) + 1;
   }
 
   draftedModels
-    .then(models => {
+    .then((models) => {
       const slice = Slice.fromModels(std.store, models);
-      return std.clipboard.duplicateSlice(
-        slice,
-        std.store,
-        parentModel.id,
-        index
-      );
+      return std.clipboard.duplicateSlice(slice, std.store, parentModel.id, index);
     })
     .catch(console.error);
 

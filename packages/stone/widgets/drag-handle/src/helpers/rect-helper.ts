@@ -1,22 +1,14 @@
-import { getCurrentNativeRange } from '@ink/stone-shared/utils';
 import { Rect } from '@ink/stone-global/gfx';
+import { getCurrentNativeRange } from '@ink/stone-shared/utils';
 import type { BlockComponent } from '@ink/stone-std';
 
-import {
-  DRAG_HANDLE_CONTAINER_WIDTH,
-  DRAG_HOVER_RECT_PADDING,
-} from '../config.js';
+import { DRAG_HANDLE_CONTAINER_WIDTH, DRAG_HOVER_RECT_PADDING } from '../config.js';
 import type { InkDragHandleWidget } from '../drag-handle.js';
-import {
-  containBlock,
-  getDragHandleLeftPadding,
-  includeTextSelection,
-} from '../utils.js';
+import { containBlock, getDragHandleLeftPadding, includeTextSelection } from '../utils.js';
 
 export class RectHelper {
   private readonly _getHoveredBlocks = (): BlockComponent[] => {
-    if (!this.widget.isBlockDragHandleVisible || !this.widget.anchorBlockId)
-      return [];
+    if (!this.widget.isBlockDragHandleVisible || !this.widget.anchorBlockId) return [];
 
     const hoverBlock = this.widget.anchorBlockComponent.peek();
     if (!hoverBlock) return [];
@@ -31,7 +23,7 @@ export class RectHelper {
       const rangeManager = this.widget.std.range;
       if (!rangeManager) return [];
       blocks = rangeManager.getSelectedBlockComponentsByRange(range, {
-        match: el => el.model.role === 'content',
+        match: (el) => el.model.role === 'content',
         mode: 'highest',
       });
     } else {
@@ -40,8 +32,8 @@ export class RectHelper {
 
     if (
       containBlock(
-        blocks.map(block => block.blockId),
-        this.widget.anchorBlockId.peek()!
+        blocks.map((block) => block.blockId),
+        this.widget.anchorBlockId.peek()!,
       )
     ) {
       return blocks;
@@ -63,7 +55,7 @@ export class RectHelper {
 
     const blocks = this._getHoveredBlocks();
 
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       left = Math.min(left, block.getBoundingClientRect().left);
       top = Math.min(top, block.getBoundingClientRect().top);
       right = Math.max(right, block.getBoundingClientRect().right);
@@ -72,8 +64,7 @@ export class RectHelper {
 
     const offsetLeft = getDragHandleLeftPadding(blocks);
 
-    const offsetParentRect =
-      this.widget.dragHandleContainerOffsetParent.getBoundingClientRect();
+    const offsetParentRect = this.widget.dragHandleContainerOffsetParent.getBoundingClientRect();
     if (!offsetParentRect) return null;
 
     left -= offsetParentRect.left;

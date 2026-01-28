@@ -1,18 +1,20 @@
-import { useEffect, useRef, useCallback } from 'react'
-import { Search, ChevronUp, ChevronDown, X, Replace } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { useFindReplaceStore } from '../../stores/findReplace'
-import { formatShortcutHint } from '../../utils/shortcuts'
-import './FindReplaceBar.css'
+import './FindReplaceBar.css';
+
+import { ChevronDown, ChevronUp, Replace, Search, X } from 'lucide-react';
+import { useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useFindReplaceStore } from '../../stores/findReplace';
+import { formatShortcutHint } from '../../utils/shortcuts';
 
 interface FindReplaceBarProps {
-  docId: string
+  docId: string;
 }
 
 export function FindReplaceBar({ docId }: FindReplaceBarProps) {
-  const { t } = useTranslation()
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const replaceInputRef = useRef<HTMLInputElement>(null)
+  const { t } = useTranslation();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const {
     isOpen,
@@ -33,70 +35,70 @@ export function FindReplaceBar({ docId }: FindReplaceBarProps) {
     replaceCurrent,
     replaceAll,
     close,
-  } = useFindReplaceStore()
+  } = useFindReplaceStore();
 
   // Focus search input when opened
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
-      searchInputRef.current.focus()
-      searchInputRef.current.select()
+      searchInputRef.current.focus();
+      searchInputRef.current.select();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // Re-search when options change
   useEffect(() => {
     if (isOpen && searchQuery) {
-      findAll(docId)
+      findAll(docId);
     }
-  }, [caseSensitive, useRegex, docId, isOpen])
+  }, [caseSensitive, useRegex, docId, isOpen, findAll, searchQuery]);
 
   // Handle search input change with debounce
   const handleSearchChange = useCallback(
     (value: string) => {
-      setSearchQuery(value)
+      setSearchQuery(value);
       // Trigger search after a short delay
       setTimeout(() => {
         if (value.trim()) {
-          findAll(docId)
+          findAll(docId);
         }
-      }, 150)
+      }, 150);
     },
-    [setSearchQuery, findAll, docId]
-  )
+    [setSearchQuery, findAll, docId],
+  );
 
   // Prevent events from bubbling to editor
   const stopPropagation = useCallback((e: React.KeyboardEvent | React.MouseEvent) => {
-    e.stopPropagation()
-  }, [])
+    e.stopPropagation();
+  }, []);
 
   // Handle keyboard shortcuts
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
-        close()
+        close();
       } else if (e.key === 'Enter') {
-        e.preventDefault()
+        e.preventDefault();
         if (e.shiftKey) {
-          goToPrev(docId)
+          goToPrev(docId);
         } else {
-          goToNext(docId)
+          goToNext(docId);
         }
       } else if (e.key === 'F3') {
-        e.preventDefault()
+        e.preventDefault();
         if (e.shiftKey) {
-          goToPrev(docId)
+          goToPrev(docId);
         } else {
-          goToNext(docId)
+          goToNext(docId);
         }
       }
     },
-    [close, goToNext, goToPrev, docId]
-  )
+    [close, goToNext, goToPrev, docId],
+  );
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
-    <div className="find-replace-bar" onKeyDown={handleKeyDown} onMouseDown={stopPropagation}>
+    <div className="find-replace-bar" onKeyDown={handleKeyDown} role="presentation">
       <div className="find-row">
         <div className="find-input-wrapper">
           <Search className="find-icon" size={14} />
@@ -129,15 +131,11 @@ export function FindReplaceBar({ docId }: FindReplaceBarProps) {
         </button>
 
         <span className="match-count">
-          {searchQuery ? (
-            matches.length > 0 ? (
-              t('findReplace.count', { current: currentMatchIndex + 1, total: matches.length })
-            ) : (
-              t('findReplace.noResults')
-            )
-          ) : (
-            ''
-          )}
+          {searchQuery
+            ? matches.length > 0
+              ? t('findReplace.count', { current: currentMatchIndex + 1, total: matches.length })
+              : t('findReplace.noResults')
+            : ''}
         </span>
 
         <div className="find-nav-buttons">
@@ -200,5 +198,5 @@ export function FindReplaceBar({ docId }: FindReplaceBarProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

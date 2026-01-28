@@ -7,7 +7,7 @@ import type { Native2Y, TransformOptions } from './types.js';
 
 export function native2Y<T>(
   value: T,
-  { deep = true, transform = x => x }: TransformOptions = {}
+  { deep = true, transform = (x) => x }: TransformOptions = {},
 ): Native2Y<T> {
   if (value instanceof Boxed) {
     return transform(value.yMap, value) as Native2Y<T>;
@@ -20,7 +20,7 @@ export function native2Y<T>(
   }
   if (Array.isArray(value)) {
     const yArray: YArray<unknown> = new YArray<unknown>();
-    const result = value.map(item => {
+    const result = value.map((item) => {
       return deep ? native2Y(item, { deep, transform }) : item;
     });
     yArray.insert(0, result);
@@ -41,7 +41,7 @@ export function native2Y<T>(
 
 export function y2Native(
   yAbstract: unknown,
-  { deep = true, transform = x => x }: TransformOptions = {}
+  { deep = true, transform = (x) => x }: TransformOptions = {},
 ) {
   if (Boxed.is(yAbstract)) {
     const data = new Boxed(yAbstract);
@@ -54,18 +54,15 @@ export function y2Native(
   if (yAbstract instanceof YArray) {
     const data: unknown[] = yAbstract
       .toArray()
-      .map(item => (deep ? y2Native(item, { deep, transform }) : item));
+      .map((item) => (deep ? y2Native(item, { deep, transform }) : item));
 
     return transform(data, yAbstract);
   }
   if (yAbstract instanceof YMap) {
     const data: Record<string, unknown> = Object.fromEntries(
       Array.from(yAbstract.entries()).map(([key, value]) => {
-        return [key, deep ? y2Native(value, { deep, transform }) : value] as [
-          string,
-          unknown,
-        ];
-      })
+        return [key, deep ? y2Native(value, { deep, transform }) : value] as [string, unknown];
+      }),
     );
     return transform(data, yAbstract);
   }

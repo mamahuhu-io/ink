@@ -1,9 +1,5 @@
-import {
-  EmbedSyncedDocBlockSchema,
-  SYNCED_MIN_HEIGHT,
-  SYNCED_MIN_WIDTH,
-} from '@ink/stone-model';
 import { clamp } from '@ink/stone-global/gfx';
+import { EmbedSyncedDocBlockSchema, SYNCED_MIN_HEIGHT, SYNCED_MIN_WIDTH } from '@ink/stone-model';
 import { GfxViewInteractionExtension } from '@ink/stone-std/gfx';
 
 import type { EmbedEdgelessSyncedDocBlockComponent } from '../embed-edgeless-synced-doc-block';
@@ -34,15 +30,15 @@ export const EmbedSyncedDocInteraction =
         const maxHeight = calcSyncedDocFullHeight(view);
 
         return {
-          beforeResize: context => {
+          beforeResize: (context) => {
             context.set({ maxHeight });
           },
-          onResizeStart: context => {
+          onResizeStart: (context) => {
             context.default(context);
             model.stash('scale');
             model.stash('preFoldHeight');
           },
-          onResizeMove: context => {
+          onResizeMove: (context) => {
             const { lockRatio, originalBound, constraint, newBound } = context;
 
             let scale = initialScale;
@@ -53,17 +49,9 @@ export const EmbedSyncedDocInteraction =
             }
 
             newBound.w =
-              clamp(
-                newBound.w / scale,
-                constraint.minWidth,
-                constraint.maxWidth
-              ) * scale;
+              clamp(newBound.w / scale, constraint.minWidth, constraint.maxWidth) * scale;
             newBound.h =
-              clamp(
-                newBound.h / scale,
-                constraint.minHeight,
-                constraint.maxHeight
-              ) * scale;
+              clamp(newBound.h / scale, constraint.minHeight, constraint.maxHeight) * scale;
 
             const newHeight = newBound.h / scale;
 
@@ -76,12 +64,12 @@ export const EmbedSyncedDocInteraction =
             model.props.scale = scale;
             model.xywh = newBound.serialize();
           },
-          onResizeEnd: context => {
+          onResizeEnd: (context) => {
             context.default(context);
             model.pop('scale');
             model.pop('preFoldHeight');
           },
         };
       },
-    }
+    },
   );

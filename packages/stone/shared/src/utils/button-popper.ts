@@ -1,4 +1,3 @@
-import type { Disposable } from '@ink/stone-global/disposable';
 import {
   autoPlacement,
   autoUpdate,
@@ -9,11 +8,9 @@ import {
   shift,
   size,
 } from '@floating-ui/dom';
+import type { Disposable } from '@ink/stone-global/disposable';
 
-export function listenClickAway(
-  element: HTMLElement,
-  onClickAway: () => void
-): Disposable {
+export function listenClickAway(element: HTMLElement, onClickAway: () => void): Disposable {
   const callback = (event: MouseEvent) => {
     const inside = event.composedPath().includes(element);
     if (!inside) {
@@ -74,8 +71,7 @@ export function createButtonPopper(options: ButtonPopperOptions) {
 
   function compute() {
     const overflowOptions = {
-      rootBoundary:
-        typeof rootBoundary === 'function' ? rootBoundary() : rootBoundary,
+      rootBoundary: typeof rootBoundary === 'function' ? rootBoundary() : rootBoundary,
     };
 
     computePosition(reference, popperElement, {

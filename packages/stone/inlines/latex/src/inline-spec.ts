@@ -4,15 +4,16 @@ import { InlineSpecExtension } from '@ink/stone-std/inline';
 import { html } from 'lit';
 import { z } from 'zod';
 
-export const LatexInlineSpecExtension =
-  InlineSpecExtension<InkTextAttributes>('latex', provider => {
+export const LatexInlineSpecExtension = InlineSpecExtension<InkTextAttributes>(
+  'latex',
+  (provider) => {
     const std = provider.get(StdIdentifier);
     return {
       name: 'latex',
       schema: z.object({
         latex: z.string().optional().nullable().catch(undefined),
       }),
-      match: delta => typeof delta.attributes?.latex === 'string',
+      match: (delta) => typeof delta.attributes?.latex === 'string',
       renderer: ({ delta, selected, editor, startOffset, endOffset }) => {
         return html`<ink-latex-node
           .std=${std}
@@ -25,16 +26,16 @@ export const LatexInlineSpecExtension =
       },
       embed: true,
     };
-  });
+  },
+);
 
-export const LatexEditorUnitSpecExtension =
-  InlineSpecExtension<InkTextAttributes>({
-    name: 'latex-editor-unit',
-    schema: z.object({
-      'latex-editor-unit': z.undefined(),
-    }),
-    match: () => true,
-    renderer: ({ delta }) => {
-      return html`<latex-editor-unit .delta=${delta}></latex-editor-unit>`;
-    },
-  });
+export const LatexEditorUnitSpecExtension = InlineSpecExtension<InkTextAttributes>({
+  name: 'latex-editor-unit',
+  schema: z.object({
+    'latex-editor-unit': z.undefined(),
+  }),
+  match: () => true,
+  renderer: ({ delta }) => {
+    return html`<latex-editor-unit .delta=${delta}></latex-editor-unit>`;
+  },
+});

@@ -20,22 +20,18 @@ export class TableDataManager {
   readonly widthAdjustColumnId$ = signal<string>();
   readonly virtualColumnCount$ = signal<number>(0);
   readonly virtualRowCount$ = signal<number>(0);
-  readonly virtualWidth$ = signal<
-    { columnId: string; width: number } | undefined
-  >();
+  readonly virtualWidth$ = signal<{ columnId: string; width: number } | undefined>();
   readonly cellCountTips$ = computed(
     () =>
-      `${this.virtualRowCount$.value + this.rows$.value.length} x ${this.virtualColumnCount$.value + this.columns$.value.length}`
+      `${this.virtualRowCount$.value + this.rows$.value.length} x ${this.virtualColumnCount$.value + this.columns$.value.length}`,
   );
   readonly rows$ = computed(() => {
-    return Object.values(this.model.props.rows$.value).sort((a, b) =>
-      a.order > b.order ? 1 : -1
-    );
+    return Object.values(this.model.props.rows$.value).sort((a, b) => (a.order > b.order ? 1 : -1));
   });
 
   readonly columns$ = computed(() => {
     return Object.values(this.model.props.columns$.value).sort((a, b) =>
-      a.order > b.order ? 1 : -1
+      a.order > b.order ? 1 : -1,
     );
   });
 
@@ -89,7 +85,7 @@ export class TableDataManager {
         order,
       };
 
-      this.columns$.value.forEach(column => {
+      this.columns$.value.forEach((column) => {
         this.model.props.cells[`${rowId}:${column.columnId}`] = {
           text: new Text(),
         };
@@ -111,7 +107,7 @@ export class TableDataManager {
       const rows = this.rows$.value;
       const rowCount = rows.length;
       this.model.store.transact(() => {
-        rows.slice(rowCount + count, rowCount).forEach(row => {
+        rows.slice(rowCount + count, rowCount).forEach((row) => {
           this.deleteRow(row.rowId);
         });
       });
@@ -132,7 +128,7 @@ export class TableDataManager {
       const columns = this.columns$.value;
       const columnCount = columns.length;
       this.model.store.transact(() => {
-        columns.slice(columnCount + count, columnCount).forEach(column => {
+        columns.slice(columnCount + count, columnCount).forEach((column) => {
           this.deleteColumn(column.columnId);
         });
       });
@@ -143,10 +139,7 @@ export class TableDataManager {
     after = after != null ? (after < 0 ? undefined : after) : undefined;
     const prevOrder = after == null ? null : array[after]?.order;
     const nextOrder = after == null ? array[0]?.order : array[after + 1]?.order;
-    const order = generateFractionalIndexingKeyBetween(
-      prevOrder ?? null,
-      nextOrder ?? null
-    );
+    const order = generateFractionalIndexingKeyBetween(prevOrder ?? null, nextOrder ?? null);
     return order;
   }
 
@@ -158,7 +151,7 @@ export class TableDataManager {
         columnId,
         order,
       };
-      this.rows$.value.forEach(row => {
+      this.rows$.value.forEach((row) => {
         this.model.props.cells[`${row.rowId}:${columnId}`] = {
           text: new Text(),
         };
@@ -169,12 +162,12 @@ export class TableDataManager {
 
   deleteRow(rowId: string) {
     this.model.store.transact(() => {
-      Object.keys(this.model.props.rows).forEach(id => {
+      Object.keys(this.model.props.rows).forEach((id) => {
         if (id === rowId) {
           delete this.model.props.rows[id];
         }
       });
-      Object.keys(this.model.props.cells).forEach(id => {
+      Object.keys(this.model.props.cells).forEach((id) => {
         if (id.startsWith(rowId)) {
           delete this.model.props.cells[id];
         }
@@ -184,12 +177,12 @@ export class TableDataManager {
 
   deleteColumn(columnId: string) {
     this.model.store.transact(() => {
-      Object.keys(this.model.props.columns).forEach(id => {
+      Object.keys(this.model.props.columns).forEach((id) => {
         if (id === columnId) {
           delete this.model.props.columns[id];
         }
       });
-      Object.keys(this.model.props.cells).forEach(id => {
+      Object.keys(this.model.props.cells).forEach((id) => {
         if (id.endsWith(`:${columnId}`)) {
           delete this.model.props.cells[id];
         }
@@ -247,13 +240,9 @@ export class TableDataManager {
 
   clearRow(rowId: string) {
     this.model.store.transact(() => {
-      Object.keys(this.model.props.cells).forEach(id => {
+      Object.keys(this.model.props.cells).forEach((id) => {
         if (id.startsWith(rowId)) {
-          this.model.props.cells[id]?.text.replace(
-            0,
-            this.model.props.cells[id]?.text.length,
-            ''
-          );
+          this.model.props.cells[id]?.text.replace(0, this.model.props.cells[id]?.text.length, '');
         }
       });
     });
@@ -261,13 +250,9 @@ export class TableDataManager {
 
   clearColumn(columnId: string) {
     this.model.store.transact(() => {
-      Object.keys(this.model.props.cells).forEach(id => {
+      Object.keys(this.model.props.cells).forEach((id) => {
         if (id.endsWith(`:${columnId}`)) {
-          this.model.props.cells[id]?.text.replace(
-            0,
-            this.model.props.cells[id]?.text.length,
-            ''
-          );
+          this.model.props.cells[id]?.text.replace(0, this.model.props.cells[id]?.text.length, '');
         }
       });
     });
@@ -282,11 +267,7 @@ export class TableDataManager {
       if (!row) {
         continue;
       }
-      for (
-        let j = selection.columnStartIndex;
-        j <= selection.columnEndIndex;
-        j++
-      ) {
+      for (let j = selection.columnStartIndex; j <= selection.columnEndIndex; j++) {
         const column = columns[j];
         if (!column) {
           continue;
@@ -353,12 +334,11 @@ export class TableDataManager {
         columnId: newColumnId,
         order,
       };
-      this.rows$.value.forEach(row => {
+      this.rows$.value.forEach((row) => {
         this.model.props.cells[`${row.rowId}:${newColumnId}`] = {
           text:
-            this.model.props.cells[
-              `${row.rowId}:${oldColumn.columnId}`
-            ]?.text.clone() ?? new Text(),
+            this.model.props.cells[`${row.rowId}:${oldColumn.columnId}`]?.text.clone() ??
+            new Text(),
         };
       });
     });
@@ -376,12 +356,11 @@ export class TableDataManager {
         rowId: newRowId,
         order,
       };
-      this.columns$.value.forEach(column => {
+      this.columns$.value.forEach((column) => {
         this.model.props.cells[`${newRowId}:${column.columnId}`] = {
           text:
-            this.model.props.cells[
-              `${oldRow.rowId}:${column.columnId}`
-            ]?.text.clone() ?? new Text(),
+            this.model.props.cells[`${oldRow.rowId}:${column.columnId}`]?.text.clone() ??
+            new Text(),
         };
       });
     });

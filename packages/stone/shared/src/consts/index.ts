@@ -8,7 +8,7 @@ import {
   EmbedSyncedDocModel,
   EmbedYoutubeModel,
   SYNCED_DEFAULT_WIDTH,
-} from "@ink/stone-model";
+} from '@ink/stone-model';
 
 export const BLOCK_CHILDREN_CONTAINER_PADDING_LEFT = 24;
 export const EDGELESS_BLOCK_CHILD_PADDING = 24;
@@ -51,13 +51,13 @@ export const EMBED_CARD_HEIGHT: Record<EmbedCardStyle, number> = {
 };
 
 export const EMBED_BLOCK_FLAVOUR_LIST = [
-  "ink:embed-github",
-  "ink:embed-youtube",
-  "ink:embed-figma",
-  "ink:embed-linked-doc",
-  "ink:embed-synced-doc",
-  "ink:embed-html",
-  "ink:embed-loom",
+  'ink:embed-github',
+  'ink:embed-youtube',
+  'ink:embed-figma',
+  'ink:embed-linked-doc',
+  'ink:embed-synced-doc',
+  'ink:embed-html',
+  'ink:embed-loom',
 ] as const;
 
 export const EMBED_BLOCK_MODEL_LIST = [
@@ -72,12 +72,12 @@ export const EMBED_BLOCK_MODEL_LIST = [
 
 // This constant is used to ignore tags when exporting using html2canvas
 export const CANVAS_EXPORT_IGNORE_TAGS = [
-  "EDGELESS-TOOLBAR-WIDGET",
-  "INK-DRAG-HANDLE-WIDGET",
-  "INK-TOOLBAR-WIDGET",
-  "INK-BLOCK-SELECTION",
+  'EDGELESS-TOOLBAR-WIDGET',
+  'INK-DRAG-HANDLE-WIDGET',
+  'INK-TOOLBAR-WIDGET',
+  'INK-BLOCK-SELECTION',
 ];
 
-export * from "./bracket-pairs.js";
-export * from "./note.js";
-export * from "./text.js";
+export * from './bracket-pairs.js';
+export * from './note.js';
+export * from './text.js';

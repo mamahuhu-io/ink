@@ -49,7 +49,7 @@ export class Boxed<Value = unknown> {
   static from = <Value>(
     map: Y.Map<unknown>,
     /** @internal */
-    onChange?: OnBoxedChange
+    onChange?: OnBoxedChange,
   ): Boxed<Value> => {
     const boxed = new Boxed<Value>(map.get('value') as Value);
     if (onChange) {
@@ -74,9 +74,7 @@ export class Boxed<Value = unknown> {
    * ```
    */
   static is = (value: unknown): value is Boxed => {
-    return (
-      value instanceof Y.Map && value.get('type') === NATIVE_UNIQ_IDENTIFIER
-    );
+    return value instanceof Y.Map && value.get('type') === NATIVE_UNIQ_IDENTIFIER;
   };
 
   private readonly _map: Y.Map<Value>;
@@ -105,19 +103,15 @@ export class Boxed<Value = unknown> {
   }
 
   constructor(value: Value) {
-    if (
-      value instanceof Y.Map &&
-      value.doc &&
-      value.get('type') === NATIVE_UNIQ_IDENTIFIER
-    ) {
+    if (value instanceof Y.Map && value.doc && value.get('type') === NATIVE_UNIQ_IDENTIFIER) {
       this._map = value;
     } else {
       this._map = new Y.Map();
       this._map.set('type', NATIVE_UNIQ_IDENTIFIER as Value);
       this._map.set('value', value);
     }
-    this._map.observeDeep(events => {
-      events.forEach(event => {
+    this._map.observeDeep((events) => {
+      events.forEach((event) => {
         const isLocal =
           !event.transaction.origin ||
           !this._map.doc ||

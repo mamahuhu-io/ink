@@ -1,10 +1,7 @@
 import { getSelectedBlocksCommand } from '@ink/stone-shared/commands';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import type { BlockSelection, Command } from '@ink/stone-std';
-import {
-  INLINE_ROOT_ATTR,
-  type InlineRootElement,
-} from '@ink/stone-std/inline';
+import { INLINE_ROOT_ATTR, type InlineRootElement } from '@ink/stone-std/inline';
 
 import { FORMAT_BLOCK_SUPPORT_FLAVOURS } from './consts.js';
 
@@ -18,7 +15,7 @@ export const formatBlockCommand: Command<{
   const blockSelections = ctx.blockSelections ?? ctx.currentBlockSelections;
   if (!blockSelections) {
     console.error(
-      '`blockSelections` is required, you need to pass it in args or use `getBlockSelections` command before adding this command to the pipeline.'
+      '`blockSelections` is required, you need to pass it in args or use `getBlockSelections` command before adding this command to the pipeline.',
     );
     return;
   }
@@ -32,29 +29,29 @@ export const formatBlockCommand: Command<{
     .chain()
     .pipe(getSelectedBlocksCommand, {
       blockSelections,
-      filter: el => FORMAT_BLOCK_SUPPORT_FLAVOURS.includes(el.model.flavour),
+      filter: (el) => FORMAT_BLOCK_SUPPORT_FLAVOURS.includes(el.model.flavour),
       types: ['block'],
     })
     .pipe((ctx, next) => {
       const { selectedBlocks } = ctx;
       if (!selectedBlocks) {
         console.error(
-          '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.'
+          '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.',
         );
         return;
       }
 
-      const selectedInlineEditors = selectedBlocks.flatMap(el => {
-        const inlineRoot = el.querySelector<
-          InlineRootElement<InkTextAttributes>
-        >(`[${INLINE_ROOT_ATTR}]`);
+      const selectedInlineEditors = selectedBlocks.flatMap((el) => {
+        const inlineRoot = el.querySelector<InlineRootElement<InkTextAttributes>>(
+          `[${INLINE_ROOT_ATTR}]`,
+        );
         if (inlineRoot) {
           return inlineRoot.inlineEditor;
         }
         return [];
       });
 
-      selectedInlineEditors.forEach(inlineEditor => {
+      selectedInlineEditors.forEach((inlineEditor) => {
         inlineEditor.formatText(
           {
             index: 0,
@@ -63,7 +60,7 @@ export const formatBlockCommand: Command<{
           styles,
           {
             mode,
-          }
+          },
         );
       });
 

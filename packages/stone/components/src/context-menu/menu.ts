@@ -5,10 +5,7 @@ import type { TemplateResult } from 'lit';
 import { MenuFocusable } from './focusable.js';
 import type { MenuComponentInterface } from './types.js';
 
-export type MenuConfig = (
-  menu: Menu,
-  index: number
-) => TemplateResult | undefined;
+export type MenuConfig = (menu: Menu, index: number) => TemplateResult | undefined;
 
 export type MenuOptions = {
   onComplete?: () => void;
@@ -78,7 +75,7 @@ export class Menu {
     }
 
     // Call global menu open listeners
-    menuOpenListeners.forEach(listener => {
+    menuOpenListeners.forEach((listener) => {
       const cleanup = listener(this);
       if (cleanup) {
         this._cleanupFns.push(cleanup);
@@ -92,7 +89,7 @@ export class Menu {
     }
     this.closed = true;
     // Execute cleanup functions
-    this._cleanupFns.forEach(cleanup => cleanup());
+    this._cleanupFns.forEach((cleanup) => cleanup());
     this._cleanupFns = [];
 
     this.menuElement.remove();
@@ -114,7 +111,7 @@ export class Menu {
     }
     const list = this.menuElement
       .getFocusableElements()
-      .filter(ele => ele instanceof MenuFocusable);
+      .filter((ele) => ele instanceof MenuFocusable);
     const index = list.indexOf(this._currentFocused$.value);
     list[index + 1]?.focus();
   }
@@ -125,7 +122,7 @@ export class Menu {
     }
     const list = this.menuElement
       .getFocusableElements()
-      .filter(ele => ele instanceof MenuFocusable);
+      .filter((ele) => ele instanceof MenuFocusable);
     const index = list.indexOf(this._currentFocused$.value);
     if (index === 0) {
       this._currentFocused$.value = undefined;
@@ -149,7 +146,7 @@ export class Menu {
 
   renderItems(items: MenuConfig[]) {
     const result = [];
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       const template = item(this, result.length);

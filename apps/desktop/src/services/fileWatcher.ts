@@ -2,37 +2,37 @@
  * File Watcher Service - monitors open files for external changes
  */
 
-import { isTauri } from './platform'
+import { isTauri } from './platform';
 
-type FileChangeHandler = (filePath: string) => void
+type FileChangeHandler = (filePath: string) => void;
 
-let isInitialized = false
-let unlistenFn: (() => void) | null = null
-const changeHandlers: Set<FileChangeHandler> = new Set()
+let isInitialized = false;
+let unlistenFn: (() => void) | null = null;
+const changeHandlers: Set<FileChangeHandler> = new Set();
 
 // Track files currently being saved by us (to ignore self-triggered changes)
-const filesSaving: Set<string> = new Set()
-const savingTimeouts: Map<string, ReturnType<typeof setTimeout>> = new Map()
+const filesSaving: Set<string> = new Set();
+const savingTimeouts: Map<string, ReturnType<typeof setTimeout>> = new Map();
 
 /**
  * Mark a file as being saved (to ignore file watcher events)
  */
 export function markFileSaving(filePath: string): void {
   // Clear any existing timeout for this file
-  const existingTimeout = savingTimeouts.get(filePath)
+  const existingTimeout = savingTimeouts.get(filePath);
   if (existingTimeout) {
-    clearTimeout(existingTimeout)
+    clearTimeout(existingTimeout);
   }
 
-  filesSaving.add(filePath)
+  filesSaving.add(filePath);
 
   // Auto-clear after 2 seconds in case unmark is not called
   const timeout = setTimeout(() => {
-    filesSaving.delete(filePath)
-    savingTimeouts.delete(filePath)
-  }, 2000)
+    filesSaving.delete(filePath);
+    savingTimeouts.delete(filePath);
+  }, 2000);
 
-  savingTimeouts.set(filePath, timeout)
+  savingTimeouts.set(filePath, timeout);
 }
 
 /**
@@ -41,20 +41,20 @@ export function markFileSaving(filePath: string): void {
 export function unmarkFileSaving(filePath: string): void {
   // Use a small delay to ensure file watcher event has passed
   setTimeout(() => {
-    filesSaving.delete(filePath)
-    const timeout = savingTimeouts.get(filePath)
+    filesSaving.delete(filePath);
+    const timeout = savingTimeouts.get(filePath);
     if (timeout) {
-      clearTimeout(timeout)
-      savingTimeouts.delete(filePath)
+      clearTimeout(timeout);
+      savingTimeouts.delete(filePath);
     }
-  }, 500)
+  }, 500);
 }
 
 /**
  * Check if a file is currently being saved by us
  */
 export function isFileSaving(filePath: string): boolean {
-  return filesSaving.has(filePath)
+  return filesSaving.has(filePath);
 }
 
 /**
@@ -62,42 +62,42 @@ export function isFileSaving(filePath: string): boolean {
  */
 export async function initFileWatcher(): Promise<void> {
   if (!isTauri() || isInitialized) {
-    return
+    return;
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
-    const { listen } = await import('@tauri-apps/api/event')
+    const { invoke } = await import('@tauri-apps/api/core');
+    const { listen } = await import('@tauri-apps/api/event');
 
     // Initialize the Rust file watcher
-    await invoke('init_file_watcher')
+    await invoke('init_file_watcher');
 
     // Listen for file change events from Rust
     unlistenFn = await listen<string>('file-changed', (event) => {
-      const filePath = event.payload
+      const filePath = event.payload;
 
       // Skip if this is our own save operation
       if (isFileSaving(filePath)) {
-        console.log('Ignoring self-triggered file change:', filePath)
-        return
+        console.log('Ignoring self-triggered file change:', filePath);
+        return;
       }
 
-      console.log('File changed externally:', filePath)
+      console.log('File changed externally:', filePath);
 
       // Notify all handlers
       changeHandlers.forEach((handler) => {
         try {
-          handler(filePath)
+          handler(filePath);
         } catch (error) {
-          console.error('Error in file change handler:', error)
+          console.error('Error in file change handler:', error);
         }
-      })
-    })
+      });
+    });
 
-    isInitialized = true
-    console.log('File watcher initialized')
+    isInitialized = true;
+    console.log('File watcher initialized');
   } catch (error) {
-    console.error('Failed to initialize file watcher:', error)
+    console.error('Failed to initialize file watcher:', error);
   }
 }
 
@@ -106,15 +106,15 @@ export async function initFileWatcher(): Promise<void> {
  */
 export async function watchFile(filePath: string): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
-    await invoke('watch_file', { path: filePath })
-    console.log('Started watching file:', filePath)
+    const { invoke } = await import('@tauri-apps/api/core');
+    await invoke('watch_file', { path: filePath });
+    console.log('Started watching file:', filePath);
   } catch (error) {
-    console.error('Failed to watch file:', error)
+    console.error('Failed to watch file:', error);
   }
 }
 
@@ -123,15 +123,15 @@ export async function watchFile(filePath: string): Promise<void> {
  */
 export async function unwatchFile(filePath: string): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
-    await invoke('unwatch_file', { path: filePath })
-    console.log('Stopped watching file:', filePath)
+    const { invoke } = await import('@tauri-apps/api/core');
+    await invoke('unwatch_file', { path: filePath });
+    console.log('Stopped watching file:', filePath);
   } catch (error) {
-    console.error('Failed to unwatch file:', error)
+    console.error('Failed to unwatch file:', error);
   }
 }
 
@@ -140,15 +140,15 @@ export async function unwatchFile(filePath: string): Promise<void> {
  */
 export async function unwatchAllFiles(): Promise<void> {
   if (!isTauri()) {
-    return
+    return;
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
-    await invoke('unwatch_all')
-    console.log('Stopped watching all files')
+    const { invoke } = await import('@tauri-apps/api/core');
+    await invoke('unwatch_all');
+    console.log('Stopped watching all files');
   } catch (error) {
-    console.error('Failed to unwatch all files:', error)
+    console.error('Failed to unwatch all files:', error);
   }
 }
 
@@ -157,15 +157,15 @@ export async function unwatchAllFiles(): Promise<void> {
  */
 export async function getWatchedFiles(): Promise<string[]> {
   if (!isTauri()) {
-    return []
+    return [];
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
-    return await invoke<string[]>('get_watched_files')
+    const { invoke } = await import('@tauri-apps/api/core');
+    return await invoke<string[]>('get_watched_files');
   } catch (error) {
-    console.error('Failed to get watched files:', error)
-    return []
+    console.error('Failed to get watched files:', error);
+    return [];
   }
 }
 
@@ -173,12 +173,12 @@ export async function getWatchedFiles(): Promise<string[]> {
  * Register a handler for file change events
  */
 export function onFileChange(handler: FileChangeHandler): () => void {
-  changeHandlers.add(handler)
+  changeHandlers.add(handler);
 
   // Return unsubscribe function
   return () => {
-    changeHandlers.delete(handler)
-  }
+    changeHandlers.delete(handler);
+  };
 }
 
 /**
@@ -186,11 +186,11 @@ export function onFileChange(handler: FileChangeHandler): () => void {
  */
 export async function cleanupFileWatcher(): Promise<void> {
   if (unlistenFn) {
-    unlistenFn()
-    unlistenFn = null
+    unlistenFn();
+    unlistenFn = null;
   }
 
-  await unwatchAllFiles()
-  changeHandlers.clear()
-  isInitialized = false
+  await unwatchAllFiles();
+  changeHandlers.clear();
+  isInitialized = false;
 }

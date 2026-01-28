@@ -1,9 +1,6 @@
 import type { RootBlockModel } from '@ink/stone-model';
 import { ViewportElementProvider } from '@ink/stone-shared/services';
-import {
-  autoScroll,
-  getScrollContainer,
-} from '@ink/stone-shared/utils';
+import { autoScroll, getScrollContainer } from '@ink/stone-shared/utils';
 import {
   BlockComponent,
   BlockSelection,
@@ -16,15 +13,9 @@ import { state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { literal, unsafeStatic } from 'lit/static-html.js';
 
-import {
-  type BlockInfo,
-  getSelectingBlockPaths,
-  isDragArea,
-  type Rect,
-} from './utils';
+import { type BlockInfo, getSelectingBlockPaths, isDragArea, type Rect } from './utils';
 
-export const INK_PAGE_DRAGGING_AREA_WIDGET =
-  'ink-page-dragging-area-widget';
+export const INK_PAGE_DRAGGING_AREA_WIDGET = 'ink-page-dragging-area-widget';
 
 export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
   static excludeFlavours: string[] = ['ink:note', 'ink:surface'];
@@ -51,10 +42,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
   private _rafID = 0;
 
-  private readonly _updateDraggingArea = (
-    state: PointerEventState,
-    shouldAutoScroll: boolean
-  ) => {
+  private readonly _updateDraggingArea = (state: PointerEventState, shouldAutoScroll: boolean) => {
     const { x, y } = state;
     const { x: startX, y: startY } = state.start;
 
@@ -70,19 +58,19 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
     const { left: viewportLeft, top: viewportTop } = this._viewport;
     let left = Math.min(
       startX + initScrollX + initConX - viewportLeft,
-      x + scrollLeft + conX - viewportLeft
+      x + scrollLeft + conX - viewportLeft,
     );
     let right = Math.max(
       startX + initScrollX + initConX - viewportLeft,
-      x + scrollLeft + conX - viewportLeft
+      x + scrollLeft + conX - viewportLeft,
     );
     let top = Math.min(
       startY + initScrollY + initConY - viewportTop,
-      y + scrollTop + conY - viewportTop
+      y + scrollTop + conY - viewportTop,
     );
     let bottom = Math.max(
       startY + initScrollY + initConY - viewportTop,
-      y + scrollTop + conY - viewportTop
+      y + scrollTop + conY - viewportTop,
     );
 
     left = Math.max(left, conX - viewportLeft);
@@ -123,16 +111,14 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
     const getAllNodeFromTree = (): BlockComponent[] => {
       const blocks: BlockComponent[] = [];
-      this.host.view.walkThrough(node => {
+      this.host.view.walkThrough((node) => {
         const view = node;
         if (!(view instanceof BlockComponent)) {
           return true;
         }
         if (
           view.model.role !== 'root' &&
-          !InkPageDraggingAreaWidget.excludeFlavours.includes(
-            view.model.flavour
-          )
+          !InkPageDraggingAreaWidget.excludeFlavours.includes(view.model.flavour)
         ) {
           blocks.push(view);
         }
@@ -143,7 +129,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
     const elements = getAllNodeFromTree();
 
-    return elements.map(element => {
+    return elements.map((element) => {
       const bounding = element.getBoundingClientRect();
       return {
         element,
@@ -176,14 +162,13 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
   }
 
   private _selectBlocksByRect(userRect: Rect) {
-    const selections = getSelectingBlockPaths(
-      this._allBlocksWithRect,
-      userRect
-    ).map(blockPath => {
-      return this.host.selection.create(BlockSelection, {
-        blockId: blockPath,
-      });
-    });
+    const selections = getSelectingBlockPaths(this._allBlocksWithRect, userRect).map(
+      (blockPath) => {
+        return this.host.selection.create(BlockSelection, {
+          blockId: blockPath,
+        });
+      },
+    );
 
     this.host.selection.setGroup('note', selections);
   }
@@ -193,7 +178,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
     this.handleEvent(
       'dragStart',
-      ctx => {
+      (ctx) => {
         const state = ctx.get('pointerState');
         const { button } = state.raw;
         if (button !== 0) return;
@@ -213,12 +198,12 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
         return true;
       },
-      { global: true }
+      { global: true },
     );
 
     this.handleEvent(
       'dragMove',
-      ctx => {
+      (ctx) => {
         this._clearRaf();
         if (!this._dragging) {
           return;
@@ -236,7 +221,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 
         return true;
       },
-      { global: true }
+      { global: true },
     );
 
     this.handleEvent(
@@ -257,12 +242,12 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
       },
       {
         global: true,
-      }
+      },
     );
 
     this.handleEvent(
       'pointerMove',
-      ctx => {
+      (ctx) => {
         if (this._dragging) {
           const state = ctx.get('pointerState');
           state.raw.preventDefault();
@@ -270,7 +255,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
       },
       {
         global: true,
-      }
+      },
     );
   }
 
@@ -321,7 +306,7 @@ export class InkPageDraggingAreaWidget extends WidgetComponent<RootBlockModel> {
 export const pageDraggingAreaWidget = WidgetViewExtension(
   'ink:page',
   INK_PAGE_DRAGGING_AREA_WIDGET,
-  literal`${unsafeStatic(INK_PAGE_DRAGGING_AREA_WIDGET)}`
+  literal`${unsafeStatic(INK_PAGE_DRAGGING_AREA_WIDGET)}`,
 );
 
 declare global {

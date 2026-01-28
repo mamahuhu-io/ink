@@ -3,23 +3,22 @@ import {
   type TextBuffer,
 } from '@ink/stone-shared/adapters';
 
-export const linkDeltaMarkdownAdapterMatch =
-  InlineDeltaToPlainTextAdapterExtension({
-    name: 'link',
-    match: delta => !!delta.attributes?.link,
-    toAST: delta => {
-      const linkText = delta.insert;
-      const node: TextBuffer = {
-        content: linkText,
-      };
-      const link = delta.attributes?.link;
-      if (!link) {
-        return node;
-      }
+export const linkDeltaMarkdownAdapterMatch = InlineDeltaToPlainTextAdapterExtension({
+  name: 'link',
+  match: (delta) => !!delta.attributes?.link,
+  toAST: (delta) => {
+    const linkText = delta.insert;
+    const node: TextBuffer = {
+      content: linkText,
+    };
+    const link = delta.attributes?.link;
+    if (!link) {
+      return node;
+    }
 
-      const content = `${linkText ? `${linkText}: ` : ''}${link}`;
-      return {
-        content,
-      };
-    },
-  });
+    const content = `${linkText ? `${linkText}: ` : ''}${link}`;
+    return {
+      content,
+    };
+  },
+});

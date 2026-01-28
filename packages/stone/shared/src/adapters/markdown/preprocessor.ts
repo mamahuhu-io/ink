@@ -5,10 +5,7 @@ import {
 } from '@ink/stone-global/di';
 import type { ExtensionType } from '@ink/stone-store';
 
-import {
-  type AdapterPreprocessor,
-  PreprocessorManager,
-} from '../types/preprocessor';
+import { type AdapterPreprocessor, PreprocessorManager } from '../types/preprocessor';
 import type { Markdown } from './type';
 
 export type MarkdownAdapterPreprocessor = AdapterPreprocessor<Markdown>;
@@ -17,13 +14,13 @@ const MarkdownPreprocessorIdentifier =
   createIdentifier<MarkdownAdapterPreprocessor>('MarkdownPreprocessor');
 
 export const MarkdownPreprocessorExtension = (
-  preprocessor: MarkdownAdapterPreprocessor
+  preprocessor: MarkdownAdapterPreprocessor,
 ): ExtensionType & {
   identifier: ServiceIdentifier<MarkdownAdapterPreprocessor>;
 } => {
   const identifier = MarkdownPreprocessorIdentifier(preprocessor.name);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => preprocessor);
     },
     identifier,

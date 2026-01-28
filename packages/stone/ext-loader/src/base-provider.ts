@@ -43,10 +43,7 @@ export type Context<Scope extends string> = {
  * }
  * ```
  */
-export class BaseExtensionProvider<
-  Scope extends string,
-  Options extends object = Empty,
-> {
+export class BaseExtensionProvider<Scope extends string, Options extends object = Empty> {
   /** The name of the provider */
   name = 'BaseExtension';
 

@@ -1,7 +1,6 @@
 import type { FileSnapshot } from './clipboard.js';
 
-const chars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 // Use a lookup table to find the index.
 const lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
@@ -67,7 +66,7 @@ export const decode = (base64: string): ArrayBuffer => {
 
 export async function encodeClipboardBlobs(
   map: Map<string, Blob>,
-  onError?: (message: string) => void
+  onError?: (message: string) => void,
 ) {
   const blobs: Record<string, FileSnapshot> = {};
   let sumSize = 0;
@@ -80,8 +79,7 @@ export async function encodeClipboardBlobs(
       sumSize += blob.size;
       if (sumSize > 6 * 1024 * 1024) {
         onError?.(
-          (blob as File).name ??
-            'File' + ' cannot be copied due to the clipboard size limit'
+          (blob as File).name ?? 'File' + ' cannot be copied due to the clipboard size limit',
         );
         return;
       }
@@ -92,19 +90,17 @@ export async function encodeClipboardBlobs(
         content,
       };
       blobs[id] = file;
-    })
+    }),
   );
   return blobs;
 }
 
 export function decodeClipboardBlobs(
   blobs: Record<string, FileSnapshot>,
-  map: Map<string, Blob> | undefined
+  map: Map<string, Blob> | undefined,
 ) {
   if (!map) {
-    console.error(
-      `Trying to decode clipboard blobs, but the map is not found.`
-    );
+    console.error(`Trying to decode clipboard blobs, but the map is not found.`);
     return;
   }
   Object.entries<FileSnapshot>(blobs).forEach(([sourceId, file]) => {

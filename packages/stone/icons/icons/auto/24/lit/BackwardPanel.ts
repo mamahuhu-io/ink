@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const BackwardPanel =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const BackwardPanel = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const BackwardPanel =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M12 13.778v3.995c0 .863-1.02 1.32-1.664.747L3.84 12.747a1 1 0 0 1 0-1.494l6.495-5.774C10.98 4.906 12 5.364 12 6.227v3.995l5.336-4.743C17.98 4.906 19 5.364 19 6.227v11.546c0 .863-1.02 1.32-1.664.747z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M12 13.778v3.995c0 .863-1.02 1.32-1.664.747L3.84 12.747a1 1 0 0 1 0-1.494l6.495-5.774C10.98 4.906 12 5.364 12 6.227v3.995l5.336-4.743C17.98 4.906 19 5.364 19 6.227v11.546c0 .863-1.02 1.32-1.664.747z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default BackwardPanel;

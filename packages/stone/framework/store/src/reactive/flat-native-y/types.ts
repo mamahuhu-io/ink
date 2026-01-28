@@ -4,11 +4,7 @@ import type { Map as YMap } from 'yjs';
 import type { UnRecord } from '../types';
 
 export type OnChange = (key: string, isLocal: boolean) => void;
-export type Transform = (
-  key: string,
-  value: unknown,
-  origin: unknown
-) => unknown;
+export type Transform = (key: string, value: unknown, origin: unknown) => unknown;
 
 export type CreateProxyOptions = {
   yMap: YMap<unknown>;

@@ -1,6 +1,6 @@
-import type { EmbedCardStyle } from '@ink/stone-model';
 import type { Container } from '@ink/stone-global/di';
 import { createIdentifier } from '@ink/stone-global/di';
+import type { EmbedCardStyle } from '@ink/stone-model';
 import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import { Extension, type ExtensionType } from '@ink/stone-store';
 
@@ -16,32 +16,25 @@ export interface EmbedOptionProvider {
   registerEmbedBlockOptions(options: EmbedOptions): void;
 }
 
-export const EmbedOptionProvider = createIdentifier<EmbedOptionProvider>(
-  'InkEmbedOptionProvider'
-);
+export const EmbedOptionProvider = createIdentifier<EmbedOptionProvider>('InkEmbedOptionProvider');
 
-export const EmbedOptionConfigIdentifier = createIdentifier<EmbedOptions>(
-  'InkEmbedOptionConfig'
-);
+export const EmbedOptionConfigIdentifier = createIdentifier<EmbedOptions>('InkEmbedOptionConfig');
 
 export const EmbedOptionConfig = (options: EmbedOptions): ExtensionType => {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(EmbedOptionConfigIdentifier(options.flavour), options);
     },
   };
 };
 
-export class EmbedOptionService
-  extends Extension
-  implements EmbedOptionProvider
-{
+export class EmbedOptionService extends Extension implements EmbedOptionProvider {
   private readonly _embedBlockRegistry = new Set<EmbedOptions>();
 
   constructor(readonly std: BlockStdScope) {
     super();
     const configs = this.std.provider.getAll(EmbedOptionConfigIdentifier);
-    configs.forEach(value => {
+    configs.forEach((value) => {
       this.registerEmbedBlockOptions(value);
     });
   }

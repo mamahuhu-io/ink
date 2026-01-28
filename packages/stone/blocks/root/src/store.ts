@@ -1,7 +1,4 @@
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type StoreExtensionContext, StoreExtensionProvider } from '@ink/stone-ext-loader';
 import { RootBlockSchemaExtension } from '@ink/stone-model';
 
 import { RootBlockAdapterExtensions } from './adapters/extension';

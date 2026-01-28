@@ -23,12 +23,12 @@ export function handleError(error: Error) {
   if (error.isFatal) {
     throw new Error(
       'A fatal error for InkStone occurs, please contact the team if you find this.',
-      { cause: error }
+      { cause: error },
     );
   }
 
   console.error(
-    "A runtime error for InkStone occurs, you can ignore this error if it won't break the user experience."
+    "A runtime error for InkStone occurs, you can ignore this error if it won't break the user experience.",
   );
   console.error(error.stack);
 }

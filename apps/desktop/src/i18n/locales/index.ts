@@ -1,10 +1,10 @@
-import en from './en.json'
-import zhCN from './zh-CN.json'
-import ja from './ja.json'
-import ko from './ko.json'
-import es from './es.json'
-import ptBR from './pt-BR.json'
-import zhTW from './zh-TW.json'
+import en from './en.json';
+import es from './es.json';
+import ja from './ja.json';
+import ko from './ko.json';
+import ptBR from './pt-BR.json';
+import zhCN from './zh-CN.json';
+import zhTW from './zh-TW.json';
 
 export const resources = {
   en: { translation: en },
@@ -14,7 +14,7 @@ export const resources = {
   es: { translation: es },
   'pt-BR': { translation: ptBR },
   'zh-TW': { translation: zhTW },
-}
+};
 
 export const languages = [
   { code: 'en', name: 'English', nativeName: 'English' },
@@ -24,8 +24,8 @@ export const languages = [
   { code: 'es', name: 'Spanish', nativeName: 'Español' },
   { code: 'pt-BR', name: 'Portuguese (Brazil)', nativeName: 'Português (Brasil)' },
   { code: 'zh-TW', name: 'Chinese (Traditional)', nativeName: '繁體中文' },
-] as const
+] as const;
 
-export type LanguageCode = (typeof languages)[number]['code']
+export type LanguageCode = (typeof languages)[number]['code'];
 
-export { en, zhCN, ja, ko, es, ptBR, zhTW }
+export { en, es, ja, ko, ptBR, zhCN, zhTW };

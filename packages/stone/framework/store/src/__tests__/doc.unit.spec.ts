@@ -46,8 +46,7 @@ test('trigger props updated', () => {
   const onPropsUpdated = vi.fn();
   rootModel.propsUpdated.subscribe(onPropsUpdated);
 
-  const getColor = () =>
-    (rootModel.yBlock.get('prop:style') as Y.Map<string>).get('color');
+  const getColor = () => (rootModel.yBlock.get('prop:style') as Y.Map<string>).get('color');
 
   const getItems = () => rootModel.yBlock.get('prop:items') as Y.Array<unknown>;
   const getCount = () => rootModel.yBlock.get('prop:count');
@@ -110,8 +109,7 @@ test('stash and pop', () => {
   rootModel.propsUpdated.subscribe(onPropsUpdated);
 
   const getCount = () => rootModel.yBlock.get('prop:count');
-  const getColor = () =>
-    (rootModel.yBlock.get('prop:style') as Y.Map<string>).get('color');
+  const getColor = () => (rootModel.yBlock.get('prop:style') as Y.Map<string>).get('color');
 
   rootModel.props.count = 1;
   expect(onPropsUpdated).toBeCalledTimes(1);
@@ -299,13 +297,13 @@ describe('move blocks', () => {
     const page = store.getBlock(pageId)!.model;
 
     const noteIds = store.addBlocks(
-      [1, 2, 3].map(i => ({
+      [1, 2, 3].map((i) => ({
         flavour: 'ink:note',
         blockProps: { id: `${i}` },
       })),
-      page
+      page,
     );
-    const notes = noteIds.map(id => store.getBlock(id)!.model);
+    const notes = noteIds.map((id) => store.getBlock(id)!.model);
 
     context.doc = store;
     context.page = page;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 function addSvgWrapper(svgContent, size) {
   return `
   <svg

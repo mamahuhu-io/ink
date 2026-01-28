@@ -12,7 +12,7 @@ import { AssetsManager, BaseBlockTransformer } from '../transformer/index.js';
 
 const docSchema = defineBlockSchema({
   flavour: 'page',
-  props: internal => ({
+  props: (internal) => ({
     title: internal.Text('doc title'),
     count: 3,
     style: {
@@ -40,9 +40,7 @@ const docSchema = defineBlockSchema({
 });
 
 const docSchemaExtension = BlockSchemaExtension(docSchema);
-class RootBlockModel extends BlockModel<
-  ReturnType<(typeof docSchema)['model']['props']>
-> {}
+class RootBlockModel extends BlockModel<ReturnType<(typeof docSchema)['model']['props']>> {}
 
 const extensions = [docSchemaExtension];
 

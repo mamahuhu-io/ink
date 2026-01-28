@@ -66,21 +66,15 @@ const Palettes: Palette[] = [
   { key: 'Black', value: Black },
 ] as const;
 
-const NoteBackgroundColorPalettes: Palette[] = [
-  ...buildPalettes(NoteBackgroundColorMap),
-] as const;
+const NoteBackgroundColorPalettes: Palette[] = [...buildPalettes(NoteBackgroundColorMap)] as const;
 
 const StrokeColorShortMap = { ...Medium, Black, White } as const;
 
-const StrokeColorShortPalettes: Palette[] = [
-  ...buildPalettes(StrokeColorShortMap),
-] as const;
+const StrokeColorShortPalettes: Palette[] = [...buildPalettes(StrokeColorShortMap)] as const;
 
 const FillColorShortMap = { ...Medium, Black, White, Transparent } as const;
 
-const FillColorShortPalettes: Palette[] = [
-  ...buildPalettes(FillColorShortMap),
-] as const;
+const FillColorShortPalettes: Palette[] = [...buildPalettes(FillColorShortMap)] as const;
 
 const ShapeTextColorShortMap = {
   ...Medium,

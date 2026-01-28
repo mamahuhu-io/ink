@@ -1,6 +1,6 @@
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { ToggleDownIcon, ToggleRightIcon } from '@ink/stone-icons/lit';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { ShadowlessElement } from '@ink/stone-std';
 import { css, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';

@@ -31,13 +31,8 @@ export class AwarenessStore {
     this.awareness.destroy();
   }
 
-  getLocalSelection(
-    selectionManagerId: string
-  ): ReadonlyArray<Record<string, unknown>> {
-    return (
-      (this.awareness.getLocalState()?.selectionV2 ?? {})[selectionManagerId] ??
-      []
-    );
+  getLocalSelection(selectionManagerId: string): ReadonlyArray<Record<string, unknown>> {
+    return (this.awareness.getLocalState()?.selectionV2 ?? {})[selectionManagerId] ?? [];
   }
 
   getStates(): Map<number, RawAwarenessState> {
@@ -54,7 +49,7 @@ export class AwarenessStore {
 
   setLocalStateField<Field extends keyof RawAwarenessState>(
     field: Field,
-    value: RawAwarenessState[Field]
+    value: RawAwarenessState[Field],
   ): void {
     this.awareness.setLocalStateField(field, value);
   }

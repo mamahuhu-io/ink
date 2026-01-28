@@ -3,7 +3,7 @@ import type { UIEventHandler } from '@ink/stone-std';
 import type { InkDragHandleWidget } from '../drag-handle.js';
 
 export class KeyboardEventWatcher {
-  private readonly _keyboardHandler: UIEventHandler = ctx => {
+  private readonly _keyboardHandler: UIEventHandler = (ctx) => {
     if (!this.widget.dragging) {
       return;
     }

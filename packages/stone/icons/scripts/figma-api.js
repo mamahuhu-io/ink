@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports, no-undef */
 const BASE_URL = 'https://api.figma.com/v1/';
 
 /**
@@ -9,9 +10,7 @@ const BASE_URL = 'https://api.figma.com/v1/';
  */
 async function getChildren(request, fileId, nodeId) {
   const decodedNodeId = decodeURIComponent(nodeId);
-  console.log(
-    `Fetching: ${`${BASE_URL}files/${fileId}/nodes?ids=${decodedNodeId}`}`
-  );
+  console.log(`Fetching: ${`${BASE_URL}files/${fileId}/nodes?ids=${decodedNodeId}`}`);
 
   try {
     let data = await request({
@@ -32,9 +31,7 @@ async function getChildren(request, fileId, nodeId) {
  * @returns { Object<string, string> }
  */
 async function getSvgUrls(request, fileId, svgIds) {
-  console.log(
-    `Fetching: ${`${BASE_URL}images/${fileId}/?format=svg&ids=${svgIds}`}`
-  );
+  console.log(`Fetching: ${`${BASE_URL}images/${fileId}/?format=svg&ids=${svgIds}`}`);
 
   try {
     body = await request({

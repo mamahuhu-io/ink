@@ -38,7 +38,7 @@ export const colorList: Color[] = [
   },
 ];
 
-const colorMap = Object.fromEntries(colorList.map(item => [item.color, item]));
+const colorMap = Object.fromEntries(colorList.map((item) => [item.color, item]));
 
 export const getColorByColor = (color: string): Color | undefined => {
   return colorMap[color] ?? undefined;

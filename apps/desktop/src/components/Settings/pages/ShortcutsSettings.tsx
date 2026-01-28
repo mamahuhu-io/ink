@@ -1,10 +1,12 @@
-import { useTranslation } from 'react-i18next'
-import { SettingHeader, SettingRow, SettingWrapper, KeybindingDisplay } from '../components'
-import { SHORTCUTS } from '../constants/shortcuts'
-import './SettingPages.css'
+import './SettingPages.css';
+
+import { useTranslation } from 'react-i18next';
+
+import { KeybindingDisplay, SettingHeader, SettingRow, SettingWrapper } from '../components';
+import { SHORTCUTS } from '../constants/shortcuts';
 
 export function ShortcutsSettings() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="setting-page">
@@ -16,15 +18,12 @@ export function ShortcutsSettings() {
       {SHORTCUTS.map((category) => (
         <SettingWrapper key={category.titleKey} title={t(category.titleKey)}>
           {category.shortcuts.map((shortcut) => (
-            <SettingRow
-              key={shortcut.id}
-              name={t(shortcut.descriptionKey)}
-            >
+            <SettingRow key={shortcut.id} name={t(shortcut.descriptionKey)}>
               <KeybindingDisplay keybinding={shortcut.key} />
             </SettingRow>
           ))}
         </SettingWrapper>
       ))}
     </div>
-  )
+  );
 }

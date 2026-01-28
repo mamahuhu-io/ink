@@ -4,9 +4,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import type { AttributeRenderer } from '../types.js';
 
-function inlineTextStyles(
-  props: BaseTextAttributes
-): ReturnType<typeof styleMap> {
+function inlineTextStyles(props: BaseTextAttributes): ReturnType<typeof styleMap> {
   let textDecorations = '';
   if (props.underline) {
     textDecorations += 'underline';
@@ -40,10 +38,6 @@ function inlineTextStyles(
 export const getDefaultAttributeRenderer =
   <T extends BaseTextAttributes>(): AttributeRenderer<T> =>
   ({ delta }) => {
-    const style = delta.attributes
-      ? inlineTextStyles(delta.attributes)
-      : styleMap({});
-    return html`<span style=${style}
-      ><v-text .str=${delta.insert}></v-text
-    ></span>`;
+    const style = delta.attributes ? inlineTextStyles(delta.attributes) : styleMap({});
+    return html`<span style=${style}><v-text .str=${delta.insert}></v-text></span>`;
   };

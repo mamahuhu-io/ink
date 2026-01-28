@@ -1,19 +1,15 @@
-import {
-  type BlockStdScope,
-  TextSelection,
-  type UIEventHandler,
-} from '@ink/stone-std';
+import { type BlockStdScope, TextSelection, type UIEventHandler } from '@ink/stone-std';
 
 import { textFormatConfigs } from '../command/index.js';
 
 export const textFormatKeymap = (std: BlockStdScope) =>
   textFormatConfigs
-    .filter(config => config.hotkey)
+    .filter((config) => config.hotkey)
     .reduce(
       (acc, config) => {
         return {
           ...acc,
-          [config.hotkey as string]: ctx => {
+          [config.hotkey as string]: (ctx) => {
             const { store: doc, selection } = std;
             if (doc.readonly) return;
 
@@ -32,5 +28,5 @@ export const textFormatKeymap = (std: BlockStdScope) =>
           },
         };
       },
-      {} as Record<string, UIEventHandler>
+      {} as Record<string, UIEventHandler>,
     );

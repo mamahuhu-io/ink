@@ -30,11 +30,7 @@ describe('CommandManager', () => {
     const command2: Command2 = vi.fn((_ctx, _next) => {});
 
     const [success1] = commandManager.chain().pipe(command1, {}).run();
-    const [success2] = commandManager
-      .chain()
-      .pipe(command1, {})
-      .pipe(command2)
-      .run();
+    const [success2] = commandManager.chain().pipe(command1, {}).pipe(command2).run();
 
     expect(command1).toHaveBeenCalled();
     expect(command2).toHaveBeenCalled();
@@ -47,12 +43,7 @@ describe('CommandManager', () => {
     const command2: Command = vi.fn((_ctx, next) => next());
     const command3: Command = vi.fn((_ctx, next) => next());
 
-    const [success] = commandManager
-      .chain()
-      .pipe(command1)
-      .pipe(command2)
-      .pipe(command3)
-      .run();
+    const [success] = commandManager.chain().pipe(command1).pipe(command2).pipe(command3).run();
 
     expect(command1).toHaveBeenCalled();
     expect(command2).toHaveBeenCalled();
@@ -65,12 +56,7 @@ describe('CommandManager', () => {
     const command2: Command = vi.fn((_ctx, _next) => {});
     const command3: Command = vi.fn((_ctx, next) => next());
 
-    const [success] = commandManager
-      .chain()
-      .pipe(command1)
-      .pipe(command2)
-      .pipe(command3)
-      .run();
+    const [success] = commandManager.chain().pipe(command1).pipe(command2).pipe(command3).run();
 
     expect(command1).toHaveBeenCalled();
     expect(command2).toHaveBeenCalled();
@@ -87,12 +73,7 @@ describe('CommandManager', () => {
     });
     const command3: Command = vi.fn((_ctx, next) => next());
 
-    const [success] = commandManager
-      .chain()
-      .pipe(command1)
-      .pipe(command2)
-      .pipe(command3)
-      .run();
+    const [success] = commandManager.chain().pipe(command1).pipe(command2).pipe(command3).run();
 
     expect(command1).toHaveBeenCalled();
     expect(command2).toHaveBeenCalled();
@@ -104,22 +85,17 @@ describe('CommandManager', () => {
   test('can pass data to command when calling a command', () => {
     const command1: Command1 = vi.fn((_ctx, next) => next());
 
-    const [success] = commandManager
-      .chain()
-      .pipe(command1, { command1Option: 'test' })
-      .run();
+    const [success] = commandManager.chain().pipe(command1, { command1Option: 'test' }).run();
 
     expect(command1).toHaveBeenCalledWith(
       expect.objectContaining({ command1Option: 'test' }),
-      expect.any(Function)
+      expect.any(Function),
     );
     expect(success).toBeTruthy();
   });
 
   test('can add data to the command chain with `with` method', () => {
-    const command1: Command<{ commandData1: string }> = vi.fn((_ctx, next) =>
-      next()
-    );
+    const command1: Command<{ commandData1: string }> = vi.fn((_ctx, next) => next());
 
     const [success, ctx] = commandManager
       .chain()
@@ -129,26 +105,22 @@ describe('CommandManager', () => {
 
     expect(command1).toHaveBeenCalledWith(
       expect.objectContaining({ commandData1: 'test' }),
-      expect.any(Function)
+      expect.any(Function),
     );
     expect(success).toBeTruthy();
     expect(ctx.commandData1).toBe('test');
   });
 
   test('passes and updates context across commands', () => {
-    const command1: Command<{}, { commandData1: string }> = vi.fn(
-      (_ctx, next) => next({ commandData1: '123' })
+    const command1: Command<{}, { commandData1: string }> = vi.fn((_ctx, next) =>
+      next({ commandData1: '123' }),
     );
     const command2: Command<{ commandData1: string }> = vi.fn((ctx, next) => {
       expect(ctx.commandData1).toBe('123');
       next({ commandData1: '456' });
     });
 
-    const [success, ctx] = commandManager
-      .chain()
-      .pipe(command1)
-      .pipe(command2)
-      .run();
+    const [success, ctx] = commandManager.chain().pipe(command1).pipe(command2).run();
 
     expect(command1).toHaveBeenCalled();
     expect(command2).toHaveBeenCalled();
@@ -163,7 +135,7 @@ describe('CommandManager', () => {
 
     const [success] = commandManager
       .chain()
-      .try(chain => [chain.pipe(command1), chain.pipe(command2)])
+      .try((chain) => [chain.pipe(command1), chain.pipe(command2)])
       .pipe(command3)
       .run();
 
@@ -174,8 +146,8 @@ describe('CommandManager', () => {
   });
 
   test('should not re-execute previous commands in the chain before `try`', () => {
-    const command1: Command<{}, { commandData1: string }> = vi.fn(
-      (_ctx, next) => next({ commandData1: '123' })
+    const command1: Command<{}, { commandData1: string }> = vi.fn((_ctx, next) =>
+      next({ commandData1: '123' }),
     );
     const command2: Command = vi.fn((_ctx, _next) => {});
     const command3: Command = vi.fn((_ctx, next) => next());
@@ -183,7 +155,7 @@ describe('CommandManager', () => {
     const [success, ctx] = commandManager
       .chain()
       .pipe(command1)
-      .try(chain => [chain.pipe(command2), chain.pipe(command3)])
+      .try((chain) => [chain.pipe(command2), chain.pipe(command3)])
       .run();
 
     expect(command1).toHaveBeenCalledTimes(1);
@@ -194,21 +166,19 @@ describe('CommandManager', () => {
   });
 
   test('should continue with the rest of the chain if one command in `try` succeeds', () => {
-    const command1: Command<
-      {},
-      { commandData1?: string; commandData2?: string }
-    > = vi.fn((_ctx, _next) => {});
-    const command2: Command<
-      {},
-      { commandData1?: string; commandData2?: string }
-    > = vi.fn((_ctx, next) => next({ commandData2: '123' }));
-    const command3: Command<{}, { commandData3: string }> = vi.fn(
-      (_ctx, next) => next({ commandData3: '456' })
+    const command1: Command<{}, { commandData1?: string; commandData2?: string }> = vi.fn(
+      (_ctx, _next) => {},
+    );
+    const command2: Command<{}, { commandData1?: string; commandData2?: string }> = vi.fn(
+      (_ctx, next) => next({ commandData2: '123' }),
+    );
+    const command3: Command<{}, { commandData3: string }> = vi.fn((_ctx, next) =>
+      next({ commandData3: '456' }),
     );
 
     const [success, ctx] = commandManager
       .chain()
-      .try(chain => [chain.pipe(command1), chain.pipe(command2)])
+      .try((chain) => [chain.pipe(command1), chain.pipe(command2)])
       .pipe(command3)
       .run();
 
@@ -222,18 +192,16 @@ describe('CommandManager', () => {
   });
 
   test('should not execute any further commands in `try` after one succeeds', () => {
-    const command1: Command<
-      {},
-      { commandData1?: string; commandData2?: string }
-    > = vi.fn((_ctx, next) => next({ commandData1: '123' }));
-    const command2: Command<
-      {},
-      { commandData1?: string; commandData2?: string }
-    > = vi.fn((_ctx, next) => next({ commandData2: '456' }));
+    const command1: Command<{}, { commandData1?: string; commandData2?: string }> = vi.fn(
+      (_ctx, next) => next({ commandData1: '123' }),
+    );
+    const command2: Command<{}, { commandData1?: string; commandData2?: string }> = vi.fn(
+      (_ctx, next) => next({ commandData2: '456' }),
+    );
 
     const [success, ctx] = commandManager
       .chain()
-      .try(chain => [chain.pipe(command1), chain.pipe(command2)])
+      .try((chain) => [chain.pipe(command1), chain.pipe(command2)])
       .run();
 
     expect(command1).toHaveBeenCalled();
@@ -245,7 +213,7 @@ describe('CommandManager', () => {
 
   test('should pass context correctly in `try` when a command succeeds', () => {
     const command1: Command = vi.fn((_ctx, next) =>
-      next({ commandData1: 'fromCommand1', commandData2: 'fromCommand1' })
+      next({ commandData1: 'fromCommand1', commandData2: 'fromCommand1' }),
     );
     const command2: Command = vi.fn((ctx, next) => {
       expect(ctx.commandData1).toBe('fromCommand1');
@@ -262,7 +230,7 @@ describe('CommandManager', () => {
     const [success] = commandManager
       .chain()
       .pipe(command1)
-      .try(chain => [chain.pipe(command2)])
+      .try((chain) => [chain.pipe(command2)])
       .pipe(command3)
       .run();
 
@@ -279,7 +247,7 @@ describe('CommandManager', () => {
 
     const [success] = commandManager
       .chain()
-      .tryAll(chain => [chain.pipe(command1), chain.pipe(command2)])
+      .tryAll((chain) => [chain.pipe(command1), chain.pipe(command2)])
       .pipe(command3)
       .run();
 
@@ -305,11 +273,7 @@ describe('CommandManager', () => {
 
     const [success, ctx] = commandManager
       .chain()
-      .tryAll(chain => [
-        chain.pipe(command1),
-        chain.pipe(command2),
-        chain.pipe(command3),
-      ])
+      .tryAll((chain) => [chain.pipe(command1), chain.pipe(command2), chain.pipe(command3)])
       .run();
 
     expect(command1).toHaveBeenCalled();
@@ -324,13 +288,13 @@ describe('CommandManager', () => {
   test('should not continue with the rest of the chain if all commands in `tryAll` fail', () => {
     const command1: Command = vi.fn((_ctx, _next) => {});
     const command2: Command = vi.fn((_ctx, _next) => {});
-    const command3: Command<{}, { commandData3: string }> = vi.fn(
-      (_ctx, next) => next({ commandData3: '123' })
+    const command3: Command<{}, { commandData3: string }> = vi.fn((_ctx, next) =>
+      next({ commandData3: '123' }),
     );
 
     const [success, ctx] = commandManager
       .chain()
-      .tryAll(chain => [chain.pipe(command1), chain.pipe(command2)])
+      .tryAll((chain) => [chain.pipe(command1), chain.pipe(command2)])
       .pipe(command3)
       .run();
 
@@ -342,8 +306,8 @@ describe('CommandManager', () => {
   });
 
   test('should pass context correctly in `tryAll` when at least one command succeeds', () => {
-    const command1: Command<{}, { commandData1: string }> = vi.fn(
-      (_ctx, next) => next({ commandData1: 'fromCommand1' })
+    const command1: Command<{}, { commandData1: string }> = vi.fn((_ctx, next) =>
+      next({ commandData1: 'fromCommand1' }),
     );
     const command2: Command<
       { commandData1: string; commandData2?: string },
@@ -378,7 +342,7 @@ describe('CommandManager', () => {
     const [success, ctx] = commandManager
       .chain()
       .pipe(command1)
-      .tryAll(chain => [chain.pipe(command2), chain.pipe(command3)])
+      .tryAll((chain) => [chain.pipe(command2), chain.pipe(command3)])
       .pipe(command4)
       .run();
 
@@ -401,7 +365,7 @@ describe('CommandManager', () => {
     const [success] = commandManager
       .chain()
       .pipe(command1)
-      .tryAll(chain => [chain.pipe(command2), chain.pipe(command3)])
+      .tryAll((chain) => [chain.pipe(command2), chain.pipe(command3)])
       .pipe(command4)
       .run();
 

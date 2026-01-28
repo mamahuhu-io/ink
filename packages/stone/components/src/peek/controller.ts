@@ -13,19 +13,16 @@ export class PeekableController<T extends PeekableClass> {
       this._getPeekViewService()?.peek({
         target: this.target,
         template,
-      })
+      }),
     );
   };
 
   get peekable() {
-    return (
-      !!this._getPeekViewService() &&
-      (this.enable ? this.enable(this.target) : true)
-    );
+    return !!this._getPeekViewService() && (this.enable ? this.enable(this.target) : true);
   }
 
   constructor(
     private readonly target: T,
-    private readonly enable?: (e: T) => boolean
+    private readonly enable?: (e: T) => boolean,
   ) {}
 }

@@ -1,9 +1,4 @@
-import {
-  BlockModel,
-  type DraftModel,
-  type Store,
-  toDraftModel,
-} from '../model/index';
+import { BlockModel, type DraftModel, type Store, toDraftModel } from '../model/index';
 
 type SliceData = {
   content: DraftModel[];
@@ -27,7 +22,7 @@ export class Slice {
   constructor(readonly data: SliceData) {}
 
   static fromModels(doc: Store, models: DraftModel[] | BlockModel[]) {
-    const draftModels = models.map(model => {
+    const draftModels = models.map((model) => {
       if (model instanceof BlockModel) {
         return toDraftModel(model);
       }

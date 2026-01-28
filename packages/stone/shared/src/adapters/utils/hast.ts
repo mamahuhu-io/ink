@@ -100,7 +100,7 @@ const getTextContent = (ast: HtmlAST | undefined, defaultStr = ''): string => {
           return '\n';
         }
       }
-      return ast.children.map(child => getTextContent(child)).join('');
+      return ast.children.map((child) => getTextContent(child)).join('');
     }
   }
   return defaultStr;
@@ -111,7 +111,7 @@ const getElementChildren = (ast: HtmlAST | undefined): Element[] => {
     return [];
   }
   if (ast.type === 'element') {
-    return ast.children.filter(child => child.type === 'element') as Element[];
+    return ast.children.filter((child) => child.type === 'element') as Element[];
   }
   return [];
 };
@@ -121,7 +121,7 @@ const getTextChildren = (ast: HtmlAST | undefined): Text[] => {
     return [];
   }
   if (ast.type === 'element') {
-    return ast.children.filter(child => child.type === 'text') as Text[];
+    return ast.children.filter((child) => child.type === 'text') as Text[];
   }
   return [];
 };
@@ -175,10 +175,7 @@ const getInlineOnlyElementAST = (ast: Element): Element => {
   };
 };
 
-const querySelectorTag = (
-  ast: HtmlAST,
-  tagName: string
-): Element | undefined => {
+const querySelectorTag = (ast: HtmlAST, tagName: string): Element | undefined => {
   if (ast.type === 'element') {
     if (ast.tagName === tagName) {
       return ast;
@@ -193,15 +190,9 @@ const querySelectorTag = (
   return undefined;
 };
 
-const querySelectorClass = (
-  ast: HtmlAST,
-  className: string
-): Element | undefined => {
+const querySelectorClass = (ast: HtmlAST, className: string): Element | undefined => {
   if (ast.type === 'element') {
-    if (
-      Array.isArray(ast.properties?.className) &&
-      ast.properties.className.includes(className)
-    ) {
+    if (Array.isArray(ast.properties?.className) && ast.properties.className.includes(className)) {
       return ast;
     }
     for (const child of ast.children) {
@@ -249,15 +240,12 @@ const querySelector = (ast: HtmlAST, selector: string): Element | undefined => {
   return undefined;
 };
 
-const flatNodes = (
-  ast: HtmlAST,
-  expression: (tagName: string) => boolean
-): HtmlAST => {
+const flatNodes = (ast: HtmlAST, expression: (tagName: string) => boolean): HtmlAST => {
   if (ast.type === 'element') {
-    const children = ast.children.map(child => flatNodes(child, expression));
+    const children = ast.children.map((child) => flatNodes(child, expression));
     return {
       ...ast,
-      children: children.flatMap(child => {
+      children: children.flatMap((child) => {
         if (child.type === 'element' && expression(child.tagName)) {
           return child.children;
         }
@@ -275,7 +263,7 @@ const isParagraphLike = (node: Element): boolean => {
   return (
     (typeof node.properties?.style === 'string' &&
       node.properties.style.match(/display:\s*flex/) !== null) ||
-    getElementChildren(node).every(child => isElementInline(child))
+    getElementChildren(node).every((child) => isElementInline(child))
   );
 };
 

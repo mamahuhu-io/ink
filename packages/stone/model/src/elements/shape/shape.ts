@@ -1,10 +1,4 @@
-import type {
-  Bound,
-  IBound,
-  IVec,
-  PointLocation,
-  SerializedXYWH,
-} from '@ink/stone-global/gfx';
+import type { Bound, IBound, IVec, PointLocation, SerializedXYWH } from '@ink/stone-global/gfx';
 import type { BaseElementProps, PointTestOptions } from '@ink/stone-std/gfx';
 import {
   field,
@@ -120,10 +114,7 @@ export class ShapeElementModel extends GfxPrimitiveElementModel<ShapeProps> {
   accessor maxWidth: false | number = false;
 
   @field([SHAPE_TEXT_VERTICAL_PADDING, SHAPE_TEXT_PADDING])
-  accessor padding: [number, number] = [
-    SHAPE_TEXT_VERTICAL_PADDING,
-    SHAPE_TEXT_PADDING,
-  ];
+  accessor padding: [number, number] = [SHAPE_TEXT_VERTICAL_PADDING, SHAPE_TEXT_PADDING];
 
   @field()
   accessor radius: number = 0;
@@ -218,10 +209,7 @@ export class LocalShapeElementModel extends GfxLocalElementModel {
   accessor fontWeight: FontWeight = FontWeight.Regular;
 
   @prop()
-  accessor padding: [number, number] = [
-    SHAPE_TEXT_VERTICAL_PADDING,
-    SHAPE_TEXT_PADDING,
-  ];
+  accessor padding: [number, number] = [SHAPE_TEXT_VERTICAL_PADDING, SHAPE_TEXT_PADDING];
 
   @prop()
   accessor radius: number = 0;

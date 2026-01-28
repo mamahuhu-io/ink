@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 
 import type { SelectionConstructor } from './types';
 
@@ -28,16 +28,13 @@ export abstract class BaseSelection {
   }
 
   static fromJSON(_: Record<string, unknown>): BaseSelection {
-    throw new InkStoneError(
-      ErrorCode.SelectionError,
-      'You must override this method'
-    );
+    throw new InkStoneError(ErrorCode.SelectionError, 'You must override this method');
   }
 
   abstract equals(other: BaseSelection): boolean;
 
   is<T extends SelectionConstructor>(
-    type: T
+    type: T,
   ): this is T extends SelectionConstructor<infer U> ? U : never {
     return this.type === type.type;
   }

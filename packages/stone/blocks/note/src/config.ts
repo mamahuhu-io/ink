@@ -16,5 +16,4 @@ export type NoteConfig = {
   pageBlockViewportFitAnimation?: (context: NoteBlockContext) => boolean;
 };
 
-export const NoteConfigExtension =
-  ConfigExtensionFactory<NoteConfig>('ink:note');
+export const NoteConfigExtension = ConfigExtensionFactory<NoteConfig>('ink:note');

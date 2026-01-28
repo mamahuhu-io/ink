@@ -8,5 +8,5 @@ export * from './toolbar';
 export const toolbarWidget = WidgetViewExtension(
   'ink:page',
   INK_TOOLBAR_WIDGET,
-  literal`${unsafeStatic(INK_TOOLBAR_WIDGET)}`
+  literal`${unsafeStatic(INK_TOOLBAR_WIDGET)}`,
 );

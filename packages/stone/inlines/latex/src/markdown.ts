@@ -1,7 +1,4 @@
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import type { BlockComponent } from '@ink/stone-std';
 import { InlineMarkdownExtension } from '@ink/stone-std/inline';
@@ -19,8 +16,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
     const blockPrefix = match.groups['blockPrefix'];
 
     if (!inlineEditor.rootElement) return;
-    const blockComponent =
-      inlineEditor.rootElement.closest<BlockComponent>('[data-block-id]');
+    const blockComponent = inlineEditor.rootElement.closest<BlockComponent>('[data-block-id]');
     if (!blockComponent) return;
 
     const doc = blockComponent.store;
@@ -46,7 +42,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
           latex: '',
         },
         parentComponent.model,
-        index + 1
+        index + 1,
       );
       blockComponent.host.updateComplete
         .then(() => {
@@ -60,12 +56,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
         .catch(console.error);
 
       std.getOptional(TelemetryProvider)?.track('Latex', {
-        from:
-          mode === 'page'
-            ? 'doc'
-            : ifEdgelessText
-              ? 'edgeless text'
-              : 'edgeless note',
+        from: mode === 'page' ? 'doc' : ifEdgelessText ? 'edgeless text' : 'edgeless note',
         page: mode === 'page' ? 'doc' : 'edgeless',
         segment: mode === 'page' ? 'doc' : 'whiteboard',
         module: 'equation',
@@ -87,7 +78,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
           index: inlineRange.index - 3,
           length: 0,
         },
-        ' '
+        ' ',
       );
       inlineEditor.formatText(
         {
@@ -96,7 +87,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
         },
         {
           latex: '',
-        }
+        },
       );
 
       inlineEditor
@@ -104,9 +95,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
         .then(async () => {
           await inlineEditor.waitForUpdate();
 
-          const textPoint = inlineEditor.getTextPoint(
-            inlineRange.index - 3 + 1
-          );
+          const textPoint = inlineEditor.getTextPoint(inlineRange.index - 3 + 1);
           if (!textPoint) return;
 
           const [text] = textPoint;
@@ -118,12 +107,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
         .catch(console.error);
 
       std.getOptional(TelemetryProvider)?.track('Latex', {
-        from:
-          mode === 'page'
-            ? 'doc'
-            : ifEdgelessText
-              ? 'edgeless text'
-              : 'edgeless note',
+        from: mode === 'page' ? 'doc' : ifEdgelessText ? 'edgeless text' : 'edgeless note',
         page: mode === 'page' ? 'doc' : 'edgeless',
         segment: mode === 'page' ? 'doc' : 'whiteboard',
         module: 'inline equation',
@@ -147,7 +131,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
         index: startIndex,
         length: 0,
       },
-      ' '
+      ' ',
     );
     inlineEditor.formatText(
       {
@@ -156,7 +140,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
       },
       {
         latex: String.raw`${content}`,
-      }
+      },
     );
 
     inlineEditor.setInlineRange({
@@ -165,12 +149,7 @@ export const LatexExtension = InlineMarkdownExtension<InkTextAttributes>({
     });
 
     std.getOptional(TelemetryProvider)?.track('Latex', {
-      from:
-        mode === 'page'
-          ? 'doc'
-          : ifEdgelessText
-            ? 'edgeless text'
-            : 'edgeless note',
+      from: mode === 'page' ? 'doc' : ifEdgelessText ? 'edgeless text' : 'edgeless note',
       page: mode === 'page' ? 'doc' : 'edgeless',
       segment: mode === 'page' ? 'doc' : 'whiteboard',
       module: 'inline equation',

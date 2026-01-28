@@ -1,14 +1,8 @@
+import type { Constructor } from '@ink/stone-global/utils';
 import { NoteBlockModel } from '@ink/stone-model';
 import { DocModeProvider } from '@ink/stone-shared/services';
-import {
-  isInsideEdgelessEditor,
-  matchModels,
-} from '@ink/stone-shared/utils';
-import type { Constructor } from '@ink/stone-global/utils';
-import {
-  GfxBlockElementModel,
-  GfxControllerIdentifier,
-} from '@ink/stone-std/gfx';
+import { isInsideEdgelessEditor, matchModels } from '@ink/stone-shared/utils';
+import { GfxBlockElementModel, GfxControllerIdentifier } from '@ink/stone-std/gfx';
 import type { BlockModel } from '@ink/stone-store';
 import type { LitElement, TemplateResult } from 'lit';
 
@@ -21,10 +15,7 @@ export const isPeekable = <Element extends LitElement>(e: Element): boolean => {
   return Reflect.has(e, symbol) && (e as any)[symbol]?.peekable;
 };
 
-export const peek = <Element extends LitElement>(
-  e: Element,
-  template?: TemplateResult
-): void => {
+export const peek = <Element extends LitElement>(e: Element, template?: TemplateResult): void => {
   isPeekable(e) && (e as any)[symbol]?.peek(template);
 };
 
@@ -37,7 +28,7 @@ export const Peekable =
   <T extends PeekableClass, C extends Constructor<PeekableClass>>(
     options: PeekableOptions<T> = {
       action: ['double-click', 'shift-click'],
-    }
+    },
   ) =>
   (Class: C, context: ClassDecoratorContext) => {
     if (context.kind !== 'class') {
@@ -45,8 +36,7 @@ export const Peekable =
       return;
     }
 
-    if (options.action === undefined)
-      options.action = ['double-click', 'shift-click'];
+    if (options.action === undefined) options.action = ['double-click', 'shift-click'];
 
     const actions = Array.isArray(options.action)
       ? options.action
@@ -75,7 +65,7 @@ export const Peekable =
         const model = this['model'] as BlockModel;
         const gfx = this.std.get(GfxControllerIdentifier);
         const hitTarget = gfx.getElementByPoint(
-          ...gfx.viewport.toModelCoordFromClientCoord([e.clientX, e.clientY])
+          ...gfx.viewport.toModelCoordFromClientCoord([e.clientX, e.clientY]),
         );
 
         if (hitTarget && hitTarget !== model) {
@@ -103,11 +93,10 @@ export const Peekable =
         super.connectedCallback();
 
         const target: HTMLElement =
-          (options.selector ? this.querySelector(options.selector) : this) ||
-          this;
+          (options.selector ? this.querySelector(options.selector) : this) || this;
 
         if (actions.includes('double-click')) {
-          this.disposables.addFromEvent(target, 'dblclick', e => {
+          this.disposables.addFromEvent(target, 'dblclick', (e) => {
             if (this[symbol].peekable && this._peekableInEdgeless(e)) {
               e.stopPropagation();
               this[symbol].peek().catch(console.error);
@@ -119,12 +108,8 @@ export const Peekable =
           // shift click in edgeless should be selection
           !isInsideEdgelessEditor(this.std.host)
         ) {
-          this.disposables.addFromEvent(target, 'click', e => {
-            if (
-              e.shiftKey &&
-              this[symbol].peekable &&
-              this._peekableInEdgeless(e)
-            ) {
+          this.disposables.addFromEvent(target, 'click', (e) => {
+            if (e.shiftKey && this[symbol].peekable && this._peekableInEdgeless(e)) {
               e.stopPropagation();
               e.stopImmediatePropagation();
               this[symbol].peek().catch(console.error);

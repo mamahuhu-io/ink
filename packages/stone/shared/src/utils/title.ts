@@ -7,14 +7,12 @@ function getDocTitleByEditorHost(editorHost: EditorHost): HTMLElement | null {
   return docViewport.querySelector('doc-title');
 }
 
-export function getDocTitleInlineEditor(
-  editorHost: EditorHost
-): InlineEditor | null {
+export function getDocTitleInlineEditor(editorHost: EditorHost): InlineEditor | null {
   const docTitle = getDocTitleByEditorHost(editorHost);
   if (!docTitle) return null;
-  const titleRichText = docTitle.querySelector<
-    HTMLElement & { inlineEditor: InlineEditor }
-  >('rich-text');
+  const titleRichText = docTitle.querySelector<HTMLElement & { inlineEditor: InlineEditor }>(
+    'rich-text',
+  );
   if (!titleRichText || !titleRichText.inlineEditor) return null;
   return titleRichText.inlineEditor;
 }

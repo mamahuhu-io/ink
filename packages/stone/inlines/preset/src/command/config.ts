@@ -60,14 +60,14 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('bold', 'Bold'),
       icon: BoldIcon,
       hotkey: 'Mod-b',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'bold' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleBold).run();
       },
     },
@@ -76,14 +76,14 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('italic', 'Italic'),
       icon: ItalicIcon,
       hotkey: 'Mod-i',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'italic' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleItalic).run();
       },
     },
@@ -92,14 +92,14 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('underline', 'Underline'),
       icon: UnderlineIcon,
       hotkey: 'Mod-u',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'underline' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleUnderline).run();
       },
     },
@@ -108,14 +108,14 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('strikethrough', 'Strikethrough'),
       icon: StrikethroughIcon,
       hotkey: 'Mod-shift-s',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'strike' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleStrike).run();
       },
     },
@@ -124,14 +124,14 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('code', 'Code'),
       icon: CodeIcon,
       hotkey: 'Mod-e',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'code' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleCode).run();
       },
     },
@@ -140,24 +140,22 @@ export function getTextFormatConfigs(): TextFormatConfig[] {
       name: t('link', 'Link'),
       icon: LinkIcon,
       hotkey: 'Mod-k',
-      activeWhen: host => {
+      activeWhen: (host) => {
         const [result] = host.std.command
           .chain()
           .pipe(isTextAttributeActive, { key: 'link' })
           .run();
         return result;
       },
-      action: host => {
+      action: (host) => {
         host.std.command.chain().pipe(toggleLink).run();
       },
       // should check text length
-      textChecker: host => {
+      textChecker: (host) => {
         const textSelection = host.std.selection.find(TextSelection);
         if (!textSelection || textSelection.isCollapsed()) return false;
 
-        return Boolean(
-          textSelection.from.length + (textSelection.to?.length ?? 0)
-        );
+        return Boolean(textSelection.from.length + (textSelection.to?.length ?? 0));
       },
     },
   ];

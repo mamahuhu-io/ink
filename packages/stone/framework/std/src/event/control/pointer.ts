@@ -4,27 +4,20 @@ import { nextTick } from '@ink/stone-global/utils';
 
 import { UIEventState, UIEventStateContext } from '../base.js';
 import type { UIEventDispatcher } from '../dispatcher.js';
-import {
-  DndEventState,
-  MultiPointerEventState,
-  PointerEventState,
-} from '../state/index.js';
+import { DndEventState, MultiPointerEventState, PointerEventState } from '../state/index.js';
 import { EventScopeSourceType, EventSourceState } from '../state/source.js';
 import { isFarEnough } from '../utils.js';
 
 type PointerId = typeof PointerEvent.prototype.pointerId;
 
-function createContext(
-  event: Event,
-  state: PointerEventState | MultiPointerEventState
-) {
+function createContext(event: Event, state: PointerEventState | MultiPointerEventState) {
   return UIEventStateContext.from(
     new UIEventState(event),
     new EventSourceState({
       event,
       sourceType: EventScopeSourceType.Target,
     }),
-    state
+    state,
   );
 }
 
@@ -33,7 +26,7 @@ const POLL_INTERVAL = 1000;
 abstract class PointerControllerBase {
   constructor(
     protected _dispatcher: UIEventDispatcher,
-    protected _getRect: () => DOMRect
+    protected _getRect: () => DOMRect,
   ) {}
 
   abstract listen(): void;
@@ -94,10 +87,7 @@ class PointerEventForward extends PointerControllerBase {
     this._startStates.delete(pointerId);
     this._lastStates.delete(pointerId);
 
-    this._dispatcher.run(
-      up ? 'pointerUp' : 'pointerOut',
-      createContext(event, state)
-    );
+    this._dispatcher.run(up ? 'pointerUp' : 'pointerOut', createContext(event, state));
   };
 
   listen() {
@@ -198,11 +188,7 @@ class DragController extends PointerControllerBase {
     });
     this._startPointerState = pointerState;
 
-    this._dispatcher.disposables.addFromEvent(
-      document,
-      'pointermove',
-      this._move
-    );
+    this._dispatcher.disposables.addFromEvent(document, 'pointermove', this._move);
     this._dispatcher.disposables.addFromEvent(document, 'pointerup', this._up);
     // Add pointercancel handler to handle system gesture cancellations
     this._dispatcher.disposables.addFromEvent(document, 'pointercancel', this._cancel);
@@ -257,58 +243,40 @@ class DragController extends PointerControllerBase {
   private readonly _nativeDragEnd = (event: DragEvent) => {
     this._nativeDragging = false;
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDragEnd',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDragEnd', this._createContext(event, dndEventState));
   };
 
   private _nativeDragging = false;
 
   private readonly _nativeDragMove = (event: DragEvent) => {
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDragMove',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDragMove', this._createContext(event, dndEventState));
   };
 
   private readonly _nativeDragStart = (event: DragEvent) => {
     this._reset();
     this._nativeDragging = true;
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDragStart',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDragStart', this._createContext(event, dndEventState));
   };
 
   private readonly _nativeDragOver = (event: DragEvent) => {
     // prevent default to allow drop in editor
     event.preventDefault();
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDragOver',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDragOver', this._createContext(event, dndEventState));
   };
 
   private readonly _nativeDragLeave = (event: DragEvent) => {
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDragLeave',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDragLeave', this._createContext(event, dndEventState));
   };
 
   private readonly _nativeDrop = (event: DragEvent) => {
     this._reset();
     this._nativeDragging = false;
     const dndEventState = new DndEventState({ event });
-    this._dispatcher.run(
-      'nativeDrop',
-      this._createContext(event, dndEventState)
-    );
+    this._dispatcher.run('nativeDrop', this._createContext(event, dndEventState));
   };
 
   private readonly _reset = () => {
@@ -324,10 +292,7 @@ class DragController extends PointerControllerBase {
   private _startPointerState: PointerEventState | null = null;
 
   private readonly _up = (event: PointerEvent) => {
-    if (
-      !this._startPointerState ||
-      this._startPointerState.raw.pointerId !== event.pointerId
-    )
+    if (!this._startPointerState || this._startPointerState.raw.pointerId !== event.pointerId)
       return;
 
     const start = this._startPointerState;
@@ -350,10 +315,7 @@ class DragController extends PointerControllerBase {
 
   // Handle pointer cancel event (triggered by system gestures, etc.)
   private readonly _cancel = (event: PointerEvent) => {
-    if (
-      this._startPointerState &&
-      this._startPointerState.raw.pointerId === event.pointerId
-    ) {
+    if (this._startPointerState && this._startPointerState.raw.pointerId === event.pointerId) {
       // Trigger dragEnd if we were dragging
       if (this._dragging) {
         const start = this._startPointerState;
@@ -408,7 +370,7 @@ class DragController extends PointerControllerBase {
         event,
         sourceType: EventScopeSourceType.Target,
       }),
-      dndState
+      dndState,
     );
   }
 
@@ -429,7 +391,7 @@ class DragController extends PointerControllerBase {
         onDrop: () => {
           this._nativeDragging = false;
         },
-      })
+      }),
     );
 
     disposables.addFromEvent(host, 'dragstart', this._nativeDragStart);
@@ -444,10 +406,7 @@ class DragController extends PointerControllerBase {
 abstract class DualDragControllerBase extends PointerControllerBase {
   private readonly _down = (event: PointerEvent) => {
     // Another pointer down
-    if (
-      this._startPointerStates.primary !== null &&
-      this._startPointerStates.secondary !== null
-    ) {
+    if (this._startPointerStates.primary !== null && this._startPointerStates.secondary !== null) {
       this._reset();
     }
 
@@ -479,10 +438,7 @@ abstract class DualDragControllerBase extends PointerControllerBase {
   };
 
   private readonly _move = (event: PointerEvent) => {
-    if (
-      this._startPointerStates.primary === null ||
-      this._startPointerStates.secondary === null
-    ) {
+    if (this._startPointerStates.primary === null || this._startPointerStates.secondary === null) {
       return;
     }
 
@@ -553,10 +509,7 @@ abstract class DualDragControllerBase extends PointerControllerBase {
     }
   };
 
-  abstract _handleMove(
-    event: PointerEvent,
-    state: MultiPointerEventState
-  ): void;
+  abstract _handleMove(event: PointerEvent, state: MultiPointerEventState): void;
 
   override listen(): void {
     const { host, disposables } = this._dispatcher;
@@ -580,10 +533,7 @@ class PinchController extends DualDragControllerBase {
     const deltaFirstPointerValue = Vec.len(deltaFirstPointerVec);
     const deltaSecondPointerValue = Vec.len(deltaSecondPointerVec);
 
-    const deltaDotProduct = Vec.dpr(
-      deltaFirstPointerVec,
-      deltaSecondPointerVec
-    );
+    const deltaDotProduct = Vec.dpr(deltaFirstPointerVec, deltaSecondPointerVec);
 
     const deltaValueThreshold = 0.1;
 
@@ -607,17 +557,10 @@ class PanController extends DualDragControllerBase {
     const deltaFirstPointer = state.pointers[0].delta;
     const deltaSecondPointer = state.pointers[1].delta;
 
-    const deltaDotProduct = Vec.dpr(
-      Vec.toVec(deltaFirstPointer),
-      Vec.toVec(deltaSecondPointer)
-    );
+    const deltaDotProduct = Vec.dpr(Vec.toVec(deltaFirstPointer), Vec.toVec(deltaSecondPointer));
 
     // the center move distance is not far enough
-    if (
-      !isFarEnough(deltaFirstPointer, deltaSecondPointer) &&
-      deltaDotProduct < 0
-    )
-      return;
+    if (!isFarEnough(deltaFirstPointer, deltaSecondPointer) && deltaDotProduct < 0) return;
 
     this._dispatcher.run('pan', createContext(event, state));
   }
@@ -673,6 +616,6 @@ export class PointerControl {
 
   listen() {
     this._startPolling();
-    this.controllers.forEach(controller => controller.listen());
+    this.controllers.forEach((controller) => controller.listen());
   }
 }

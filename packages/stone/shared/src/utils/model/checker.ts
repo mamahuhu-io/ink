@@ -2,11 +2,7 @@ import type { BlockModel, Store } from '@ink/stone-store';
 
 type ConstructorType<U> = { new (): U };
 type ModelList<T> =
-  T extends Array<infer U>
-    ? U extends ConstructorType<infer C>
-      ? Array<C>
-      : never
-    : never;
+  T extends Array<infer U> ? (U extends ConstructorType<infer C> ? Array<C> : never) : never;
 
 export function matchModels<
   const Model extends ConstructorType<BlockModel>[],
@@ -15,13 +11,13 @@ export function matchModels<
   if (model === null || model === undefined) {
     return false;
   }
-  return expected.some(expectedModel => model instanceof expectedModel);
+  return expected.some((expectedModel) => model instanceof expectedModel);
 }
 
 export function isInsideBlockByFlavour(
   doc: Store,
   block: BlockModel | string,
-  flavour: string
+  flavour: string,
 ): boolean {
   const parent = doc.getParent(block);
   if (parent === null) {

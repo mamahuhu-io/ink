@@ -4,10 +4,7 @@ import type { BlockModel, Store } from '@ink/stone-store';
 
 import { matchModels } from './checker.js';
 
-export function findAncestorModel(
-  model: BlockModel,
-  match: (m: BlockModel) => boolean
-) {
+export function findAncestorModel(model: BlockModel, match: (m: BlockModel) => boolean) {
   let curModel: BlockModel | null = model;
   while (curModel) {
     if (match(curModel)) {
@@ -24,7 +21,7 @@ export function findAncestorModel(
  */
 export async function asyncGetBlockComponent(
   std: BlockStdScope,
-  id: string
+  id: string,
 ): Promise<BlockComponent | null> {
   const rootBlockId = std.store.root?.id;
   if (!rootBlockId) return null;
@@ -36,9 +33,7 @@ export async function asyncGetBlockComponent(
 }
 
 export function findNoteBlockModel(model: BlockModel) {
-  return findAncestorModel(model, m =>
-    matchModels(m, [NoteBlockModel])
-  ) as NoteBlockModel | null;
+  return findAncestorModel(model, (m) => matchModels(m, [NoteBlockModel])) as NoteBlockModel | null;
 }
 
 export function getLastNoteBlock(doc: Store) {

@@ -1,1 +1,1 @@
-export { FileChangeDialog } from './FileChangeDialog'
+export { FileChangeDialog } from './FileChangeDialog';

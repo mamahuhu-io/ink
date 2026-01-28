@@ -4,21 +4,17 @@ import {
 } from '@ink/stone-shared/adapters';
 
 function escapeBrackets(text: string) {
-  const pattern =
-    /(```[\S\s]*?```|`.*?`)|\\\[([\S\s]*?[^\\])\\]|\\\((.*?)\\\)/g;
-  return text.replaceAll(
-    pattern,
-    (match, codeBlock, squareBracket, roundBracket) => {
-      if (codeBlock) {
-        return codeBlock;
-      } else if (squareBracket) {
-        return `$$${squareBracket}$$`;
-      } else if (roundBracket) {
-        return `$${roundBracket}$`;
-      }
-      return match;
+  const pattern = /(```[\S\s]*?```|`.*?`)|\\\[([\S\s]*?[^\\])\\]|\\\((.*?)\\\)/g;
+  return text.replaceAll(pattern, (match, codeBlock, squareBracket, roundBracket) => {
+    if (codeBlock) {
+      return codeBlock;
+    } else if (squareBracket) {
+      return `$$${squareBracket}$$`;
+    } else if (roundBracket) {
+      return `$${roundBracket}$`;
     }
-  );
+    return match;
+  });
 }
 
 function escapeMhchem(text: string) {
@@ -36,22 +32,19 @@ function preprocessLatex(content: string) {
   // Protect code blocks
   const codeBlocks: string[] = [];
   let preprocessedContent = content;
-  preprocessedContent = preprocessedContent.replace(
-    /(```[\s\S]*?```|`[^`\n]+`)/g,
-    (_, code) => {
-      codeBlocks.push(code);
-      return `<<CODE_BLOCK_${codeBlocks.length - 1}>>`;
-    }
-  );
+  preprocessedContent = preprocessedContent.replace(/(```[\s\S]*?```|`[^`\n]+`)/g, (_, code) => {
+    codeBlocks.push(code);
+    return `<<CODE_BLOCK_${codeBlocks.length - 1}>>`;
+  });
 
   // Protect existing LaTeX expressions
   const latexExpressions: string[] = [];
   preprocessedContent = preprocessedContent.replace(
     /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\(.*?\\\))/g,
-    match => {
+    (match) => {
       latexExpressions.push(match);
       return `<<LATEX_${latexExpressions.length - 1}>>`;
-    }
+    },
   );
 
   // Escape dollar signs that are likely currency indicators
@@ -60,13 +53,13 @@ function preprocessLatex(content: string) {
   // Restore LaTeX expressions
   preprocessedContent = preprocessedContent.replace(
     /<<LATEX_(\d+)>>/g,
-    (_, index) => latexExpressions[parseInt(index)]
+    (_, index) => latexExpressions[parseInt(index)],
   );
 
   // Restore code blocks
   preprocessedContent = preprocessedContent.replace(
     /<<CODE_BLOCK_(\d+)>>/g,
-    (_, index) => codeBlocks[parseInt(index)]
+    (_, index) => codeBlocks[parseInt(index)],
   );
 
   // Apply additional escaping functions
@@ -79,10 +72,9 @@ function preprocessLatex(content: string) {
 const latexPreprocessor: MarkdownAdapterPreprocessor = {
   name: 'latex',
   levels: ['block', 'slice', 'doc'],
-  preprocess: content => {
+  preprocess: (content) => {
     return preprocessLatex(content);
   },
 };
 
-export const LatexMarkdownPreprocessorExtension =
-  MarkdownPreprocessorExtension(latexPreprocessor);
+export const LatexMarkdownPreprocessorExtension = MarkdownPreprocessorExtension(latexPreprocessor);

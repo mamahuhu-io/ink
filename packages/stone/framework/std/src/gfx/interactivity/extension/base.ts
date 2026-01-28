@@ -1,5 +1,5 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import type { GfxController } from '../../controller.js';
@@ -53,17 +53,14 @@ export class InteractivityExtension extends Extension {
     if (!this.key) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'key is not defined in the InteractivityExtension'
+        'key is not defined in the InteractivityExtension',
       );
     }
 
-    di.add(
-      this as unknown as { new (gfx: GfxController): InteractivityExtension },
-      [GfxControllerIdentifier]
-    );
-    di.addImpl(InteractivityExtensionIdentifier(this.key), provider =>
-      provider.get(this)
-    );
+    di.add(this as unknown as { new (gfx: GfxController): InteractivityExtension }, [
+      GfxControllerIdentifier,
+    ]);
+    di.addImpl(InteractivityExtensionIdentifier(this.key), (provider) => provider.get(this));
   }
 }
 
@@ -73,10 +70,7 @@ export class InteractivityEventAPI {
     ((evt: GfxInteractivityContext) => void)[]
   >();
 
-  on(
-    eventName: SupportedEvents,
-    handler: (evt: GfxInteractivityContext) => void
-  ) {
+  on(eventName: SupportedEvents, handler: (evt: GfxInteractivityContext) => void) {
     const handlers = this._handlersMap.get(eventName) ?? [];
     handlers.push(handler);
     this._handlersMap.set(eventName, handlers);
@@ -142,14 +136,14 @@ export type ActionContextMap = {
 export class InteractivityActionAPI {
   private readonly _handlers: Partial<{
     [K in keyof ActionContextMap]: (
-      ctx: ActionContextMap[K]['context']
+      ctx: ActionContextMap[K]['context'],
     ) => ActionContextMap[K]['returnType'];
   }> = {};
 
   onDragInitialize(
     handler: (
-      ctx: ActionContextMap['dragInitialize']['context']
-    ) => ActionContextMap['dragInitialize']['returnType']
+      ctx: ActionContextMap['dragInitialize']['context'],
+    ) => ActionContextMap['dragInitialize']['returnType'],
   ) {
     this._handlers['dragInitialize'] = handler;
 
@@ -160,8 +154,8 @@ export class InteractivityActionAPI {
 
   onElementResize(
     handler: (
-      ctx: ActionContextMap['elementResize']['context']
-    ) => ActionContextMap['elementResize']['returnType']
+      ctx: ActionContextMap['elementResize']['context'],
+    ) => ActionContextMap['elementResize']['returnType'],
   ) {
     this._handlers['elementResize'] = handler;
 
@@ -172,8 +166,8 @@ export class InteractivityActionAPI {
 
   onRequestElementsClone(
     handler: (
-      ctx: ActionContextMap['elementsClone']['context']
-    ) => ActionContextMap['elementsClone']['returnType']
+      ctx: ActionContextMap['elementsClone']['context'],
+    ) => ActionContextMap['elementsClone']['returnType'],
   ) {
     this._handlers['elementsClone'] = handler;
 
@@ -184,8 +178,8 @@ export class InteractivityActionAPI {
 
   onElementSelect(
     handler: (
-      ctx: ActionContextMap['elementSelect']['context']
-    ) => ActionContextMap['elementSelect']['returnType']
+      ctx: ActionContextMap['elementSelect']['context'],
+    ) => ActionContextMap['elementSelect']['returnType'],
   ) {
     this._handlers['elementSelect'] = handler;
 
@@ -196,7 +190,7 @@ export class InteractivityActionAPI {
 
   emit<K extends keyof ActionContextMap>(
     event: K,
-    context: ActionContextMap[K]['context']
+    context: ActionContextMap[K]['context'],
   ): ActionContextMap[K]['returnType'] | undefined {
     const handler = this._handlers[event];
 

@@ -5,6 +5,7 @@
 //   EdgelessNoteBlockComponent,
 // } from '@ink/stone-block-note';
 import { ParagraphBlockComponent } from '@ink/stone-block-paragraph';
+import { Bound, Point, Rect, type SerializedXYWH } from '@ink/stone-global/gfx';
 import {
   // [REMOVED] Database modules - not needed for local markdown editor
   // DatabaseBlockModel,
@@ -20,19 +21,8 @@ import {
   getClosestBlockComponentByPoint,
   matchModels,
 } from '@ink/stone-shared/utils';
-import {
-  Bound,
-  Point,
-  Rect,
-  type SerializedXYWH,
-} from '@ink/stone-global/gfx';
 import type { BlockComponent, EditorHost } from '@ink/stone-std';
-import type {
-  BaseSelection,
-  BlockModel,
-  BlockSnapshot,
-  SliceSnapshot,
-} from '@ink/stone-store';
+import type { BaseSelection, BlockModel, BlockSnapshot, SliceSnapshot } from '@ink/stone-store';
 
 import {
   DRAG_HANDLE_CONTAINER_HEIGHT,
@@ -71,11 +61,8 @@ export const getDragHandleContainerHeight = (model: BlockModel) => {
 };
 
 // To check if the block is a child block of the selected blocks
-export const containChildBlock = (
-  blocks: BlockComponent[],
-  childModel: BlockModel
-) => {
-  return blocks.some(block => {
+export const containChildBlock = (blocks: BlockComponent[], childModel: BlockModel) => {
+  return blocks.some((block) => {
     let currentBlock: BlockModel | null = childModel;
     while (currentBlock) {
       if (currentBlock.id === block.model.id) {
@@ -88,7 +75,7 @@ export const containChildBlock = (
 };
 
 export const containBlock = (blockIDs: string[], targetID: string) => {
-  return blockIDs.some(blockID => blockID === targetID);
+  return blockIDs.some((blockID) => blockID === targetID);
 };
 
 export const extractIdsFromSnapshot = (snapshot: SliceSnapshot) => {
@@ -116,16 +103,13 @@ export const insideDatabaseTable = (element: Element) => {
 };
 
 export const includeTextSelection = (selections: BaseSelection[]) => {
-  return selections.some(selection => selection.type === 'text');
+  return selections.some((selection) => selection.type === 'text');
 };
 
 /**
  * Check if the path of two blocks are equal
  */
-export const isBlockIdEqual = (
-  id1: string | null | undefined,
-  id2: string | null | undefined
-) => {
+export const isBlockIdEqual = (id1: string | null | undefined, id2: string | null | undefined) => {
   if (!id1 || !id2) {
     return false;
   }
@@ -136,21 +120,16 @@ export const isOutOfNoteBlock = (
   editorHost: EditorHost,
   noteBlock: Element,
   point: Point,
-  scale: number
+  scale: number,
 ) => {
   // TODO: need to find a better way to check if the point is out of note block
   const rect = noteBlock.getBoundingClientRect();
-  const insidePageEditor =
-    editorHost.std.get(DocModeProvider).getEditorMode() === 'page';
+  const insidePageEditor = editorHost.std.get(DocModeProvider).getEditorMode() === 'page';
   const padding =
-    (NOTE_CONTAINER_PADDING +
-      (insidePageEditor ? 0 : EDGELESS_NOTE_EXTRA_PADDING)) *
-    scale;
+    (NOTE_CONTAINER_PADDING + (insidePageEditor ? 0 : EDGELESS_NOTE_EXTRA_PADDING)) * scale;
   return rect
     ? insidePageEditor
-      ? point.y < rect.top ||
-        point.y > rect.bottom ||
-        point.x > rect.right + padding
+      ? point.y < rect.top || point.y > rect.bottom || point.x > rect.right + padding
       : point.y < rect.top ||
         point.y > rect.bottom ||
         point.x < rect.left - padding ||
@@ -165,10 +144,9 @@ export const getParentNoteBlock = (blockComponent: BlockComponent) => {
 export const getClosestNoteBlock = (
   editorHost: EditorHost,
   rootComponent: BlockComponent,
-  point: Point
+  point: Point,
 ) => {
-  const isInsidePageEditor =
-    editorHost.std.get(DocModeProvider).getEditorMode() === 'page';
+  const isInsidePageEditor = editorHost.std.get(DocModeProvider).getEditorMode() === 'page';
   return isInsidePageEditor
     ? findClosestBlockComponent(rootComponent, point, 'ink-note')
     : getHoveringNote(point);
@@ -177,13 +155,9 @@ export const getClosestNoteBlock = (
 export const getClosestBlockByPoint = (
   editorHost: EditorHost,
   rootComponent: BlockComponent,
-  point: Point
+  point: Point,
 ) => {
-  const closestNoteBlock = getClosestNoteBlock(
-    editorHost,
-    rootComponent,
-    point
-  );
+  const closestNoteBlock = getClosestNoteBlock(editorHost, rootComponent, point);
   if (!closestNoteBlock || closestNoteBlock.closest('.ink-surface-ref')) {
     return null;
   }
@@ -201,11 +175,7 @@ export const getClosestBlockByPoint = (
   const closestBlock = (
     block && containChildBlock([closestNoteBlock], block.model)
       ? block
-      : findClosestBlockComponent(
-          closestNoteBlock as BlockComponent,
-          point.clone(),
-          blockSelector
-        )
+      : findClosestBlockComponent(closestNoteBlock as BlockComponent, point.clone(), blockSelector)
   ) as BlockComponent;
 
   if (!closestBlock || !!closestBlock.closest('.surface-ref-note-portal')) {
@@ -215,10 +185,7 @@ export const getClosestBlockByPoint = (
   return closestBlock;
 };
 
-export const getDropResult = (
-  event: MouseEvent,
-  scale: number = 1
-): DropTarget | null => {
+export const getDropResult = (event: MouseEvent, scale: number = 1): DropTarget | null => {
   let dropIndicator = null;
   const point = new Point(event.x, event.y);
   const closestBlock = getClosestBlockComponentByPoint(point) as BlockComponent;
@@ -244,12 +211,11 @@ export const getDropResult = (
 
 export function getDragHandleLeftPadding(blocks: BlockComponent[]) {
   const hasToggleList = blocks.some(
-    block =>
-      (matchModels(block.model, [ListBlockModel]) &&
-        block.model.children.length > 0) ||
+    (block) =>
+      (matchModels(block.model, [ListBlockModel]) && block.model.children.length > 0) ||
       (block instanceof ParagraphBlockComponent &&
         block.model.props.type.startsWith('h') &&
-        block.collapsedSiblings.length > 0)
+        block.collapsedSiblings.length > 0),
   );
   const offsetLeft = hasToggleList
     ? DRAG_HANDLE_CONTAINER_OFFSET_LEFT_LIST
@@ -260,13 +226,13 @@ export function getDragHandleLeftPadding(blocks: BlockComponent[]) {
 let previousEle: BlockComponent[] = [];
 export function updateDragHandleClassName(blocks: BlockComponent[] = []) {
   const className = 'with-drag-handle';
-  previousEle.forEach(block => block.classList.remove(className));
+  previousEle.forEach((block) => block.classList.remove(className));
   previousEle = blocks;
-  blocks.forEach(block => block.classList.add(className));
+  blocks.forEach((block) => block.classList.add(className));
 }
 
 export function getDuplicateBlocks(blocks: BlockModel[]) {
-  const duplicateBlocks = blocks.map(block => ({
+  const duplicateBlocks = blocks.map((block) => ({
     flavour: block.flavour,
     blockProps: getBlockProps(block),
   }));
@@ -277,7 +243,7 @@ export function getDuplicateBlocks(blocks: BlockModel[]) {
  * Get hovering note with given a point in edgeless mode.
  * [REMOVED] Edgeless mode - always return null for Page mode
  */
-function getHoveringNote(point: Point) {
+function getHoveringNote(_point: Point) {
   // Edgeless mode not supported
   return null;
 }
@@ -289,11 +255,8 @@ export function getSnapshotRect(snapshot: SliceSnapshot): Bound | null {
     if (block.flavour === 'ink:surface') {
       if (block.props.elements) {
         Object.values(
-          block.props.elements as Record<
-            string,
-            { type: string; xywh: SerializedXYWH }
-          >
-        ).forEach(elem => {
+          block.props.elements as Record<string, { type: string; xywh: SerializedXYWH }>,
+        ).forEach((elem) => {
           if (elem.xywh) {
             bound = bound
               ? bound.unite(Bound.deserialize(elem.xywh))

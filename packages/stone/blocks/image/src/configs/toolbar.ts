@@ -1,14 +1,10 @@
+import { CopyIcon, DeleteIcon, DuplicateIcon } from '@ink/stone-icons/lit';
 import { ImageBlockModel } from '@ink/stone-model';
 import {
   blockCommentToolbarButton,
   type ToolbarModuleConfig,
   ToolbarModuleExtension,
 } from '@ink/stone-shared/services';
-import {
-  CopyIcon,
-  DeleteIcon,
-  DuplicateIcon,
-} from '@ink/stone-icons/lit';
 import { BlockFlavourIdentifier } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 
@@ -17,9 +13,7 @@ import { ImageEdgelessBlockComponent } from '../image-edgeless-block';
 import { duplicate } from '../utils';
 import { t } from './i18n';
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
   const name = flavour.split(':').pop();
 
   const builtinToolbarConfig = {
@@ -101,7 +95,7 @@ export const createBuiltinToolbarConfigExtension = (
       },
     ],
 
-    when: ctx => ctx.getSurfaceModelsByType(ImageBlockModel).length === 1,
+    when: (ctx) => ctx.getSurfaceModelsByType(ImageBlockModel).length === 1,
   } as const satisfies ToolbarModuleConfig;
 
   return [

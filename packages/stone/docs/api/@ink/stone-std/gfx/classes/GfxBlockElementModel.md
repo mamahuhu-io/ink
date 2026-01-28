@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / GfxBlockElementModel
 
@@ -18,7 +18,7 @@ You can use `GfxCompatibleBlockModel` to convert a BlockModel to a subclass that
 
 ### Props
 
-`Props` *extends* [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md) = [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md)
+`Props` _extends_ [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md) = [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md)
 
 ## Implements
 
@@ -40,6 +40,7 @@ The response area is computed as:
 `[x - horizontal, y - vertical, width + 2 * horizontal, height + 2 * vertical]`.
 
 Example:
+
 - Bounding box: `[0, 0, 100, 100]`, `responseExtension: [10, 20]`
   Resulting response area: `[-10, -20, 120, 140]`.
 - `responseExtension: [0, 0]` keeps the response area equal to the bounding box.
@@ -68,7 +69,7 @@ The bound of the element without considering the response extension.
 
 [`GfxCompatibleInterface`](../interfaces/GfxCompatibleInterface.md).[`elementBound`](../interfaces/GfxCompatibleInterface.md#elementbound)
 
-***
+---
 
 ### lockedBySelf
 
@@ -110,7 +111,7 @@ For (un)locking the element, use `(un)lock` instead.
 
 [`GfxCompatibleInterface`](../interfaces/GfxCompatibleInterface.md).[`lockedBySelf`](../interfaces/GfxCompatibleInterface.md#lockedbyself)
 
-***
+---
 
 ### responseBound
 

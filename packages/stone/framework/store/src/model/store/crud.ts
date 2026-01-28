@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import * as Y from 'yjs';
 
 import { isPureObject, native2Y } from '../../reactive/index.js';
@@ -10,7 +10,7 @@ import { internalPrimitives } from '../block/zod.js';
 export class DocCRUD {
   get root(): string | null {
     let rootId: string | null = null;
-    this._yBlocks.forEach(yBlock => {
+    this._yBlocks.forEach((yBlock) => {
       const flavour = yBlock.get('sys:flavour') as string;
       const schema = this._schema.flavourSchemaMap.get(flavour);
       if (!schema) return;
@@ -24,13 +24,10 @@ export class DocCRUD {
 
   constructor(
     private readonly _yBlocks: Y.Map<YBlock>,
-    private readonly _schema: Schema
+    private readonly _schema: Schema,
   ) {}
 
-  private _getSiblings<T>(
-    id: string,
-    fn: (index: number, parent: YBlock) => T
-  ) {
+  private _getSiblings<T>(id: string, fn: (index: number, parent: YBlock) => T) {
     const parentId = this.getParent(id);
     if (!parentId) return null;
     const parent = this._yBlocks.get(parentId);
@@ -48,27 +45,19 @@ export class DocCRUD {
     flavour: string,
     initialProps: Record<string, unknown> = {},
     parent?: string | null,
-    parentIndex?: number
+    parentIndex?: number,
   ) {
     const schema = this._schema.flavourSchemaMap.get(flavour);
     if (!schema) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `schema for flavour: ${flavour} not found`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `schema for flavour: ${flavour} not found`);
     }
 
     const hasBlock = this._yBlocks.has(id);
     if (hasBlock) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `Should not add existing block: ${id}`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `Should not add existing block: ${id}`);
     }
 
-    const parentFlavour = parent
-      ? this._yBlocks.get(parent)?.get('sys:flavour')
-      : undefined;
+    const parentFlavour = parent ? this._yBlocks.get(parent)?.get('sys:flavour') : undefined;
 
     this._schema.validate(flavour, parentFlavour as string);
 
@@ -76,9 +65,9 @@ export class DocCRUD {
     this._yBlocks.set(id, yBlock);
 
     const version = schema.version;
-    const children = (
-      initialProps.children as undefined | (string | BlockModel)[]
-    )?.map(child => (typeof child === 'string' ? child : child.id));
+    const children = (initialProps.children as undefined | (string | BlockModel)[])?.map((child) =>
+      typeof child === 'string' ? child : child.id,
+    );
 
     yBlock.set('sys:id', id);
     yBlock.set('sys:flavour', flavour);
@@ -116,8 +105,7 @@ export class DocCRUD {
       });
     }
 
-    const parentId =
-      parent ?? (schema.model.role === 'root' ? null : this.root);
+    const parentId = parent ?? (schema.model.role === 'root' ? null : this.root);
 
     if (!parentId) return;
 
@@ -141,13 +129,11 @@ export class DocCRUD {
       deleteChildren?: boolean;
     } = {
       deleteChildren: true,
-    }
+    },
   ) {
     const { bringChildrenTo, deleteChildren } = options;
     if (bringChildrenTo && deleteChildren) {
-      console.error(
-        'Cannot bring children to another block and delete them at the same time'
-      );
+      console.error('Cannot bring children to another block and delete them at the same time');
       return;
     }
 
@@ -173,20 +159,17 @@ export class DocCRUD {
           if (!bringChildrenTo) {
             throw new InkStoneError(
               ErrorCode.ModelCRUDError,
-              'bringChildrenTo is not provided when deleting block'
+              'bringChildrenTo is not provided when deleting block',
             );
           }
           const model = this._yBlocks.get(bringChildrenTo);
           if (!model) return;
           const bringFlavour = model.get('sys:flavour');
 
-          yModelChildren.forEach(child => {
+          yModelChildren.forEach((child) => {
             const childModel = this._yBlocks.get(child);
             if (!childModel) return;
-            this._schema.validate(
-              childModel.get('sys:flavour') as string,
-              bringFlavour as string
-            );
+            this._schema.validate(childModel.get('sys:flavour') as string, bringFlavour as string);
           });
 
           if (bringChildrenTo === parent) {
@@ -198,9 +181,7 @@ export class DocCRUD {
           const yBringChildrenTo = this._yBlocks.get(bringChildrenTo);
           if (!yBringChildrenTo) return;
 
-          const yBringChildrenToChildren = yBringChildrenTo.get(
-            'sys:children'
-          ) as Y.Array<string>;
+          const yBringChildrenToChildren = yBringChildrenTo.get('sys:children') as Y.Array<string>;
           yBringChildrenToChildren.push(yModelChildren.toArray());
         };
 
@@ -214,12 +195,12 @@ export class DocCRUD {
           const yBlock = this._yBlocks.get(id) as YBlock;
 
           const yChildren = yBlock.get('sys:children') as Y.Array<string>;
-          yChildren.forEach(id => deleteById(id));
+          yChildren.forEach((id) => deleteById(id));
 
           this._yBlocks.delete(id);
         };
 
-        yModelChildren.forEach(id => deleteById(id));
+        yModelChildren.forEach((id) => deleteById(id));
       }
     };
 
@@ -235,7 +216,7 @@ export class DocCRUD {
         parent
           .get('sys:children')
           .toArray()
-          .at(index + 1) ?? null
+          .at(index + 1) ?? null,
     );
   }
 
@@ -269,7 +250,7 @@ export class DocCRUD {
         parent
           .get('sys:children')
           .toArray()
-          .at(index - 1) ?? null
+          .at(index - 1) ?? null,
     );
   }
 
@@ -277,16 +258,10 @@ export class DocCRUD {
     blocksToMove: string[],
     newParent: string,
     targetSibling: string | null = null,
-    shouldInsertBeforeSibling = true
+    shouldInsertBeforeSibling = true,
   ) {
-    if (
-      blocksToMove.length > 1 &&
-      targetSibling &&
-      blocksToMove.includes(targetSibling)
-    ) {
-      console.error(
-        'Cannot move blocks when the target sibling is in the blocks to move'
-      );
+    if (blocksToMove.length > 1 && targetSibling && blocksToMove.includes(targetSibling)) {
+      console.error('Cannot move blocks when the target sibling is in the blocks to move');
       return;
     }
 
@@ -295,9 +270,7 @@ export class DocCRUD {
     }
 
     if (blocksToMove.includes(newParent)) {
-      console.error(
-        'Cannot move blocks when the new parent is in the blocks to move'
-      );
+      console.error('Cannot move blocks when the new parent is in the blocks to move');
       return;
     }
 
@@ -309,17 +282,14 @@ export class DocCRUD {
 
     const parentFlavour = parentBlock.get('sys:flavour');
 
-    blocksToMove.forEach(blockId => {
+    blocksToMove.forEach((blockId) => {
       const parent = this.getParent(blockId);
       if (!parent) return;
 
       const block = this._yBlocks.get(blockId);
       if (!block) return;
 
-      this._schema.validate(
-        block.get('sys:flavour') as string,
-        parentFlavour as string
-      );
+      this._schema.validate(block.get('sys:flavour') as string, parentFlavour as string);
 
       const children = childBlocksPerParent.get(parent);
       if (!children) {
@@ -331,7 +301,7 @@ export class DocCRUD {
       if (this.getNext(last) !== blockId) {
         throw new InkStoneError(
           ErrorCode.ModelCRUDError,
-          'The blocks to move are not contiguous under their parent'
+          'The blocks to move are not contiguous under their parent',
         );
       }
 
@@ -339,51 +309,43 @@ export class DocCRUD {
     });
 
     let insertIndex = 0;
-    Array.from(childBlocksPerParent.entries()).forEach(
-      ([parentBlock, blocksToMove], index) => {
-        const targetParentBlock = this._yBlocks.get(newParent);
-        if (!targetParentBlock) return;
-        const targetParentChildren = targetParentBlock.get('sys:children');
-        const sourceParentBlock = this._yBlocks.get(parentBlock);
-        if (!sourceParentBlock) return;
-        const sourceParentChildren = sourceParentBlock.get('sys:children');
+    Array.from(childBlocksPerParent.entries()).forEach(([parentBlock, blocksToMove], index) => {
+      const targetParentBlock = this._yBlocks.get(newParent);
+      if (!targetParentBlock) return;
+      const targetParentChildren = targetParentBlock.get('sys:children');
+      const sourceParentBlock = this._yBlocks.get(parentBlock);
+      if (!sourceParentBlock) return;
+      const sourceParentChildren = sourceParentBlock.get('sys:children');
 
-        // Get the IDs of blocks to move
-        // Remove the blocks from their current parent
-        const startIndex = sourceParentChildren
-          .toArray()
-          .findIndex(id => id === blocksToMove[0]);
-        sourceParentChildren.delete(startIndex, blocksToMove.length);
+      // Get the IDs of blocks to move
+      // Remove the blocks from their current parent
+      const startIndex = sourceParentChildren.toArray().findIndex((id) => id === blocksToMove[0]);
+      sourceParentChildren.delete(startIndex, blocksToMove.length);
 
-        const updateInsertIndex = () => {
-          const first = index === 0;
-          if (!first) {
-            insertIndex++;
-            return;
-          }
+      const updateInsertIndex = () => {
+        const first = index === 0;
+        if (!first) {
+          insertIndex++;
+          return;
+        }
 
-          if (!targetSibling) {
-            insertIndex = targetParentChildren.length;
-            return;
-          }
+        if (!targetSibling) {
+          insertIndex = targetParentChildren.length;
+          return;
+        }
 
-          let targetIndex = targetParentChildren
-            .toArray()
-            .findIndex(id => id === targetSibling);
-          if (targetIndex === -1) {
-            console.error('Target sibling not found, just insert to the end');
-            targetIndex = targetParentChildren.length;
-          }
-          insertIndex = shouldInsertBeforeSibling
-            ? targetIndex
-            : targetIndex + 1;
-        };
+        let targetIndex = targetParentChildren.toArray().findIndex((id) => id === targetSibling);
+        if (targetIndex === -1) {
+          console.error('Target sibling not found, just insert to the end');
+          targetIndex = targetParentChildren.length;
+        }
+        insertIndex = shouldInsertBeforeSibling ? targetIndex : targetIndex + 1;
+      };
 
-        updateInsertIndex();
+      updateInsertIndex();
 
-        targetParentChildren.insert(insertIndex, blocksToMove);
-      }
-    );
+      targetParentChildren.insert(insertIndex, blocksToMove);
+    });
   }
 
   updateBlockChildren(id: string, children: string[]) {

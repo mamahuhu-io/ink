@@ -10,55 +10,44 @@ import type { ExtensionType } from '@ink/stone-store';
 // not convert: ***test *** + space
 // not convert: *** test *** + space
 
-export const BoldItalicMarkdown = InlineMarkdownExtension<InkTextAttributes>(
-  {
-    name: 'bolditalic',
-    pattern: /.*\*{3}([^\s*][^*]*[^\s*])\*{3}\s$|.*\*{3}([^\s*])\*{3}\s$/,
-    action: ({
-      inlineEditor,
-      prefixText,
-      inlineRange,
-      pattern,
-      undoManager,
-    }) => {
-      const match = prefixText.match(pattern);
-      if (!match) return;
+export const BoldItalicMarkdown = InlineMarkdownExtension<InkTextAttributes>({
+  name: 'bolditalic',
+  pattern: /.*\*{3}([^\s*][^*]*[^\s*])\*{3}\s$|.*\*{3}([^\s*])\*{3}\s$/,
+  action: ({ inlineEditor, prefixText, inlineRange, pattern, undoManager }) => {
+    const match = prefixText.match(pattern);
+    if (!match) return;
 
-      const targetText = match[1] ?? match[2];
-      const annotatedText = match[0].slice(
-        -(targetText.length + 3 * 2 + 1),
-        -1
-      );
-      const startIndex = inlineRange.index - annotatedText.length - 1;
+    const targetText = match[1] ?? match[2];
+    const annotatedText = match[0].slice(-(targetText.length + 3 * 2 + 1), -1);
+    const startIndex = inlineRange.index - annotatedText.length - 1;
 
-      undoManager.stopCapturing();
+    undoManager.stopCapturing();
 
-      inlineEditor.formatText(
-        {
-          index: startIndex,
-          length: annotatedText.length,
-        },
-        {
-          bold: true,
-          italic: true,
-        }
-      );
-
-      inlineEditor.deleteText({
-        index: inlineRange.index - 4,
-        length: 4,
-      });
-      inlineEditor.deleteText({
+    inlineEditor.formatText(
+      {
         index: startIndex,
-        length: 3,
-      });
-      inlineEditor.setInlineRange({
-        index: startIndex + annotatedText.length - 6,
-        length: 0,
-      });
-    },
-  }
-);
+        length: annotatedText.length,
+      },
+      {
+        bold: true,
+        italic: true,
+      },
+    );
+
+    inlineEditor.deleteText({
+      index: inlineRange.index - 4,
+      length: 4,
+    });
+    inlineEditor.deleteText({
+      index: startIndex,
+      length: 3,
+    });
+    inlineEditor.setInlineRange({
+      index: startIndex + annotatedText.length - 6,
+      length: 0,
+    });
+  },
+});
 
 export const BoldMarkdown = InlineMarkdownExtension<InkTextAttributes>({
   name: 'bold',
@@ -80,7 +69,7 @@ export const BoldMarkdown = InlineMarkdownExtension<InkTextAttributes>({
       },
       {
         bold: true,
-      }
+      },
     );
 
     inlineEditor.deleteText({
@@ -118,7 +107,7 @@ export const ItalicExtension = InlineMarkdownExtension<InkTextAttributes>({
       },
       {
         italic: true,
-      }
+      },
     );
 
     inlineEditor.deleteText({
@@ -136,103 +125,83 @@ export const ItalicExtension = InlineMarkdownExtension<InkTextAttributes>({
   },
 });
 
-export const StrikethroughExtension =
-  InlineMarkdownExtension<InkTextAttributes>({
-    name: 'strikethrough',
-    pattern: /.*~{2}([^\s][^~]*[^\s])~{2}\s$|.*~{2}([^\s~])~{2}\s$/,
-    action: ({
-      inlineEditor,
-      prefixText,
-      inlineRange,
-      pattern,
-      undoManager,
-    }) => {
-      const match = prefixText.match(pattern);
-      if (!match) return;
+export const StrikethroughExtension = InlineMarkdownExtension<InkTextAttributes>({
+  name: 'strikethrough',
+  pattern: /.*~{2}([^\s][^~]*[^\s])~{2}\s$|.*~{2}([^\s~])~{2}\s$/,
+  action: ({ inlineEditor, prefixText, inlineRange, pattern, undoManager }) => {
+    const match = prefixText.match(pattern);
+    if (!match) return;
 
-      const targetText = match[1] ?? match[2];
-      const annotatedText = match[0].slice(
-        -targetText.length - (2 * 2 + 1),
-        -1
-      );
-      const startIndex = inlineRange.index - annotatedText.length - 1;
+    const targetText = match[1] ?? match[2];
+    const annotatedText = match[0].slice(-targetText.length - (2 * 2 + 1), -1);
+    const startIndex = inlineRange.index - annotatedText.length - 1;
 
-      undoManager.stopCapturing();
+    undoManager.stopCapturing();
 
-      inlineEditor.formatText(
-        {
-          index: startIndex,
-          length: annotatedText.length,
-        },
-        {
-          strike: true,
-        }
-      );
-
-      inlineEditor.deleteText({
-        index: inlineRange.index - 3,
-        length: 3,
-      });
-      inlineEditor.deleteText({
+    inlineEditor.formatText(
+      {
         index: startIndex,
-        length: 2,
-      });
+        length: annotatedText.length,
+      },
+      {
+        strike: true,
+      },
+    );
 
-      inlineEditor.setInlineRange({
-        index: startIndex + annotatedText.length - 4,
-        length: 0,
-      });
-    },
-  });
+    inlineEditor.deleteText({
+      index: inlineRange.index - 3,
+      length: 3,
+    });
+    inlineEditor.deleteText({
+      index: startIndex,
+      length: 2,
+    });
 
-export const UnderthroughExtension =
-  InlineMarkdownExtension<InkTextAttributes>({
-    name: 'underthrough',
-    pattern: /.*~{1}([^\s][^~]*[^\s~])~{1}\s$|.*~{1}([^\s~])~{1}\s$/,
-    action: ({
-      inlineEditor,
-      prefixText,
-      inlineRange,
-      pattern,
-      undoManager,
-    }) => {
-      const match = prefixText.match(pattern);
-      if (!match) return;
+    inlineEditor.setInlineRange({
+      index: startIndex + annotatedText.length - 4,
+      length: 0,
+    });
+  },
+});
 
-      const targetText = match[1] ?? match[2];
-      const annotatedText = match[0].slice(
-        -(targetText.length + 1 * 2 + 1),
-        -1
-      );
-      const startIndex = inlineRange.index - annotatedText.length - 1;
+export const UnderthroughExtension = InlineMarkdownExtension<InkTextAttributes>({
+  name: 'underthrough',
+  pattern: /.*~{1}([^\s][^~]*[^\s~])~{1}\s$|.*~{1}([^\s~])~{1}\s$/,
+  action: ({ inlineEditor, prefixText, inlineRange, pattern, undoManager }) => {
+    const match = prefixText.match(pattern);
+    if (!match) return;
 
-      undoManager.stopCapturing();
+    const targetText = match[1] ?? match[2];
+    const annotatedText = match[0].slice(-(targetText.length + 1 * 2 + 1), -1);
+    const startIndex = inlineRange.index - annotatedText.length - 1;
 
-      inlineEditor.formatText(
-        {
-          index: startIndex,
-          length: annotatedText.length,
-        },
-        {
-          underline: true,
-        }
-      );
+    undoManager.stopCapturing();
 
-      inlineEditor.deleteText({
-        index: inlineRange.index - 2,
-        length: 2,
-      });
-      inlineEditor.deleteText({
+    inlineEditor.formatText(
+      {
         index: startIndex,
-        length: 1,
-      });
+        length: annotatedText.length,
+      },
+      {
+        underline: true,
+      },
+    );
 
-      inlineEditor.setInlineRange({
-        index: startIndex + annotatedText.length - 2,
-        length: 0,
-      });
-    },
-  });
+    inlineEditor.deleteText({
+      index: inlineRange.index - 2,
+      length: 2,
+    });
+    inlineEditor.deleteText({
+      index: startIndex,
+      length: 1,
+    });
+
+    inlineEditor.setInlineRange({
+      index: startIndex + annotatedText.length - 2,
+      length: 0,
+    });
+  },
+});
 
 export const CodeExtension = InlineMarkdownExtension<InkTextAttributes>({
   name: 'code',
@@ -254,7 +223,7 @@ export const CodeExtension = InlineMarkdownExtension<InkTextAttributes>({
       },
       {
         code: true,
-      }
+      },
     );
 
     inlineEditor.deleteText({

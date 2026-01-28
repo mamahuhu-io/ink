@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { BaseTextAttributes } from '@ink/stone-store';
 import { html, render } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
@@ -10,10 +10,7 @@ import type { InlineRange } from '../types.js';
 import { deltaInsertsToChunks } from '../utils/delta-convert.js';
 
 export class RenderService<TextAttributes extends BaseTextAttributes> {
-  private readonly _onYTextChange = (
-    _: Y.YTextEvent,
-    transaction: Y.Transaction
-  ) => {
+  private readonly _onYTextChange = (_: Y.YTextEvent, transaction: Y.Transaction) => {
     this.editor.slots.textChange.next();
 
     const yText = this.editor.yText;
@@ -21,7 +18,7 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
     if (yText.toString().includes('\r')) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'yText must not contain "\\r" because it will break the range synchronization'
+        'yText must not contain "\\r" because it will break the range synchronization',
       );
     }
 
@@ -41,12 +38,9 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
     }
     const absoluteStart = Y.createAbsolutePositionFromRelativePosition(
       lastStartRelativePosition,
-      doc
+      doc,
     );
-    const absoluteEnd = Y.createAbsolutePositionFromRelativePosition(
-      lastEndRelativePosition,
-      doc
-    );
+    const absoluteEnd = Y.createAbsolutePositionFromRelativePosition(lastEndRelativePosition, doc);
 
     const startIndex = absoluteStart?.index;
     const endIndex = absoluteEnd?.index;
@@ -97,7 +91,7 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
 
       const lineStartOffset = deltaIndex;
       if (chunk.length > 0) {
-        const elements: VLine['elements'] = chunk.map(delta => {
+        const elements: VLine['elements'] = chunk.map((delta) => {
           const startOffset = deltaIndex;
           deltaIndex += delta.insert.length;
           const endOffset = deltaIndex;
@@ -107,9 +101,7 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
               .inlineEditor=${this.editor}
               .delta=${{
                 insert: delta.insert,
-                attributes: this.editor.attributeService.normalizeAttributes(
-                  delta.attributes
-                ),
+                attributes: this.editor.attributeService.normalizeAttributes(delta.attributes),
               }}
               .startOffset=${startOffset}
               .endOffset=${endOffset}
@@ -139,10 +131,10 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
       render(
         repeat(
           lines.map((line, i) => ({ line, index: i })),
-          entry => entry.index,
-          entry => entry.line
+          (entry) => entry.index,
+          (entry) => entry.line,
         ),
-        rootElement
+        rootElement,
       );
     } catch {
       // Lit may be crashed by IME input and we need to rerender whole editor for it
@@ -175,10 +167,8 @@ export class RenderService<TextAttributes extends BaseTextAttributes> {
 
   waitForUpdate = async () => {
     if (!this.editor.rootElement) return;
-    const vLines = Array.from(
-      this.editor.rootElement.querySelectorAll('v-line')
-    );
-    await Promise.all(vLines.map(line => line.updateComplete));
+    const vLines = Array.from(this.editor.rootElement.querySelectorAll('v-line'));
+    await Promise.all(vLines.map((line) => line.updateComplete));
   };
 
   constructor(readonly editor: InlineEditor<TextAttributes>) {}

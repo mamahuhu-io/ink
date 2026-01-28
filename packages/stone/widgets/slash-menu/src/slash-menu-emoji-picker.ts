@@ -1,16 +1,16 @@
 // Re-export the SlashMenuEmojiPicker from the emoji inline package
 // This file provides the emoji picker component for the slash menu
 
-import { stopPropagation } from "@ink/stone-shared/utils";
-import { unsafeCSSVarV2, unsafeCSSVar } from "@ink/stone-shared/theme";
-import { baseTheme } from "@ink/stone-theme";
-import { WithDisposable } from "@ink/stone-global/lit";
-import { ShadowlessElement } from "@ink/stone-std";
-import { searchEmojisByKeyword } from "@ink/stone-shared/utils";
-import { css, html, unsafeCSS } from "lit";
-import { property, query, state } from "lit/decorators.js";
-import { repeat } from "lit/directives/repeat.js";
-import { classMap } from "lit/directives/class-map.js";
+import { WithDisposable } from '@ink/stone-global/lit';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import { stopPropagation } from '@ink/stone-shared/utils';
+import { searchEmojisByKeyword } from '@ink/stone-shared/utils';
+import { ShadowlessElement } from '@ink/stone-std';
+import { baseTheme } from '@ink/stone-theme';
+import { css, html, unsafeCSS } from 'lit';
+import { property, query, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { repeat } from 'lit/directives/repeat.js';
 
 // i18n translation getter - can be overridden by the application
 let i18nGetter: ((key: string, fallback: string) => string) | null = null;
@@ -19,7 +19,7 @@ let i18nGetter: ((key: string, fallback: string) => string) | null = null;
  * Set a custom i18n getter function for emoji picker translations
  */
 export function setSlashMenuEmojiPickerI18nGetter(
-  getter: (key: string, fallback: string) => string
+  getter: (key: string, fallback: string) => string,
 ) {
   i18nGetter = getter;
 }
@@ -42,661 +42,661 @@ interface EmojiCategory {
 
 const EMOJI_CATEGORIES: EmojiCategory[] = [
   {
-    id: "smileys",
-    name: "Smileys & Emotion",
+    id: 'smileys',
+    name: 'Smileys & Emotion',
     emojis: [
-      "😀",
-      "😃",
-      "😄",
-      "😁",
-      "😆",
-      "😅",
-      "🤣",
-      "😂",
-      "🙂",
-      "🙃",
-      "😉",
-      "😊",
-      "😇",
-      "🥰",
-      "😍",
-      "🤩",
-      "😘",
-      "😗",
-      "☺️",
-      "😚",
-      "😙",
-      "🥲",
-      "😋",
-      "😛",
-      "😜",
-      "🤪",
-      "😝",
-      "🤑",
-      "🤗",
-      "🤭",
-      "🤫",
-      "🤔",
-      "🤐",
-      "🤨",
-      "😐",
-      "😑",
-      "😶",
-      "😏",
-      "😒",
-      "🙄",
-      "😬",
-      "🤥",
-      "😌",
-      "😔",
-      "😪",
-      "🤤",
-      "😴",
-      "😷",
-      "🤒",
-      "🤕",
-      "🤢",
-      "🤮",
-      "🤧",
-      "🥵",
-      "🥶",
-      "🥴",
-      "😵",
-      "🤯",
-      "🤠",
-      "🥳",
-      "🥸",
-      "😎",
-      "🤓",
-      "🧐",
-      "😕",
-      "😟",
-      "🙁",
-      "☹️",
-      "😮",
-      "😯",
-      "😲",
-      "😳",
-      "🥺",
-      "😦",
-      "😧",
-      "😨",
-      "😰",
-      "😥",
-      "😢",
-      "😭",
-      "😱",
-      "😖",
-      "😣",
-      "😞",
-      "😓",
-      "😩",
-      "😫",
-      "🥱",
-      "😤",
-      "😡",
-      "😠",
-      "🤬",
-      "😈",
-      "👿",
-      "💀",
-      "☠️",
-      "💩",
-      "🤡",
-      "👹",
-      "👺",
+      '😀',
+      '😃',
+      '😄',
+      '😁',
+      '😆',
+      '😅',
+      '🤣',
+      '😂',
+      '🙂',
+      '🙃',
+      '😉',
+      '😊',
+      '😇',
+      '🥰',
+      '😍',
+      '🤩',
+      '😘',
+      '😗',
+      '☺️',
+      '😚',
+      '😙',
+      '🥲',
+      '😋',
+      '😛',
+      '😜',
+      '🤪',
+      '😝',
+      '🤑',
+      '🤗',
+      '🤭',
+      '🤫',
+      '🤔',
+      '🤐',
+      '🤨',
+      '😐',
+      '😑',
+      '😶',
+      '😏',
+      '😒',
+      '🙄',
+      '😬',
+      '🤥',
+      '😌',
+      '😔',
+      '😪',
+      '🤤',
+      '😴',
+      '😷',
+      '🤒',
+      '🤕',
+      '🤢',
+      '🤮',
+      '🤧',
+      '🥵',
+      '🥶',
+      '🥴',
+      '😵',
+      '🤯',
+      '🤠',
+      '🥳',
+      '🥸',
+      '😎',
+      '🤓',
+      '🧐',
+      '😕',
+      '😟',
+      '🙁',
+      '☹️',
+      '😮',
+      '😯',
+      '😲',
+      '😳',
+      '🥺',
+      '😦',
+      '😧',
+      '😨',
+      '😰',
+      '😥',
+      '😢',
+      '😭',
+      '😱',
+      '😖',
+      '😣',
+      '😞',
+      '😓',
+      '😩',
+      '😫',
+      '🥱',
+      '😤',
+      '😡',
+      '😠',
+      '🤬',
+      '😈',
+      '👿',
+      '💀',
+      '☠️',
+      '💩',
+      '🤡',
+      '👹',
+      '👺',
     ],
   },
   {
-    id: "gestures",
-    name: "People & Body",
+    id: 'gestures',
+    name: 'People & Body',
     emojis: [
-      "👋",
-      "🤚",
-      "🖐️",
-      "✋",
-      "🖖",
-      "👌",
-      "🤌",
-      "🤏",
-      "✌️",
-      "🤞",
-      "🤟",
-      "🤘",
-      "🤙",
-      "👈",
-      "👉",
-      "👆",
-      "🖕",
-      "👇",
-      "☝️",
-      "👍",
-      "👎",
-      "✊",
-      "👊",
-      "🤛",
-      "🤜",
-      "👏",
-      "🙌",
-      "👐",
-      "🤲",
-      "🤝",
-      "🙏",
-      "✍️",
-      "💅",
-      "🤳",
-      "💪",
-      "🦾",
-      "🦿",
-      "🦵",
-      "🦶",
-      "👂",
-      "🦻",
-      "👃",
-      "🧠",
-      "🫀",
-      "🫁",
-      "🦷",
-      "🦴",
-      "👀",
-      "👁️",
-      "👅",
-      "👄",
-      "👶",
-      "🧒",
-      "👦",
-      "👧",
-      "🧑",
-      "👱",
-      "👨",
-      "🧔",
-      "👩",
-      "🧓",
-      "👴",
-      "👵",
-      "🙍",
-      "🙎",
-      "🙅",
-      "🙆",
-      "💁",
-      "🙋",
-      "🧏",
-      "🙇",
-      "🤦",
-      "🤷",
-      "👮",
-      "🕵️",
-      "💂",
-      "🥷",
-      "👷",
-      "🤴",
-      "👸",
+      '👋',
+      '🤚',
+      '🖐️',
+      '✋',
+      '🖖',
+      '👌',
+      '🤌',
+      '🤏',
+      '✌️',
+      '🤞',
+      '🤟',
+      '🤘',
+      '🤙',
+      '👈',
+      '👉',
+      '👆',
+      '🖕',
+      '👇',
+      '☝️',
+      '👍',
+      '👎',
+      '✊',
+      '👊',
+      '🤛',
+      '🤜',
+      '👏',
+      '🙌',
+      '👐',
+      '🤲',
+      '🤝',
+      '🙏',
+      '✍️',
+      '💅',
+      '🤳',
+      '💪',
+      '🦾',
+      '🦿',
+      '🦵',
+      '🦶',
+      '👂',
+      '🦻',
+      '👃',
+      '🧠',
+      '🫀',
+      '🫁',
+      '🦷',
+      '🦴',
+      '👀',
+      '👁️',
+      '👅',
+      '👄',
+      '👶',
+      '🧒',
+      '👦',
+      '👧',
+      '🧑',
+      '👱',
+      '👨',
+      '🧔',
+      '👩',
+      '🧓',
+      '👴',
+      '👵',
+      '🙍',
+      '🙎',
+      '🙅',
+      '🙆',
+      '💁',
+      '🙋',
+      '🧏',
+      '🙇',
+      '🤦',
+      '🤷',
+      '👮',
+      '🕵️',
+      '💂',
+      '🥷',
+      '👷',
+      '🤴',
+      '👸',
     ],
   },
   {
-    id: "animals",
-    name: "Animals & Nature",
+    id: 'animals',
+    name: 'Animals & Nature',
     emojis: [
-      "🐶",
-      "🐱",
-      "🐭",
-      "🐹",
-      "🐰",
-      "🦊",
-      "🐻",
-      "🐼",
-      "🐻‍❄️",
-      "🐨",
-      "🐯",
-      "🦁",
-      "🐮",
-      "🐷",
-      "🐽",
-      "🐸",
-      "🐵",
-      "🙈",
-      "🙉",
-      "🙊",
-      "🐒",
-      "🐔",
-      "🐧",
-      "🐦",
-      "🐤",
-      "🐣",
-      "🐥",
-      "🦆",
-      "🦅",
-      "🦉",
-      "🦇",
-      "🐺",
-      "🐗",
-      "🐴",
-      "🦄",
-      "🐝",
-      "🪱",
-      "🐛",
-      "🦋",
-      "🐌",
-      "🐞",
-      "🐜",
-      "🪰",
-      "🪲",
-      "🪳",
-      "🦟",
-      "🦗",
-      "🕷️",
-      "🕸️",
-      "🦂",
-      "🐢",
-      "🐍",
-      "🦎",
-      "🦖",
-      "🦕",
-      "🐙",
-      "🦑",
-      "🦐",
-      "🦞",
-      "🦀",
-      "🐡",
-      "🐠",
-      "🐟",
-      "🐬",
-      "🐳",
-      "🐋",
-      "🦈",
-      "🐊",
-      "🐅",
-      "🐆",
-      "🦓",
-      "🦍",
-      "🦧",
-      "🦣",
-      "🐘",
-      "🦛",
-      "🦏",
-      "🐪",
-      "🐫",
-      "🦒",
+      '🐶',
+      '🐱',
+      '🐭',
+      '🐹',
+      '🐰',
+      '🦊',
+      '🐻',
+      '🐼',
+      '🐻‍❄️',
+      '🐨',
+      '🐯',
+      '🦁',
+      '🐮',
+      '🐷',
+      '🐽',
+      '🐸',
+      '🐵',
+      '🙈',
+      '🙉',
+      '🙊',
+      '🐒',
+      '🐔',
+      '🐧',
+      '🐦',
+      '🐤',
+      '🐣',
+      '🐥',
+      '🦆',
+      '🦅',
+      '🦉',
+      '🦇',
+      '🐺',
+      '🐗',
+      '🐴',
+      '🦄',
+      '🐝',
+      '🪱',
+      '🐛',
+      '🦋',
+      '🐌',
+      '🐞',
+      '🐜',
+      '🪰',
+      '🪲',
+      '🪳',
+      '🦟',
+      '🦗',
+      '🕷️',
+      '🕸️',
+      '🦂',
+      '🐢',
+      '🐍',
+      '🦎',
+      '🦖',
+      '🦕',
+      '🐙',
+      '🦑',
+      '🦐',
+      '🦞',
+      '🦀',
+      '🐡',
+      '🐠',
+      '🐟',
+      '🐬',
+      '🐳',
+      '🐋',
+      '🦈',
+      '🐊',
+      '🐅',
+      '🐆',
+      '🦓',
+      '🦍',
+      '🦧',
+      '🦣',
+      '🐘',
+      '🦛',
+      '🦏',
+      '🐪',
+      '🐫',
+      '🦒',
     ],
   },
   {
-    id: "food",
-    name: "Food & Drink",
+    id: 'food',
+    name: 'Food & Drink',
     emojis: [
-      "🍇",
-      "🍈",
-      "🍉",
-      "🍊",
-      "🍋",
-      "🍌",
-      "🍍",
-      "🥭",
-      "🍎",
-      "🍏",
-      "🍐",
-      "🍑",
-      "🍒",
-      "🍓",
-      "🫐",
-      "🥝",
-      "🍅",
-      "🫒",
-      "🥥",
-      "🥑",
-      "🍆",
-      "🥔",
-      "🥕",
-      "🌽",
-      "🌶️",
-      "🫑",
-      "🥒",
-      "🥬",
-      "🥦",
-      "🧄",
-      "🧅",
-      "🍄",
-      "🥜",
-      "🫘",
-      "🌰",
-      "🍞",
-      "🥐",
-      "🥖",
-      "🫓",
-      "🥨",
-      "🥯",
-      "🥞",
-      "🧇",
-      "🧀",
-      "🍖",
-      "🍗",
-      "🥩",
-      "🥓",
-      "🍔",
-      "🍟",
-      "🍕",
-      "🌭",
-      "🥪",
-      "🌮",
-      "🌯",
-      "🫔",
-      "🥙",
-      "🧆",
-      "🥚",
-      "🍳",
-      "🥘",
-      "🍲",
-      "🫕",
-      "🥣",
-      "🥗",
-      "🍿",
-      "🧈",
-      "🧂",
-      "🥫",
-      "🍱",
-      "🍘",
-      "🍙",
-      "🍚",
-      "🍛",
-      "🍜",
-      "🍝",
-      "🍠",
-      "🍢",
-      "🍣",
-      "🍤",
+      '🍇',
+      '🍈',
+      '🍉',
+      '🍊',
+      '🍋',
+      '🍌',
+      '🍍',
+      '🥭',
+      '🍎',
+      '🍏',
+      '🍐',
+      '🍑',
+      '🍒',
+      '🍓',
+      '🫐',
+      '🥝',
+      '🍅',
+      '🫒',
+      '🥥',
+      '🥑',
+      '🍆',
+      '🥔',
+      '🥕',
+      '🌽',
+      '🌶️',
+      '🫑',
+      '🥒',
+      '🥬',
+      '🥦',
+      '🧄',
+      '🧅',
+      '🍄',
+      '🥜',
+      '🫘',
+      '🌰',
+      '🍞',
+      '🥐',
+      '🥖',
+      '🫓',
+      '🥨',
+      '🥯',
+      '🥞',
+      '🧇',
+      '🧀',
+      '🍖',
+      '🍗',
+      '🥩',
+      '🥓',
+      '🍔',
+      '🍟',
+      '🍕',
+      '🌭',
+      '🥪',
+      '🌮',
+      '🌯',
+      '🫔',
+      '🥙',
+      '🧆',
+      '🥚',
+      '🍳',
+      '🥘',
+      '🍲',
+      '🫕',
+      '🥣',
+      '🥗',
+      '🍿',
+      '🧈',
+      '🧂',
+      '🥫',
+      '🍱',
+      '🍘',
+      '🍙',
+      '🍚',
+      '🍛',
+      '🍜',
+      '🍝',
+      '🍠',
+      '🍢',
+      '🍣',
+      '🍤',
     ],
   },
   {
-    id: "activities",
-    name: "Activities",
+    id: 'activities',
+    name: 'Activities',
     emojis: [
-      "⚽",
-      "🏀",
-      "🏈",
-      "⚾",
-      "🥎",
-      "🎾",
-      "🏐",
-      "🏉",
-      "🥏",
-      "🎱",
-      "🪀",
-      "🏓",
-      "🏸",
-      "🏒",
-      "🏑",
-      "🥍",
-      "🏏",
-      "🪃",
-      "🥅",
-      "⛳",
-      "🪁",
-      "🏹",
-      "🎣",
-      "🤿",
-      "🥊",
-      "🥋",
-      "🎽",
-      "🛹",
-      "🛼",
-      "🛷",
-      "⛸️",
-      "🥌",
-      "🎿",
-      "⛷️",
-      "🏂",
-      "🪂",
-      "🏋️",
-      "🤼",
-      "🤸",
-      "🤺",
-      "⛹️",
-      "🤾",
-      "🏌️",
-      "🏇",
-      "🧘",
-      "🏄",
-      "🏊",
-      "🤽",
-      "🚣",
-      "🧗",
-      "🚵",
-      "🚴",
-      "🏆",
-      "🥇",
-      "🥈",
-      "🥉",
-      "🏅",
-      "🎖️",
-      "🏵️",
-      "🎗️",
-      "🎫",
-      "🎟️",
-      "🎪",
-      "🤹",
-      "🎭",
-      "🩰",
-      "🎨",
-      "🎬",
-      "🎤",
-      "🎧",
-      "🎼",
-      "🎹",
-      "🥁",
-      "🪘",
-      "🎷",
-      "🎺",
-      "🪗",
-      "🎸",
-      "🪕",
-      "🎻",
+      '⚽',
+      '🏀',
+      '🏈',
+      '⚾',
+      '🥎',
+      '🎾',
+      '🏐',
+      '🏉',
+      '🥏',
+      '🎱',
+      '🪀',
+      '🏓',
+      '🏸',
+      '🏒',
+      '🏑',
+      '🥍',
+      '🏏',
+      '🪃',
+      '🥅',
+      '⛳',
+      '🪁',
+      '🏹',
+      '🎣',
+      '🤿',
+      '🥊',
+      '🥋',
+      '🎽',
+      '🛹',
+      '🛼',
+      '🛷',
+      '⛸️',
+      '🥌',
+      '🎿',
+      '⛷️',
+      '🏂',
+      '🪂',
+      '🏋️',
+      '🤼',
+      '🤸',
+      '🤺',
+      '⛹️',
+      '🤾',
+      '🏌️',
+      '🏇',
+      '🧘',
+      '🏄',
+      '🏊',
+      '🤽',
+      '🚣',
+      '🧗',
+      '🚵',
+      '🚴',
+      '🏆',
+      '🥇',
+      '🥈',
+      '🥉',
+      '🏅',
+      '🎖️',
+      '🏵️',
+      '🎗️',
+      '🎫',
+      '🎟️',
+      '🎪',
+      '🤹',
+      '🎭',
+      '🩰',
+      '🎨',
+      '🎬',
+      '🎤',
+      '🎧',
+      '🎼',
+      '🎹',
+      '🥁',
+      '🪘',
+      '🎷',
+      '🎺',
+      '🪗',
+      '🎸',
+      '🪕',
+      '🎻',
     ],
   },
   {
-    id: "objects",
-    name: "Objects",
+    id: 'objects',
+    name: 'Objects',
     emojis: [
-      "⌚",
-      "📱",
-      "📲",
-      "💻",
-      "⌨️",
-      "🖥️",
-      "🖨️",
-      "🖱️",
-      "🖲️",
-      "🕹️",
-      "🗜️",
-      "💽",
-      "💾",
-      "💿",
-      "📀",
-      "📼",
-      "📷",
-      "📸",
-      "📹",
-      "🎥",
-      "📽️",
-      "🎞️",
-      "📞",
-      "☎️",
-      "📟",
-      "📠",
-      "📺",
-      "📻",
-      "🎙️",
-      "🎚️",
-      "🎛️",
-      "🧭",
-      "⏱️",
-      "⏲️",
-      "⏰",
-      "🕰️",
-      "⌛",
-      "⏳",
-      "📡",
-      "🔋",
-      "🔌",
-      "💡",
-      "🔦",
-      "🕯️",
-      "🪔",
-      "🧯",
-      "🛢️",
-      "💸",
-      "💵",
-      "💴",
-      "💶",
-      "💷",
-      "🪙",
-      "💰",
-      "💳",
-      "💎",
-      "⚖️",
-      "🪜",
-      "🧰",
-      "🪛",
-      "🔧",
-      "🔨",
-      "⚒️",
-      "🛠️",
-      "⛏️",
-      "🪚",
-      "🔩",
-      "⚙️",
-      "🪤",
-      "🧱",
-      "⛓️",
-      "🧲",
-      "🔫",
-      "💣",
-      "🧨",
-      "🪓",
-      "🔪",
-      "🗡️",
-      "⚔️",
-      "🛡️",
+      '⌚',
+      '📱',
+      '📲',
+      '💻',
+      '⌨️',
+      '🖥️',
+      '🖨️',
+      '🖱️',
+      '🖲️',
+      '🕹️',
+      '🗜️',
+      '💽',
+      '💾',
+      '💿',
+      '📀',
+      '📼',
+      '📷',
+      '📸',
+      '📹',
+      '🎥',
+      '📽️',
+      '🎞️',
+      '📞',
+      '☎️',
+      '📟',
+      '📠',
+      '📺',
+      '📻',
+      '🎙️',
+      '🎚️',
+      '🎛️',
+      '🧭',
+      '⏱️',
+      '⏲️',
+      '⏰',
+      '🕰️',
+      '⌛',
+      '⏳',
+      '📡',
+      '🔋',
+      '🔌',
+      '💡',
+      '🔦',
+      '🕯️',
+      '🪔',
+      '🧯',
+      '🛢️',
+      '💸',
+      '💵',
+      '💴',
+      '💶',
+      '💷',
+      '🪙',
+      '💰',
+      '💳',
+      '💎',
+      '⚖️',
+      '🪜',
+      '🧰',
+      '🪛',
+      '🔧',
+      '🔨',
+      '⚒️',
+      '🛠️',
+      '⛏️',
+      '🪚',
+      '🔩',
+      '⚙️',
+      '🪤',
+      '🧱',
+      '⛓️',
+      '🧲',
+      '🔫',
+      '💣',
+      '🧨',
+      '🪓',
+      '🔪',
+      '🗡️',
+      '⚔️',
+      '🛡️',
     ],
   },
   {
-    id: "symbols",
-    name: "Symbols",
+    id: 'symbols',
+    name: 'Symbols',
     emojis: [
-      "❤️",
-      "🧡",
-      "💛",
-      "💚",
-      "💙",
-      "💜",
-      "🖤",
-      "🤍",
-      "🤎",
-      "💔",
-      "❣️",
-      "💕",
-      "💞",
-      "💓",
-      "💗",
-      "💖",
-      "💘",
-      "💝",
-      "💟",
-      "☮️",
-      "✝️",
-      "☪️",
-      "🕉️",
-      "☸️",
-      "✡️",
-      "🔯",
-      "🕎",
-      "☯️",
-      "☦️",
-      "🛐",
-      "⛎",
-      "♈",
-      "♉",
-      "♊",
-      "♋",
-      "♌",
-      "♍",
-      "♎",
-      "♏",
-      "♐",
-      "♑",
-      "♒",
-      "♓",
-      "🆔",
-      "⚛️",
-      "🉑",
-      "☢️",
-      "☣️",
-      "📴",
-      "📳",
-      "✅",
-      "❌",
-      "⭕",
-      "🛑",
-      "⛔",
-      "📛",
-      "🚫",
-      "💯",
-      "💢",
-      "♨️",
-      "🔅",
-      "🔆",
-      "⚠️",
-      "🚸",
-      "🔱",
-      "⚜️",
-      "🔰",
-      "♻️",
-      "✳️",
-      "❇️",
-      "🔴",
-      "🟠",
-      "🟡",
-      "🟢",
-      "🔵",
-      "🟣",
-      "⚫",
-      "⚪",
-      "🟤",
-      "🔺",
+      '❤️',
+      '🧡',
+      '💛',
+      '💚',
+      '💙',
+      '💜',
+      '🖤',
+      '🤍',
+      '🤎',
+      '💔',
+      '❣️',
+      '💕',
+      '💞',
+      '💓',
+      '💗',
+      '💖',
+      '💘',
+      '💝',
+      '💟',
+      '☮️',
+      '✝️',
+      '☪️',
+      '🕉️',
+      '☸️',
+      '✡️',
+      '🔯',
+      '🕎',
+      '☯️',
+      '☦️',
+      '🛐',
+      '⛎',
+      '♈',
+      '♉',
+      '♊',
+      '♋',
+      '♌',
+      '♍',
+      '♎',
+      '♏',
+      '♐',
+      '♑',
+      '♒',
+      '♓',
+      '🆔',
+      '⚛️',
+      '🉑',
+      '☢️',
+      '☣️',
+      '📴',
+      '📳',
+      '✅',
+      '❌',
+      '⭕',
+      '🛑',
+      '⛔',
+      '📛',
+      '🚫',
+      '💯',
+      '💢',
+      '♨️',
+      '🔅',
+      '🔆',
+      '⚠️',
+      '🚸',
+      '🔱',
+      '⚜️',
+      '🔰',
+      '♻️',
+      '✳️',
+      '❇️',
+      '🔴',
+      '🟠',
+      '🟡',
+      '🟢',
+      '🔵',
+      '🟣',
+      '⚫',
+      '⚪',
+      '🟤',
+      '🔺',
     ],
   },
   {
-    id: "flags",
-    name: "Flags",
+    id: 'flags',
+    name: 'Flags',
     emojis: [
-      "🏳️",
-      "🏴",
-      "🏴‍☠️",
-      "🏁",
-      "🚩",
-      "🎌",
-      "🏳️‍🌈",
-      "🏳️‍⚧️",
-      "🇺🇳",
-      "🇨🇳",
-      "🇺🇸",
-      "🇬🇧",
-      "🇯🇵",
-      "🇰🇷",
-      "🇫🇷",
-      "🇩🇪",
-      "🇮🇹",
-      "🇪🇸",
-      "🇷🇺",
-      "🇧🇷",
-      "🇮🇳",
-      "🇦🇺",
-      "🇨🇦",
-      "🇲🇽",
+      '🏳️',
+      '🏴',
+      '🏴‍☠️',
+      '🏁',
+      '🚩',
+      '🎌',
+      '🏳️‍🌈',
+      '🏳️‍⚧️',
+      '🇺🇳',
+      '🇨🇳',
+      '🇺🇸',
+      '🇬🇧',
+      '🇯🇵',
+      '🇰🇷',
+      '🇫🇷',
+      '🇩🇪',
+      '🇮🇹',
+      '🇪🇸',
+      '🇷🇺',
+      '🇧🇷',
+      '🇮🇳',
+      '🇦🇺',
+      '🇨🇦',
+      '🇲🇽',
     ],
   },
 ];
 
 // Local storage key for recent emojis
-const RECENT_EMOJIS_KEY = "ink-recent-emojis";
+const RECENT_EMOJIS_KEY = 'ink-recent-emojis';
 const MAX_RECENT_EMOJIS = 32;
 
 function getRecentEmojis(): string[] {
@@ -756,8 +756,8 @@ const styles = css`
     z-index: var(--ink-z-index-popover);
     animation: ink-popover-fade-in 0.2s ease;
 
-    background: ${unsafeCSSVarV2("layer/background/overlayPanel")};
-    box-shadow: ${unsafeCSSVar("overlayPanelShadow")};
+    background: ${unsafeCSSVarV2('layer/background/overlayPanel')};
+    box-shadow: ${unsafeCSSVar('overlayPanelShadow')};
     border-radius: 8px;
     font-family: ${unsafeCSS(baseTheme.fontSansFamily)};
   }
@@ -798,7 +798,9 @@ const styles = css`
     font-size: var(--ink-font-sm);
     font-family: inherit;
     outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
   }
 
   .emoji-search input::placeholder {
@@ -877,7 +879,9 @@ const styles = css`
     border-radius: 4px;
     cursor: pointer;
     font-size: 20px;
-    transition: background-color 0.15s, transform 0.1s;
+    transition:
+      background-color 0.15s,
+      transform 0.1s;
     user-select: none;
   }
 
@@ -909,21 +913,21 @@ const styles = css`
 
 // Category icons for tabs
 const CATEGORY_ICONS: Record<string, string> = {
-  recent: "🕐",
-  smileys: "😀",
-  gestures: "👋",
-  animals: "🐱",
-  food: "🍔",
-  activities: "⚽",
-  objects: "💡",
-  symbols: "❤️",
-  flags: "🏳️",
+  recent: '🕐',
+  smileys: '😀',
+  gestures: '👋',
+  animals: '🐱',
+  food: '🍔',
+  activities: '⚽',
+  objects: '💡',
+  symbols: '❤️',
+  flags: '🏳️',
 };
 
 export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
   static override styles = styles;
 
-  private _bodyOverflowStyle = "";
+  private _bodyOverflowStyle = '';
 
   @property({ attribute: false })
   accessor abortController!: AbortController;
@@ -935,10 +939,10 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
   accessor onSelect: ((emoji: string) => void) | null = null;
 
   @state()
-  accessor _searchQuery: string = "";
+  accessor _searchQuery: string = '';
 
   @state()
-  accessor _activeCategory: string = "smileys";
+  accessor _activeCategory: string = 'smileys';
 
   @state()
   accessor _focusedIndex: number = 0;
@@ -946,13 +950,13 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
   @state()
   accessor _keyboardNavActive: boolean = false;
 
-  @query(".popover-container")
+  @query('.popover-container')
   accessor popoverContainer!: HTMLDivElement;
 
-  @query(".emoji-content")
+  @query('.emoji-content')
   accessor emojiContent!: HTMLDivElement;
 
-  @query("#emoji-search-input")
+  @query('#emoji-search-input')
   accessor searchInput!: HTMLInputElement;
 
   private get _filteredCategories(): EmojiCategory[] {
@@ -963,8 +967,8 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
 
       if (recentEmojis.length > 0) {
         categories.push({
-          id: "recent",
-          name: t("recent", "Recent"),
+          id: 'recent',
+          name: t('recent', 'Recent'),
           emojis: recentEmojis,
         });
       }
@@ -981,8 +985,8 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
 
     return [
       {
-        id: "search-results",
-        name: t("searchResults", "Search Results"),
+        id: 'search-results',
+        name: t('searchResults', 'Search Results'),
         emojis: filteredEmojis,
       },
     ];
@@ -1000,11 +1004,9 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
    */
   private _scrollToFocusedEmoji(): void {
     requestAnimationFrame(() => {
-      const focusedElement = this.emojiContent?.querySelector(
-        ".emoji-item.focused"
-      );
+      const focusedElement = this.emojiContent?.querySelector('.emoji-item.focused');
       if (focusedElement) {
-        focusedElement.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        focusedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
     });
   }
@@ -1022,25 +1024,25 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
     let handled = false;
 
     switch (e.key) {
-      case "ArrowLeft":
+      case 'ArrowLeft':
         if (newIndex > 0) {
           newIndex--;
           handled = true;
         }
         break;
-      case "ArrowRight":
+      case 'ArrowRight':
         if (newIndex < totalEmojis - 1) {
           newIndex++;
           handled = true;
         }
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         if (newIndex >= cols) {
           newIndex -= cols;
           handled = true;
         }
         break;
-      case "ArrowDown":
+      case 'ArrowDown':
         if (newIndex + cols < totalEmojis) {
           newIndex += cols;
           handled = true;
@@ -1050,7 +1052,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
           handled = true;
         }
         break;
-      case "Enter":
+      case 'Enter':
         if (this._keyboardNavActive && flatEmojis[this._focusedIndex]) {
           this._onEmojiClick(flatEmojis[this._focusedIndex]);
           handled = true;
@@ -1058,7 +1060,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
         break;
     }
 
-    if (handled && e.key !== "Enter") {
+    if (handled && e.key !== 'Enter') {
       this._focusedIndex = newIndex;
       this._keyboardNavActive = true;
       this._scrollToFocusedEmoji();
@@ -1082,17 +1084,15 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
 
   private readonly _onCategoryClick = (categoryId: string) => {
     this._activeCategory = categoryId;
-    this._searchQuery = "";
+    this._searchQuery = '';
     // Reset focus when category changes
     this._focusedIndex = 0;
     this._keyboardNavActive = false;
 
     // Scroll to category
-    const categorySection = this.emojiContent?.querySelector(
-      `[data-category="${categoryId}"]`
-    );
+    const categorySection = this.emojiContent?.querySelector(`[data-category="${categoryId}"]`);
     if (categorySection) {
-      categorySection.scrollIntoView({ behavior: "smooth", block: "start" });
+      categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -1109,7 +1109,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
 
     // disable body scroll
     this._bodyOverflowStyle = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
     this.disposables.add({
       dispose: () => {
         document.body.style.overflow = this._bodyOverflowStyle;
@@ -1123,7 +1123,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
       if (e.isComposing) return;
 
       // Handle Escape
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
         this.abortController.abort();
@@ -1131,11 +1131,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
       }
 
       // Handle keyboard navigation (arrow keys and Enter)
-      if (
-        ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter"].includes(
-          e.key
-        )
-      ) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
         const handled = this._handleKeyboardNav(e);
         if (handled) {
           e.preventDefault();
@@ -1144,15 +1140,14 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
       }
     };
 
-    document.addEventListener("keydown", handleKeydown, true);
+    document.addEventListener('keydown', handleKeydown, true);
     this.disposables.add({
-      dispose: () =>
-        document.removeEventListener("keydown", handleKeydown, true),
+      dispose: () => document.removeEventListener('keydown', handleKeydown, true),
     });
 
-    this.disposables.addFromEvent(this, "copy", stopPropagation);
-    this.disposables.addFromEvent(this, "cut", stopPropagation);
-    this.disposables.addFromEvent(this, "paste", stopPropagation);
+    this.disposables.addFromEvent(this, 'copy', stopPropagation);
+    this.disposables.addFromEvent(this, 'cut', stopPropagation);
+    this.disposables.addFromEvent(this, 'paste', stopPropagation);
 
     // Position the popover
     if (this.popoverContainer) {
@@ -1185,7 +1180,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
   }
 
   private _renderCategoryTabs() {
-    const allCategoryIds = ["recent", ...EMOJI_CATEGORIES.map((c) => c.id)];
+    const allCategoryIds = ['recent', ...EMOJI_CATEGORIES.map((c) => c.id)];
     const recentEmojis = getRecentEmojis();
 
     return html`
@@ -1195,26 +1190,25 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
           (id) => id,
           (id) => {
             // Hide recent tab if no recent emojis
-            if (id === "recent" && recentEmojis.length === 0) {
+            if (id === 'recent' && recentEmojis.length === 0) {
               return null;
             }
 
-            const icon = CATEGORY_ICONS[id] || "📁";
+            const icon = CATEGORY_ICONS[id] || '📁';
             const classes = classMap({
-              "category-tab": true,
+              'category-tab': true,
               active: this._activeCategory === id,
             });
             return html`
               <div
                 class=${classes}
                 @click=${() => this._onCategoryClick(id)}
-                title=${EMOJI_CATEGORIES.find((c) => c.id === id)?.name ||
-                t("recent", "Recent")}
+                title=${EMOJI_CATEGORIES.find((c) => c.id === id)?.name || t('recent', 'Recent')}
               >
                 ${icon}
               </div>
             `;
-          }
+          },
         )}
       </div>
     `;
@@ -1224,9 +1218,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
     const categories = this._filteredCategories;
 
     if (categories.length === 0) {
-      return html`
-        <div class="no-results">${t("noEmojisFound", "No emojis found")}</div>
-      `;
+      return html` <div class="no-results">${t('noEmojisFound', 'No emojis found')}</div> `;
     }
 
     // Track global index across all categories for keyboard navigation
@@ -1240,11 +1232,9 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
           const categoryStartIndex = globalIndex;
           const emojiElements = category.emojis.map((emoji, localIndex) => {
             const currentGlobalIndex = categoryStartIndex + localIndex;
-            const isFocused =
-              this._keyboardNavActive &&
-              currentGlobalIndex === this._focusedIndex;
+            const isFocused = this._keyboardNavActive && currentGlobalIndex === this._focusedIndex;
             const classes = classMap({
-              "emoji-item": true,
+              'emoji-item': true,
               focused: isFocused,
             });
             return html`
@@ -1268,7 +1258,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
               <div class="emoji-grid">${emojiElements}</div>
             </div>
           `;
-        }
+        },
       )}
     `;
   }
@@ -1283,7 +1273,7 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
               <input
                 id="emoji-search-input"
                 type="text"
-                placeholder="${t("searchEmoji", "Search emoji...")}"
+                placeholder="${t('searchEmoji', 'Search emoji...')}"
                 @input=${this._onSearchInput}
                 .value=${this._searchQuery}
               />
@@ -1298,12 +1288,12 @@ export class SlashMenuEmojiPicker extends WithDisposable(ShadowlessElement) {
 }
 
 // Register the custom element
-if (!customElements.get("slash-menu-emoji-picker")) {
-  customElements.define("slash-menu-emoji-picker", SlashMenuEmojiPicker);
+if (!customElements.get('slash-menu-emoji-picker')) {
+  customElements.define('slash-menu-emoji-picker', SlashMenuEmojiPicker);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "slash-menu-emoji-picker": SlashMenuEmojiPicker;
+    'slash-menu-emoji-picker': SlashMenuEmojiPicker;
   }
 }

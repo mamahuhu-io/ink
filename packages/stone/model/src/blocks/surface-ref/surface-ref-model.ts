@@ -1,8 +1,4 @@
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 export type SurfaceRefProps = {
   reference: string;
@@ -27,8 +23,6 @@ export const SurfaceRefBlockSchema = defineBlockSchema({
   toModel: () => new SurfaceRefBlockModel(),
 });
 
-export const SurfaceRefBlockSchemaExtension = BlockSchemaExtension(
-  SurfaceRefBlockSchema
-);
+export const SurfaceRefBlockSchemaExtension = BlockSchemaExtension(SurfaceRefBlockSchema);
 
 export class SurfaceRefBlockModel extends BlockModel<SurfaceRefProps> {}

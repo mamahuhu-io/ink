@@ -1,6 +1,6 @@
 import { Container, type ServiceProvider } from '@ink/stone-global/di';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { computed, signal } from '@preact/signals-core';
 import { Subject } from 'rxjs';
 import * as Y from 'yjs';
@@ -375,13 +375,11 @@ export class Store {
         try {
           fn();
         } catch (e) {
-          console.error(
-            `An error occurred while Y.doc ${spaceDoc.guid} transacting:`
-          );
+          console.error(`An error occurred while Y.doc ${spaceDoc.guid} transacting:`);
           console.error(e);
         }
       },
-      shouldTransact ? this.spaceDoc.clientID : null
+      shouldTransact ? this.spaceDoc.clientID : null,
     );
   }
 
@@ -572,18 +570,18 @@ export class Store {
     const container = new Container();
     container.addImpl(StoreIdentifier, () => this);
 
-    internalExtensions.forEach(ext => {
+    internalExtensions.forEach((ext) => {
       ext.setup(container);
     });
 
     const userExtensions = extensions ?? [];
     this.userExtensions = userExtensions;
-    userExtensions.forEach(extension => {
+    userExtensions.forEach((extension) => {
       extension.setup(container);
     });
 
     this._provider = container.provider(undefined, provider);
-    this._provider.getAll(BlockSchemaIdentifier).forEach(schema => {
+    this._provider.getAll(BlockSchemaIdentifier).forEach((schema) => {
       this._schema.register([schema]);
     });
     this._doc = this._provider.get(DocIdentifier);
@@ -621,7 +619,7 @@ export class Store {
             return;
           }
         }
-      })
+      }),
     );
     this.disposableGroup.add(this.slots.ready);
     this.disposableGroup.add(this.slots.blockUpdated);
@@ -631,13 +629,12 @@ export class Store {
 
   private _getSiblings<T>(
     block: BlockModel | string,
-    fn: (parent: BlockModel, index: number) => T
+    fn: (parent: BlockModel, index: number) => T,
   ) {
     const parent = this.getParent(block);
     if (!parent) return null;
 
-    const blockModel =
-      typeof block === 'string' ? this.getBlock(block)?.model : block;
+    const blockModel = typeof block === 'string' ? this.getBlock(block)?.model : block;
     if (!blockModel) return null;
 
     const index = parent.children.indexOf(blockModel);
@@ -744,13 +741,10 @@ export class Store {
     flavour: string,
     blockProps: Partial<(PropsOfModel<T> & BlockSysProps) | BlockProps> = {},
     parent?: BlockModel | string | null,
-    parentIndex?: number
+    parentIndex?: number,
   ): string {
     if (this.readonly) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        'cannot modify data in readonly mode'
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, 'cannot modify data in readonly mode');
     }
 
     const id = blockProps.id ?? this._doc.workspace.idGenerator();
@@ -761,7 +755,7 @@ export class Store {
         flavour,
         { ...blockProps },
         typeof parent === 'string' ? parent : parent?.id,
-        parentIndex
+        parentIndex,
       );
     });
 
@@ -783,16 +777,11 @@ export class Store {
       blockProps?: Partial<BlockProps & Omit<BlockProps, 'flavour' | 'id'>>;
     }>,
     parent?: BlockModel | string | null,
-    parentIndex?: number
+    parentIndex?: number,
   ): string[] {
     const ids: string[] = [];
-    blocks.forEach(block => {
-      const id = this.addBlock(
-        block.flavour as never,
-        block.blockProps ?? {},
-        parent,
-        parentIndex
-      );
+    blocks.forEach((block) => {
+      const id = this.addBlock(block.flavour as never, block.blockProps ?? {}, parent, parentIndex);
       ids.push(id);
       typeof parentIndex === 'number' && parentIndex++;
     });
@@ -812,25 +801,19 @@ export class Store {
   addSiblingBlocks(
     targetModel: BlockModel,
     props: Array<Partial<BlockProps>>,
-    placement: 'after' | 'before' = 'after'
+    placement: 'after' | 'before' = 'after',
   ): string[] {
     if (!props.length) return [];
     const parent = this.getParent(targetModel);
     if (!parent) return [];
 
-    const targetIndex =
-      parent.children.findIndex(({ id }) => id === targetModel.id) ?? 0;
+    const targetIndex = parent.children.findIndex(({ id }) => id === targetModel.id) ?? 0;
     const insertIndex = placement === 'before' ? targetIndex : targetIndex + 1;
 
     if (props.length <= 1) {
       if (!props[0]?.flavour) return [];
       const { flavour, ...blockProps } = props[0];
-      const id = this.addBlock(
-        flavour as never,
-        blockProps,
-        parent.id,
-        insertIndex
-      );
+      const id = this.addBlock(flavour as never, blockProps, parent.id, insertIndex);
       return [id];
     }
 
@@ -838,7 +821,7 @@ export class Store {
       flavour: string;
       blockProps: Partial<BlockProps>;
     }> = [];
-    props.forEach(prop => {
+    props.forEach((prop) => {
       const { flavour, ...blockProps } = prop;
       if (!flavour) return;
       blocks.push({ flavour, blockProps });
@@ -857,9 +840,7 @@ export class Store {
 
   updateBlock<T extends BlockModel = BlockModel>(
     modelOrId: T | string,
-    callBackOrProps:
-      | (() => void)
-      | Partial<(PropsOfModel<T> & BlockSysProps) | BlockProps>
+    callBackOrProps: (() => void) | Partial<(PropsOfModel<T> & BlockSysProps) | BlockProps>,
   ) {
     if (this.readonly) {
       console.error('cannot modify data in readonly mode');
@@ -868,15 +849,9 @@ export class Store {
 
     const isCallback = typeof callBackOrProps === 'function';
 
-    const model =
-      typeof modelOrId === 'string'
-        ? this.getBlock(modelOrId)?.model
-        : modelOrId;
+    const model = typeof modelOrId === 'string' ? this.getBlock(modelOrId)?.model : modelOrId;
     if (!model) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `updating block: ${modelOrId} not found`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `updating block: ${modelOrId} not found`);
     }
 
     if (!isCallback) {
@@ -884,16 +859,13 @@ export class Store {
       this.schema.validate(
         model.flavour,
         parent?.flavour,
-        callBackOrProps.children?.map(child => child.flavour)
+        callBackOrProps.children?.map((child) => child.flavour),
       );
     }
 
     const yBlock = this._yBlocks.get(model.id);
     if (!yBlock) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `updating block: ${model.id} not found`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `updating block: ${model.id} not found`);
     }
 
     const block = this.getBlock(model.id);
@@ -909,7 +881,7 @@ export class Store {
       if (callBackOrProps.children) {
         this._crud.updateBlockChildren(
           model.id,
-          callBackOrProps.children.map(child => child.id)
+          callBackOrProps.children.map((child) => child.id),
         );
       }
 
@@ -917,7 +889,7 @@ export class Store {
       if (!schema) {
         throw new InkStoneError(
           ErrorCode.ModelCRUDError,
-          `schema for flavour: ${model.flavour} not found`
+          `schema for flavour: ${model.flavour} not found`,
         );
       }
       syncBlockProps(schema, model, yBlock, callBackOrProps);
@@ -942,7 +914,7 @@ export class Store {
       deleteChildren?: boolean;
     } = {
       deleteChildren: true,
-    }
+    },
   ) {
     if (this.readonly) {
       console.error('cannot modify data in readonly mode');
@@ -962,10 +934,7 @@ export class Store {
     };
 
     this.transact(() => {
-      this._crud.deleteBlock(
-        typeof model === 'string' ? model : model.id,
-        opts
-      );
+      this._crud.deleteBlock(typeof model === 'string' ? model : model.id, opts);
     });
   }
 
@@ -998,9 +967,7 @@ export class Store {
    *
    * @category Block CRUD
    */
-  getModelById<Model extends BlockModel = BlockModel>(
-    id: string
-  ): Model | null {
+  getModelById<Model extends BlockModel = BlockModel>(id: string): Model | null {
     return (this.getBlock(id)?.model ?? null) as Model | null;
   }
 
@@ -1012,12 +979,9 @@ export class Store {
    * @category Block CRUD
    */
   getBlocksByFlavour(blockFlavour: string | string[]): Block[] {
-    const flavours =
-      typeof blockFlavour === 'string' ? [blockFlavour] : blockFlavour;
+    const flavours = typeof blockFlavour === 'string' ? [blockFlavour] : blockFlavour;
 
-    return Object.values(this._blocks.peek()).filter(({ flavour }) =>
-      flavours.includes(flavour)
-    );
+    return Object.values(this._blocks.peek()).filter(({ flavour }) => flavours.includes(flavour));
   }
 
   /**
@@ -1027,7 +991,7 @@ export class Store {
    * @category Block CRUD
    */
   getAllModels() {
-    return Object.values(this._blocks.peek()).map(block => block.model);
+    return Object.values(this._blocks.peek()).map((block) => block.model);
   }
 
   /**
@@ -1038,7 +1002,7 @@ export class Store {
    * @category Block CRUD
    */
   getModelsByFlavour(blockFlavour: string | string[]): BlockModel[] {
-    return this.getBlocksByFlavour(blockFlavour).map(x => x.model);
+    return this.getBlocksByFlavour(blockFlavour).map((x) => x.model);
   }
 
   /**
@@ -1067,10 +1031,7 @@ export class Store {
    * @category Block CRUD
    */
   getPrev(block: BlockModel | string) {
-    return this._getSiblings(
-      block,
-      (parent, index) => parent.children[index - 1] ?? null
-    );
+    return this._getSiblings(block, (parent, index) => parent.children[index - 1] ?? null);
   }
 
   /**
@@ -1081,11 +1042,7 @@ export class Store {
    * @category Block CRUD
    */
   getPrevs(block: BlockModel | string) {
-    return (
-      this._getSiblings(block, (parent, index) =>
-        parent.children.slice(0, index)
-      ) ?? []
-    );
+    return this._getSiblings(block, (parent, index) => parent.children.slice(0, index)) ?? [];
   }
 
   /**
@@ -1096,10 +1053,7 @@ export class Store {
    * @category Block CRUD
    */
   getNext(block: BlockModel | string) {
-    return this._getSiblings(
-      block,
-      (parent, index) => parent.children[index + 1] ?? null
-    );
+    return this._getSiblings(block, (parent, index) => parent.children[index + 1] ?? null);
   }
 
   /**
@@ -1110,11 +1064,7 @@ export class Store {
    * @category Block CRUD
    */
   getNexts(block: BlockModel | string) {
-    return (
-      this._getSiblings(block, (parent, index) =>
-        parent.children.slice(index + 1)
-      ) ?? []
-    );
+    return this._getSiblings(block, (parent, index) => parent.children.slice(index + 1)) ?? [];
   }
 
   /**
@@ -1141,7 +1091,7 @@ export class Store {
     blocksToMove: BlockModel[],
     newParent: BlockModel,
     targetSibling: BlockModel | null = null,
-    shouldInsertBeforeSibling = true
+    shouldInsertBeforeSibling = true,
   ) {
     if (this.readonly) {
       console.error('Cannot modify data in read-only mode');
@@ -1150,10 +1100,10 @@ export class Store {
 
     this.transact(() => {
       this._crud.moveBlocks(
-        blocksToMove.map(model => model.id),
+        blocksToMove.map((model) => model.id),
         newParent.id,
         targetSibling?.id ?? null,
-        shouldInsertBeforeSibling
+        shouldInsertBeforeSibling,
       );
     });
   }
@@ -1171,8 +1121,7 @@ export class Store {
       blobCRUD: this.workspace.blobSync,
       docCRUD: {
         create: (id: string) => this.workspace.createDoc(id).getStore({ id }),
-        get: (id: string) =>
-          this.workspace.getDoc(id)?.getStore({ id }) ?? null,
+        get: (id: string) => this.workspace.getDoc(id)?.getStore({ id }) ?? null,
         delete: (id: string) => this.workspace.removeDoc(id),
       },
       middlewares,
@@ -1226,7 +1175,7 @@ export class Store {
     }
 
     this._doc.load(initFn);
-    this._provider.getAll(StoreExtensionIdentifier).forEach(ext => {
+    this._provider.getAll(StoreExtensionIdentifier).forEach((ext) => {
       ext.loaded();
     });
     this.slots.ready.next();
@@ -1240,7 +1189,7 @@ export class Store {
    * @category Store Lifecycle
    */
   dispose() {
-    this._provider.getAll(StoreExtensionIdentifier).forEach(ext => {
+    this._provider.getAll(StoreExtensionIdentifier).forEach((ext) => {
       ext.disposed();
     });
     if (this._doc.ready) {
@@ -1293,6 +1242,6 @@ export class Store {
   }
 
   private readonly _handleYEvents = (events: Y.YEvent<YBlock | Y.Text>[]) => {
-    events.forEach(event => this._handleYEvent(event));
+    events.forEach((event) => this._handleYEvent(event));
   };
 }

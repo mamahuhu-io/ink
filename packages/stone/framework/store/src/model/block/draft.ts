@@ -6,17 +6,14 @@ type ModelProps<Model> = Model extends BlockModel<infer U> ? U : never;
 
 const draftModelSymbol = Symbol('draftModel');
 
-export type DraftModel<Model extends BlockModel = BlockModel> = Pick<
-  Model,
-  PropsInDraft
-> & {
+export type DraftModel<Model extends BlockModel = BlockModel> = Pick<Model, PropsInDraft> & {
   children: DraftModel[];
   props: ModelProps<Model>;
   [draftModelSymbol]: true;
 };
 
 export function toDraftModel<Model extends BlockModel = BlockModel>(
-  origin: Model
+  origin: Model,
 ): DraftModel<Model> {
   const { id, version, flavour, role, keys, text, children } = origin;
 

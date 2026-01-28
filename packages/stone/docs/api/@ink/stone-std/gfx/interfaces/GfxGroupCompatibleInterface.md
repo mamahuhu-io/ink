@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / GfxGroupCompatibleInterface
 
@@ -23,7 +23,7 @@ All child element models of this container.
 Note that the `childElements` may not contains all the children in `childIds`,
 because some children may not be loaded.
 
-***
+---
 
 ### childIds
 
@@ -31,7 +31,7 @@ because some children may not be loaded.
 
 All child ids of this container.
 
-***
+---
 
 ### elementBound
 
@@ -43,7 +43,7 @@ The bound of the element without considering the response extension.
 
 [`GfxCompatibleInterface`](GfxCompatibleInterface.md).[`elementBound`](GfxCompatibleInterface.md#elementbound)
 
-***
+---
 
 ### forceFullRender?
 
@@ -56,7 +56,7 @@ Defaults to false (fallback to placeholder rendering is enabled).
 
 [`GfxCompatibleInterface`](GfxCompatibleInterface.md).[`forceFullRender`](GfxCompatibleInterface.md#forcefullrender)
 
-***
+---
 
 ### lockedBySelf?
 
@@ -70,7 +70,7 @@ For (un)locking the element, use `(un)lock` instead.
 
 [`GfxCompatibleInterface`](GfxCompatibleInterface.md).[`lockedBySelf`](GfxCompatibleInterface.md#lockedbyself)
 
-***
+---
 
 ### responseBound
 
@@ -82,7 +82,7 @@ The bound of the element considering the response extension.
 
 [`GfxCompatibleInterface`](GfxCompatibleInterface.md).[`responseBound`](GfxCompatibleInterface.md#responsebound)
 
-***
+---
 
 ### responseExtension
 
@@ -98,6 +98,7 @@ The response area is computed as:
 `[x - horizontal, y - vertical, w + 2 * horizontal, h + 2 * vertical]`.
 
 Example:
+
 - xywh: `[0, 0, 100, 100]`, `responseExtension: [10, 20]`
   Resulting response area: `[-10, -20, 120, 140]`.
 - `responseExtension: [0, 0]` keeps the response area equal to the bounding box.

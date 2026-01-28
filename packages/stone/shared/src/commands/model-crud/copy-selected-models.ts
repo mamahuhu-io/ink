@@ -8,13 +8,13 @@ export const copySelectedModelsCommand: Command<{
   const models = ctx.draftedModels;
   if (!models) {
     console.error(
-      '`draftedModels` is required, you need to use `draftSelectedModels` command before adding this command to the pipeline.'
+      '`draftedModels` is required, you need to use `draftSelectedModels` command before adding this command to the pipeline.',
     );
     return;
   }
 
   models
-    .then(models => {
+    .then((models) => {
       const slice = Slice.fromModels(ctx.std.store, models);
 
       return ctx.std.clipboard.copy(slice);

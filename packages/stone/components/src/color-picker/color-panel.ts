@@ -89,9 +89,7 @@ export class EdgelessColorButton extends LitElement {
   override render() {
     const { label, preprocessColor, hollowCircle } = this;
     const additionIcon = AdditionIcon(preprocessColor, !!hollowCircle);
-    return html`<div class="color-unit" aria-label=${ifDefined(label)}>
-      ${additionIcon}
-    </div>`;
+    return html`<div class="color-unit" aria-label=${ifDefined(label)}>${additionIcon}</div>`;
   }
 
   @property({ attribute: true, type: Boolean })
@@ -148,7 +146,7 @@ export class EdgelessColorPanel extends LitElement {
         bubbles: true,
         composed: true,
         cancelable: true,
-      })
+      }),
     );
   }
 
@@ -170,8 +168,8 @@ export class EdgelessColorPanel extends LitElement {
     return html`
       ${repeat(
         this.palettes,
-        palette => palette.key,
-        palette => {
+        (palette) => palette.key,
+        (palette) => {
           const resolvedColor = resolveColor(palette.value, this.theme);
           const activated = isEqual(resolvedColor, this.resolvedValue);
           return html`<edgeless-color-button
@@ -187,7 +185,7 @@ export class EdgelessColorPanel extends LitElement {
             }}
           >
           </edgeless-color-button>`;
-        }
+        },
       )}
       <slot name="custom"></slot>
     `;

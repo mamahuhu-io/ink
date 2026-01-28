@@ -19,10 +19,7 @@ import {
 } from '@ink/stone-shared/utils';
 import type { BlockComponent } from '@ink/stone-std';
 import { TextSelection } from '@ink/stone-std';
-import {
-  getInlineRangeProvider,
-  type InlineRangeProvider,
-} from '@ink/stone-std/inline';
+import { getInlineRangeProvider, type InlineRangeProvider } from '@ink/stone-std/inline';
 import { computed, effect, signal } from '@preact/signals-core';
 import { html, nothing, type TemplateResult } from 'lit';
 import { query, state } from 'lit/decorators.js';
@@ -40,7 +37,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
 
   focused$ = computed(() => {
     const selection = this.std.selection.value.find(
-      selection => selection.blockId === this.model?.id
+      (selection) => selection.blockId === this.model?.id,
     );
     if (!selection) return false;
     return selection.is(TextSelection);
@@ -64,9 +61,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
   };
 
   private get _placeholder() {
-    return this.std
-      .get(ParagraphBlockConfigExtension.identifier)
-      ?.getPlaceholder(this.model);
+    return this.std.get(ParagraphBlockConfigExtension.identifier)?.getPlaceholder(this.model);
   }
 
   // Language change version - incremented when language changes to trigger re-render
@@ -94,10 +89,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
   }
 
   get inEdgelessText() {
-    return (
-      this.topContenteditableElement?.tagName.toLowerCase() ===
-      'ink-edgeless-text'
-    );
+    return this.topContenteditableElement?.tagName.toLowerCase() === 'ink-edgeless-text';
   }
 
   get inlineEditor() {
@@ -109,24 +101,19 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
   }
 
   get hasCitationSiblings() {
-    return this.collapsedSiblings.some(sibling =>
-      this.citationService.isCitationModel(sibling)
-    );
+    return this.collapsedSiblings.some((sibling) => this.citationService.isCitationModel(sibling));
   }
 
   get isCommentHighlighted() {
     return (
-      this.std
-        .getOptional(BlockElementCommentManager)
-        ?.isBlockCommentHighlighted(this.model) ?? false
+      this.std.getOptional(BlockElementCommentManager)?.isBlockCommentHighlighted(this.model) ??
+      false
     );
   }
 
   override get topContenteditableElement() {
     if (this.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
-      return this.closest<BlockComponent>(
-        EDGELESS_TOP_CONTENTEDITABLE_SELECTOR
-      );
+      return this.closest<BlockComponent>(EDGELESS_TOP_CONTENTEDITABLE_SELECTOR);
     }
     return this.rootComponent;
   }
@@ -138,7 +125,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
     this.disposables.add(
       subscribeLanguageChange(() => {
         this._langVersion++;
-      })
+      }),
     );
 
     this.handleEvent(
@@ -146,14 +133,14 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
       () => {
         this._composing.value = true;
       },
-      { flavour: true }
+      { flavour: true },
     );
     this.handleEvent(
       'compositionEnd',
       () => {
         this._composing.value = false;
       },
-      { flavour: true }
+      { flavour: true },
     );
 
     this._inlineRangeProvider = getInlineRangeProvider(this);
@@ -174,10 +161,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
 
         this.updateComplete
           .then(() => {
-            if (
-              (this.inlineEditor?.yTextLength ?? 0) > 0 ||
-              this._isInDatabase()
-            ) {
+            if ((this.inlineEditor?.yTextLength ?? 0) > 0 || this._isInDatabase()) {
               this._displayPlaceholder.value = false;
               return;
             }
@@ -185,7 +169,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
             return;
           })
           .catch(console.error);
-      })
+      }),
     );
 
     this.disposables.add(
@@ -194,7 +178,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
         if (!type.startsWith('h') && this.model.props.collapsed) {
           this.model.props.collapsed = false;
         }
-      })
+      }),
     );
 
     this.disposables.add(
@@ -209,14 +193,12 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
 
           if (
             textSelection &&
-            collapsedSiblings.some(
-              sibling => sibling.id === textSelection.blockId
-            )
+            collapsedSiblings.some((sibling) => sibling.id === textSelection.blockId)
           ) {
             this.host.selection.clear(['text']);
           }
         }
-      })
+      }),
     );
 
     // > # 123
@@ -239,7 +221,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
           }
         }
         beforeType = type;
-      })
+      }),
     );
   }
 
@@ -253,25 +235,23 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
     const widgets = html`${repeat(
       Object.entries(this.widgets),
       ([id]) => id,
-      ([_, widget]) => widget
+      ([_, widget]) => widget,
     )}`;
 
     const { type$ } = this.model.props;
-    const collapsed = this.store.readonly
-      ? this._readonlyCollapsed
-      : this.model.props.collapsed;
+    const collapsed = this.store.readonly ? this._readonlyCollapsed : this.model.props.collapsed;
     const collapsedSiblings = this.collapsedSiblings;
 
     let style = html``;
     if (this.model.props.type$.value.startsWith('h') && collapsed) {
       style = html`
         <style>
-          ${collapsedSiblings.map(sibling =>
+          ${collapsedSiblings.map((sibling) =>
             unsafeHTML(`
               [data-block-id="${sibling.id}"] {
                 display: none !important;
               }
-            `)
+            `),
           )}
         </style>
       `;
@@ -316,14 +296,9 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
           })}
         >
           ${this.model.props.type$.value.startsWith('h')
-            ? html`
-                <ink-paragraph-heading-icon
-                  .model=${this.model}
-                ></ink-paragraph-heading-icon>
-              `
+            ? html` <ink-paragraph-heading-icon .model=${this.model}></ink-paragraph-heading-icon> `
             : nothing}
-          ${this.model.props.type$.value.startsWith('h') &&
-          collapsedSiblings.length > 0
+          ${this.model.props.type$.value.startsWith('h') && collapsedSiblings.length > 0
             ? html`
                 <ink-toggle-button
                   .collapsed=${collapsed}
@@ -359,8 +334,7 @@ export class ParagraphBlockComponent extends CaptionedBlockComponent<ParagraphBl
             .inlineRangeProvider=${this._inlineRangeProvider}
             .enableClipboard=${false}
             .enableUndoRedo=${false}
-            .verticalScrollContainerGetter=${() =>
-              getViewportElement(this.host)}
+            .verticalScrollContainerGetter=${() => getViewportElement(this.host)}
           ></rich-text>
           ${this.inEdgelessText
             ? nothing

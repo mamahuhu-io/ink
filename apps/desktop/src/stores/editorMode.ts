@@ -3,13 +3,14 @@
  * and source mode content for proper save handling
  */
 import { create } from 'zustand';
+
 import { normalizeMarkdown } from './editor';
 
 export type EditorViewMode = 'preview' | 'source';
 
 interface SourceContent {
-  current: string;    // Current edited content
-  original: string;   // Original content when entering source mode
+  current: string; // Current edited content
+  original: string; // Original content when entering source mode
 }
 
 interface EditorModeState {
@@ -106,7 +107,7 @@ export const useEditorModeStore = create<EditorModeState>((set, get) => ({
           ...state.sourceContents,
           [docId]: {
             ...existing,
-            original: existing.current,  // Original now matches current
+            original: existing.current, // Original now matches current
           },
         },
       };

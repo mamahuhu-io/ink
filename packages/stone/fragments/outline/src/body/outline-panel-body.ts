@@ -1,24 +1,14 @@
 import { changeNoteDisplayMode } from '@ink/stone-block-note';
+import { Bound } from '@ink/stone-global/gfx';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { NoteBlockModel, NoteDisplayMode } from '@ink/stone-model';
 import { DocModeProvider } from '@ink/stone-shared/services';
 import { focusTitle, matchModels } from '@ink/stone-shared/utils';
-import { Bound } from '@ink/stone-global/gfx';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  BlockSelection,
-  ShadowlessElement,
-  SurfaceSelection,
-} from '@ink/stone-std';
+import { BlockSelection, ShadowlessElement, SurfaceSelection } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
 import type { BlockModel } from '@ink/stone-store';
 import { consume } from '@lit/context';
-import {
-  batch,
-  computed,
-  effect,
-  type Signal,
-  signal,
-} from '@preact/signals-core';
+import { batch, computed, effect, type Signal, signal } from '@preact/signals-core';
 import { html, nothing } from 'lit';
 import { query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -33,22 +23,13 @@ import type {
   SelectEvent,
 } from '../utils/custom-events';
 import type { NoteCardEntity, NoteDropPayload } from '../utils/drag';
-import {
-  getHeadingBlocksFromDoc,
-  getNotesFromStore,
-  isHeadingBlock,
-} from '../utils/query';
-import {
-  observeActiveHeadingDuringScroll,
-  scrollToBlockWithHighlight,
-} from '../utils/scroll';
+import { getHeadingBlocksFromDoc, getNotesFromStore, isHeadingBlock } from '../utils/query';
+import { observeActiveHeadingDuringScroll, scrollToBlockWithHighlight } from '../utils/scroll';
 import * as styles from './outline-panel-body.css';
 
 export const INK_OUTLINE_PANEL_BODY = 'ink-outline-panel-body';
 
-export class OutlinePanelBody extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class OutlinePanelBody extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   private readonly _activeHeadingId$ = signal<string | null>(null);
 
   private readonly _dragging$ = signal(false);
@@ -59,21 +40,16 @@ export class OutlinePanelBody extends SignalWatcher(
 
   private readonly _edgelessOnlyNotes$ = signal<NoteBlockModel[]>([]);
 
-  private readonly _selectedNotes$: Record<
-    NoteDisplayMode,
-    Signal<NoteBlockModel[]>
-  > = {
+  private readonly _selectedNotes$: Record<NoteDisplayMode, Signal<NoteBlockModel[]>> = {
     [NoteDisplayMode.DocOnly]: signal<NoteBlockModel[]>([]),
     [NoteDisplayMode.DocAndEdgeless]: signal<NoteBlockModel[]>([]),
     [NoteDisplayMode.EdgelessOnly]: signal<NoteBlockModel[]>([]),
   };
 
   private readonly _allSelectedNotes$ = computed(() =>
-    [
-      NoteDisplayMode.DocAndEdgeless,
-      NoteDisplayMode.DocOnly,
-      NoteDisplayMode.EdgelessOnly,
-    ].flatMap(mode => this._selectedNotes$[mode].value)
+    [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.DocOnly, NoteDisplayMode.EdgelessOnly].flatMap(
+      (mode) => this._selectedNotes$[mode].value,
+    ),
   );
 
   private _clearHighlightMask = () => {};
@@ -82,8 +58,7 @@ export class OutlinePanelBody extends SignalWatcher(
 
   private get _shouldRenderEmptyPanel() {
     return (
-      this._pageVisibleNotes$.value.length === 0 &&
-      this._edgelessOnlyNotes$.value.length === 0
+      this._pageVisibleNotes$.value.length === 0 && this._edgelessOnlyNotes$.value.length === 0
     );
   }
 
@@ -99,7 +74,7 @@ export class OutlinePanelBody extends SignalWatcher(
     const fitPadding = this._context.fitPadding$.value;
     return fitPadding.length === 4
       ? ([0, 0, 0, 0].map((val, idx) =>
-          Number.isFinite(fitPadding[idx]) ? fitPadding[idx] : val
+          Number.isFinite(fitPadding[idx]) ? fitPadding[idx] : val,
         ) as [number, number, number, number])
       : [0, 0, 0, 0];
   }
@@ -109,7 +84,7 @@ export class OutlinePanelBody extends SignalWatcher(
     const selection = gfx.selection;
 
     if (!selection.has(note.id)) return;
-    const selectedIds = selection.selectedIds.filter(id => id !== note.id);
+    const selectedIds = selection.selectedIds.filter((id) => id !== note.id);
     selection.set({
       elements: selectedIds,
       editing: false,
@@ -118,10 +93,7 @@ export class OutlinePanelBody extends SignalWatcher(
 
   private _renderEmptyPanel() {
     return html`<div class=${styles.emptyPanel}>
-      <div
-        data-testid="empty-panel-placeholder"
-        class=${styles.emptyPanelPlaceholder}
-      >
+      <div data-testid="empty-panel-placeholder" class=${styles.emptyPanelPlaceholder}>
         Use headings to create a table of contents.
       </div>
     </div>`;
@@ -180,12 +152,8 @@ export class OutlinePanelBody extends SignalWatcher(
     const removeSelectedNoteFilter = (block: BlockModel) =>
       !matchModels(block, [NoteBlockModel]) || !selected.includes(block);
 
-    const leftPart = children
-      .slice(0, targetIndex)
-      .filter(removeSelectedNoteFilter);
-    const rightPart = children
-      .slice(targetIndex)
-      .filter(removeSelectedNoteFilter);
+    const leftPart = children.slice(0, targetIndex).filter(removeSelectedNoteFilter);
+    const rightPart = children.slice(targetIndex).filter(removeSelectedNoteFilter);
 
     const newChildren = [...leftPart, ...selected, ...rightPart];
 
@@ -210,10 +178,7 @@ export class OutlinePanelBody extends SignalWatcher(
     }
     this._lockActiveHeadingId = true;
     this._activeHeadingId$.value = blockId;
-    this._clearHighlightMask = await scrollToBlockWithHighlight(
-      this.editor,
-      blockId
-    );
+    this._clearHighlightMask = await scrollToBlockWithHighlight(this.editor, blockId);
     this._lockActiveHeadingId = false;
   }
 
@@ -226,16 +191,16 @@ export class OutlinePanelBody extends SignalWatcher(
 
     // map from signal to value
     const selectedNotes = Object.fromEntries(
-      Object.entries(this._selectedNotes$).map(([k, v]) => [k, v.peek()])
+      Object.entries(this._selectedNotes$).map(([k, v]) => [k, v.peek()]),
     ) as Record<NoteDisplayMode, NoteBlockModel[]>;
 
     if (multiselect) {
       selectedNotes[note.props.displayMode] = selected
         ? [...selectedNotes[note.props.displayMode], note]
-        : selectedNotes[note.props.displayMode].filter(_note => _note !== note);
+        : selectedNotes[note.props.displayMode].filter((_note) => _note !== note);
     } else {
       selectedNotes[note.props.displayMode] = selected ? [note] : [];
-      Object.keys(this._selectedNotes$).forEach(mode => {
+      Object.keys(this._selectedNotes$).forEach((mode) => {
         if (mode !== note.props.displayMode) {
           selectedNotes[mode as NoteDisplayMode] = [];
         }
@@ -245,18 +210,14 @@ export class OutlinePanelBody extends SignalWatcher(
     // We use gfx.selection and effect to keep sync between canvas and outline panel
     if (editorMode === 'edgeless') {
       gfx.selection.set({
-        elements: [...selectedNotes.both, ...selectedNotes.edgeless].map(
-          ({ id }) => id
-        ),
+        elements: [...selectedNotes.both, ...selectedNotes.edgeless].map(({ id }) => id),
         editing: false,
       });
       this._selectedNotes$.doc.value = selectedNotes.doc;
     } else {
-      [NoteDisplayMode.DocOnly, NoteDisplayMode.DocAndEdgeless].forEach(
-        mode => {
-          this._selectedNotes$[mode].value = selectedNotes[mode];
-        }
-      );
+      [NoteDisplayMode.DocOnly, NoteDisplayMode.DocAndEdgeless].forEach((mode) => {
+        this._selectedNotes$[mode].value = selectedNotes[mode];
+      });
     }
   }
 
@@ -270,19 +231,17 @@ export class OutlinePanelBody extends SignalWatcher(
       const currSelectedNotes = std.selection
         .filter(SurfaceSelection)
         .map(({ blockId }) => store.getBlock(blockId)?.model)
-        .filter(model => {
+        .filter((model) => {
           return !!model && matchModels(model, [NoteBlockModel]);
         });
 
       // update selected notes from edgeless selection
       batch(() => {
-        [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.EdgelessOnly].forEach(
-          mode => {
-            this._selectedNotes$[mode].value = currSelectedNotes.filter(
-              note => note.props.displayMode === mode
-            );
-          }
-        );
+        [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.EdgelessOnly].forEach((mode) => {
+          this._selectedNotes$[mode].value = currSelectedNotes.filter(
+            (note) => note.props.displayMode === mode,
+          );
+        });
       });
     });
   }
@@ -310,7 +269,7 @@ export class OutlinePanelBody extends SignalWatcher(
         this._edgelessOnlyNotes$.value = getNotesFromStore(this.store, [
           NoteDisplayMode.EdgelessOnly,
         ]).filter(isRenderableNote);
-      })
+      }),
     );
   }
 
@@ -321,18 +280,16 @@ export class OutlinePanelBody extends SignalWatcher(
         onDragStart: () => {
           this._dragging$.value = true;
         },
-        onDrag: data => {
+        onDrag: (data) => {
           const target = data.location.current.dropTargets[0];
           if (!target) return;
           const edge = target.data.edge;
           const rect = target.element.getBoundingClientRect();
           const parentRect = this._pageVisibleList.getBoundingClientRect();
           this._indicatorTranslateY$.value =
-            edge === 'top'
-              ? rect.top - parentRect.top
-              : rect.bottom - parentRect.top;
+            edge === 'top' ? rect.top - parentRect.top : rect.bottom - parentRect.top;
         },
-        onDrop: data => {
+        onDrop: (data) => {
           this._dragging$.value = false;
           const target = data.location.current.dropTargets[0];
           if (!target) return;
@@ -346,12 +303,12 @@ export class OutlinePanelBody extends SignalWatcher(
 
           this._moveSelectedNotes(edge === 'top' ? index : index + 1);
         },
-      })
+      }),
     );
     this.disposables.add(
       std.dnd.autoScroll<NoteCardEntity>({
         element: this,
-      })
+      }),
     );
   }
 
@@ -362,11 +319,11 @@ export class OutlinePanelBody extends SignalWatcher(
     this.disposables.add(
       observeActiveHeadingDuringScroll(
         () => this.editor,
-        newHeadingId => {
+        (newHeadingId) => {
           if (this._lockActiveHeadingId) return;
           this._activeHeadingId$.value = newHeadingId;
-        }
-      )
+        },
+      ),
     );
     this._watchNotes();
     this._watchSelectedNotes();
@@ -385,7 +342,7 @@ export class OutlinePanelBody extends SignalWatcher(
       getHeadingBlocksFromDoc(
         this.store,
         [NoteDisplayMode.DocOnly, NoteDisplayMode.DocAndEdgeless],
-        true
+        true,
       ).length > 0;
 
     if (!hasNotEmptyHeadings) return nothing;
@@ -423,7 +380,7 @@ export class OutlinePanelBody extends SignalWatcher(
           @clickblock=${(e: ClickBlockEvent) => {
             this._scrollToBlock(e.detail.blockId).catch(console.error);
           }}
-        ></ink-outline-note-card>`
+        ></ink-outline-note-card>`,
     );
   }
 
@@ -435,7 +392,7 @@ export class OutlinePanelBody extends SignalWatcher(
           html`<div
             class=${styles.insertIndicator}
             style=${`transform: translateY(${this._indicatorTranslateY$.value}px)`}
-          ></div>`
+          ></div>`,
       )}
       ${this._renderNoteCards(this._pageVisibleNotes$.value)}
     </div>`;
@@ -446,8 +403,7 @@ export class OutlinePanelBody extends SignalWatcher(
     return html`<div class=${styles.cardList}>
       ${when(
         items.length > 0,
-        () =>
-          html`<div class=${styles.edgelessCardListTitle}>Hidden Contents</div>`
+        () => html`<div class=${styles.edgelessCardListTitle}>Hidden Contents</div>`,
       )}
       ${this._renderNoteCards(items)}
     </div>`;
@@ -459,10 +415,7 @@ export class OutlinePanelBody extends SignalWatcher(
       ${when(
         this._shouldRenderEmptyPanel,
         () => this._renderEmptyPanel(),
-        () => html`
-          ${this._renderPageVisibleCardList()}
-          ${this._renderEdgelessOnlyCardList()}
-        `
+        () => html` ${this._renderPageVisibleCardList()} ${this._renderEdgelessOnlyCardList()} `,
       )}
     `;
   }

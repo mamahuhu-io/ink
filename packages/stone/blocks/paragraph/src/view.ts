@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { ParagraphBlockModel } from '@ink/stone-model';
 import { BlockViewExtension, FlavourExtension } from '@ink/stone-std';
 import { literal } from 'lit/static-html.js';
@@ -10,10 +7,7 @@ import { z } from 'zod';
 import { effects } from './effects';
 import { ParagraphMarkdownExtension } from './markdown.js';
 import { ParagraphBlockConfigExtension } from './paragraph-block-config.js';
-import {
-  ParagraphKeymapExtension,
-  ParagraphTextKeymapExtension,
-} from './paragraph-keymap.js';
+import { ParagraphKeymapExtension, ParagraphTextKeymapExtension } from './paragraph-keymap.js';
 
 // Default placeholders (used as fallback)
 const defaultPlaceholders: Record<string, string> = {
@@ -57,7 +51,7 @@ export function subscribeLanguageChange(callback: () => void): () => void {
  * Call this when the application language changes
  */
 export function notifyLanguageChange() {
-  languageChangeListeners.forEach(callback => callback());
+  languageChangeListeners.forEach((callback) => callback());
 }
 
 /**
@@ -72,13 +66,11 @@ function getPlaceholderText(type: string): string {
 
 const optionsSchema = z.object({
   getPlaceholder: z.optional(
-    z.function().args(z.instanceof(ParagraphBlockModel)).returns(z.string())
+    z.function().args(z.instanceof(ParagraphBlockModel)).returns(z.string()),
   ),
 });
 
-export class ParagraphViewExtension extends ViewExtensionProvider<
-  z.infer<typeof optionsSchema>
-> {
+export class ParagraphViewExtension extends ViewExtensionProvider<z.infer<typeof optionsSchema>> {
   override name = 'ink-paragraph-block';
 
   override schema = optionsSchema;
@@ -88,13 +80,10 @@ export class ParagraphViewExtension extends ViewExtensionProvider<
     effects();
   }
 
-  override setup(
-    context: ViewExtensionContext,
-    options?: z.infer<typeof optionsSchema>
-  ) {
+  override setup(context: ViewExtensionContext, options?: z.infer<typeof optionsSchema>) {
     super.setup(context, options);
     const getPlaceholder =
-      options?.getPlaceholder ?? (model => getPlaceholderText(model.props.type));
+      options?.getPlaceholder ?? ((model) => getPlaceholderText(model.props.type));
 
     context.register([
       FlavourExtension('ink:paragraph'),

@@ -1,11 +1,7 @@
 import { BlockSchemaExtension } from '@ink/stone-store';
 
 import { createEmbedBlockSchema } from '../../../utils/index.js';
-import {
-  type EmbedLoomBlockProps,
-  EmbedLoomModel,
-  EmbedLoomStyles,
-} from './loom-model.js';
+import { type EmbedLoomBlockProps, EmbedLoomModel, EmbedLoomStyles } from './loom-model.js';
 
 const defaultEmbedLoomProps: EmbedLoomBlockProps = {
   style: EmbedLoomStyles[0],
@@ -25,5 +21,4 @@ export const EmbedLoomBlockSchema = createEmbedBlockSchema({
   props: (): EmbedLoomBlockProps => defaultEmbedLoomProps,
 });
 
-export const EmbedLoomBlockSchemaExtension =
-  BlockSchemaExtension(EmbedLoomBlockSchema);
+export const EmbedLoomBlockSchemaExtension = BlockSchemaExtension(EmbedLoomBlockSchema);

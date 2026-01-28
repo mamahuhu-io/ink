@@ -47,12 +47,11 @@ export class Zip {
 
   async generate() {
     this.zip.end();
-    return new Promise<Blob>(resolve => {
+    return new Promise<Blob>((resolve) => {
       if (this.finalized) {
         resolve(new Blob([this.compressed], { type: 'application/zip' }));
       } else {
-        this.finalize = () =>
-          resolve(new Blob([this.compressed], { type: 'application/zip' }));
+        this.finalize = () => resolve(new Blob([this.compressed], { type: 'application/zip' }));
       }
     });
   }
@@ -68,7 +67,7 @@ export class Unzip {
   private fixFileNameEncoding(fileName: string): string {
     try {
       // check if contains non-ASCII characters
-      if (fileName.split('').some(char => char.charCodeAt(0) > 127)) {
+      if (fileName.split('').some((char) => char.charCodeAt(0) > 127)) {
         // try different encodings
         const fixedName = this.tryDifferentEncodings(fileName);
         if (fixedName && fixedName !== fileName) {
@@ -152,9 +151,7 @@ export class Unzip {
       0x7f, // \x7F
     ]);
 
-    return !str
-      .split('')
-      .some(char => controlCharCodes.has(char.charCodeAt(0)));
+    return !str.split('').some((char) => controlCharCodes.has(char.charCodeAt(0)));
   }
 
   *[Symbol.iterator]() {
@@ -167,8 +164,7 @@ export class Unzip {
       }
       const lastSplitIndex = path.lastIndexOf('/');
       const fileName = path.substring(lastSplitIndex + 1);
-      const fileExt =
-        fileName.lastIndexOf('.') === -1 ? '' : fileName.split('.').at(-1);
+      const fileExt = fileName.lastIndexOf('.') === -1 ? '' : fileName.split('.').at(-1);
       const mime = extMimeMap.get(fileExt ?? '');
       const content = new File([this.unzipped![path]], fileName, {
         type: mime ?? '',
@@ -182,10 +178,7 @@ export class Unzip {
   }
 }
 
-export async function createAssetsArchive(
-  assetsMap: Map<string, Blob>,
-  assetsIds: string[]
-) {
+export async function createAssetsArchive(assetsMap: Map<string, Blob>, assetsIds: string[]) {
   const zip = new Zip();
 
   for (const [id, blob] of assetsMap) {

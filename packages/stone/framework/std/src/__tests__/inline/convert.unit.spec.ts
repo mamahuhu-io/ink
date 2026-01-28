@@ -1,9 +1,6 @@
 import { expect, test } from 'vitest';
 
-import {
-  deltaInsertsToChunks,
-  transformDelta,
-} from '../../inline/utils/delta-convert.js';
+import { deltaInsertsToChunks, transformDelta } from '../../inline/utils/delta-convert.js';
 
 test('transformDelta', () => {
   expect(
@@ -12,7 +9,7 @@ test('transformDelta', () => {
       attributes: {
         bold: true,
       },
-    })
+    }),
   ).toEqual([
     {
       insert: 'aaa',
@@ -28,7 +25,7 @@ test('transformDelta', () => {
       attributes: {
         bold: true,
       },
-    })
+    }),
   ).toEqual([
     '\n',
     '\n',
@@ -60,7 +57,7 @@ test('deltaInsertsToChunks', () => {
           bold: true,
         },
       },
-    ])
+    ]),
   ).toEqual([
     [
       {
@@ -80,7 +77,7 @@ test('deltaInsertsToChunks', () => {
           bold: true,
         },
       },
-    ])
+    ]),
   ).toEqual([
     [],
     [],
@@ -118,7 +115,7 @@ test('deltaInsertsToChunks', () => {
           italic: true,
         },
       },
-    ])
+    ]),
   ).toEqual([
     [],
     [],

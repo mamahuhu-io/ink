@@ -1,5 +1,5 @@
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { IS_MOBILE } from '@ink/stone-global/env';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { html, type TemplateResult } from 'lit';
 
 import type { MenuConfig } from './menu.js';

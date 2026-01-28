@@ -8,15 +8,14 @@ export interface NativeClipboardService {
   copyAsPNG(arrayBuffer: ArrayBuffer): Promise<boolean>;
 }
 
-export const NativeClipboardProvider = createIdentifier<NativeClipboardService>(
-  'NativeClipboardService'
-);
+export const NativeClipboardProvider =
+  createIdentifier<NativeClipboardService>('NativeClipboardService');
 
 export function NativeClipboardExtension(
-  nativeClipboardProvider: NativeClipboardService
+  nativeClipboardProvider: NativeClipboardService,
 ): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(NativeClipboardProvider, nativeClipboardProvider);
     },
   };

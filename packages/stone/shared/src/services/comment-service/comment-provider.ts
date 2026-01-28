@@ -1,6 +1,6 @@
-import { createIdentifier } from "@ink/stone-global/di";
-import type { DisposableMember } from "@ink/stone-global/disposable";
-import type { BaseSelection, ExtensionType } from "@ink/stone-store";
+import { createIdentifier } from '@ink/stone-global/di';
+import type { DisposableMember } from '@ink/stone-global/disposable';
+import type { BaseSelection, ExtensionType } from '@ink/stone-store';
 
 export type CommentId = string;
 
@@ -16,26 +16,19 @@ export interface CommentProvider {
   resolveComment: (id: CommentId) => void;
   highlightComment: (id: CommentId | null) => void;
 
-  getComments: (
-    type: "resolved" | "unresolved" | "all"
-  ) => Promise<CommentId[]> | CommentId[];
+  getComments: (type: 'resolved' | 'unresolved' | 'all') => Promise<CommentId[]> | CommentId[];
 
   onCommentAdded: (
-    callback: (id: CommentId, selections: BaseSelection[]) => void
+    callback: (id: CommentId, selections: BaseSelection[]) => void,
   ) => DisposableMember;
   onCommentResolved: (callback: (id: CommentId) => void) => DisposableMember;
   onCommentDeleted: (callback: (id: CommentId) => void) => DisposableMember;
-  onCommentHighlighted: (
-    callback: (id: CommentId | null) => void
-  ) => DisposableMember;
+  onCommentHighlighted: (callback: (id: CommentId | null) => void) => DisposableMember;
 }
 
-export const CommentProviderIdentifier =
-  createIdentifier<CommentProvider>("comment-provider");
+export const CommentProviderIdentifier = createIdentifier<CommentProvider>('comment-provider');
 
-export const CommentProviderExtension = (
-  provider: CommentProvider
-): ExtensionType => {
+export const CommentProviderExtension = (provider: CommentProvider): ExtensionType => {
   return {
     setup: (di) => {
       di.addImpl(CommentProviderIdentifier, provider);

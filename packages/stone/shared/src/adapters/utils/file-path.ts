@@ -35,10 +35,7 @@ function resolveFullPath(basePath: string, relativePath: string): string {
  * @param imageReference The image reference from the file (can be relative or absolute path)
  * @returns The full path of the reference image
  */
-export function getImageFullPath(
-  filePath: string,
-  imageReference: string
-): string {
+export function getImageFullPath(filePath: string, imageReference: string): string {
   // Decode the image reference in case it contains URL-encoded characters
   const decodedReference = decodeURIComponent(imageReference);
 

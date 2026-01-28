@@ -1,11 +1,7 @@
 import { BlockSchemaExtension } from '@ink/stone-store';
 
 import { createEmbedBlockSchema } from '../../../utils/index.js';
-import {
-  type EmbedGithubBlockProps,
-  EmbedGithubModel,
-  EmbedGithubStyles,
-} from './github-model.js';
+import { type EmbedGithubBlockProps, EmbedGithubModel, EmbedGithubStyles } from './github-model.js';
 
 const defaultEmbedGithubProps: EmbedGithubBlockProps = {
   style: EmbedGithubStyles[1],
@@ -32,6 +28,4 @@ export const EmbedGithubBlockSchema = createEmbedBlockSchema({
   props: (): EmbedGithubBlockProps => defaultEmbedGithubProps,
 });
 
-export const EmbedGithubBlockSchemaExtension = BlockSchemaExtension(
-  EmbedGithubBlockSchema
-);
+export const EmbedGithubBlockSchemaExtension = BlockSchemaExtension(EmbedGithubBlockSchema);

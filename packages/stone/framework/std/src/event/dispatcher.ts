@@ -1,16 +1,12 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { signal } from '@preact/signals-core';
 
 import { LifeCycleWatcher } from '../extension/index.js';
 import { KeymapIdentifier } from '../identifier.js';
 import type { BlockStdScope } from '../scope/index.js';
 import { type BlockComponent, EditorHost } from '../view/index.js';
-import {
-  type UIEventHandler,
-  UIEventState,
-  UIEventStateContext,
-} from './base.js';
+import { type UIEventHandler, UIEventState, UIEventStateContext } from './base.js';
 import { ClipboardControl } from './control/clipboard.js';
 import { KeyboardControl } from './control/keyboard.js';
 import { PointerControl } from './control/pointer.js';
@@ -18,14 +14,7 @@ import { RangeControl } from './control/range.js';
 import { EventScopeSourceType, EventSourceState } from './state/source.js';
 import { toLowerCase } from './utils.js';
 
-const bypassEventNames = [
-  'beforeInput',
-
-  'blur',
-  'focus',
-  'contextMenu',
-  'wheel',
-] as const;
+const bypassEventNames = ['beforeInput', 'blur', 'focus', 'contextMenu', 'wheel'] as const;
 
 const eventNames = [
   'click',
@@ -88,7 +77,7 @@ export class UIEventDispatcher extends LifeCycleWatcher {
   private readonly _clipboardControl: ClipboardControl;
 
   private _handlersMap = Object.fromEntries(
-    eventNames.map((name): [EventName, Array<EventHandlerRunner>] => [name, []])
+    eventNames.map((name): [EventName, Array<EventHandlerRunner>] => [name, []]),
   ) as Record<EventName, Array<EventHandlerRunner>>;
 
   private readonly _keyboardControl: KeyboardControl;
@@ -128,11 +117,11 @@ export class UIEventDispatcher extends LifeCycleWatcher {
   }
 
   private _bindEvents() {
-    bypassEventNames.forEach(eventName => {
+    bypassEventNames.forEach((eventName) => {
       this.disposables.addFromEvent(
         this.host,
         toLowerCase(eventName),
-        event => {
+        (event) => {
           this.run(
             eventName,
             UIEventStateContext.from(
@@ -140,15 +129,15 @@ export class UIEventDispatcher extends LifeCycleWatcher {
               new EventSourceState({
                 event,
                 sourceType: EventScopeSourceType.Selection,
-              })
-            )
+              }),
+            ),
           );
         },
         eventName === 'wheel'
           ? {
               passive: false,
             }
-          : undefined
+          : undefined,
       );
     });
 
@@ -171,7 +160,7 @@ export class UIEventDispatcher extends LifeCycleWatcher {
     this.disposables.addFromEvent(this.host, 'focusin', () => {
       this._setActive(true);
     });
-    this.disposables.addFromEvent(document, 'focusout', e => {
+    this.disposables.addFromEvent(document, 'focusout', (e) => {
       if (e.relatedTarget && !this.host.contains(e.relatedTarget as Node)) {
         this._setActive(false);
       }
@@ -210,11 +199,7 @@ export class UIEventDispatcher extends LifeCycleWatcher {
       this._setActive(true);
     });
     this.disposables.addFromEvent(this.host, 'pointerleave', () => {
-      if (
-        (document.activeElement &&
-          this.host.contains(document.activeElement)) ||
-        _dragging
-      ) {
+      if ((document.activeElement && this.host.contains(document.activeElement)) || _dragging) {
         return;
       }
 
@@ -245,7 +230,7 @@ export class UIEventDispatcher extends LifeCycleWatcher {
     if (!handlers) return;
 
     const selections = this._currentSelections;
-    const ids = selections.map(selection => selection.blockId);
+    const ids = selections.map((selection) => selection.blockId);
 
     return this.buildEventScope(name, ids);
   }
@@ -286,16 +271,13 @@ export class UIEventDispatcher extends LifeCycleWatcher {
         break;
       }
       case EventScopeSourceType.Target: {
-        output = this._buildEventScopeByTarget(
-          name,
-          state.event.target as Node
-        );
+        output = this._buildEventScopeByTarget(name, state.event.target as Node);
         break;
       }
       default: {
         throw new InkStoneError(
           ErrorCode.EventDispatcherError,
-          `Unknown event scope source: ${state.sourceType}`
+          `Unknown event scope source: ${state.sourceType}`,
         );
       }
     }
@@ -353,22 +335,17 @@ export class UIEventDispatcher extends LifeCycleWatcher {
     this._handlersMap[name].unshift(runner);
     return () => {
       if (this._handlersMap[name].includes(runner)) {
-        this._handlersMap[name] = this._handlersMap[name].filter(
-          x => x !== runner
-        );
+        this._handlersMap[name] = this._handlersMap[name].filter((x) => x !== runner);
       }
     };
   }
 
-  buildEventScope(
-    name: EventName,
-    blocks: string[]
-  ): EventHandlerRunner[] | undefined {
+  buildEventScope(name: EventName, blocks: string[]): EventHandlerRunner[] | undefined {
     const handlers = this._handlersMap[name];
     if (!handlers) return;
 
     const globalEvents = handlers.filter(
-      handler => handler.flavour === undefined && handler.blockId === undefined
+      (handler) => handler.flavour === undefined && handler.blockId === undefined,
     );
 
     let blockIds: string[] = blocks;
@@ -376,24 +353,24 @@ export class UIEventDispatcher extends LifeCycleWatcher {
     const flavourSeen: Record<string, boolean> = {};
     while (blockIds.length > 0) {
       const idHandlers = handlers.filter(
-        handler => handler.blockId && blockIds.includes(handler.blockId)
+        (handler) => handler.blockId && blockIds.includes(handler.blockId),
       );
 
       const flavourHandlers = blockIds
-        .map(blockId => this.std.store.getBlock(blockId)?.flavour)
+        .map((blockId) => this.std.store.getBlock(blockId)?.flavour)
         .filter((flavour): flavour is string => {
           if (!flavour) return false;
           if (flavourSeen[flavour]) return false;
           flavourSeen[flavour] = true;
           return true;
         })
-        .flatMap(flavour => {
-          return handlers.filter(handler => handler.flavour === flavour);
+        .flatMap((flavour) => {
+          return handlers.filter((handler) => handler.flavour === flavour);
         });
 
       events.push(...idHandlers, ...flavourHandlers);
       blockIds = blockIds
-        .map(blockId => {
+        .map((blockId) => {
           const parent = this.std.store.getParent(blockId);
           return parent?.id;
         })
@@ -410,18 +387,12 @@ export class UIEventDispatcher extends LifeCycleWatcher {
     this._bindEvents();
 
     const std = this.std;
-    this.std.provider
-      .getAll(KeymapIdentifier)
-      .forEach(({ getter, options }) => {
-        this.bindHotkey(getter(std), options);
-      });
+    this.std.provider.getAll(KeymapIdentifier).forEach(({ getter, options }) => {
+      this.bindHotkey(getter(std), options);
+    });
   }
 
-  run(
-    name: EventName,
-    context: UIEventStateContext,
-    runners?: EventHandlerRunner[]
-  ) {
+  run(name: EventName, context: UIEventStateContext, runners?: EventHandlerRunner[]) {
     if (!this.active) return;
 
     const sourceState = context.get('sourceState');

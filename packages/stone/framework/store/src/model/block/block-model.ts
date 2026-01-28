@@ -21,7 +21,7 @@ export class BlockModel<Props extends object = object> {
 
   private readonly _childModels = computed(() => {
     const value: BlockModel[] = [];
-    this._children.value.forEach(id => {
+    this._children.value.forEach((id) => {
       const block = this._store.getBlock$(id);
       if (block) {
         value.push(block.model);
@@ -38,7 +38,7 @@ export class BlockModel<Props extends object = object> {
     this._children.value.reduce((map, id, index) => {
       map.set(id, index);
       return map;
-    }, new Map<string, number>())
+    }, new Map<string, number>()),
   );
 
   created = new Subject<void>();
@@ -117,10 +117,10 @@ export class BlockModel<Props extends object = object> {
     this._onCreated = {
       dispose: this.created.pipe(take(1)).subscribe(() => {
         this._children.value = this.yBlock.get('sys:children').toArray();
-        this.yBlock.get('sys:children').observe(event => {
+        this.yBlock.get('sys:children').observe((event) => {
           this._children.value = event.target.toArray();
         });
-        this.yBlock.observe(event => {
+        this.yBlock.observe((event) => {
           if (event.keysChanged.has('sys:children')) {
             this._children.value = this.yBlock.get('sys:children').toArray();
           }

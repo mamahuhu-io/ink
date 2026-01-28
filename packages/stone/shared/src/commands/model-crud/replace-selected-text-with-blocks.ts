@@ -40,7 +40,7 @@ type SnapshotPattern = {
 const getBlocksPattern = (
   blocks: BlockModel[],
   startBlockModel: BlockModel,
-  endBlockModel?: BlockModel
+  endBlockModel?: BlockModel,
 ): SnapshotPattern => {
   const firstBlock = blocks[0];
   const lastBlock = blocks[blocks.length - 1];
@@ -50,20 +50,13 @@ const getBlocksPattern = (
 
   return {
     multiple: blocks.length > 1,
-    canMergeWithStart:
-      isFirstMergable && canMergeBlocks(startBlockModel, firstBlock),
+    canMergeWithStart: isFirstMergable && canMergeBlocks(startBlockModel, firstBlock),
     canMergeWithEnd:
-      isLastMergable && endBlockModel
-        ? canMergeBlocks(endBlockModel, lastBlock)
-        : false,
+      isLastMergable && endBlockModel ? canMergeBlocks(endBlockModel, lastBlock) : false,
   };
 };
 
-const mergeText = (
-  targetModel: BlockModel,
-  sourceBlock: BlockModel,
-  offset: number
-) => {
+const mergeText = (targetModel: BlockModel, sourceBlock: BlockModel, offset: number) => {
   if (targetModel.text && sourceBlock.text) {
     const sourceText = sourceBlock.text.toString();
     if (sourceText.length > 0) {
@@ -77,7 +70,7 @@ const splitParagraph = (
   parent: any,
   blockModel: BlockModel,
   index: number,
-  splitOffset: number
+  splitOffset: number,
 ): BlockModel => {
   // Create a new block of the same type as the original
   const newBlockId = doc.addBlock(blockModel.flavour, {}, parent, index + 1);
@@ -90,10 +83,7 @@ const splitParagraph = (
   return nextBlock.model;
 };
 
-const getSelectedBlocks = (
-  doc: Store,
-  textSelection: TextSelection
-): BlockModel[] | null => {
+const getSelectedBlocks = (doc: Store, textSelection: TextSelection): BlockModel[] | null => {
   const selectedBlocks: BlockModel[] = [];
   const fromBlock = doc.getBlock(textSelection.from.blockId)?.model;
   if (!fromBlock) return null;
@@ -143,7 +133,7 @@ const deleteSelectedText = (doc: Store, textSelection: TextSelection) => {
     }
 
     // Delete the blocks in between
-    selectedBlocks.slice(1).forEach(block => {
+    selectedBlocks.slice(1).forEach((block) => {
       doc.deleteBlock(block);
     });
   } else {
@@ -156,12 +146,7 @@ const deleteSelectedText = (doc: Store, textSelection: TextSelection) => {
   return { startBlockModel: firstBlock, endBlockModel: lastBlock, startOffset };
 };
 
-const addBlocks = (
-  doc: any,
-  blocks: BlockModel[],
-  parent: any,
-  from: number
-) => {
+const addBlocks = (doc: any, blocks: BlockModel[], parent: any, from: number) => {
   blocks.forEach((block, index) => {
     const blockProps = {
       ...getBlockProps(block),
@@ -196,9 +181,7 @@ export const replaceSelectedTextWithBlocksCommand: Command<{
   if (!parent) return next();
 
   const pattern = getBlocksPattern(blocks, startBlockModel, endBlockModel);
-  const startIndex = parent.children.findIndex(
-    x => x.id === startBlockModel.id
-  );
+  const startIndex = parent.children.findIndex((x) => x.id === startBlockModel.id);
 
   match(pattern)
     .with({ multiple: false, canMergeWithStart: true }, () => {
@@ -265,7 +248,7 @@ export const replaceSelectedTextWithBlocksCommand: Command<{
           parent,
           startBlockModel,
           startIndex,
-          startOffset
+          startOffset,
         );
         mergeText(startBlockModel, blocks[0], startOffset);
         mergeText(nextBlockModel, blocks[blocks.length - 1], 0);
@@ -273,7 +256,7 @@ export const replaceSelectedTextWithBlocksCommand: Command<{
         if (restBlocks.length > 0) {
           addBlocks(doc, restBlocks, parent, startIndex + 1);
         }
-      }
+      },
     )
     .with(
       {
@@ -315,7 +298,7 @@ export const replaceSelectedTextWithBlocksCommand: Command<{
         if (restBlocks.length > 0) {
           addBlocks(doc, restBlocks, parent, startIndex + 1);
         }
-      }
+      },
     )
     .with(
       {
@@ -356,14 +339,14 @@ export const replaceSelectedTextWithBlocksCommand: Command<{
           parent,
           startBlockModel,
           startIndex,
-          startOffset
+          startOffset,
         );
         mergeText(nextBlockModel as BlockModel, blocks[blocks.length - 1], 0);
         const restBlocks = blocks.slice(0, -1);
         if (restBlocks.length > 0) {
           addBlocks(doc, restBlocks, parent, startIndex + 1);
         }
-      }
+      },
     )
     .otherwise(() => {
       /**

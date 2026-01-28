@@ -5,7 +5,7 @@ import { type IVec, Vec } from './vec.js';
 
 export function getIBoundFromPoints(
   points: IVec[],
-  rotation = 0
+  rotation = 0,
 ): IBound & {
   maxX: number;
   maxY: number;
@@ -33,9 +33,7 @@ export function getIBoundFromPoints(
 
   if (rotation !== 0) {
     return getIBoundFromPoints(
-      points.map(pt =>
-        Vec.rotWith(pt, [(minX + maxX) / 2, (minY + maxY) / 2], rotation)
-      )
+      points.map((pt) => Vec.rotWith(pt, [(minX + maxX) / 2, (minY + maxY) / 2], rotation)),
     );
   }
 
@@ -216,10 +214,7 @@ export class Bound implements IBound {
 
   contains(bound: Bound) {
     return (
-      bound.x >= this.x &&
-      bound.y >= this.y &&
-      bound.maxX <= this.maxX &&
-      bound.maxY <= this.maxY
+      bound.x >= this.x && bound.y >= this.y && bound.maxX <= this.maxX && bound.maxY <= this.maxY
     );
   }
 
@@ -230,12 +225,7 @@ export class Bound implements IBound {
 
   expand(margin: [number, number]): Bound;
   expand(left: number, top?: number, right?: number, bottom?: number): Bound;
-  expand(
-    left: number | [number, number],
-    top?: number,
-    right?: number,
-    bottom?: number
-  ) {
+  expand(left: number | [number, number], top?: number, right?: number, bottom?: number) {
     if (Array.isArray(left)) {
       const [x, y] = left;
       return new Bound(this.x - x, this.y - y, this.w + x * 2, this.h + y * 2);
@@ -245,12 +235,7 @@ export class Bound implements IBound {
     right ??= left;
     bottom ??= top;
 
-    return new Bound(
-      this.x - left,
-      this.y - top,
-      this.w + left + right,
-      this.h + top + bottom
-    );
+    return new Bound(this.x - left, this.y - top, this.w + left + right, this.h + top + bottom);
   }
 
   getRelativePoint([x, y]: IVec): IVec {
@@ -262,10 +247,7 @@ export class Bound implements IBound {
   }
 
   horizontalDistance(bound: Bound) {
-    return Math.min(
-      Math.abs(this.minX - bound.maxX),
-      Math.abs(this.maxX - bound.minX)
-    );
+    return Math.min(Math.abs(this.minX - bound.maxX), Math.abs(this.maxX - bound.minX));
   }
 
   include(point: IVec) {
@@ -365,9 +347,6 @@ export class Bound implements IBound {
   }
 
   verticalDistance(bound: Bound) {
-    return Math.min(
-      Math.abs(this.minY - bound.maxY),
-      Math.abs(this.maxY - bound.minY)
-    );
+    return Math.min(Math.abs(this.minY - bound.maxY), Math.abs(this.maxY - bound.minY));
   }
 }

@@ -1,9 +1,8 @@
+import { autoUpdate, computePosition, flip, offset } from '@floating-ui/dom';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { nextTick } from '@ink/stone-global/utils';
 import type { AliasInfo, LinkableEmbedModel } from '@ink/stone-model';
-import {
-  EmbedLinkedDocModel,
-  EmbedSyncedDocModel,
-  isInternalEmbedModel,
-} from '@ink/stone-model';
+import { EmbedLinkedDocModel, EmbedSyncedDocModel, isInternalEmbedModel } from '@ink/stone-model';
 import {
   type LinkEventType,
   type TelemetryEvent,
@@ -11,19 +10,13 @@ import {
 } from '@ink/stone-shared/services';
 import { fontSMStyle, fontXSStyle } from '@ink/stone-shared/styles';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import {
-  listenClickAway,
-  stopPropagation,
-} from '@ink/stone-shared/utils';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { nextTick } from '@ink/stone-global/utils';
+import { listenClickAway, stopPropagation } from '@ink/stone-shared/utils';
 import {
   type BlockComponent,
   type BlockStdScope,
   type EditorHost,
   EditorLifeCycleExtension,
 } from '@ink/stone-std';
-import { autoUpdate, computePosition, flip, offset } from '@floating-ui/dom';
 import { computed, signal } from '@preact/signals-core';
 import { css, html, LitElement } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -33,9 +26,7 @@ import { live } from 'lit/directives/live.js';
 
 import { toast } from '../toast';
 
-export class EmbedCardEditModal extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class EmbedCardEditModal extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = css`
     :host {
       position: absolute;
@@ -236,8 +227,7 @@ export class EmbedCardEditModal extends SignalWatcher(
     if (this.isInternalEmbedModel) {
       return {
         title: 'Add title alias',
-        description:
-          'Add description alias (empty to inherit document content)',
+        description: 'Add description alias (empty to inherit document content)',
       };
     }
 
@@ -249,8 +239,7 @@ export class EmbedCardEditModal extends SignalWatcher(
 
   private _updateInfo() {
     const title = this.model.props.title || this.originalDocInfo?.title || '';
-    const description =
-      this.model.props.description || this.originalDocInfo?.description || '';
+    const description = this.model.props.description || this.originalDocInfo?.description || '';
 
     this.title$.value = title;
     this.description$.value = description;
@@ -260,9 +249,7 @@ export class EmbedCardEditModal extends SignalWatcher(
     super.connectedCallback();
 
     this.disposables.add(
-      this.host.std
-        .get(EditorLifeCycleExtension)
-        .slots.unmounted.subscribe(this._hide)
+      this.host.std.get(EditorLifeCycleExtension).slots.unmounted.subscribe(this._hide),
     );
     this._updateInfo();
   }
@@ -284,7 +271,7 @@ export class EmbedCardEditModal extends SignalWatcher(
             this.style.top = `${y}px`;
           })
           .catch(console.error);
-      })
+      }),
     );
 
     // Resolves the click event is triggered after the first rendering.
@@ -381,30 +368,20 @@ export class EmbedCardEditModal extends SignalWatcher(
   accessor originalDocInfo: AliasInfo | undefined = undefined;
 
   @property({ attribute: false })
-  accessor onReset:
-    | ((std: BlockStdScope, component: BlockComponent) => void)
-    | undefined = undefined;
+  accessor onReset: ((std: BlockStdScope, component: BlockComponent) => void) | undefined =
+    undefined;
 
   @property({ attribute: false })
   accessor onSave:
-    | ((
-        std: BlockStdScope,
-        component: BlockComponent,
-        props: AliasInfo
-      ) => void)
+    | ((std: BlockStdScope, component: BlockComponent, props: AliasInfo) => void)
     | undefined = undefined;
 
   accessor resetButtonDisabled$ = computed<boolean>(
     () =>
-      !(
-        Boolean(this.model.props.title?.length) ||
-        Boolean(this.model.props.description?.length)
-      )
+      !(Boolean(this.model.props.title?.length) || Boolean(this.model.props.description?.length)),
   );
 
-  accessor saveButtonDisabled$ = computed<boolean>(
-    () => this.title$.value.trim().length === 0
-  );
+  accessor saveButtonDisabled$ = computed<boolean>(() => this.title$.value.trim().length === 0);
 
   accessor title$ = signal<string>('');
 
@@ -424,12 +401,8 @@ export function toggleEmbedCardEditModal(
   viewType: string,
   originalDocInfo?: AliasInfo,
   onReset?: (std: BlockStdScope, component: BlockComponent) => void,
-  onSave?: (
-    std: BlockStdScope,
-    component: BlockComponent,
-    props: AliasInfo
-  ) => void,
-  abortController?: AbortController
+  onSave?: (std: BlockStdScope, component: BlockComponent, props: AliasInfo) => void,
+  abortController?: AbortController,
 ) {
   document.body.querySelector('embed-card-edit-modal')?.remove();
 
@@ -455,7 +428,7 @@ function track(
   model: LinkableEmbedModel,
   viewType: string,
   event: LinkEventType,
-  props: Partial<TelemetryEvent>
+  props: Partial<TelemetryEvent>,
 ) {
   std.getOptional(TelemetryProvider)?.track(event, {
     segment: 'toolbar',

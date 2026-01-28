@@ -8,12 +8,9 @@ interface Unsubscribable {
   unsubscribe(): void;
 }
 
-export function createSignalFromObservable<T>(
-  observable$: Observable<T>,
-  initValue: T
-) {
+export function createSignalFromObservable<T>(observable$: Observable<T>, initValue: T) {
   const newSignal = signal(initValue);
-  const subscription = observable$.subscribe(value => {
+  const subscription = observable$.subscribe((value) => {
     newSignal.value = value;
   });
   return {

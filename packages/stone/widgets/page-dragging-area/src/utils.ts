@@ -1,10 +1,6 @@
 import { NoteBlockModel, RootBlockModel } from '@ink/stone-model';
 import { matchModels } from '@ink/stone-shared/utils';
-import {
-  BLOCK_ID_ATTR,
-  type BlockComponent,
-  type PointerEventState,
-} from '@ink/stone-std';
+import { BLOCK_ID_ATTR, type BlockComponent, type PointerEventState } from '@ink/stone-std';
 
 export type Rect = {
   left: number;
@@ -46,25 +42,23 @@ function filterBlockInfos(blockInfos: BlockInfo[], userRect: Rect) {
 function filterBlockInfosByParent(
   parentInfos: BlockInfo,
   userRect: Rect,
-  filteredBlockInfos: BlockInfo[]
+  filteredBlockInfos: BlockInfo[],
 ) {
   const targetBlock = parentInfos.element;
   let results = [parentInfos];
   if (targetBlock.childElementCount > 0) {
     const childBlockInfos = targetBlock.childBlocks
-      .map(el =>
-        filteredBlockInfos.find(
-          blockInfo => blockInfo.element.model.id === el.model.id
-        )
+      .map((el) =>
+        filteredBlockInfos.find((blockInfo) => blockInfo.element.model.id === el.model.id),
       )
-      .filter(block => block) as BlockInfo[];
+      .filter((block) => block) as BlockInfo[];
     const firstIndex = childBlockInfos.findIndex(
-      bl => rectIntersects(bl.rect, userRect) && bl.rect.top < userRect.top
+      (bl) => rectIntersects(bl.rect, userRect) && bl.rect.top < userRect.top,
     );
     const lastIndex = childBlockInfos.findIndex(
-      bl =>
+      (bl) =>
         rectIntersects(bl.rect, userRect) &&
-        bl.rect.top + bl.rect.height > userRect.top + userRect.height
+        bl.rect.top + bl.rect.height > userRect.top + userRect.height,
     );
 
     if (firstIndex !== -1 && lastIndex !== -1) {
@@ -75,10 +69,7 @@ function filterBlockInfosByParent(
   return results;
 }
 
-export function getSelectingBlockPaths(
-  blockInfos: BlockInfo[],
-  userRect: Rect
-) {
+export function getSelectingBlockPaths(blockInfos: BlockInfo[], userRect: Rect) {
   const filteredBlockInfos = filterBlockInfos(blockInfos, userRect);
   const len = filteredBlockInfos.length;
   const blockPaths: string[] = [];
@@ -90,20 +81,13 @@ export function getSelectingBlockPaths(
   for (const block of filteredBlockInfos) {
     const rect = block.rect;
 
-    if (
-      rectIntersects(userRect, rect) &&
-      rectIncludesTopAndBottom(rect, userRect)
-    ) {
+    if (rectIntersects(userRect, rect) && rectIncludesTopAndBottom(rect, userRect)) {
       singleTargetParentBlock = block;
     }
   }
 
   if (singleTargetParentBlock) {
-    blocks = filterBlockInfosByParent(
-      singleTargetParentBlock,
-      userRect,
-      filteredBlockInfos
-    );
+    blocks = filterBlockInfosByParent(singleTargetParentBlock, userRect, filteredBlockInfos);
   } else {
     // If there is no block contains the top and bottom of the userRect
     // Then get all the blocks that intersect with the userRect
@@ -115,15 +99,13 @@ export function getSelectingBlockPaths(
   }
 
   // Filter out the blocks which parent is in the blocks
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i];
     const parent = blocks[i].element.store.getParent(block.element.model);
     const parentId = parent?.id;
     if (parentId) {
-      const isParentInBlocks = blocks.some(
-        block => block.element.model.id === parentId
-      );
+      const isParentInBlocks = blocks.some((block) => block.element.model.id === parentId);
       if (!isParentInBlocks) {
         blockPaths.push(blocks[i].element.blockId);
       }

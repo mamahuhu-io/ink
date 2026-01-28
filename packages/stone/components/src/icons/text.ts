@@ -502,13 +502,7 @@ export const EmbedCardDarkBannerIcon = html`<svg
 </svg>`;
 
 export const EmbedCardLightHorizontalIcon = html`
-  <svg
-    width="70"
-    height="32"
-    viewBox="0 0 70 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="70" height="32" viewBox="0 0 70 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.25" y="0.25" width="69.5" height="31.5" rx="3.75" fill="white" />
     <rect
       x="0.25"
@@ -558,21 +552,8 @@ export const EmbedCardLightHorizontalIcon = html`
 `;
 
 export const EmbedCardDarkHorizontalIcon = html`
-  <svg
-    width="70"
-    height="32"
-    viewBox="0 0 70 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect
-      x="0.25"
-      y="0.25"
-      width="69.5"
-      height="31.5"
-      rx="3.75"
-      fill="#141414"
-    />
+  <svg width="70" height="32" viewBox="0 0 70 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.25" y="0.25" width="69.5" height="31.5" rx="3.75" fill="#141414" />
     <rect
       x="0.25"
       y="0.25"
@@ -621,13 +602,7 @@ export const EmbedCardDarkHorizontalIcon = html`
 `;
 
 export const EmbedCardLightListIcon = html`
-  <svg
-    width="70"
-    height="14"
-    viewBox="0 0 70 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="70" height="14" viewBox="0 0 70 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.25" y="0.25" width="69.5" height="13.5" rx="2.75" fill="white" />
     <rect
       x="0.25"
@@ -644,21 +619,8 @@ export const EmbedCardLightListIcon = html`
 `;
 
 export const EmbedCardDarkListIcon = html`
-  <svg
-    width="70"
-    height="14"
-    viewBox="0 0 70 14"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect
-      x="0.25"
-      y="0.25"
-      width="69.5"
-      height="13.5"
-      rx="2.75"
-      fill="#141414"
-    />
+  <svg width="70" height="14" viewBox="0 0 70 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.25" y="0.25" width="69.5" height="13.5" rx="2.75" fill="#141414" />
     <rect
       x="0.25"
       y="0.25"
@@ -674,21 +636,8 @@ export const EmbedCardDarkListIcon = html`
 `;
 
 export const EmbedCardLightVerticalIcon = html`
-  <svg
-    width="60"
-    height="66"
-    viewBox="0 0 60 66"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect
-      x="0.25"
-      y="1.10718"
-      width="59.5"
-      height="63.7857"
-      rx="3.75"
-      fill="white"
-    />
+  <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.25" y="1.10718" width="59.5" height="63.7857" rx="3.75" fill="white" />
     <rect
       x="0.25"
       y="1.10718"
@@ -730,21 +679,8 @@ export const EmbedCardLightVerticalIcon = html`
 `;
 
 export const EmbedCardDarkVerticalIcon = html`
-  <svg
-    width="60"
-    height="66"
-    viewBox="0 0 60 66"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect
-      x="0.25"
-      y="1.10718"
-      width="59.5"
-      height="63.7857"
-      rx="3.75"
-      fill="#141414"
-    />
+  <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.25" y="1.10718" width="59.5" height="63.7857" rx="3.75" fill="#141414" />
     <rect
       x="0.25"
       y="1.10718"
@@ -786,13 +722,7 @@ export const EmbedCardDarkVerticalIcon = html`
 `;
 
 export const EmbedCardLightCubeIcon = html`
-  <svg
-    width="38"
-    height="30"
-    viewBox="0 0 38 30"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.25" y="0.25" width="37.5" height="29.5" rx="3.75" fill="white" />
     <rect
       x="0.25"
@@ -810,21 +740,8 @@ export const EmbedCardLightCubeIcon = html`
 `;
 
 export const EmbedCardDarkCubeIcon = html`
-  <svg
-    width="38"
-    height="30"
-    viewBox="0 0 38 30"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <rect
-      x="0.25"
-      y="0.25"
-      width="37.5"
-      height="29.5"
-      rx="3.75"
-      fill="#141414"
-    />
+  <svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.25" y="0.25" width="37.5" height="29.5" rx="3.75" fill="#141414" />
     <rect
       x="0.25"
       y="0.25"

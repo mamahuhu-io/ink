@@ -1,5 +1,5 @@
-import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import type { ServiceProvider } from '@ink/stone-global/di';
+import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import {
   type AssetsManager,
   ASTWalker,
@@ -21,11 +21,7 @@ import {
   type Transformer,
 } from '@ink/stone-store';
 
-import {
-  type AdapterContext,
-  AdapterFactoryIdentifier,
-  type TextBuffer,
-} from '../types';
+import { type AdapterContext, AdapterFactoryIdentifier, type TextBuffer } from '../types';
 import {
   type BlockPlainTextAdapterMatcher,
   BlockPlainTextAdapterMatcherIdentifier,
@@ -52,29 +48,26 @@ export class PlainTextAdapter extends BaseAdapter<PlainText> {
   constructor(job: Transformer, provider: ServiceProvider) {
     super(job, provider);
     const blockMatchers = Array.from(
-      provider.getAll(BlockPlainTextAdapterMatcherIdentifier).values()
+      provider.getAll(BlockPlainTextAdapterMatcherIdentifier).values(),
     );
     const inlineDeltaToPlainTextAdapterMatchers = Array.from(
-      provider.getAll(InlineDeltaToPlainTextAdapterMatcherIdentifier).values()
+      provider.getAll(InlineDeltaToPlainTextAdapterMatcherIdentifier).values(),
     );
     this.blockMatchers = blockMatchers;
     this.deltaConverter = new PlainTextDeltaConverter(
       job.adapterConfigs,
       inlineDeltaToPlainTextAdapterMatchers,
-      []
+      [],
     );
   }
 
-  private async _traverseSnapshot(
-    snapshot: BlockSnapshot
-  ): Promise<{ plaintext: string }> {
+  private async _traverseSnapshot(snapshot: BlockSnapshot): Promise<{ plaintext: string }> {
     const textBuffer: TextBuffer = {
       content: '',
     };
     const walker = new ASTWalker<BlockSnapshot, TextBuffer>();
     walker.setONodeTypeGuard(
-      (node): node is BlockSnapshot =>
-        BlockSnapshotSchema.safeParse(node).success
+      (node): node is BlockSnapshot => BlockSnapshotSchema.safeParse(node).success,
     );
     walker.setEnter(async (o, context) => {
       for (const matcher of this.blockMatchers) {
@@ -152,8 +145,7 @@ export class PlainTextAdapter extends BaseAdapter<PlainText> {
       const { plaintext } = await this._traverseSnapshot(contentSlice);
       buffer += plaintext;
     }
-    const plaintext =
-      buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
+    const plaintext = buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
     return {
       file: plaintext,
       assetsIds: sliceAssetsIds,
@@ -265,9 +257,7 @@ export class PlainTextAdapter extends BaseAdapter<PlainText> {
     };
   }
 
-  toSliceSnapshot(
-    payload: PlainTextToSliceSnapshotPayload
-  ): SliceSnapshot | null {
+  toSliceSnapshot(payload: PlainTextToSliceSnapshotPayload): SliceSnapshot | null {
     if (payload.file.trim().length === 0) {
       return null;
     }
@@ -312,12 +302,11 @@ export class PlainTextAdapter extends BaseAdapter<PlainText> {
   }
 }
 
-export const PlainTextAdapterFactoryIdentifier =
-  AdapterFactoryIdentifier('PlainText');
+export const PlainTextAdapterFactoryIdentifier = AdapterFactoryIdentifier('PlainText');
 
 export const PlainTextAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(PlainTextAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(PlainTextAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new PlainTextAdapter(job, provider),
     }));
   },

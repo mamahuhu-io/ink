@@ -1,8 +1,7 @@
 function encodeSVG(svg: string) {
-  const trimedSVG = svg.replace(/\n/g, '')
-    .replace(/[\s]{2,}/g, ' ')
+  const trimedSVG = svg.replace(/\n/g, '').replace(/[\s]{2,}/g, ' ');
 
-  return `data:image/svg+xml,${encodeURIComponent(trimedSVG)}`
+  return `data:image/svg+xml,${encodeURIComponent(trimedSVG)}`;
 }
 
 export const grabbingCursor = encodeSVG(`
@@ -24,7 +23,7 @@ export const grabbingCursor = encodeSVG(`
       fill="white"
     />
   </svg>
-`)
+`);
 
 export const grabCursor = encodeSVG(`
   <svg
@@ -45,4 +44,4 @@ export const grabCursor = encodeSVG(`
       fill="white"
     />
   </svg>
-`)
+`);

@@ -27,9 +27,7 @@ export declare class DisposableClass {
  * }
  * ```
  */
-export function WithDisposable<T extends Constructor<LitElement>>(
-  SuperClass: T
-) {
+export function WithDisposable<T extends Constructor<LitElement>>(SuperClass: T) {
   class DerivedClass extends SuperClass {
     protected _disposables = new DisposableGroup();
 

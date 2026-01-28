@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { IVec, SerializedXYWH, XYWH } from '@ink/stone-global/gfx';
 import {
   Bound,
@@ -49,9 +49,7 @@ export type GfxCommonBlockProps = GfxCompatibleProps & {
  * All the graphic block model should extend this class.
  * You can use `GfxCompatibleBlockModel` to convert a BlockModel to a subclass that extends it.
  */
-export class GfxBlockElementModel<
-    Props extends GfxCompatibleProps = GfxCompatibleProps,
-  >
+export class GfxBlockElementModel<Props extends GfxCompatibleProps = GfxCompatibleProps>
   extends BlockModel<Props>
   implements GfxCompatibleInterface
 {
@@ -202,7 +200,7 @@ export class GfxBlockElementModel<
       h: bound.h,
       rotate: this.rotate,
     });
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   }
 
   getLineIntersections(start: IVec, end: IVec): PointLocation[] | null {
@@ -211,38 +209,26 @@ export class GfxBlockElementModel<
     return linePolygonIntersects(
       start,
       end,
-      rotatePoints(bound.points, bound.center, this.rotate ?? 0)
+      rotatePoints(bound.points, bound.center, this.rotate ?? 0),
     );
   }
 
   getNearestPoint(point: IVec): IVec {
     const bound = Bound.deserialize(this.xywh);
-    return polygonNearestPoint(
-      rotatePoints(bound.points, bound.center, this.rotate ?? 0),
-      point
-    );
+    return polygonNearestPoint(rotatePoints(bound.points, bound.center, this.rotate ?? 0), point);
   }
 
   getRelativePointLocation(relativePoint: IVec): PointLocation {
     const bound = Bound.deserialize(this.xywh);
     const point = bound.getRelativePoint(relativePoint);
-    const rotatePoint = rotatePoints(
-      [point],
-      bound.center,
-      this.rotate ?? 0
-    )[0];
+    const rotatePoint = rotatePoints([point], bound.center, this.rotate ?? 0)[0];
     const points = rotatePoints(bound.points, bound.center, this.rotate ?? 0);
     const tangent = polygonGetPointTangent(points, rotatePoint);
 
     return new PointLocation(rotatePoint, tangent);
   }
 
-  includesPoint(
-    x: number,
-    y: number,
-    opt: PointTestOptions,
-    __: EditorHost
-  ): boolean {
+  includesPoint(x: number, y: number, opt: PointTestOptions, __: EditorHost): boolean {
     const bound = opt.useElementBound ? this.elementBound : this.responseBound;
     return bound.isPointInBound([x, y], 0);
   }
@@ -251,7 +237,7 @@ export class GfxBlockElementModel<
     return (
       this.containsBound(bound) ||
       bound.points.some((point, i, points) =>
-        this.getLineIntersections(point, points[(i + 1) % points.length])
+        this.getLineIntersections(point, points[(i + 1) % points.length]),
       )
     );
   }
@@ -301,14 +287,11 @@ export function GfxCompatibleBlockModel<
     if (Object.getPrototypeOf(currentClass.prototype) === null) {
       throw new InkStoneError(
         ErrorCode.GfxBlockElementError,
-        'The SuperClass is not a subclass of BlockModel'
+        'The SuperClass is not a subclass of BlockModel',
       );
     }
 
-    Object.setPrototypeOf(
-      currentClass.prototype,
-      GfxBlockElementModel.prototype
-    );
+    Object.setPrototypeOf(currentClass.prototype, GfxBlockElementModel.prototype);
   }
 
   return BlockModelSuperClass as unknown as typeof GfxBlockElementModel<Props>;

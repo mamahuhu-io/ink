@@ -1,4 +1,3 @@
-import type { ListBlockModel } from '@ink/stone-model';
 import {
   BulletedList01Icon,
   BulletedList02Icon,
@@ -9,6 +8,7 @@ import {
   ToggleDownIcon,
   ToggleRightIcon,
 } from '@ink/stone-icons/lit';
+import type { ListBlockModel } from '@ink/stone-model';
 import { html } from 'lit';
 
 import { getNumberPrefix } from './get-number-prefix.js';
@@ -33,16 +33,12 @@ const BulletIcons = [
 export function getListIcon(
   model: ListBlockModel,
   showChildren: boolean,
-  onClick: (e: MouseEvent) => void
+  onClick: (e: MouseEvent) => void,
 ) {
   const deep = getListDeep(model);
   switch (model.props.type) {
     case 'bulleted':
-      return html`<div
-        contenteditable="false"
-        class="ink-list-block__prefix"
-        @click=${onClick}
-      >
+      return html`<div contenteditable="false" class="ink-list-block__prefix" @click=${onClick}>
         ${BulletIcons[deep % BulletIcons.length]}
       </div>`;
     case 'numbered':
@@ -64,11 +60,7 @@ export function getListIcon(
           : CheckBoxUnIcon()}
       </div>`;
     case 'toggle':
-      return html`<div
-        contenteditable="false"
-        class="ink-list-block__prefix"
-        @click=${onClick}
-      >
+      return html`<div contenteditable="false" class="ink-list-block__prefix" @click=${onClick}>
         ${showChildren ? ToggleDownIcon() : ToggleRightIcon()}
       </div>`;
     default:

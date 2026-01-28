@@ -1,11 +1,8 @@
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { EdgelessLegacySlotIdentifier } from '@ink/stone-block-surface';
-import { getSelectedRect } from '@ink/stone-shared/utils';
 import { type IVec, Rect } from '@ink/stone-global/gfx';
-import {
-  GfxControllerIdentifier,
-  type ToolOptionWithType,
-} from '@ink/stone-std/gfx';
+import { getSelectedRect } from '@ink/stone-shared/utils';
+import { GfxControllerIdentifier, type ToolOptionWithType } from '@ink/stone-std/gfx';
 import { effect } from '@preact/signals-core';
 
 import {
@@ -22,9 +19,7 @@ import type { InkDragHandleWidget } from '../drag-handle.js';
  * 2. Multiple selection is not supported
  */
 export class EdgelessWatcher {
-  private readonly _handleEdgelessToolUpdated = (
-    newTool: ToolOptionWithType
-  ) => {
+  private readonly _handleEdgelessToolUpdated = (newTool: ToolOptionWithType) => {
     if (newTool.toolType?.toolName === 'default') {
       this.updateAnchorElement();
     } else {
@@ -43,10 +38,7 @@ export class EdgelessWatcher {
       this.widget.scale.value = zoom;
     }
 
-    if (
-      this.widget.center[0] !== center[0] &&
-      this.widget.center[1] !== center[1]
-    ) {
+    if (this.widget.center[0] !== center[0] && this.widget.center[1] !== center[1]) {
       this.widget.center = [...center];
     }
 
@@ -101,11 +93,7 @@ export class EdgelessWatcher {
     const editing = selection.editing;
     const selectedElements = selection.selectedElements;
 
-    if (
-      editing ||
-      selectedElements.length !== 1 ||
-      this.widget.store.readonly
-    ) {
+    if (editing || selectedElements.length !== 1 || this.widget.store.readonly) {
       this.widget.hide();
       return;
     }
@@ -131,7 +119,9 @@ export class EdgelessWatcher {
 
     const { viewport } = this.gfx;
     const rect = getSelectedRect([edgelessElement]);
-    let [left, top] = viewport.toViewCoord(rect.left, rect.top);
+    const coords = viewport.toViewCoord(rect.left, rect.top);
+    let left = coords[0];
+    const top = coords[1];
     const scale = this.widget.scale.peek();
     const width = rect.width * scale;
     const height = rect.height * scale;
@@ -172,14 +162,12 @@ export class EdgelessWatcher {
     // [REMOVED] Edgeless blocks - not needed for Page mode
     // const edgelessSlots = std.get(EdgelessLegacySlotIdentifier);
 
-    disposables.add(
-      viewport.viewportUpdated.subscribe(this._handleEdgelessViewPortUpdated)
-    );
+    disposables.add(viewport.viewportUpdated.subscribe(this._handleEdgelessViewPortUpdated));
 
     disposables.add(
       selection.slots.updated.subscribe(() => {
         this.updateAnchorElement();
-      })
+      }),
     );
 
     // [REMOVED] Edgeless blocks - not needed for Page mode
@@ -200,21 +188,18 @@ export class EdgelessWatcher {
         const value = tool.currentToolOption$.value;
 
         value && this._handleEdgelessToolUpdated(value);
-      })
+      }),
     );
 
     disposables.add(
       edgelessSlots.elementResizeStart.subscribe(() => {
         this.widget.hide();
-      })
+      }),
     );
 
     disposables.add(
-      std.store.slots.blockUpdated.subscribe(payload => {
-        if (
-          this.widget.isGfxDragHandleVisible &&
-          payload.id === this.widget.anchorBlockId.peek()
-        ) {
+      std.store.slots.blockUpdated.subscribe((payload) => {
+        if (this.widget.isGfxDragHandleVisible && payload.id === this.widget.anchorBlockId.peek()) {
           if (payload.type === 'delete') {
             this.widget.hide();
           }
@@ -222,7 +207,7 @@ export class EdgelessWatcher {
             this._showDragHandle();
           }
         }
-      })
+      }),
     );
 
     if (surface) {
@@ -231,7 +216,7 @@ export class EdgelessWatcher {
           if (this.widget.isGfxDragHandleVisible) {
             this._showDragHandle();
           }
-        })
+        }),
       );
     }
   }

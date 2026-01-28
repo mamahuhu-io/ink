@@ -1,6 +1,6 @@
 import type { NoteBlockComponent } from '@ink/stone-block-note';
-import { captureEventTarget } from '@ink/stone-shared/utils';
 import { Point } from '@ink/stone-global/gfx';
+import { captureEventTarget } from '@ink/stone-shared/utils';
 import {
   BLOCK_ID_ATTR,
   type BlockComponent,
@@ -56,7 +56,7 @@ export class PointerEventWatcher {
    * Should select the block and show slash menu if current block is not selected
    * Should clear selection if current block is the first selected block
    */
-  private readonly _clickHandler: UIEventHandler = ctx => {
+  private readonly _clickHandler: UIEventHandler = (ctx) => {
     if (!this.widget.isBlockDragHandleVisible) return;
 
     const state = ctx.get('pointerState');
@@ -99,12 +99,9 @@ export class PointerEventWatcher {
   private readonly _getTopWithBlockComponent = (block: BlockComponent) => {
     const computedStyle = getComputedStyle(block);
     const { top } = block.getBoundingClientRect();
-    const paddingTop =
-      parseInt(computedStyle.paddingTop) * this.widget.scale.peek();
+    const paddingTop = parseInt(computedStyle.paddingTop) * this.widget.scale.peek();
     return (
-      top +
-      paddingTop -
-      this.widget.dragHandleContainerOffsetParent.getBoundingClientRect().top
+      top + paddingTop - this.widget.dragHandleContainerOffsetParent.getBoundingClientRect().top
     );
   };
 
@@ -121,15 +118,12 @@ export class PointerEventWatcher {
 
     const scaleInNote = this.widget.scaleInNote.value;
 
-    const rowPaddingY =
-      ((containerHeight - DRAG_HANDLE_GRABBER_HEIGHT) / 2 + 2) * scaleInNote;
+    const rowPaddingY = ((containerHeight - DRAG_HANDLE_GRABBER_HEIGHT) / 2 + 2) * scaleInNote;
 
     // use padding to control grabber's height
     const paddingTop = rowPaddingY + posTop - draggingAreaRect.top;
     const paddingBottom =
-      draggingAreaRect.height -
-      paddingTop -
-      DRAG_HANDLE_GRABBER_HEIGHT * scaleInNote;
+      draggingAreaRect.height - paddingTop - DRAG_HANDLE_GRABBER_HEIGHT * scaleInNote;
 
     return {
       paddingTop: `${paddingTop}px`,
@@ -163,11 +157,7 @@ export class PointerEventWatcher {
     const point = new Point(state.raw.x, state.raw.y);
     if (!this.widget.rootComponent) return;
 
-    const closestBlock = getClosestBlockByPoint(
-      this.widget.host,
-      this.widget.rootComponent,
-      point
-    );
+    const closestBlock = getClosestBlockByPoint(this.widget.host, this.widget.rootComponent, point);
     if (!closestBlock) {
       this.widget.anchorBlockId.value = null;
       return;
@@ -186,10 +176,7 @@ export class PointerEventWatcher {
     // If current block is not the last hovered block, show drag handle beside the hovered block
     if (
       (!this._lastHoveredBlockId ||
-        !isBlockIdEqual(
-          this.widget.anchorBlockId.peek(),
-          this._lastHoveredBlockId
-        ) ||
+        !isBlockIdEqual(this.widget.anchorBlockId.peek(), this._lastHoveredBlockId) ||
         !this.widget.isBlockDragHandleVisible) &&
       !this.widget.isDragHandleHovered
     ) {
@@ -198,7 +185,7 @@ export class PointerEventWatcher {
     }
   };
 
-  private readonly _pointerOutHandler: UIEventHandler = ctx => {
+  private readonly _pointerOutHandler: UIEventHandler = (ctx) => {
     const state = ctx.get('pointerState');
     state.raw.preventDefault();
 
@@ -211,9 +198,7 @@ export class PointerEventWatcher {
     // But the pointer out event is not as expected
     // Need to be optimized
     const relatedElement = captureEventTarget(relatedTarget);
-    const outOfPageViewPort = element.classList.contains(
-      'ink-page-viewport'
-    );
+    const outOfPageViewPort = element.classList.contains('ink-page-viewport');
     const inPage = !!relatedElement?.closest('.ink-page-viewport');
 
     const inDragHandle = !!relatedElement?.closest(INK_DRAG_HANDLE_WIDGET);
@@ -222,69 +207,55 @@ export class PointerEventWatcher {
     }
   };
 
-  private readonly _throttledPointerMoveHandler = throttle<UIEventHandler>(
-    ctx => {
-      if (this._isPointerDown) return;
-      if (
-        this.widget.store.readonly ||
-        this.widget.dragging ||
-        !this.widget.isConnected
-      ) {
-        this.widget.hide();
-        return;
-      }
-      if (this.widget.isGfxDragHandleVisible) return;
+  private readonly _throttledPointerMoveHandler = throttle<UIEventHandler>((ctx) => {
+    if (this._isPointerDown) return;
+    if (this.widget.store.readonly || this.widget.dragging || !this.widget.isConnected) {
+      this.widget.hide();
+      return;
+    }
+    if (this.widget.isGfxDragHandleVisible) return;
 
-      const state = ctx.get('pointerState');
+    const state = ctx.get('pointerState');
 
-      // When pointer is moving, should do nothing
-      if (state.delta.x !== 0 && state.delta.y !== 0) return;
+    // When pointer is moving, should do nothing
+    if (state.delta.x !== 0 && state.delta.y !== 0) return;
 
-      const { target } = state.raw;
-      const element = captureEventTarget(target);
-      // When pointer not on block or on dragging, should do nothing
-      if (!element) return;
+    const { target } = state.raw;
+    const element = captureEventTarget(target);
+    // When pointer not on block or on dragging, should do nothing
+    if (!element) return;
 
-      // When pointer on drag handle, should do nothing
-      if (element.closest('.ink-drag-handle-container')) return;
+    // When pointer on drag handle, should do nothing
+    if (element.closest('.ink-drag-handle-container')) return;
 
-      if (!this.widget.rootComponent) return;
+    if (!this.widget.rootComponent) return;
 
-      // When pointer out of note block hover area or inside database, should hide drag handle
-      const point = new Point(state.raw.x, state.raw.y);
+    // When pointer out of note block hover area or inside database, should hide drag handle
+    const point = new Point(state.raw.x, state.raw.y);
 
-      const closestNoteBlock = getClosestNoteBlock(
-        this.widget.host,
-        this.widget.rootComponent,
-        point
-      ) as NoteBlockComponent | null;
+    const closestNoteBlock = getClosestNoteBlock(
+      this.widget.host,
+      this.widget.rootComponent,
+      point,
+    ) as NoteBlockComponent | null;
 
-      this.widget.noteScale.value =
-        this.widget.mode === 'page'
-          ? 1
-          : (closestNoteBlock?.model.props.edgeless.scale ?? 1);
+    this.widget.noteScale.value =
+      this.widget.mode === 'page' ? 1 : (closestNoteBlock?.model.props.edgeless.scale ?? 1);
 
-      if (
-        closestNoteBlock &&
-        this._canEditing(closestNoteBlock) &&
-        !isOutOfNoteBlock(
-          this.widget.host,
-          closestNoteBlock,
-          point,
-          this.widget.scaleInNote.peek()
-        )
-      ) {
-        this._pointerMoveOnBlock(state);
-        return true;
-      }
+    if (
+      closestNoteBlock &&
+      this._canEditing(closestNoteBlock) &&
+      !isOutOfNoteBlock(this.widget.host, closestNoteBlock, point, this.widget.scaleInNote.peek())
+    ) {
+      this._pointerMoveOnBlock(state);
+      return true;
+    }
 
-      if (this.widget.activeDragHandle) {
-        this.widget.hide();
-      }
-      return false;
-    },
-    1000 / 60
-  );
+    if (this.widget.activeDragHandle) {
+      this.widget.hide();
+    }
+    return false;
+  }, 1000 / 60);
 
   // Multiple blocks: drag handle should show on the vertical middle of all blocks
   showDragHandleOnHoverBlock = () => {
@@ -320,9 +291,7 @@ export class PointerEventWatcher {
       if (this.widget.selectionHelper.isBlockSelected(block))
         applyStyle(
           this.widget.isDragHandleHovered &&
-            this.widget.selectionHelper.isBlockSelected(
-              this._lastShowedBlock?.el
-            )
+            this.widget.selectionHelper.isBlockSelected(this._lastShowedBlock?.el),
         );
       else applyStyle(false);
     } else {

@@ -5,11 +5,10 @@ import { css } from 'lit';
 import { ImagePlaceholderBlockComponent } from './page.js';
 
 export class ImageEdgelessPlaceholderBlockComponent extends toGfxBlockComponent(
-  ImagePlaceholderBlockComponent
+  ImagePlaceholderBlockComponent,
 ) {
   static override styles = css`
-    ink-edgeless-placeholder-preview-image
-      .ink-placeholder-preview-container {
+    ink-edgeless-placeholder-preview-image .ink-placeholder-preview-container {
       border: 1px solid ${unsafeCSSVarV2('layer/background/tertiary')};
     }
   `;

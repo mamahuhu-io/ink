@@ -21,15 +21,13 @@ import type { InkDragHandleWidget } from '../drag-handle.js';
 
 export class PreviewHelper {
   private readonly _calculateQuery = (selectedIds: string[]): Query => {
-    const ids: Array<{ id: string; viewType: BlockViewType }> = selectedIds.map(
-      id => ({
-        id,
-        viewType: 'display',
-      })
-    );
+    const ids: Array<{ id: string; viewType: BlockViewType }> = selectedIds.map((id) => ({
+      id,
+      viewType: 'display',
+    }));
 
     // The ancestors of the selected blocks should be rendered as Bypass
-    selectedIds.forEach(block => {
+    selectedIds.forEach((block) => {
       let parent: string | null = block;
       do {
         if (!selectedIds.includes(parent)) {
@@ -47,7 +45,7 @@ export class PreviewHelper {
       }
 
       const children = model.children ?? [];
-      children.forEach(child => {
+      children.forEach((child) => {
         ids.push({ viewType: 'display', id: child.id });
         addChildren(child.id);
       });
@@ -69,19 +67,14 @@ export class PreviewHelper {
     const editorSetting = std.get(EditorSettingProvider);
     const query = this._calculateQuery(blockIds as string[]);
     const store = widget.store.doc.getStore({ query });
-    let previewSpec = widget.std
-      .get(ViewExtensionManagerIdentifier)
-      .get('preview-page');
+    let previewSpec = widget.std.get(ViewExtensionManagerIdentifier).get('preview-page');
     const settingSignal = signal({ ...editorSetting.setting$.peek() });
     const extensions = [
       DocModeExtension(docModeService),
       EditorSettingExtension({ setting$: settingSignal }),
       {
         setup(di) {
-          di.override(
-            BlockViewIdentifier('ink:database'),
-            () => literal`ink-dnd-preview-database`
-          );
+          di.override(BlockViewIdentifier('ink:database'), () => literal`ink-dnd-preview-database`);
         },
       } as ExtensionType,
       {
@@ -132,15 +125,15 @@ export class PreviewHelper {
       type: string;
     }[] = [];
 
-    snapshot.content.forEach(block => {
+    snapshot.content.forEach((block) => {
       if (block.flavour === 'ink:surface') {
-        Object.values(
-          block.props.elements as Record<string, { id: string; type: string }>
-        ).forEach(elem => {
-          blockTypes.push({
-            type: elem.type,
-          });
-        });
+        Object.values(block.props.elements as Record<string, { id: string; type: string }>).forEach(
+          (elem) => {
+            blockTypes.push({
+              type: elem.type,
+            });
+          },
+        );
       } else {
         blockTypes.push({
           type: block.flavour,
@@ -188,8 +181,7 @@ export class PreviewHelper {
     mode: 'block' | 'gfx';
   }): { x: number; y: number } => {
     const { container } = options;
-    const { width, height, element, left, top } =
-      this.getPreviewElement(options);
+    const { width, height, element, left, top } = this.getPreviewElement(options);
 
     container.style.position = 'absolute';
     container.style.left = left ? `${left}px` : '';

@@ -8,12 +8,7 @@ export type XYWH = [number, number, number, number];
  */
 export type SerializedXYWH = `[${number},${number},${number},${number}]`;
 
-export function serializeXYWH(
-  x: number,
-  y: number,
-  w: number,
-  h: number
-): SerializedXYWH {
+export function serializeXYWH(x: number, y: number, w: number, h: number): SerializedXYWH {
   return `[${x},${y},${w},${h}]`;
 }
 

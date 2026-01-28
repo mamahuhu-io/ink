@@ -1,12 +1,11 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import type { GfxController } from './controller.js';
 import { GfxControllerIdentifier } from './identifiers.js';
 
-export const GfxExtensionIdentifier =
-  createIdentifier<GfxExtension>('GfxExtension');
+export const GfxExtensionIdentifier = createIdentifier<GfxExtension>('GfxExtension');
 
 export const GfxClassExtenderIdentifier = createIdentifier<{
   extendFn: (gfx: GfxController) => void;
@@ -28,10 +27,7 @@ export abstract class GfxExtension extends Extension {
 
   static override setup(di: Container) {
     if (!this.key) {
-      throw new InkStoneError(
-        ErrorCode.ValueNotExists,
-        'key is not defined in the GfxExtension'
-      );
+      throw new InkStoneError(ErrorCode.ValueNotExists, 'key is not defined in the GfxExtension');
     }
 
     di.addImpl(GfxClassExtenderIdentifier(this.key), {
@@ -42,9 +38,7 @@ export abstract class GfxExtension extends Extension {
       GfxControllerIdentifier,
     ]);
 
-    di.addImpl(GfxExtensionIdentifier(this.key), provider =>
-      provider.get(this)
-    );
+    di.addImpl(GfxExtensionIdentifier(this.key), (provider) => provider.get(this));
   }
 
   mounted() {}

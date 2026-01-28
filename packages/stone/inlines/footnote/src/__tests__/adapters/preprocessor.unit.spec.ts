@@ -35,8 +35,7 @@ describe('FootnoteReferenceMarkdownPreprocessorExtension', () => {
 
   it('should handle multiple footnote references with mixed URL and non-URL text', () => {
     const content = 'https://example.com[^1]normal text[^2]http://test.com[^3]';
-    const expected =
-      'https://example.com [^1]normal text[^2]http://test.com [^3]';
+    const expected = 'https://example.com [^1]normal text[^2]http://test.com [^3]';
     expect(preprocessFootnoteReference(content)).toBe(expected);
   });
 

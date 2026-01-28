@@ -12,22 +12,14 @@ describe('SVGPathBuilder', () => {
 
   test('should build a path with curves', () => {
     const pathBuilder = new SVGPathBuilder();
-    const result = pathBuilder
-      .moveTo(0, 0)
-      .curveTo(10, 0, 10, 10, 20, 10)
-      .build();
+    const result = pathBuilder.moveTo(0, 0).curveTo(10, 0, 10, 10, 20, 10).build();
 
     expect(result).toBe('M 0 0 C 10 0 10 10 20 10');
   });
 
   test('should build a closed path', () => {
     const pathBuilder = new SVGPathBuilder();
-    const result = pathBuilder
-      .moveTo(0, 0)
-      .lineTo(10, 0)
-      .lineTo(5, 10)
-      .closePath()
-      .build();
+    const result = pathBuilder.moveTo(0, 0).lineTo(10, 0).lineTo(5, 10).closePath().build();
 
     expect(result).toBe('M 0 0 L 10 0 L 5 10 Z');
   });

@@ -29,23 +29,23 @@ const IMAGE_LINE_REGEX = /^!\[(.*?)\]\((.+?)\)$/;
  * This is a pure function that doesn't touch the DOM
  */
 function parseMarkdownToBlockDefs(markdown: string): BlockDef[] {
-  const lines = markdown.split("\n");
+  const lines = markdown.split('\n');
   const blockDefs: BlockDef[] = [];
   let inCodeBlock = false;
   let codeBlockContent: string[] = [];
-  let codeBlockLanguage = "";
+  let codeBlockLanguage = '';
 
   for (const line of lines) {
-    if (line.startsWith("```")) {
+    if (line.startsWith('```')) {
       if (!inCodeBlock) {
         inCodeBlock = true;
         codeBlockLanguage = line.slice(3).trim();
         codeBlockContent = [];
       } else {
         blockDefs.push({
-          type: "ink:code",
+          type: 'ink:code',
           props: {
-            text: codeBlockContent.join("\n"),
+            text: codeBlockContent.join('\n'),
             language: codeBlockLanguage,
           },
         });
@@ -72,84 +72,84 @@ function parseMarkdownToBlockDefs(markdown: string): BlockDef[] {
         imagePath = imagePath.slice(1, -1);
       }
       blockDefs.push({
-        type: "ink:image",
+        type: 'ink:image',
         props: { caption },
         imagePath,
       });
       continue;
     }
 
-    if (line.startsWith("# ")) {
+    if (line.startsWith('# ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h1", text: line.slice(2) },
+        type: 'ink:paragraph',
+        props: { type: 'h1', text: line.slice(2) },
       });
-    } else if (line.startsWith("## ")) {
+    } else if (line.startsWith('## ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h2", text: line.slice(3) },
+        type: 'ink:paragraph',
+        props: { type: 'h2', text: line.slice(3) },
       });
-    } else if (line.startsWith("### ")) {
+    } else if (line.startsWith('### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h3", text: line.slice(4) },
+        type: 'ink:paragraph',
+        props: { type: 'h3', text: line.slice(4) },
       });
-    } else if (line.startsWith("#### ")) {
+    } else if (line.startsWith('#### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h4", text: line.slice(5) },
+        type: 'ink:paragraph',
+        props: { type: 'h4', text: line.slice(5) },
       });
-    } else if (line.startsWith("##### ")) {
+    } else if (line.startsWith('##### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h5", text: line.slice(6) },
+        type: 'ink:paragraph',
+        props: { type: 'h5', text: line.slice(6) },
       });
-    } else if (line.startsWith("###### ")) {
+    } else if (line.startsWith('###### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h6", text: line.slice(7) },
+        type: 'ink:paragraph',
+        props: { type: 'h6', text: line.slice(7) },
       });
-    } else if (line.startsWith("> ")) {
+    } else if (line.startsWith('> ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "quote", text: line.slice(2) },
+        type: 'ink:paragraph',
+        props: { type: 'quote', text: line.slice(2) },
       });
-    } else if (line === "---" || line === "***" || line === "___") {
+    } else if (line === '---' || line === '***' || line === '___') {
       blockDefs.push({
-        type: "ink:divider",
+        type: 'ink:divider',
         props: {},
       });
     } else if (line.match(/^\s*[-*+]\s/)) {
       const match = line.match(/^\s*[-*+]\s(.*)$/);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
-          props: { type: "bulleted", text: match[1] },
+          type: 'ink:list',
+          props: { type: 'bulleted', text: match[1] },
         });
       }
     } else if (line.match(/^\s*\d+\.\s/)) {
       const match = line.match(/^\s*\d+\.\s(.*)$/);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
-          props: { type: "numbered", text: match[1] },
+          type: 'ink:list',
+          props: { type: 'numbered', text: match[1] },
         });
       }
     } else if (line.match(/^\s*-\s*\[[ x]\]\s/i)) {
       const match = line.match(/^\s*-\s*\[([ x])\]\s(.*)$/i);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
+          type: 'ink:list',
           props: {
-            type: "todo",
-            checked: match[1].toLowerCase() === "x",
+            type: 'todo',
+            checked: match[1].toLowerCase() === 'x',
             text: match[2],
           },
         });
       }
     } else {
       blockDefs.push({
-        type: "ink:paragraph",
+        type: 'ink:paragraph',
         props: { text: line },
       });
     }

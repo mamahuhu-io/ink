@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { type BlockModel, type BlockViewType, Store } from '@ink/stone-store';
 import { consume, provide } from '@lit/context';
@@ -15,11 +15,7 @@ import { BlockServiceIdentifier } from '../../identifier.js';
 import type { BlockStdScope } from '../../scope/index.js';
 import { BlockSelection } from '../../selection/index.js';
 import { PropTypes, requiredProperties } from '../decorators/index.js';
-import {
-  blockComponentSymbol,
-  modelContext,
-  serviceContext,
-} from './consts.js';
+import { blockComponentSymbol, modelContext, serviceContext } from './consts.js';
 import { stdContext, storeContext } from './lit-host.js';
 import { ShadowlessElement } from './shadowless-element.js';
 import type { WidgetComponent } from './widget-component.js';
@@ -39,7 +35,7 @@ export class BlockComponent<
 
   selected$ = computed(() => {
     const selection = this.std.selection.value.find(
-      selection => selection.blockId === this.model?.id
+      (selection) => selection.blockId === this.model?.id,
     );
     if (!selection) return false;
     return selection.is(BlockSelection);
@@ -50,17 +46,13 @@ export class BlockComponent<
   handleEvent = (
     name: EventName,
     handler: UIEventHandler,
-    options?: { global?: boolean; flavour?: boolean }
+    options?: { global?: boolean; flavour?: boolean },
   ) => {
     this._disposables.add(
       this.std.event.add(name, handler, {
-        flavour: options?.global
-          ? undefined
-          : options?.flavour
-            ? this.model?.flavour
-            : undefined,
+        flavour: options?.global ? undefined : options?.flavour ? this.model?.flavour : undefined,
         blockId: options?.global || options?.flavour ? undefined : this.blockId,
-      })
+      }),
     );
   };
 
@@ -71,7 +63,7 @@ export class BlockComponent<
   get childBlocks() {
     const childModels = this.model.children;
     return childModels
-      .map(child => {
+      .map((child) => {
         return this.std.view.getBlock(child.id);
       })
       .filter((x): x is BlockComponent => !!x);
@@ -88,16 +80,14 @@ export class BlockComponent<
   get isVersionMismatch() {
     const schema = this.store.schema.flavourSchemaMap.get(this.model.flavour);
     if (!schema) {
-      console.warn(
-        `Schema not found for block ${this.model.id}, flavour ${this.model.flavour}`
-      );
+      console.warn(`Schema not found for block ${this.model.id}, flavour ${this.model.flavour}`);
       return true;
     }
     const expectedVersion = schema.version;
     const actualVersion = this.model.version;
     if (expectedVersion !== actualVersion) {
       console.warn(
-        `Version mismatch for block ${this.model.id}, expected ${expectedVersion}, actual ${actualVersion}`
+        `Version mismatch for block ${this.model.id}, expected ${expectedVersion}, actual ${actualVersion}`,
       );
       return true;
     }
@@ -113,7 +103,7 @@ export class BlockComponent<
     if (!model) {
       throw new InkStoneError(
         ErrorCode.MissingViewModelError,
-        `Cannot find block model for id ${this.blockId}`
+        `Cannot find block model for id ${this.blockId}`,
       );
     }
     this._model = model;
@@ -147,9 +137,7 @@ export class BlockComponent<
     if (this._service) {
       return this._service;
     }
-    const service = this.std.getOptional(
-      BlockServiceIdentifier(this.model.flavour)
-    );
+    const service = this.std.getOptional(BlockServiceIdentifier(this.model.flavour));
     this._service = service as Service;
     return service as Service;
   }
@@ -164,7 +152,7 @@ export class BlockComponent<
         ...mapping,
         [key]: this.std.view.getWidget(key, this.blockId),
       }),
-      {}
+      {},
     );
   }
 
@@ -173,13 +161,11 @@ export class BlockComponent<
       this.isVersionMismatch,
       () => {
         const actualVersion = this.model.version;
-        const schema = this.store.schema.flavourSchemaMap.get(
-          this.model.flavour
-        );
+        const schema = this.store.schema.flavourSchemaMap.get(this.model.flavour);
         const expectedVersion = schema?.version ?? -1;
         return this.renderVersionMismatch(expectedVersion, actualVersion);
       },
-      () => content
+      () => content,
     );
   }
 
@@ -197,14 +183,10 @@ export class BlockComponent<
 
   bindHotKey(
     keymap: Record<string, UIEventHandler>,
-    options?: { global?: boolean; flavour?: boolean }
+    options?: { global?: boolean; flavour?: boolean },
   ) {
     const dispose = this.std.event.bindHotkey(keymap, {
-      flavour: options?.global
-        ? undefined
-        : options?.flavour
-          ? this.model.flavour
-          : undefined,
+      flavour: options?.global ? undefined : options?.flavour ? this.model.flavour : undefined,
       blockId: options?.global || options?.flavour ? undefined : this.blockId,
     });
     this._disposables.add(dispose);
@@ -216,34 +198,29 @@ export class BlockComponent<
 
     this.std.view.setBlock(this);
 
-    const disposable = this.std.store.slots.blockUpdated.subscribe(
-      ({ type, id }) => {
-        if (id === this.model.id && type === 'delete') {
-          this.std.view.deleteBlock(this);
-          disposable.unsubscribe();
-        }
+    const disposable = this.std.store.slots.blockUpdated.subscribe(({ type, id }) => {
+      if (id === this.model.id && type === 'delete') {
+        this.std.view.deleteBlock(this);
+        disposable.unsubscribe();
       }
-    );
+    });
     this._disposables.add(disposable);
 
     this._disposables.add(
       this.model.propsUpdated.subscribe(() => {
         this.requestUpdate();
-      })
+      }),
     );
   }
 
   protected override async getUpdateComplete(): Promise<boolean> {
     const result = await super.getUpdateComplete();
-    await Promise.all(this.childBlocks.map(el => el.updateComplete));
+    await Promise.all(this.childBlocks.map((el) => el.updateComplete));
     return result;
   }
 
   override render() {
-    return this._renderers.reduce(
-      (acc, cur) => cur.call(this, acc),
-      nothing as unknown
-    );
+    return this._renderers.reduce((acc, cur) => cur.call(this, acc), nothing as unknown);
   }
 
   renderBlock(): unknown {
@@ -256,10 +233,7 @@ export class BlockComponent<
    *        Which means the block is not supported in the current editor.
    * @param actualVersion The version of the block's crdt data.
    */
-  renderVersionMismatch(
-    expectedVersion: number,
-    actualVersion: number
-  ): TemplateResult {
+  renderVersionMismatch(expectedVersion: number, actualVersion: number): TemplateResult {
     return html`
       <dl class="version-mismatch-warning" contenteditable="false">
         <dt>
@@ -267,8 +241,8 @@ export class BlockComponent<
         </dt>
         <dd>
           <p>
-            We can not render this <var>${this.model.flavour}</var> block
-            because the version is mismatched.
+            We can not render this <var>${this.model.flavour}</var> block because the version is
+            mismatched.
           </p>
           <p>Editor version: <var>${expectedVersion}</var></p>
           <p>Data version: <var>${actualVersion}</var></p>

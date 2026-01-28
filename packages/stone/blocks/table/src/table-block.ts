@@ -1,13 +1,10 @@
 import { CaptionedBlockComponent } from '@ink/stone-components/caption';
 import { whenHover } from '@ink/stone-components/hover';
+import { IS_MOBILE } from '@ink/stone-global/env';
 import type { TableBlockModel } from '@ink/stone-model';
 import { EDGELESS_TOP_CONTENTEDITABLE_SELECTOR } from '@ink/stone-shared/consts';
-import {
-  DocModeProvider,
-  ToolbarRegistryIdentifier,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, ToolbarRegistryIdentifier } from '@ink/stone-shared/services';
 import { VirtualPaddingController } from '@ink/stone-shared/utils';
-import { IS_MOBILE } from '@ink/stone-global/env';
 import type { BlockComponent } from '@ink/stone-std';
 import { RANGE_SYNC_EXCLUDE_ATTR } from '@ink/stone-std/inline';
 import { signal } from '@preact/signals-core';
@@ -18,12 +15,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { SelectionController } from './selection-controller';
-import {
-  rowStyle,
-  table,
-  tableContainer,
-  tableWrapper,
-} from './table-block-css';
+import { rowStyle, table, tableContainer, tableWrapper } from './table-block-css';
 import { TableDataManager } from './table-data-manager';
 
 export const TableBlockComponentName = 'ink-table';
@@ -47,7 +39,7 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
 
   private _initHover() {
     const { setReference, setFloating, dispose } = whenHover(
-      hovered => {
+      (hovered) => {
         const message$ = this.std.get(ToolbarRegistryIdentifier).message$;
         if (hovered) {
           message$.value = {
@@ -62,7 +54,7 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
         message$.value = null;
         setFloating();
       },
-      { enterDelay: 500 }
+      { enterDelay: 500 },
     );
     setReference(this.hoverableContainer);
     this._disposables.add(dispose);
@@ -75,9 +67,7 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
 
   override get topContenteditableElement() {
     if (this.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
-      return this.closest<BlockComponent>(
-        EDGELESS_TOP_CONTENTEDITABLE_SELECTOR
-      );
+      return this.closest<BlockComponent>(EDGELESS_TOP_CONTENTEDITABLE_SELECTOR);
     }
     return this.rootComponent;
   }
@@ -133,7 +123,7 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
     rowStartIndex: number,
     rowEndIndex: number,
     columnStartIndex: number,
-    columnEndIndex: number
+    columnEndIndex: number,
   ) => {
     const rootRect = this.getRootRect();
     const rows = this.querySelectorAll('tr');
@@ -178,13 +168,11 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
             paddingLeft: `${virtualPadding}px`,
             paddingRight: `${virtualPadding}px`,
             marginLeft:
-              !this.model.props.textAlign$.value ||
-              this.model.props.textAlign$?.value === 'left'
+              !this.model.props.textAlign$.value || this.model.props.textAlign$?.value === 'left'
                 ? undefined
                 : 'auto',
             marginRight:
-              !this.model.props.textAlign$.value ||
-              this.model.props.textAlign$?.value === 'right'
+              !this.model.props.textAlign$.value || this.model.props.textAlign$?.value === 'right'
                 ? undefined
                 : 'auto',
           })}
@@ -193,18 +181,15 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
             <tbody class=${table}>
               ${repeat(
                 rows,
-                row => row.rowId,
+                (row) => row.rowId,
                 (row, rowIndex) => {
                   return html`
                     <tr class=${rowStyle} data-row-id=${row.rowId}>
                       ${repeat(
                         columns,
-                        column => column.columnId,
+                        (column) => column.columnId,
                         (column, columnIndex) => {
-                          const cell = this.dataManager.getCell(
-                            row.rowId,
-                            column.columnId
-                          );
+                          const cell = this.dataManager.getCell(row.rowId, column.columnId);
                           return html`
                             <ink-table-cell
                               style="display: contents;"
@@ -217,11 +202,11 @@ export class TableBlockComponent extends CaptionedBlockComponent<TableBlockModel
                               .selectionController=${this.selectionController}
                             ></ink-table-cell>
                           `;
-                        }
+                        },
                       )}
                     </tr>
                   `;
-                }
+                },
               )}
             </tbody>
             ${IS_MOBILE || this.dataManager.readonly$.value

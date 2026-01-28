@@ -1,5 +1,5 @@
-import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import type { ServiceProvider } from '@ink/stone-global/di';
+import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import {
   type AssetsManager,
   ASTWalker,
@@ -26,25 +26,15 @@ import rehypeParse from 'rehype-parse';
 import rehypeStringify from 'rehype-stringify';
 import { unified } from 'unified';
 
-import {
-  type AdapterContext,
-  AdapterFactoryIdentifier,
-  type HtmlAST,
-} from '../types';
+import { type AdapterContext, AdapterFactoryIdentifier, type HtmlAST } from '../types';
 import { HastUtils } from '../utils/hast';
-import {
-  type BlockHtmlAdapterMatcher,
-  BlockHtmlAdapterMatcherIdentifier,
-} from './block-adapter';
+import { type BlockHtmlAdapterMatcher, BlockHtmlAdapterMatcherIdentifier } from './block-adapter';
 import {
   HtmlASTToDeltaMatcherIdentifier,
   HtmlDeltaConverter,
   InlineDeltaToHtmlAdapterMatcherIdentifier,
 } from './delta-converter';
-import {
-  rehypeInlineToBlock,
-  rehypeWrapInlineElements,
-} from './rehype-plugins';
+import { rehypeInlineToBlock, rehypeWrapInlineElements } from './rehype-plugins';
 
 export type Html = string;
 
@@ -63,21 +53,16 @@ export class HtmlAdapter extends BaseAdapter<Html> {
   private readonly _traverseHtml = async (
     html: HtmlAST,
     snapshot: BlockSnapshot,
-    assets?: AssetsManager
+    assets?: AssetsManager,
   ) => {
     const walker = new ASTWalker<HtmlAST, BlockSnapshot>();
     walker.setONodeTypeGuard(
-      (node): node is HtmlAST =>
-        'type' in (node as object) && (node as HtmlAST).type !== undefined
+      (node): node is HtmlAST => 'type' in (node as object) && (node as HtmlAST).type !== undefined,
     );
     walker.setEnter(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.toMatch(o)) {
-          const adapterContext: AdapterContext<
-            HtmlAST,
-            BlockSnapshot,
-            HtmlDeltaConverter
-          > = {
+          const adapterContext: AdapterContext<HtmlAST, BlockSnapshot, HtmlDeltaConverter> = {
             walker,
             walkerContext: context,
             configs: this.configs,
@@ -93,11 +78,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
     walker.setLeave(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.toMatch(o)) {
-          const adapterContext: AdapterContext<
-            HtmlAST,
-            BlockSnapshot,
-            HtmlDeltaConverter
-          > = {
+          const adapterContext: AdapterContext<HtmlAST, BlockSnapshot, HtmlDeltaConverter> = {
             walker,
             walkerContext: context,
             configs: this.configs,
@@ -116,22 +97,17 @@ export class HtmlAdapter extends BaseAdapter<Html> {
   private readonly _traverseSnapshot = async (
     snapshot: BlockSnapshot,
     html: HtmlAST,
-    assets?: AssetsManager
+    assets?: AssetsManager,
   ) => {
     const assetsIds: string[] = [];
     const walker = new ASTWalker<BlockSnapshot, HtmlAST>();
     walker.setONodeTypeGuard(
-      (node): node is BlockSnapshot =>
-        BlockSnapshotSchema.safeParse(node).success
+      (node): node is BlockSnapshot => BlockSnapshotSchema.safeParse(node).success,
     );
     walker.setEnter(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.fromMatch(o)) {
-          const adapterContext: AdapterContext<
-            BlockSnapshot,
-            HtmlAST,
-            HtmlDeltaConverter
-          > = {
+          const adapterContext: AdapterContext<BlockSnapshot, HtmlAST, HtmlDeltaConverter> = {
             walker,
             walkerContext: context,
             configs: this.configs,
@@ -151,11 +127,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
     walker.setLeave(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.fromMatch(o)) {
-          const adapterContext: AdapterContext<
-            BlockSnapshot,
-            HtmlAST,
-            HtmlDeltaConverter
-          > = {
+          const adapterContext: AdapterContext<BlockSnapshot, HtmlAST, HtmlDeltaConverter> = {
             walker,
             walkerContext: context,
             configs: this.configs,
@@ -181,21 +153,19 @@ export class HtmlAdapter extends BaseAdapter<Html> {
 
   constructor(job: Transformer, provider: ServiceProvider) {
     super(job, provider);
-    const blockMatchers = Array.from(
-      provider.getAll(BlockHtmlAdapterMatcherIdentifier).values()
-    );
+    const blockMatchers = Array.from(provider.getAll(BlockHtmlAdapterMatcherIdentifier).values());
     const inlineDeltaToHtmlAdapterMatchers = Array.from(
-      provider.getAll(InlineDeltaToHtmlAdapterMatcherIdentifier).values()
+      provider.getAll(InlineDeltaToHtmlAdapterMatcherIdentifier).values(),
     );
     const htmlInlineToDeltaMatchers = Array.from(
-      provider.getAll(HtmlASTToDeltaMatcherIdentifier).values()
+      provider.getAll(HtmlASTToDeltaMatcherIdentifier).values(),
     );
     this.blockMatchers = blockMatchers;
     this.deltaConverter = new HtmlDeltaConverter(
       job.adapterConfigs,
       inlineDeltaToHtmlAdapterMatchers,
       htmlInlineToDeltaMatchers,
-      provider
+      provider,
     );
   }
 
@@ -209,7 +179,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
   }
 
   override async fromBlockSnapshot(
-    payload: FromBlockSnapshotPayload
+    payload: FromBlockSnapshotPayload,
   ): Promise<FromBlockSnapshotResult<string>> {
     const root: Root = {
       type: 'root',
@@ -219,11 +189,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
         },
       ],
     };
-    const { ast, assetsIds } = await this._traverseSnapshot(
-      payload.snapshot,
-      root,
-      payload.assets
-    );
+    const { ast, assetsIds } = await this._traverseSnapshot(payload.snapshot, root, payload.assets);
     return {
       file: this._astToHtml(ast),
       assetsIds,
@@ -231,7 +197,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
   }
 
   override async fromDocSnapshot(
-    payload: FromDocSnapshotPayload
+    payload: FromDocSnapshotPayload,
   ): Promise<FromDocSnapshotResult<string>> {
     const { file, assetsIds } = await this.fromBlockSnapshot({
       snapshot: payload.snapshot.blocks,
@@ -240,14 +206,14 @@ export class HtmlAdapter extends BaseAdapter<Html> {
     return {
       file: file.replace(
         '<!--InkStoneDocTitlePlaceholder-->',
-        `<h1>${payload.snapshot.meta.title}</h1>`
+        `<h1>${payload.snapshot.meta.title}</h1>`,
       ),
       assetsIds,
     };
   }
 
   override async fromSliceSnapshot(
-    payload: FromSliceSnapshotPayload
+    payload: FromSliceSnapshotPayload,
   ): Promise<FromSliceSnapshotResult<string>> {
     let buffer = '';
     const sliceAssetsIds: string[] = [];
@@ -256,11 +222,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
         type: 'root',
         children: [],
       };
-      const { ast, assetsIds } = await this._traverseSnapshot(
-        contentSlice,
-        root,
-        payload.assets
-      );
+      const { ast, assetsIds } = await this._traverseSnapshot(contentSlice, root, payload.assets);
       sliceAssetsIds.push(...assetsIds);
       buffer += this._astToHtml(ast);
     }
@@ -271,9 +233,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
     };
   }
 
-  override toBlockSnapshot(
-    payload: ToBlockSnapshotPayload<string>
-  ): Promise<BlockSnapshot> {
+  override toBlockSnapshot(payload: ToBlockSnapshotPayload<string>): Promise<BlockSnapshot> {
     const htmlAst = this._htmlToAst(payload.file);
     const blockSnapshotRoot = {
       type: 'block',
@@ -288,16 +248,10 @@ export class HtmlAdapter extends BaseAdapter<Html> {
       },
       children: [],
     };
-    return this._traverseHtml(
-      htmlAst,
-      blockSnapshotRoot as BlockSnapshot,
-      payload.assets
-    );
+    return this._traverseHtml(htmlAst, blockSnapshotRoot as BlockSnapshot, payload.assets);
   }
 
-  override async toDocSnapshot(
-    payload: ToDocSnapshotPayload<string>
-  ): Promise<DocSnapshot> {
+  override async toDocSnapshot(payload: ToDocSnapshotPayload<string>): Promise<DocSnapshot> {
     const sanitized = DOMPurify.sanitize(payload.file);
     const htmlAst = this._htmlToAst(sanitized);
     const titleAst = HastUtils.querySelector(htmlAst, 'title');
@@ -333,7 +287,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
               titleAst ?? {
                 type: 'text',
                 value: 'Untitled',
-              }
+              },
             ),
           },
         },
@@ -348,18 +302,14 @@ export class HtmlAdapter extends BaseAdapter<Html> {
           //   },
           //   children: [],
           // },
-          await this._traverseHtml(
-            htmlAst,
-            blockSnapshotRoot as BlockSnapshot,
-            payload.assets
-          ),
+          await this._traverseHtml(htmlAst, blockSnapshotRoot as BlockSnapshot, payload.assets),
         ],
       },
     };
   }
 
   override async toSliceSnapshot(
-    payload: HtmlToSliceSnapshotPayload
+    payload: HtmlToSliceSnapshotPayload,
   ): Promise<SliceSnapshot | null> {
     const htmlAst = this._htmlToAst(payload.file);
     const blockSnapshotRoot = {
@@ -378,7 +328,7 @@ export class HtmlAdapter extends BaseAdapter<Html> {
     const contentSlice = (await this._traverseHtml(
       htmlAst,
       blockSnapshotRoot as BlockSnapshot,
-      payload.assets
+      payload.assets,
     )) as BlockSnapshot;
     if (contentSlice.children.length === 0) {
       return null;
@@ -395,9 +345,9 @@ export class HtmlAdapter extends BaseAdapter<Html> {
 export const HtmlAdapterFactoryIdentifier = AdapterFactoryIdentifier('Html');
 
 export const HtmlAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(HtmlAdapterFactoryIdentifier, provider => ({
-      get: job => new HtmlAdapter(job, provider),
+  setup: (di) => {
+    di.addImpl(HtmlAdapterFactoryIdentifier, (provider) => ({
+      get: (job) => new HtmlAdapter(job, provider),
     }));
   },
 };

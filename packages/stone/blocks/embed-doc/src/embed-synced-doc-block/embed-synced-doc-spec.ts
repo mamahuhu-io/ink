@@ -10,7 +10,7 @@ const flavour = EmbedSyncedDocBlockSchema.model.flavour;
 
 export const EmbedSyncedDocViewExtensions: ExtensionType[] = [
   FlavourExtension(flavour),
-  BlockViewExtension(flavour, model => {
+  BlockViewExtension(flavour, (model) => {
     return model.parent?.flavour === 'ink:surface'
       ? literal`ink-embed-edgeless-synced-doc-block`
       : literal`ink-embed-synced-doc-block`;

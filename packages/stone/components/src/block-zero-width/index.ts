@@ -20,10 +20,9 @@ export class BlockZeroWidth extends LitElement {
     if (this.block.store.readonly) return;
     const nextBlock = this.block.store.getNext(this.block.model);
     if (nextBlock?.flavour !== 'ink:paragraph') {
-      const [paragraphId] = this.block.store.addSiblingBlocks(
-        this.block.model,
-        [{ flavour: 'ink:paragraph' }]
-      );
+      const [paragraphId] = this.block.store.addSiblingBlocks(this.block.model, [
+        { flavour: 'ink:paragraph' },
+      ]);
       const std = this.block.std;
       std.selection.setGroup('note', [
         std.selection.create(TextSelection, {

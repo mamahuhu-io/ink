@@ -121,13 +121,6 @@
         "themeDesc": "Theme to use when exporting documents",
         "auto": "Auto (match current)"
       },
-      "window": {
-        "title": "Window",
-        "sidebarPosition": "Sidebar position",
-        "sidebarPositionDesc": "Position of the file sidebar",
-        "left": "Left",
-        "right": "Right"
-      },
       "display": {
         "title": "Display",
         "showDocStats": "Show Document Statistics",
@@ -502,13 +495,13 @@
       "rename": "Rename",
       "horizontalStyle": "Horizontal style",
       "verticalStyle": "Vertical style",
-    "reload": "Reload"
-  },
-  "note": {
-    "slicer": "Slicer",
-    "size": "Size",
-    "viewInToc": "View in Toc"
-  },
+      "reload": "Reload"
+    },
+    "note": {
+      "slicer": "Slicer",
+      "size": "Size",
+      "viewInToc": "View in Toc"
+    },
     "search": "Search"
   },
   "updater": {

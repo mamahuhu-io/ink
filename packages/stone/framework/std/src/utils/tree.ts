@@ -30,8 +30,8 @@ export function getTopElements(elements: GfxModel[]): GfxModel[] {
 
   elements = [...new Set(elements)];
 
-  elements.forEach(e1 => {
-    elements.forEach(e2 => {
+  elements.forEach((e1) => {
+    elements.forEach((e2) => {
       if (isGfxGroupCompatibleModel(e1) && e1.hasDescendant(e2)) {
         results.delete(e2);
       }
@@ -44,7 +44,7 @@ export function getTopElements(elements: GfxModel[]): GfxModel[] {
 function traverse(
   element: GfxModel,
   preCallback?: (element: GfxModel) => void | boolean,
-  postCallBack?: (element: GfxModel) => void
+  postCallBack?: (element: GfxModel) => void,
 ) {
   // avoid infinite loop caused by circular reference
   const visited = new Set<GfxModel>();
@@ -59,7 +59,7 @@ function traverse(
     }
 
     if (isGfxGroupCompatibleModel(element)) {
-      element.childElements.forEach(child => {
+      element.childElements.forEach((child) => {
         innerTraverse(child);
       });
     }
@@ -70,12 +70,10 @@ function traverse(
   innerTraverse(element);
 }
 
-export function descendantElementsImpl(
-  container: GfxGroupCompatibleInterface
-): GfxModel[] {
+export function descendantElementsImpl(container: GfxGroupCompatibleInterface): GfxModel[] {
   const results: GfxModel[] = [];
-  container.childElements.forEach(child => {
-    traverse(child, element => {
+  container.childElements.forEach((child) => {
+    traverse(child, (element) => {
       results.push(element);
     });
   });
@@ -84,7 +82,7 @@ export function descendantElementsImpl(
 
 export function hasDescendantElementImpl(
   container: GfxGroupCompatibleInterface,
-  element: GfxCompatibleInterface
+  element: GfxCompatibleInterface,
 ): boolean {
   let _container = element.group;
   while (_container) {
@@ -97,10 +95,7 @@ export function hasDescendantElementImpl(
 /**
  * This checker is used to prevent circular reference, when adding a child element to a container.
  */
-export function canSafeAddToContainer(
-  container: GfxGroupModel,
-  element: GfxCompatibleInterface
-) {
+export function canSafeAddToContainer(container: GfxGroupModel, element: GfxCompatibleInterface) {
   if (
     element === container ||
     (isGfxGroupCompatibleModel(element) && element.hasDescendant(container))
@@ -110,9 +105,7 @@ export function canSafeAddToContainer(
   return true;
 }
 
-export function isLockedByAncestorImpl(
-  element: GfxCompatibleInterface
-): boolean {
+export function isLockedByAncestorImpl(element: GfxCompatibleInterface): boolean {
   return element.groups.some(isLockedBySelfImpl);
 }
 

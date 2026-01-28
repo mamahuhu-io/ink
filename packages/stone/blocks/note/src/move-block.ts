@@ -1,8 +1,4 @@
-import {
-  BlockSelection,
-  type BlockStdScope,
-  TextSelection,
-} from '@ink/stone-std';
+import { BlockSelection, type BlockStdScope, TextSelection } from '@ink/stone-std';
 
 const getSelection = (std: BlockStdScope) => std.selection;
 
@@ -18,8 +14,7 @@ function getTextSelection(std: BlockStdScope) {
   return selection.find(TextSelection);
 }
 
-const pathToBlock = (std: BlockStdScope, blockId: string) =>
-  std.view.getBlock(blockId);
+const pathToBlock = (std: BlockStdScope, blockId: string) => std.view.getBlock(blockId);
 
 interface MoveBlockConfig {
   name: string;
@@ -31,14 +26,11 @@ export const moveBlockConfigs: MoveBlockConfig[] = [
   {
     name: 'Move Up',
     hotkey: ['Mod-Alt-ArrowUp', 'Mod-Shift-ArrowUp'],
-    action: std => {
+    action: (std) => {
       const doc = std.store;
       const textSelection = getTextSelection(std);
       if (textSelection) {
-        const currentModel = pathToBlock(
-          std,
-          textSelection.from.blockId
-        )?.model;
+        const currentModel = pathToBlock(std, textSelection.from.blockId)?.model;
         if (!currentModel) return;
 
         const previousSiblingModel = doc.getPrev(currentModel);
@@ -47,12 +39,7 @@ export const moveBlockConfigs: MoveBlockConfig[] = [
         const parentModel = std.store.getParent(previousSiblingModel);
         if (!parentModel) return;
 
-        std.store.moveBlocks(
-          [currentModel],
-          parentModel,
-          previousSiblingModel,
-          true
-        );
+        std.store.moveBlocks([currentModel], parentModel, previousSiblingModel, true);
         std.host.updateComplete
           .then(() => {
             std.range.syncTextSelectionToRange(textSelection);
@@ -71,12 +58,7 @@ export const moveBlockConfigs: MoveBlockConfig[] = [
         const parentModel = doc.getParent(previousSiblingModel);
         if (!parentModel) return;
 
-        doc.moveBlocks(
-          [currentModel],
-          parentModel,
-          previousSiblingModel,
-          false
-        );
+        doc.moveBlocks([currentModel], parentModel, previousSiblingModel, false);
         return true;
       }
       return;
@@ -85,14 +67,11 @@ export const moveBlockConfigs: MoveBlockConfig[] = [
   {
     name: 'Move Down',
     hotkey: ['Mod-Alt-ArrowDown', 'Mod-Shift-ArrowDown'],
-    action: std => {
+    action: (std) => {
       const doc = std.store;
       const textSelection = getTextSelection(std);
       if (textSelection) {
-        const currentModel = pathToBlock(
-          std,
-          textSelection.from.blockId
-        )?.model;
+        const currentModel = pathToBlock(std, textSelection.from.blockId)?.model;
         if (!currentModel) return;
 
         const nextSiblingModel = doc.getNext(currentModel);

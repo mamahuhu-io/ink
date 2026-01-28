@@ -14,11 +14,7 @@ const ColorDarkLightSchema = z.object({
   [ColorScheme.Light]: z.string(),
 });
 
-export const ColorSchema = z.union([
-  z.string(),
-  ColorNormalSchema,
-  ColorDarkLightSchema,
-]);
+export const ColorSchema = z.union([z.string(), ColorNormalSchema, ColorDarkLightSchema]);
 
 export type Color = z.infer<typeof ColorSchema>;
 
@@ -26,7 +22,7 @@ export type Color = z.infer<typeof ColorSchema>;
 export function resolveColor(
   color: Color,
   colorScheme: ColorScheme,
-  fallback = 'transparent'
+  fallback = 'transparent',
 ): string {
   let value = fallback;
 
@@ -48,7 +44,5 @@ export function resolveColor(
 }
 
 export function isTransparent(color: Color) {
-  return (
-    typeof color === 'string' && color.toLowerCase().endsWith('transparent')
-  );
+  return typeof color === 'string' && color.toLowerCase().endsWith('transparent');
 }

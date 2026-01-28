@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / Text
 
@@ -26,7 +26,7 @@ Text [delta](https://docs.yjs.dev/api/delta-format) is a format from Y.js.
 
 ### TextAttributes
 
-`TextAttributes` *extends* `BaseTextAttributes` = `BaseTextAttributes`
+`TextAttributes` _extends_ `BaseTextAttributes` = `BaseTextAttributes`
 
 ## Constructors
 
@@ -84,10 +84,10 @@ The delta to apply.
 
 ```ts
 const text = new Text('Hello, world!');
-text.applyDelta([{insert: ' stone', attributes: { bold: true }}]);
+text.applyDelta([{ insert: ' stone', attributes: { bold: true } }]);
 ```
 
-***
+---
 
 ### clear()
 
@@ -99,7 +99,7 @@ Clear the text content.
 
 `void`
 
-***
+---
 
 ### clone()
 
@@ -113,7 +113,7 @@ Clone the text to a new Text instance.
 
 A new Text instance.
 
-***
+---
 
 ### delete()
 
@@ -139,7 +139,7 @@ The length to delete.
 
 `void`
 
-***
+---
 
 ### format()
 
@@ -178,7 +178,7 @@ const text = new Text('Hello, world!');
 text.format(7, 1, { bold: true });
 ```
 
-***
+---
 
 ### insert()
 
@@ -215,7 +215,7 @@ const text = new Text('Hello, world!');
 text.insert(' stone', 7);
 ```
 
-***
+---
 
 ### join()
 
@@ -243,7 +243,7 @@ const other = new Text(' stone');
 text.join(other);
 ```
 
-***
+---
 
 ### replace()
 
@@ -288,7 +288,7 @@ const text = new Text('Hello, world!');
 text.replace(7, 1, ' stone');
 ```
 
-***
+---
 
 ### sliceToDelta()
 
@@ -316,7 +316,7 @@ The end index.
 
 The delta of the sliced text.
 
-***
+---
 
 ### split()
 
@@ -368,7 +368,7 @@ Here are three cases for point position(index + length):
    right: [{insert: 'hi', ...}]
 ```
 
-***
+---
 
 ### toDelta()
 
@@ -382,7 +382,7 @@ Get the text delta.
 
 The delta of the text.
 
-***
+---
 
 ### toString()
 

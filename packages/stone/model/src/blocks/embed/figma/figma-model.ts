@@ -16,6 +16,4 @@ export type EmbedFigmaBlockProps = {
   caption: string | null;
 } & EmbedFigmaBlockUrlData;
 
-export class EmbedFigmaModel extends defineEmbedModel<EmbedFigmaBlockProps>(
-  BlockModel
-) {}
+export class EmbedFigmaModel extends defineEmbedModel<EmbedFigmaBlockProps>(BlockModel) {}

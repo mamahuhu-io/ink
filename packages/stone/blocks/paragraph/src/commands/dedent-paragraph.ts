@@ -1,9 +1,6 @@
 import { ParagraphBlockModel } from '@ink/stone-model';
 import type { IndentContext } from '@ink/stone-shared/types';
-import {
-  calculateCollapsedSiblings,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { calculateCollapsedSiblings, matchModels } from '@ink/stone-shared/utils';
 import { type Command, TextSelection } from '@ink/stone-std';
 
 export const canDedentParagraphCommand: Command<
@@ -70,7 +67,7 @@ export const dedentParagraphCommand: Command<{
     dedentContext.flavour !== 'ink:paragraph'
   ) {
     console.warn(
-      'you need to use `canDedentParagraph` command before running `dedentParagraph` command'
+      'you need to use `canDedentParagraph` command before running `dedentParagraph` command',
     );
     return;
   }

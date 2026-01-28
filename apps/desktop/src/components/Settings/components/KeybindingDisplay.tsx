@@ -1,12 +1,12 @@
-import { isMacOS } from '../../../services/platform'
+import { isMacOS } from '../../../services/platform';
 
 interface KeybindingDisplayProps {
-  keybinding: string
+  keybinding: string;
 }
 
 function formatKey(key: string): string {
   // Normalize the key name
-  const normalized = key.trim()
+  const normalized = key.trim();
 
   if (isMacOS()) {
     // On macOS, use symbols
@@ -14,34 +14,37 @@ function formatKey(key: string): string {
       case 'Mod':
       case 'Cmd':
       case 'Command':
-        return '⌘'
+        return '⌘';
       case 'Ctrl':
       case 'Control':
-        return '⌃'
+        return '⌃';
       case 'Alt':
       case 'Option':
-        return '⌥'
+        return '⌥';
       case 'Shift':
-        return '⇧'
+        return '⇧';
       default:
-        return normalized
+        return normalized;
     }
   } else {
     // On Windows/Linux, use text labels
     switch (normalized) {
       case 'Mod':
-        return 'Ctrl'
+        return 'Ctrl';
       case 'Meta':
-        return 'Win'
+        return 'Win';
       default:
-        return normalized
+        return normalized;
     }
   }
 }
 
 export function KeybindingDisplay({ keybinding }: KeybindingDisplayProps) {
   // Split keybinding string (e.g., "Mod-Shift-S" -> ["Mod", "Shift", "S"])
-  const keys = keybinding.split('-').map(key => formatKey(key))
+  const keys = keybinding
+    .replace(/(?<=-)-/g, '__DASH__')
+    .split('-')
+    .map((k) => formatKey(k === '__DASH__' ? '-' : k));
 
   return (
     <div className="shortcut-keys">
@@ -52,5 +55,5 @@ export function KeybindingDisplay({ keybinding }: KeybindingDisplayProps) {
         </span>
       ))}
     </div>
-  )
+  );
 }

@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import type { InkInlineEditor } from '@ink/stone-shared/types';
 import type { EditorHost } from '@ink/stone-std';
 import { z } from 'zod';
@@ -23,14 +20,14 @@ const optionsSchema = z.object({
         z.function().returns(z.void()),
         z.custom<EditorHost>(),
         z.custom<InkInlineEditor>(),
-        z.instanceof(AbortSignal)
+        z.instanceof(AbortSignal),
       )
       .returns(
         z.union([
           z.promise(z.array(z.custom<LinkedMenuGroup>())),
           z.array(z.custom<LinkedMenuGroup>()),
-        ])
-      )
+        ]),
+      ),
   ),
 
   autoFocusedItemKey: z.optional(
@@ -41,19 +38,17 @@ const optionsSchema = z.object({
         z.string(),
         z.string().nullable(),
         z.custom<EditorHost>(),
-        z.custom<InkInlineEditor>()
+        z.custom<InkInlineEditor>(),
       )
-      .returns(z.string().nullable())
+      .returns(z.string().nullable()),
   ),
 
   mobile: z
     .object({
       scrollContainer: z.optional(
-        z.union([z.string(), z.instanceof(HTMLElement), z.custom<Window>()])
+        z.union([z.string(), z.instanceof(HTMLElement), z.custom<Window>()]),
       ),
-      scrollTopOffset: z.optional(
-        z.union([z.number(), z.function().returns(z.number())])
-      ),
+      scrollTopOffset: z.optional(z.union([z.number(), z.function().returns(z.number())])),
     })
     .optional(),
 });
@@ -70,10 +65,7 @@ export class LinkedDocViewExtension extends ViewExtensionProvider<LinkedDocViewE
     effects();
   }
 
-  override setup(
-    context: ViewExtensionContext,
-    options?: LinkedDocViewExtensionOptions
-  ) {
+  override setup(context: ViewExtensionContext, options?: LinkedDocViewExtensionOptions) {
     super.setup(context);
     context.register(linkedDocWidget);
     if (options) {

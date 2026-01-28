@@ -18,6 +18,4 @@ export type EmbedLoomBlockProps = {
   caption: string | null;
 } & EmbedLoomBlockUrlData;
 
-export class EmbedLoomModel extends defineEmbedModel<EmbedLoomBlockProps>(
-  BlockModel
-) {}
+export class EmbedLoomModel extends defineEmbedModel<EmbedLoomBlockProps>(BlockModel) {}

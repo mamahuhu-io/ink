@@ -48,6 +48,4 @@ export type ModeRgba = { type: ModeType; rgba: Rgba };
 
 export type PickColorType = 'palette' | ModeType;
 
-export type PickColorEvent =
-  | { type: 'start' | 'end' }
-  | { type: 'pick'; detail: Palette };
+export type PickColorEvent = { type: 'start' | 'end' } | { type: 'pick'; detail: Palette };

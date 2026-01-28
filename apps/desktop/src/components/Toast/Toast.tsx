@@ -2,32 +2,35 @@
  * Toast notification component
  */
 
-import { useToastStore } from '../../services/toast'
-import './Toast.css'
+import './Toast.css';
+
+import { useToastStore } from '../../services/toast';
 
 export function Toast() {
-  const { toasts, removeToast } = useToastStore()
+  const { toasts, removeToast } = useToastStore();
 
   if (toasts.length === 0) {
-    return null
+    return null;
   }
 
   return (
     <div className="toast-container">
       {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`toast toast-${toast.type}`}
-          onClick={() => removeToast(toast.id)}
-        >
-          <span className="toast-icon">
-            {toast.type === 'success' && '✓'}
-            {toast.type === 'error' && '✕'}
-            {toast.type === 'info' && 'ℹ'}
-          </span>
-          <span className="toast-message">{toast.message}</span>
+        <div key={toast.id} role="alert">
+          <button
+            className={`toast toast-${toast.type}`}
+            onClick={() => removeToast(toast.id)}
+            aria-label={`Dismiss ${toast.type} message: ${toast.message}`}
+          >
+            <span className="toast-icon">
+              {toast.type === 'success' && '✓'}
+              {toast.type === 'error' && '✕'}
+              {toast.type === 'info' && 'ℹ'}
+            </span>
+            <span className="toast-message">{toast.message}</span>
+          </button>
         </div>
       ))}
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / Extension
 
@@ -13,6 +13,7 @@ They allow you to register services, implementations, and factories in the DI co
 which can then be retrieved and used by different parts of the application.
 
 Extensions are particularly useful for:
+
 - Registering different implementations for different types
 - Creating pluggable architecture where components can be added or removed
 - Managing dependencies between different parts of the application
@@ -66,12 +67,12 @@ class BananaProcessor implements FruitProcessor {
 ```ts
 const FruitProcessorExtension = (
   fruitType: string,
-  implementation: new () => FruitProcessor
+  implementation: new () => FruitProcessor,
 ): ExtensionType => {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(FruitProcessorProvider(fruitType), implementation);
-    }
+    },
   };
 };
 ```
@@ -95,7 +96,7 @@ class FruitProcessingSystem {
     const container = new Container();
 
     // Set up all extensions
-    extensions.forEach(ext => ext.setup(container));
+    extensions.forEach((ext) => ext.setup(container));
 
     // Create a provider from the container
     this.provider = container.provider();
@@ -111,13 +112,10 @@ class FruitProcessingSystem {
 }
 
 // Initialize the system with extensions
-const system = new FruitProcessingSystem([
-  AppleProcessorExtension,
-  BananaProcessorExtension
-]);
+const system = new FruitProcessingSystem([AppleProcessorExtension, BananaProcessorExtension]);
 
 // Use the system
-system.processFruit({ type: 'apple' });  // Output: Slicing apple
+system.processFruit({ type: 'apple' }); // Output: Slicing apple
 system.processFruit({ type: 'banana' }); // Output: Peeling banana
 ```
 

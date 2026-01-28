@@ -1,29 +1,12 @@
-import {
-  CodeBlockModel,
-  ListBlockModel,
-  ParagraphBlockModel,
-} from '@ink/stone-model';
-import {
-  asyncSetInlineRange,
-  focusTextModel,
-  onModelTextUpdated,
-} from '@ink/stone-rich-text';
+import { CodeBlockModel, ListBlockModel, ParagraphBlockModel } from '@ink/stone-model';
+import { asyncSetInlineRange, focusTextModel, onModelTextUpdated } from '@ink/stone-rich-text';
 import {
   getBlockSelectionsCommand,
   getSelectedBlocksCommand,
   getTextSelectionCommand,
 } from '@ink/stone-shared/commands';
-import {
-  matchModels,
-  mergeToCodeModel,
-  transformModel,
-} from '@ink/stone-shared/utils';
-import {
-  type BlockComponent,
-  BlockSelection,
-  type Command,
-  TextSelection,
-} from '@ink/stone-std';
+import { matchModels, mergeToCodeModel, transformModel } from '@ink/stone-shared/utils';
+import { type BlockComponent, BlockSelection, type Command, TextSelection } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
 
 type UpdateBlockConfig = {
@@ -49,7 +32,7 @@ export const updateBlockType: Command<
     if (selectedBlocks == null) {
       const [result, ctx] = std.command
         .chain()
-        .tryAll(chain => [
+        .tryAll((chain) => [
           chain.pipe(getTextSelectionCommand),
           chain.pipe(getBlockSelectionsCommand),
         ])
@@ -66,21 +49,18 @@ export const updateBlockType: Command<
   const selectedBlocks = getSelectedBlocks();
   if (!selectedBlocks || selectedBlocks.length === 0) return false;
 
-  const blockModels = selectedBlocks.map(ele => ele.model);
+  const blockModels = selectedBlocks.map((ele) => ele.model);
 
-  const hasSameDoc = selectedBlocks.every(block => block.store === doc);
+  const hasSameDoc = selectedBlocks.every((block) => block.store === doc);
   if (!hasSameDoc) {
     // doc check
     console.error(
       'Not all models have the same doc instance, the result for update text type may not be correct',
-      selectedBlocks
+      selectedBlocks,
     );
   }
 
-  const mergeToCode: Command<{}, { updatedBlocks: BlockModel[] }> = (
-    _,
-    next
-  ) => {
+  const mergeToCode: Command<{}, { updatedBlocks: BlockModel[] }> = (_, next) => {
     if (flavour !== 'ink:code') return;
     const id = mergeToCodeModel(blockModels);
     if (!id) return;
@@ -92,10 +72,7 @@ export const updateBlockType: Command<
     }).catch(console.error);
     return next({ updatedBlocks: [model] });
   };
-  const appendDivider: Command<{}, { updatedBlocks: BlockModel[] }> = (
-    _,
-    next
-  ) => {
+  const appendDivider: Command<{}, { updatedBlocks: BlockModel[] }> = (_, next) => {
     if (flavour !== 'ink:divider') {
       return false;
     }
@@ -131,9 +108,7 @@ export const updateBlockType: Command<
     const firstNewModel = updatedBlocks[0];
     const lastNewModel = updatedBlocks[updatedBlocks.length - 1];
 
-    const allTextUpdated = updatedBlocks.map(model =>
-      onModelTextUpdated(std, model)
-    );
+    const allTextUpdated = updatedBlocks.map((model) => onModelTextUpdated(std, model));
     const selectionManager = host.selection;
     const textSelection = selectionManager.find(TextSelection);
     if (!textSelection) {
@@ -175,7 +150,7 @@ export const updateBlockType: Command<
       return false;
     }
     requestAnimationFrame(() => {
-      const selections = updatedBlocks.map(model => {
+      const selections = updatedBlocks.map((model) => {
         return selectionManager.create(BlockSelection, {
           blockId: model.id,
         });
@@ -193,19 +168,13 @@ export const updateBlockType: Command<
       return next();
     })
     // update block type
-    .try<{ updatedBlocks: BlockModel[] }>(chain => [
+    .try<{ updatedBlocks: BlockModel[] }>((chain) => [
       chain.pipe(mergeToCode),
       chain.pipe(appendDivider),
       chain.pipe((_, next) => {
         const newModels: BlockModel[] = [];
-        blockModels.forEach(model => {
-          if (
-            !matchModels(model, [
-              ParagraphBlockModel,
-              ListBlockModel,
-              CodeBlockModel,
-            ])
-          ) {
+        blockModels.forEach((model) => {
+          if (!matchModels(model, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])) {
             return;
           }
           if (model.flavour === flavour) {
@@ -226,7 +195,7 @@ export const updateBlockType: Command<
       }),
     ])
     // focus
-    .try(chain => [
+    .try((chain) => [
       chain.pipe((_, next) => {
         if (['ink:code', 'ink:divider'].includes(flavour)) {
           return next();

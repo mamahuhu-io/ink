@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import * as Y from 'yjs';
 
 import { ReactiveFlatYMap } from '../../reactive/flat-native-y/index.js';
@@ -25,7 +25,7 @@ export class FlatSyncController {
     readonly schema: Schema,
     readonly yBlock: YBlock,
     readonly doc?: Store,
-    readonly onChange?: (key: string, isLocal: boolean) => void
+    readonly onChange?: (key: string, isLocal: boolean) => void,
   ) {
     const { id, flavour, version, yChildren, props } = this._parseYBlock();
 
@@ -42,7 +42,7 @@ export class FlatSyncController {
     if (!schema) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        `schema for flavour: ${this.flavour} not found`
+        `schema for flavour: ${this.flavour} not found`,
       );
     }
 
@@ -53,12 +53,7 @@ export class FlatSyncController {
     model.id = this.id;
     model.keys = Array.from(props);
     model.yBlock = this.yBlock;
-    const reactive = new ReactiveFlatYMap(
-      this.yBlock,
-      model.deleted,
-      this.onChange,
-      defaultProps
-    );
+    const reactive = new ReactiveFlatYMap(this.yBlock, model.deleted, this.onChange, defaultProps);
     this._reactive = reactive;
     const proxy = reactive.proxy;
     model._props = proxy;
@@ -107,28 +102,25 @@ export class FlatSyncController {
     if (!id) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block id is not found when creating model'
+        'block id is not found when creating model',
       );
     }
     if (!flavour) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block flavour is not found when creating model'
+        'block flavour is not found when creating model',
       );
     }
     if (!yChildren) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block children is not found when creating model'
+        'block children is not found when creating model',
       );
     }
 
     const schema = this.schema.flavourSchemaMap.get(flavour);
     if (!schema) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `schema for flavour: ${flavour} not found`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `schema for flavour: ${flavour} not found`);
     }
 
     if (typeof version !== 'number') {
@@ -139,7 +131,7 @@ export class FlatSyncController {
     const defaultProps = schema.model.props?.(internalPrimitives);
     // Set default props if not exists
     if (defaultProps) {
-      Object.keys(defaultProps).forEach(key => {
+      Object.keys(defaultProps).forEach((key) => {
         if (props.has(key)) return;
         props.add(key);
       });

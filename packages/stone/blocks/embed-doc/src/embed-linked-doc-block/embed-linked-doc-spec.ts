@@ -10,7 +10,7 @@ import { EmbedLinkedDocInteraction } from './embed-edgeless-linked-doc-block';
 const flavour = EmbedLinkedDocBlockSchema.model.flavour;
 
 export const EmbedLinkedDocViewExtensions: ExtensionType[] = [
-  BlockViewExtension(flavour, model => {
+  BlockViewExtension(flavour, (model) => {
     return model.parent?.flavour === 'ink:surface'
       ? literal`ink-embed-edgeless-linked-doc-block`
       : literal`ink-embed-linked-doc-block`;

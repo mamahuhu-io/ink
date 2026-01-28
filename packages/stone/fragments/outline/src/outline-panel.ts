@@ -1,11 +1,6 @@
-import { DocModeProvider } from '@ink/stone-shared/services';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  type EditorHost,
-  PropTypes,
-  requiredProperties,
-  ShadowlessElement,
-} from '@ink/stone-std';
+import { DocModeProvider } from '@ink/stone-shared/services';
+import { type EditorHost, PropTypes, requiredProperties, ShadowlessElement } from '@ink/stone-std';
 import { provide } from '@lit/context';
 import { effect, signal } from '@preact/signals-core';
 import { html, type PropertyValues } from 'lit';
@@ -19,9 +14,7 @@ export const INK_OUTLINE_PANEL = 'ink-outline-panel';
 @requiredProperties({
   editor: PropTypes.object,
 })
-export class OutlinePanel extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class OutlinePanel extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   private _getEditorMode(host: EditorHost) {
     const docModeService = host.std.get(DocModeProvider);
     const mode = docModeService.getEditorMode();
@@ -51,15 +44,14 @@ export class OutlinePanel extends SignalWatcher(
         } else if (settings) {
           this._context.enableSorting$.value = settings.enableSorting;
         }
-      })
+      }),
     );
   }
 
   private _watchSettingsChange() {
     this.disposables.add(
       effect(() => {
-        if (this._getEditorMode(this._context.editor$.value) === 'edgeless')
-          return;
+        if (this._getEditorMode(this._context.editor$.value) === 'edgeless') return;
 
         const showPreviewIcon = this._context.showIcons$.value;
         const enableNotesSorting = this._context.enableSorting$.value;
@@ -68,9 +60,9 @@ export class OutlinePanel extends SignalWatcher(
           JSON.stringify({
             showIcons: showPreviewIcon,
             enableSorting: enableNotesSorting,
-          })
+          }),
         );
-      })
+      }),
     );
   }
 

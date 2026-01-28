@@ -31,9 +31,7 @@ export function getStrokePoints<
   // Whatever the input is, make sure that the points are in number[][].
   let pts: (IVec3 | IVec)[] = Array.isArray(points[0])
     ? (points as T[])
-    : (points as K[]).map(
-        ({ x, y, pressure = 0.5 }) => [x, y, pressure] as IVec3
-      );
+    : (points as K[]).map(({ x, y, pressure = 0.5 }) => [x, y, pressure] as IVec3);
 
   // Add extra points between the two, to help avoid "dash" lines
   // for strokes with tapered start and ends. Don't mutate the
@@ -49,10 +47,7 @@ export function getStrokePoints<
   // If there's only one point, add another point at a 1pt offset.
   // Don't mutate the input array!
   if (pts.length === 1) {
-    pts = [
-      ...pts,
-      [...add(pts[0] as IVec, [1, 1]), ...pts[0].slice(2)] as IVec,
-    ];
+    pts = [...pts, [...add(pts[0] as IVec, [1, 1]), ...pts[0].slice(2)] as IVec];
   }
 
   // The strokePoints array will hold the points for the stroke.

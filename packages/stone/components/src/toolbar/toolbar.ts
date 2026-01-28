@@ -1,6 +1,6 @@
+import { WithDisposable } from '@ink/stone-global/lit';
 import { panelBaseStyle } from '@ink/stone-shared/styles';
 import { stopPropagation } from '@ink/stone-shared/utils';
-import { WithDisposable } from '@ink/stone-global/lit';
 import { css, html, LitElement } from 'lit';
 
 export class EditorToolbar extends WithDisposable(LitElement) {

@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Ink",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "io.mamahuhu.ink",
   "build": {
     "frontendDist": "../dist",
@@ -74,9 +74,7 @@
       "open": ".*"
     },
     "updater": {
-      "endpoints": [
-        "https://github.com/mamahuhu-io/Ink/releases/latest/download/latest.json"
-      ],
+      "endpoints": ["https://github.com/mamahuhu-io/Ink/releases/latest/download/latest.json"],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUwN0IwRTUwM0M2RTlGQ0UKUldUT24yNDhVQTU3VU1acnUwbGVxaEhkcENaVURIdjAvaXA3cUVReE9yS0M2c011WjM4RUNEQkkK"
     }
   }

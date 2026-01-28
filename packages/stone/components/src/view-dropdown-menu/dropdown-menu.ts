@@ -1,8 +1,5 @@
-import {
-  type ToolbarAction,
-  ToolbarContext,
-} from '@ink/stone-shared/services';
 import { SignalWatcher } from '@ink/stone-global/lit';
+import { type ToolbarAction, ToolbarContext } from '@ink/stone-shared/services';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import type { ReadonlySignal, Signal } from '@preact/signals-core';
 import { LitElement } from 'lit';
@@ -53,25 +50,24 @@ export class ViewDropdownMenu extends SignalWatcher(LitElement) {
       >
         <div data-size="small" data-orientation="vertical">
           ${repeat(
-            actions.filter(action => {
-              if (typeof action.when === 'function')
-                return action.when(context);
+            actions.filter((action) => {
+              if (typeof action.when === 'function') return action.when(context);
               return action.when ?? true;
             }),
-            action => action.id,
+            (action) => action.id,
             ({ id, label, disabled, run }) => html`
               <editor-menu-action
                 aria-label="${ifDefined(label)}"
                 data-testid="${`link-to-${id}`}"
                 ?data-selected="${label === viewType}"
                 ?disabled="${ifDefined(
-                  typeof disabled === 'function' ? disabled(context) : disabled
+                  typeof disabled === 'function' ? disabled(context) : disabled,
                 )}"
                 @click=${() => run?.(context)}
               >
                 ${label}
               </editor-menu-action>
-            `
+            `,
           )}
         </div>
       </editor-menu-button>

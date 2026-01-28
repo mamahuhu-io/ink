@@ -48,7 +48,7 @@ export function testSerial(name: string, callback: () => Promise<boolean>) {
 }
 
 function wait(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function runOnce() {
@@ -66,7 +66,7 @@ export async function runOnce() {
 }
 
 export async function nextFrame() {
-  return new Promise(resolve => requestAnimationFrame(resolve));
+  return new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
 // Test image source: https://en.wikipedia.org/wiki/Test_card
@@ -78,7 +78,7 @@ export async function loadTestImageBlob(name: string): Promise<Blob> {
 export async function loadImage(blobUrl: string) {
   const img = new Image();
   img.src = blobUrl;
-  return new Promise<HTMLImageElement>(resolve => {
+  return new Promise<HTMLImageElement>((resolve) => {
     img.onload = () => resolve(img);
   });
 }
@@ -87,7 +87,7 @@ export function assertColor(
   img: HTMLImageElement,
   x: number,
   y: number,
-  color: [number, number, number]
+  color: [number, number, number],
 ): boolean {
   const canvas = document.createElement('canvas');
   canvas.width = img.width;
@@ -105,9 +105,9 @@ export function assertColor(
 // prevent redundant test runs
 export function disableButtonsAfterClick() {
   const buttons = document.querySelectorAll('button');
-  buttons.forEach(btn => {
+  buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         button.disabled = true;
       });
     });

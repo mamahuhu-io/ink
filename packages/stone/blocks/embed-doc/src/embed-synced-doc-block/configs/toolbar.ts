@@ -1,5 +1,15 @@
 import { toast } from '@ink/stone-components/toast';
 import { EditorChevronDown } from '@ink/stone-components/toolbar';
+import { Bound } from '@ink/stone-global/gfx';
+import {
+  CaptionIcon,
+  CopyIcon,
+  DeleteIcon,
+  DuplicateIcon,
+  ExpandFullIcon,
+  InsertIntoPageIcon,
+  OpenInNewIcon,
+} from '@ink/stone-icons/lit';
 import {
   DEFAULT_NOTE_HEIGHT,
   DEFAULT_NOTE_WIDTH,
@@ -27,23 +37,8 @@ import {
 } from '@ink/stone-shared/services';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import { getBlockProps, matchModels } from '@ink/stone-shared/utils';
-import { Bound } from '@ink/stone-global/gfx';
-import {
-  CaptionIcon,
-  CopyIcon,
-  DeleteIcon,
-  DuplicateIcon,
-  ExpandFullIcon,
-  InsertIntoPageIcon,
-  OpenInNewIcon,
-} from '@ink/stone-icons/lit';
 import { BlockFlavourIdentifier, isGfxBlockComponent } from '@ink/stone-std';
-import {
-  type BlockModel,
-  type ExtensionType,
-  Slice,
-  Text,
-} from '@ink/stone-store';
+import { type BlockModel, type ExtensionType, Slice, Text } from '@ink/stone-store';
 import { computed, signal } from '@preact/signals-core';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -59,11 +54,8 @@ const trackBaseProps = {
 const createOnToggleFn =
   (
     ctx: ToolbarContext,
-    name: Extract<
-      LinkEventType,
-      'OpenedViewSelector' | 'OpenedCardScaleSelector'
-    >,
-    control: 'switch view' | 'switch card scale'
+    name: Extract<LinkEventType, 'OpenedViewSelector' | 'OpenedCardScaleSelector'>,
+    control: 'switch view' | 'switch card scale',
   ) =>
   (e: CustomEvent<boolean>) => {
     e.stopPropagation();
@@ -91,14 +83,12 @@ const openDocActionGroup = {
     const block = ctx.getCurrentBlockByType(EmbedSyncedDocBlockComponent);
     if (!block) return null;
 
-    const actions = openDocActions.map<ToolbarAction>(action => {
+    const actions = openDocActions.map<ToolbarAction>((action) => {
       const openMode = action.mode;
       const shouldOpenInActiveView = openMode === 'open-in-active-view';
       return {
         ...action,
-        disabled: shouldOpenInActiveView
-          ? block.model.props.pageId === ctx.store.id
-          : false,
+        disabled: shouldOpenInActiveView ? block.model.props.pageId === ctx.store.id : false,
         when: true,
         run: (_ctx: ToolbarContext) => block.open({ openMode }),
       };
@@ -116,18 +106,16 @@ const openDocActionGroup = {
         <div data-size="small" data-orientation="vertical">
           ${repeat(
             actions,
-            action => action.id,
+            (action) => action.id,
             ({ label, icon, run, disabled }) => html`
               <editor-menu-action
                 aria-label=${ifDefined(label)}
-                ?disabled=${ifDefined(
-                  typeof disabled === 'function' ? disabled(ctx) : disabled
-                )}
+                ?disabled=${ifDefined(typeof disabled === 'function' ? disabled(ctx) : disabled)}
                 @click=${() => run?.(ctx)}
               >
                 ${icon}<span class="label">${label}</span>
               </editor-menu-action>
-            `
+            `,
           )}
         </div>
       </editor-menu-button>
@@ -155,7 +143,7 @@ const conversionsActionGroup = {
           type: 'inline view',
         });
       },
-      when: ctx => !ctx.hasSelectedSurfaceModels,
+      when: (ctx) => !ctx.hasSelectedSurfaceModels,
     },
     {
       id: 'card',
@@ -164,10 +152,7 @@ const conversionsActionGroup = {
         const block = ctx.getCurrentBlockByType(EmbedSyncedDocBlockComponent);
         if (isGfxBlockComponent(block)) {
           const editorSetting = ctx.std.getOptional(EditorSettingProvider);
-          editorSetting?.set?.(
-            'docCanvasPreferView',
-            'ink:embed-linked-doc'
-          );
+          editorSetting?.set?.('docCanvasPreferView', 'ink:embed-linked-doc');
         }
 
         block?.convertToCard();
@@ -189,7 +174,7 @@ const conversionsActionGroup = {
     const model = ctx.getCurrentModelByType(EmbedSyncedDocModel);
     if (!model) return null;
 
-    const actions = this.actions.map(action => ({ ...action }));
+    const actions = this.actions.map((action) => ({ ...action }));
     const viewType$ = signal('Embed view');
     const onToggle = createOnToggleFn(ctx, 'OpenedViewSelector', 'switch view');
 
@@ -200,7 +185,7 @@ const conversionsActionGroup = {
         .actions=${actions}
         .context=${ctx}
         .viewType$=${viewType$}
-      ></ink-view-dropdown-menu>`
+      ></ink-view-dropdown-menu>`,
     )}`;
   },
 } as const satisfies ToolbarActionGroup<ToolbarAction>;
@@ -290,7 +275,7 @@ const builtinSurfaceToolbarConfig = {
       label: 'Insert to page',
       tooltip: 'Insert to page',
       icon: InsertIntoPageIcon(),
-      run: ctx => {
+      run: (ctx) => {
         const model = ctx.getCurrentModelByType(EmbedSyncedDocModel);
         if (!model) return;
 
@@ -299,7 +284,7 @@ const builtinSurfaceToolbarConfig = {
           .findLast(
             (note): note is NoteBlockModel =>
               matchModels(note, [NoteBlockModel]) &&
-              note.props.displayMode !== NoteDisplayMode.EdgelessOnly
+              note.props.displayMode !== NoteDisplayMode.EdgelessOnly,
           );
 
         ctx.store.captureSync();
@@ -323,10 +308,9 @@ const builtinSurfaceToolbarConfig = {
     {
       id: 'c.duplicate-as-note',
       label: 'Duplicate as note',
-      tooltip:
-        'Duplicate as note to create an editable copy, the original remains unchanged.',
+      tooltip: 'Duplicate as note to create an editable copy, the original remains unchanged.',
       icon: DuplicateIcon(),
-      run: ctx => {
+      run: (ctx) => {
         const { gfx } = ctx;
 
         const syncedDocModel = ctx.getCurrentModelByType(EmbedSyncedDocModel);
@@ -343,9 +327,9 @@ const builtinSurfaceToolbarConfig = {
             .filter(
               (note): note is NoteBlockModel =>
                 matchModels(note, [NoteBlockModel]) &&
-                note.props.displayMode !== NoteDisplayMode.EdgelessOnly
+                note.props.displayMode !== NoteDisplayMode.EdgelessOnly,
             )
-            .flatMap(note => note.children);
+            .flatMap((note) => note.children);
         }
         if (contentModels.length === 0) return;
 
@@ -357,26 +341,18 @@ const builtinSurfaceToolbarConfig = {
           .pipe(({ std, draftedModels }, next) => {
             (async () => {
               const PADDING = 20;
-              const x =
-                syncedDocModel.elementBound.x +
-                syncedDocModel.elementBound.w +
-                PADDING;
+              const x = syncedDocModel.elementBound.x + syncedDocModel.elementBound.w + PADDING;
               const y = syncedDocModel.elementBound.y;
 
               const children = await draftedModels;
               const noteId = std.store.addBlock(
                 'ink:note',
                 {
-                  xywh: new Bound(
-                    x,
-                    y,
-                    DEFAULT_NOTE_WIDTH,
-                    DEFAULT_NOTE_HEIGHT
-                  ).serialize(),
+                  xywh: new Bound(x, y, DEFAULT_NOTE_WIDTH, DEFAULT_NOTE_HEIGHT).serialize(),
                   index: gfx.layer.generateIndex(),
                   displayMode: NoteDisplayMode.EdgelessOnly,
                 } satisfies Partial<NoteProps>,
-                ctx.store.root
+                ctx.store.root,
               );
 
               std.store.addBlock(
@@ -394,13 +370,13 @@ const builtinSurfaceToolbarConfig = {
                     },
                   ]),
                 } satisfies Partial<ParagraphProps>,
-                noteId
+                noteId,
               );
 
               await std.clipboard.duplicateSlice(
                 Slice.fromModels(std.store, children),
                 std.store,
-                noteId
+                noteId,
               );
 
               gfx.selection.set({
@@ -426,14 +402,10 @@ const builtinSurfaceToolbarConfig = {
     {
       id: 'e.scale',
       content(ctx) {
-        const model = ctx.getCurrentBlockByType(
-          EmbedSyncedDocBlockComponent
-        )?.model;
+        const model = ctx.getCurrentBlockByType(EmbedSyncedDocBlockComponent)?.model;
         if (!model) return null;
 
-        const scale$ = computed(() =>
-          Math.round(100 * (model.props.scale$.value ?? 1))
-        );
+        const scale$ = computed(() => Math.round(100 * (model.props.scale$.value ?? 1)));
         const onSelect = (e: CustomEvent<number>) => {
           e.stopPropagation();
 
@@ -453,11 +425,7 @@ const builtinSurfaceToolbarConfig = {
             control: 'select card scale',
           });
         };
-        const onToggle = createOnToggleFn(
-          ctx,
-          'OpenedCardScaleSelector',
-          'switch card scale'
-        );
+        const onToggle = createOnToggleFn(ctx, 'OpenedCardScaleSelector', 'switch card scale');
         const format = (value: number) => `${value}%`;
 
         return html`${keyed(
@@ -467,18 +435,16 @@ const builtinSurfaceToolbarConfig = {
             @toggle=${onToggle}
             .format=${format}
             .size$=${scale$}
-          ></ink-size-dropdown-menu>`
+          ></ink-size-dropdown-menu>`,
         )}`;
       },
     },
   ],
 
-  when: ctx => ctx.getSurfaceModelsByType(EmbedSyncedDocModel).length === 1,
+  when: (ctx) => ctx.getSurfaceModelsByType(EmbedSyncedDocModel).length === 1,
 } as const satisfies ToolbarModuleConfig;
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
   const name = flavour.split(':').pop();
 
   return [

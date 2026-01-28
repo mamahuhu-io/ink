@@ -48,7 +48,7 @@ export function getInternalStoreExtensions() {
     AttachmentStoreExtension,
     // [REMOVED] Embed modules
     // BookmarkStoreExtension,
-    MermaidStoreExtension,  // Must be before CodeStoreExtension to match mermaid code blocks first
+    MermaidStoreExtension, // Must be before CodeStoreExtension to match mermaid code blocks first
     CodeStoreExtension,
     // [REMOVED] Database modules
     // DataViewStoreExtension,

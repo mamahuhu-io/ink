@@ -11,8 +11,8 @@ import type { Element } from 'hast';
 
 export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: ListBlockSchema.model.flavour,
-  toMatch: o => HastUtils.isElement(o.node) && o.node.tagName === 'li',
-  fromMatch: o => o.node.flavour === ListBlockSchema.model.flavour,
+  toMatch: (o) => HastUtils.isElement(o.node) && o.node.tagName === 'li',
+  fromMatch: (o) => o.node.flavour === ListBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -40,7 +40,7 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       const firstElementChild = HastUtils.getElementChildren(o.node)[0];
       o.node = HastUtils.flatNodes(
         o.node,
-        tagName => tagName === 'div' || tagName === 'p'
+        (tagName) => tagName === 'div' || tagName === 'p',
       ) as Element;
 
       const { walkerContext, deltaConverter } = context;
@@ -55,12 +55,8 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               '$stone:internal:text$': true,
               delta:
                 listType !== 'toggle'
-                  ? deltaConverter.astToDelta(
-                      HastUtils.getInlineOnlyElementAST(o.node)
-                    )
-                  : deltaConverter.astToDelta(
-                      HastUtils.querySelector(o.node, 'summary') ?? o.node
-                    ),
+                  ? deltaConverter.astToDelta(HastUtils.getInlineOnlyElementAST(o.node))
+                  : deltaConverter.astToDelta(HastUtils.querySelector(o.node, 'summary') ?? o.node),
             },
             checked:
               listType === 'todo'
@@ -78,7 +74,7 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
           },
           children: [],
         },
-        'children'
+        'children',
       );
     },
     leave: (_, context) => {
@@ -118,16 +114,13 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       if (
         walkerContext.getNodeContext('ink:list:parent') === o.parent &&
         currentTNode.type === 'element' &&
-        currentTNode.tagName ===
-          (o.node.props.type === 'numbered' ? 'ol' : 'ul') &&
+        currentTNode.tagName === (o.node.props.type === 'numbered' ? 'ol' : 'ul') &&
         !(
           Array.isArray(currentTNode.properties.className) &&
           currentTNode.properties.className.includes('todo-list')
         ) ===
           AdapterTextUtils.isNullish(
-            o.node.props.type === 'todo'
-              ? (o.node.props.checked as boolean)
-              : undefined
+            o.node.props.type === 'todo' ? (o.node.props.checked as boolean) : undefined,
           )
       ) {
         // if true, add the list item to the list
@@ -146,7 +139,7 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         );
         walkerContext.setNodeContext('ink:list:parent', o.parent);
       }
@@ -160,7 +153,7 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
           },
           children: liChildren,
         },
-        'children'
+        'children',
       );
     },
     leave: (o, context) => {
@@ -168,26 +161,19 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       const currentTNode = walkerContext.currentNode() as Element;
       const previousTNode = walkerContext.previousNode() as Element;
       if (
-        walkerContext.getPreviousNodeContext('ink:list:parent') ===
-          o.parent &&
+        walkerContext.getPreviousNodeContext('ink:list:parent') === o.parent &&
         currentTNode.tagName === 'li' &&
-        previousTNode.tagName ===
-          (o.node.props.type === 'numbered' ? 'ol' : 'ul') &&
+        previousTNode.tagName === (o.node.props.type === 'numbered' ? 'ol' : 'ul') &&
         !(
           Array.isArray(previousTNode.properties.className) &&
           previousTNode.properties.className.includes('todo-list')
         ) ===
           AdapterTextUtils.isNullish(
-            o.node.props.type === 'todo'
-              ? (o.node.props.checked as boolean)
-              : undefined
+            o.node.props.type === 'todo' ? (o.node.props.checked as boolean) : undefined,
           )
       ) {
         walkerContext.closeNode();
-        if (
-          o.next?.flavour !== 'ink:list' ||
-          o.next.props.type !== o.node.props.type
-        ) {
+        if (o.next?.flavour !== 'ink:list' || o.next.props.type !== o.node.props.type) {
           // If the next node is not a list or different type of list, close the list
           walkerContext.closeNode();
         }
@@ -198,6 +184,4 @@ export const listBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   },
 };
 
-export const ListBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  listBlockHtmlAdapterMatcher
-);
+export const ListBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(listBlockHtmlAdapterMatcher);

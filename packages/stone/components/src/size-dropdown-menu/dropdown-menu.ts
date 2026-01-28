@@ -1,6 +1,6 @@
-import { stopPropagation } from '@ink/stone-shared/utils';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { DoneIcon } from '@ink/stone-icons/lit';
+import { stopPropagation } from '@ink/stone-shared/utils';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import type { ReadonlySignal, Signal } from '@preact/signals-core';
 import { css, html, LitElement, type TemplateResult } from 'lit';
@@ -15,18 +15,12 @@ type SizeItem = { key?: string | number; value: number };
 
 const MIN_SIZE = 0;
 const MAX_SIZE = 400;
-const SIZE_LIST: SizeItem[] = [
-  { value: 50 },
-  { value: 100 },
-  { value: 200 },
-] as const;
+const SIZE_LIST: SizeItem[] = [{ value: 50 }, { value: 100 }, { value: 200 }] as const;
 
 @requiredProperties({
   size$: PropTypes.object,
 })
-export class SizeDropdownMenu extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class SizeDropdownMenu extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = css`
     div[data-orientation] {
       width: 68px;
@@ -126,15 +120,11 @@ export class SizeDropdownMenu extends SignalWatcher(
   accessor menuButton!: EditorMenuButton;
 
   override firstUpdated() {
-    this.disposables.addFromEvent(
-      this.menuButton,
-      'toggle',
-      (e: CustomEvent<boolean>) => {
-        const opened = e.detail;
-        if (opened) return;
-        this.input.value = '';
-      }
-    );
+    this.disposables.addFromEvent(this.menuButton, 'toggle', (e: CustomEvent<boolean>) => {
+      const opened = e.detail;
+      if (opened) return;
+      this.input.value = '';
+    });
   }
 
   override render() {
@@ -161,8 +151,7 @@ export class SizeDropdownMenu extends SignalWatcher(
             .labelHeight="${'20px'}"
             .iconContainerWidth="${icon ? 'unset' : '65px'}"
           >
-            ${icon ??
-            html`<span class="label">${format?.(size) ?? size}</span>`}
+            ${icon ?? html`<span class="label">${format?.(size) ?? size}</span>`}
             ${EditorChevronDown}
           </editor-icon-button>
         `}
@@ -180,7 +169,7 @@ export class SizeDropdownMenu extends SignalWatcher(
                 ${key ?? format?.(value) ?? value}
                 ${when(isCheckType && size === value, () => DoneIcon())}
               </editor-menu-action>
-            `
+            `,
           )}
 
           <input

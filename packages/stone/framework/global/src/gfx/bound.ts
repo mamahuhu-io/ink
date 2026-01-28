@@ -29,7 +29,7 @@ export function getPointsFromBoundWithRotation(
     // left-bottom
     [x, y + h],
   ],
-  resPadding: [number, number] = [0, 0]
+  resPadding: [number, number] = [0, 0],
 ): IVec[] {
   const { rotate } = bounds;
   let points = getPoints({
@@ -44,12 +44,9 @@ export function getPointsFromBoundWithRotation(
     const cx = x + w / 2;
     const cy = y + h / 2;
 
-    const m = new DOMMatrix()
-      .translateSelf(cx, cy)
-      .rotateSelf(rotate)
-      .translateSelf(-cx, -cy);
+    const m = new DOMMatrix().translateSelf(cx, cy).rotateSelf(rotate).translateSelf(-cx, -cy);
 
-    points = points.map(point => {
+    points = points.map((point) => {
       const { x, y } = new DOMPoint(...point).matrixTransform(m);
       return [x, y];
     });
@@ -65,9 +62,7 @@ export function getQuadBoundWithRotation(bounds: IBound): DOMRect {
   if (!rotate) return rect;
 
   return new DOMQuad(
-    ...getPointsFromBoundWithRotation(bounds).map(
-      point => new DOMPoint(...point)
-    )
+    ...getPointsFromBoundWithRotation(bounds).map((point) => new DOMPoint(...point)),
   ).getBounds();
 }
 
@@ -112,11 +107,9 @@ export function getCommonBoundWithRotation(bounds: IBound[]): Bound {
 
   return bounds.reduce(
     (pre, bound) => {
-      return pre.unite(
-        bound instanceof Bound ? bound : Bound.from(getBoundWithRotation(bound))
-      );
+      return pre.unite(bound instanceof Bound ? bound : Bound.from(getBoundWithRotation(bound)));
     },
-    Bound.from(getBoundWithRotation(bounds[0]))
+    Bound.from(getBoundWithRotation(bounds[0])),
   );
 }
 
@@ -127,12 +120,7 @@ export function getBoundFromPoints(points: IVec[]) {
 export function inflateBound(bound: IBound, delta: number) {
   const half = delta / 2;
 
-  const newBound = new Bound(
-    bound.x - half,
-    bound.y - half,
-    bound.w + delta,
-    bound.h + delta
-  );
+  const newBound = new Bound(bound.x - half, bound.y - half, bound.w + delta, bound.h + delta);
 
   if (newBound.w <= 0 || newBound.h <= 0) {
     throw new Error('Invalid delta range or bound size.');
@@ -146,7 +134,7 @@ export function transformPointsToNewBound<T extends { x: number; y: number }>(
   oldBound: IBound,
   oldMargin: number,
   newBound: IBound,
-  newMargin: number
+  newMargin: number,
 ) {
   const wholeOldMargin = oldMargin * 2;
   const wholeNewMargin = newMargin * 2;
@@ -155,7 +143,7 @@ export function transformPointsToNewBound<T extends { x: number; y: number }>(
   const newW = Math.max(newBound.w - wholeNewMargin, 1);
   const newH = Math.max(newBound.h - wholeNewMargin, 1);
 
-  const transformedPoints = points.map(p => {
+  const transformedPoints = points.map((p) => {
     return {
       ...p,
       x: newW * ((p.x - oldMargin) / oldW) + newMargin,
@@ -165,11 +153,6 @@ export function transformPointsToNewBound<T extends { x: number; y: number }>(
 
   return {
     points: transformedPoints,
-    bound: new Bound(
-      newBound.x,
-      newBound.y,
-      newW + wholeNewMargin,
-      newH + wholeNewMargin
-    ),
+    bound: new Bound(newBound.x, newBound.y, newW + wholeNewMargin, newH + wholeNewMargin),
   };
 }

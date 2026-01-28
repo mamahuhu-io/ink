@@ -1,7 +1,4 @@
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type StoreExtensionContext, StoreExtensionProvider } from '@ink/stone-ext-loader';
 import {
   EmbedLinkedDocBlockSchemaExtension,
   EmbedSyncedDocBlockSchemaExtension,
@@ -15,10 +12,7 @@ export class EmbedDocStoreExtension extends StoreExtensionProvider {
 
   override setup(context: StoreExtensionContext) {
     super.setup(context);
-    context.register([
-      EmbedSyncedDocBlockSchemaExtension,
-      EmbedLinkedDocBlockSchemaExtension,
-    ]);
+    context.register([EmbedSyncedDocBlockSchemaExtension, EmbedLinkedDocBlockSchemaExtension]);
     context.register(EmbedLinkedDocBlockAdapterExtensions);
     context.register(EmbedSyncedDocBlockAdapterExtensions);
   }

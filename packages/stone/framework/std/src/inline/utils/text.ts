@@ -9,12 +9,10 @@ export function calculateTextLength(text: Text): number {
 }
 
 export function getTextNodesFromElement(element: Element): Text[] {
-  const textSpanElements = Array.from(
-    element.querySelectorAll('[data-v-text="true"]')
-  );
-  const textNodes = textSpanElements.flatMap(textSpanElement => {
+  const textSpanElements = Array.from(element.querySelectorAll('[data-v-text="true"]'));
+  const textNodes = textSpanElements.flatMap((textSpanElement) => {
     const textNode = Array.from(textSpanElement.childNodes).find(
-      (node): node is Text => node instanceof Text
+      (node): node is Text => node instanceof Text,
     );
     if (!textNode) return [];
 

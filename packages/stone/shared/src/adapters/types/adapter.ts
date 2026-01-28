@@ -75,7 +75,7 @@ export type BlockAdapterMatcher<
      */
     enter?: (
       o: NodeProps<TNode>,
-      context: AdapterContext<TNode, BlockSnapshot, TConverter>
+      context: AdapterContext<TNode, BlockSnapshot, TConverter>,
     ) => void | Promise<void>;
 
     /**
@@ -85,7 +85,7 @@ export type BlockAdapterMatcher<
      */
     leave?: (
       o: NodeProps<TNode>,
-      context: AdapterContext<TNode, BlockSnapshot, TConverter>
+      context: AdapterContext<TNode, BlockSnapshot, TConverter>,
     ) => void | Promise<void>;
   };
 
@@ -100,7 +100,7 @@ export type BlockAdapterMatcher<
      */
     enter?: (
       o: NodeProps<BlockSnapshot>,
-      context: AdapterContext<BlockSnapshot, TNode, TConverter>
+      context: AdapterContext<BlockSnapshot, TNode, TConverter>,
     ) => void | Promise<void>;
 
     /**
@@ -110,7 +110,7 @@ export type BlockAdapterMatcher<
      */
     leave?: (
       o: NodeProps<BlockSnapshot>,
-      context: AdapterContext<BlockSnapshot, TNode, TConverter>
+      context: AdapterContext<BlockSnapshot, TNode, TConverter>,
     ) => void | Promise<void>;
   };
 };
@@ -120,5 +120,4 @@ export type AdapterFactory = {
   get: (job: Transformer) => BaseAdapter;
 };
 
-export const AdapterFactoryIdentifier =
-  createIdentifier<AdapterFactory>('AdapterFactory');
+export const AdapterFactoryIdentifier = createIdentifier<AdapterFactory>('AdapterFactory');

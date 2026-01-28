@@ -1,4 +1,5 @@
 import { appendParagraphCommand } from '@ink/stone-block-paragraph';
+import { Point } from '@ink/stone-global/gfx';
 import {
   CodeBlockModel,
   ListBlockModel,
@@ -8,10 +9,7 @@ import {
   type RootBlockModel,
 } from '@ink/stone-model';
 import { focusTextModel } from '@ink/stone-rich-text';
-import {
-  PageViewportService,
-  ViewportElementProvider,
-} from '@ink/stone-shared/services';
+import { PageViewportService, ViewportElementProvider } from '@ink/stone-shared/services';
 import {
   focusTitle,
   getClosestBlockComponentByPoint,
@@ -19,7 +17,6 @@ import {
   getScrollContainer,
   matchModels,
 } from '@ink/stone-shared/utils';
-import { Point } from '@ink/stone-global/gfx';
 import type { PointerEventState } from '@ink/stone-std';
 import { BlockComponent, BlockSelection, TextSelection } from '@ink/stone-std';
 import type { BlockModel, Text } from '@ink/stone-store';
@@ -38,12 +35,10 @@ function testClickOnBlankArea(
   viewportWidth: number,
   pageWidth: number,
   paddingLeft: number,
-  paddingRight: number
+  paddingRight: number,
 ) {
-  const blankLeft =
-    viewportLeft + (viewportWidth - pageWidth) / 2 + paddingLeft;
-  const blankRight =
-    viewportLeft + (viewportWidth - pageWidth) / 2 + pageWidth - paddingRight;
+  const blankLeft = viewportLeft + (viewportWidth - pageWidth) / 2 + paddingLeft;
+  const blankRight = viewportLeft + (viewportWidth - pageWidth) / 2 + pageWidth - paddingRight;
 
   return state.raw.clientX < blankLeft || state.raw.clientX > blankRight;
 }
@@ -110,19 +105,14 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
    */
   focusFirstParagraph = (): { id: string; created: boolean } => {
     const defaultNote = this._getDefaultNoteBlock();
-    const firstText = defaultNote?.children.find(block =>
-      matchModels(block, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])
+    const firstText = defaultNote?.children.find((block) =>
+      matchModels(block, [ParagraphBlockModel, ListBlockModel, CodeBlockModel]),
     );
     if (firstText) {
       focusTextModel(this.std, firstText.id);
       return { id: firstText.id, created: false };
     } else {
-      const newFirstParagraphId = this.store.addBlock(
-        'ink:paragraph',
-        {},
-        defaultNote,
-        0
-      );
+      const newFirstParagraphId = this.store.addBlock('ink:paragraph', {}, defaultNote, 0);
       focusTextModel(this.std, newFirstParagraphId);
       return { id: newFirstParagraphId, created: true };
     }
@@ -135,7 +125,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
       'ink:paragraph',
       { text },
       this._getDefaultNoteBlock(),
-      0
+      0,
     );
     focusTextModel(this.std, newFirstParagraphId);
   };
@@ -165,9 +155,8 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
 
   private _getDefaultNoteBlock() {
     return (
-      this.store.root?.children.find(
-        child => child.flavour === 'ink:note'
-      ) ?? this._createDefaultNoteBlock()
+      this.store.root?.children.find((child) => child.flavour === 'ink:note') ??
+      this._createDefaultNoteBlock()
     );
   }
 
@@ -180,16 +169,14 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
 
     const viewportService = this.std.get(PageViewportService);
     // when observe viewportElement resize, emit viewport update event
-    const resizeObserver = new ResizeObserver(
-      (entries: ResizeObserverEntry[]) => {
-        for (const { target } of entries) {
-          if (target === viewportElement) {
-            viewportService.next(viewport);
-            break;
-          }
+    const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      for (const { target } of entries) {
+        if (target === viewportElement) {
+          viewportService.next(viewport);
+          break;
         }
       }
-    );
+    });
     resizeObserver.observe(viewportElement);
     this.disposables.add(() => {
       resizeObserver.unobserve(viewportElement);
@@ -205,17 +192,16 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
     this.bindHotKey({
       'Mod-a': () => {
         const blocks = this.model.children
-          .filter(model => {
+          .filter((model) => {
             if (matchModels(model, [NoteBlockModel])) {
-              if (model.props.displayMode === NoteDisplayMode.EdgelessOnly)
-                return false;
+              if (model.props.displayMode === NoteDisplayMode.EdgelessOnly) return false;
 
               return true;
             }
             return false;
           })
-          .flatMap(model => {
-            return model.children.map(child => {
+          .flatMap((model) => {
+            return model.children.map((child) => {
               return this.std.selection.create(BlockSelection, {
                 blockId: child.id,
               });
@@ -226,9 +212,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
       },
       ArrowUp: () => {
         const selection = this.host.selection;
-        const sel = selection.value.find(
-          sel => sel.is(TextSelection) || sel.is(BlockSelection)
-        );
+        const sel = selection.value.find((sel) => sel.is(TextSelection) || sel.is(BlockSelection));
         if (!sel) return;
         let model: BlockModel | null = null;
         let current = this.store.getModelById(sel.blockId);
@@ -275,7 +259,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
       },
     });
 
-    this.handleEvent('pointerDown', ctx => {
+    this.handleEvent('pointerDown', (ctx) => {
       const event = ctx.get('pointerState');
       if (
         event.raw.target !== this &&
@@ -288,7 +272,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
       event.raw.preventDefault();
     });
 
-    this.handleEvent('click', ctx => {
+    this.handleEvent('click', (ctx) => {
       const event = ctx.get('pointerState');
       if (
         event.raw.target !== this &&
@@ -301,7 +285,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
       const notes = this.model.children.filter(
         (child): child is NoteBlockModel =>
           child instanceof NoteBlockModel &&
-          child.props.displayMode !== NoteDisplayMode.EdgelessOnly
+          child.props.displayMode !== NoteDisplayMode.EdgelessOnly,
       );
 
       // make sure there is a block can be focused
@@ -313,9 +297,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
         return;
       }
 
-      const { paddingLeft, paddingRight } = window.getComputedStyle(
-        this.rootElementContainer
-      );
+      const { paddingLeft, paddingRight } = window.getComputedStyle(this.rootElementContainer);
       if (!this.viewport) return;
       const isClickOnBlankArea = testClickOnBlankArea(
         event,
@@ -323,7 +305,7 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
         this.viewport.clientWidth,
         this.rootElementContainer.clientWidth,
         parseFloat(paddingLeft),
-        parseFloat(paddingRight)
+        parseFloat(paddingRight),
       );
       if (!isClickOnBlankArea && !this.store.readonly$.value) {
         const lastBlock = notes[notes.length - 1].lastChild();
@@ -398,16 +380,14 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
 
   override firstUpdated() {
     this._initViewportResizeEffect();
-    const noteModels = this.model.children.filter(model =>
-      matchModels(model, [NoteBlockModel])
-    );
-    noteModels.forEach(note => {
+    const noteModels = this.model.children.filter((model) => matchModels(model, [NoteBlockModel]));
+    noteModels.forEach((note) => {
       this.disposables.add(
         note.propsUpdated.subscribe(({ key }) => {
           if (key === 'displayMode') {
             this.requestUpdate();
           }
-        })
+        }),
       );
     });
   }
@@ -416,24 +396,21 @@ export class PageRootBlockComponent extends BlockComponent<RootBlockModel> {
     const widgets = html`${repeat(
       Object.entries(this.widgets),
       ([id]) => id,
-      ([_, widget]) => widget
+      ([_, widget]) => widget,
     )}`;
 
-    const children = this.renderChildren(this.model, child => {
+    const children = this.renderChildren(this.model, (child) => {
       const isNote = matchModels(child, [NoteBlockModel]);
       const note = child as NoteBlockModel;
       const displayOnEdgeless =
-        !!note.props.displayMode &&
-        note.props.displayMode === NoteDisplayMode.EdgelessOnly;
+        !!note.props.displayMode && note.props.displayMode === NoteDisplayMode.EdgelessOnly;
       // Should remove deprecated `hidden` property in the future
       return !(isNote && displayOnEdgeless);
     });
 
     this.contentEditable = String(!this.store.readonly$.value);
 
-    return html`
-      <div class="ink-page-root-block-container">${children} ${widgets}</div>
-    `;
+    return html` <div class="ink-page-root-block-container">${children} ${widgets}</div> `;
   }
 
   @query('.ink-page-root-block-container')

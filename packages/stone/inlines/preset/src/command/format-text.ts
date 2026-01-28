@@ -1,14 +1,8 @@
 import { clearMarksOnDiscontinuousInput } from '@ink/stone-rich-text';
 import { getSelectedBlocksCommand } from '@ink/stone-shared/commands';
-import type {
-  InkTextAttributes,
-  InkTextStyleAttributes,
-} from '@ink/stone-shared/types';
+import type { InkTextAttributes, InkTextStyleAttributes } from '@ink/stone-shared/types';
 import type { Command, TextSelection } from '@ink/stone-std';
-import {
-  INLINE_ROOT_ATTR,
-  type InlineRootElement,
-} from '@ink/stone-std/inline';
+import { INLINE_ROOT_ATTR, type InlineRootElement } from '@ink/stone-std/inline';
 
 import { FORMAT_TEXT_SUPPORT_FLAVOURS } from './consts.js';
 
@@ -28,24 +22,24 @@ export const formatTextCommand: Command<{
     .chain()
     .pipe(getSelectedBlocksCommand, {
       textSelection,
-      filter: el => FORMAT_TEXT_SUPPORT_FLAVOURS.includes(el.model.flavour),
+      filter: (el) => FORMAT_TEXT_SUPPORT_FLAVOURS.includes(el.model.flavour),
       types: ['text'],
     })
     .pipe((ctx, next) => {
       const { selectedBlocks } = ctx;
       if (!selectedBlocks) return;
 
-      const selectedInlineEditors = selectedBlocks.flatMap(el => {
-        const inlineRoot = el.querySelector<
-          InlineRootElement<InkTextAttributes>
-        >(`[${INLINE_ROOT_ATTR}]`);
+      const selectedInlineEditors = selectedBlocks.flatMap((el) => {
+        const inlineRoot = el.querySelector<InlineRootElement<InkTextAttributes>>(
+          `[${INLINE_ROOT_ATTR}]`,
+        );
         if (inlineRoot && inlineRoot.inlineEditor.getInlineRange()) {
           return inlineRoot.inlineEditor;
         }
         return [];
       });
 
-      selectedInlineEditors.forEach(inlineEditor => {
+      selectedInlineEditors.forEach((inlineEditor) => {
         const inlineRange = inlineEditor.getInlineRange();
         if (!inlineRange) return;
 
@@ -59,17 +53,14 @@ export const formatTextCommand: Command<{
                 if (typeof value === 'boolean') {
                   return [
                     key,
-                    (inlineEditor.marks &&
-                      inlineEditor.marks[key as keyof InkTextAttributes]) ||
-                    (delta &&
-                      delta.attributes &&
-                      delta.attributes[key as keyof InkTextAttributes])
+                    (inlineEditor.marks && inlineEditor.marks[key as keyof InkTextAttributes]) ||
+                    (delta && delta.attributes && delta.attributes[key as keyof InkTextAttributes])
                       ? null
                       : value,
                   ];
                 }
                 return [key, value];
-              })
+              }),
             ),
           });
           clearMarksOnDiscontinuousInput(inlineEditor);
@@ -80,7 +71,7 @@ export const formatTextCommand: Command<{
         }
       });
 
-      Promise.all(selectedBlocks.map(el => el.updateComplete))
+      Promise.all(selectedBlocks.map((el) => el.updateComplete))
         .then(() => {
           ctx.std.range.syncTextSelectionToRange(textSelection);
         })

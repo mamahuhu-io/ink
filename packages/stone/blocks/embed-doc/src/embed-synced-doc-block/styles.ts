@@ -1,8 +1,5 @@
 import { embedNoteContentStyles } from '@ink/stone-block-embed';
-import {
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-} from '@ink/stone-shared/consts';
+import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH } from '@ink/stone-shared/consts';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { css, html } from 'lit';
 
@@ -15,8 +12,7 @@ export const blockStyles = css`
     margin-left: calc(-1 * var(--embed-padding));
     margin-right: calc(-1 * var(--embed-padding));
   }
-  .edgeless-block-portal-embed
-    > ink-embed-synced-doc-block[data-nested-editor] {
+  .edgeless-block-portal-embed > ink-embed-synced-doc-block[data-nested-editor] {
     position: relative;
     display: block;
     left: 0px;
@@ -25,9 +21,7 @@ export const blockStyles = css`
     height: 100%;
   }
 
-  .edgeless-block-portal-embed
-    .ink-embed-synced-doc-editor
-    .ink-page-root-block-container {
+  .edgeless-block-portal-embed .ink-embed-synced-doc-editor .ink-page-root-block-container {
     width: 100%;
   }
 
@@ -161,8 +155,7 @@ export const blockStyles = css`
     }
   }
 
-  .ink-embed-synced-doc-container
-    > .ink-embed-synced-doc-editor.ink-page-viewport {
+  .ink-embed-synced-doc-container > .ink-embed-synced-doc-editor.ink-page-viewport {
     background: transparent;
   }
 
@@ -371,9 +364,7 @@ export const cardStyles = css`
   .ink-embed-synced-doc-card:not(.loading).error {
     background: var(--ink-background-secondary-color);
   }
-  .ink-embed-synced-doc-card:not(.loading):not(.error):not(
-      .surface
-    ).deleted {
+  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.surface).deleted {
     height: ${EMBED_CARD_HEIGHT.horizontalThin}px;
     .ink-embed-synced-doc-card-banner {
       height: 66px;
@@ -388,9 +379,7 @@ export const cardStyles = css`
     }
   }
 
-  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.deleted):not(
-      .note-empty
-    ).cycle {
+  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.deleted):not(.note-empty).cycle {
     .ink-embed-synced-doc-content-note.render {
       display: block;
     }
@@ -399,9 +388,7 @@ export const cardStyles = css`
     }
   }
 
-  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.deleted):not(
-      .banner-empty
-    ).cycle {
+  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.deleted):not(.banner-empty).cycle {
     .ink-embed-synced-doc-card-banner.render {
       display: block;
     }
@@ -409,9 +396,7 @@ export const cardStyles = css`
       display: none;
     }
   }
-  .ink-embed-synced-doc-card:not(.loading):not(.error):not(
-      .deleted
-    ).cycle.banner-empty {
+  .ink-embed-synced-doc-card:not(.loading):not(.error):not(.deleted).cycle.banner-empty {
     .ink-embed-synced-doc-card-content {
       width: 100%;
       height: 100%;
@@ -471,9 +456,7 @@ export const cardStyles = css`
     }
   }
 
-  .ink-embed-synced-doc-card.surface:not(.loading):not(.error):not(
-      .deleted
-    ).cycle {
+  .ink-embed-synced-doc-card.surface:not(.loading):not(.error):not(.deleted).cycle {
     width: ${EMBED_CARD_WIDTH.vertical}px;
     height: ${EMBED_CARD_HEIGHT.vertical}px;
     flex-direction: column-reverse;
@@ -505,9 +488,9 @@ export const cardStyles = css`
     }
   }
 
-  .ink-embed-synced-doc-card.surface:not(.loading):not(.error):not(
-      .deleted
-    ).cycle:not(.empty).banner-empty {
+  .ink-embed-synced-doc-card.surface:not(.loading):not(.error):not(.deleted).cycle:not(
+      .empty
+    ).banner-empty {
     .ink-embed-synced-doc-card-content {
       width: 100%;
       height: 100%;
@@ -687,11 +670,7 @@ export const LightSyncedDocEmptyBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_6122_32989"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6122_32989" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -700,12 +679,7 @@ export const LightSyncedDocEmptyBanner = html`<svg
       />
     </filter>
     <clipPath id="clip0_6122_32989">
-      <rect
-        width="340"
-        height="170"
-        fill="white"
-        transform="translate(0 0.5)"
-      />
+      <rect width="340" height="170" fill="white" transform="translate(0 0.5)" />
     </clipPath>
   </defs>
 </svg>`;
@@ -815,11 +789,7 @@ export const DarkSyncedDocEmptyBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_6122_33004"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6122_33004" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -828,12 +798,7 @@ export const DarkSyncedDocEmptyBanner = html`<svg
       />
     </filter>
     <clipPath id="clip0_6122_33004">
-      <rect
-        width="340"
-        height="170"
-        fill="white"
-        transform="translate(0 0.5)"
-      />
+      <rect width="340" height="170" fill="white" transform="translate(0 0.5)" />
     </clipPath>
   </defs>
 </svg>`;
@@ -855,12 +820,7 @@ export const LightSyncedDocErrorBanner = html`<svg
   </g>
   <defs>
     <clipPath id="clip0_6122_32955">
-      <rect
-        width="340"
-        height="170"
-        fill="white"
-        transform="translate(0 0.5)"
-      />
+      <rect width="340" height="170" fill="white" transform="translate(0 0.5)" />
     </clipPath>
   </defs>
 </svg>`;
@@ -882,12 +842,7 @@ export const DarkSyncedDocErrorBanner = html`<svg
   </g>
   <defs>
     <clipPath id="clip0_6122_32972">
-      <rect
-        width="340"
-        height="170"
-        fill="white"
-        transform="translate(0 0.5)"
-      />
+      <rect width="340" height="170" fill="white" transform="translate(0 0.5)" />
     </clipPath>
   </defs>
 </svg>`;
@@ -901,12 +856,7 @@ export const LightSyncedDocDeletedBanner = html`<svg
 >
   <g clip-path="url(#clip0_6122_32919)">
     <g filter="url(#filter0_d_6122_32919)">
-      <rect
-        width="124"
-        height="154"
-        transform="translate(41 61.5)"
-        fill="white"
-      />
+      <rect width="124" height="154" transform="translate(41 61.5)" fill="white" />
       <rect
         x="59.7563"
         y="82.0332"
@@ -986,11 +936,7 @@ export const LightSyncedDocDeletedBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_6122_32919"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6122_32919" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -1100,11 +1046,7 @@ export const DarkSyncedDocDeletedBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_6122_32937"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6122_32937" />
       <feBlend
         mode="normal"
         in="SourceGraphic"

@@ -1,5 +1,5 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { nextTick } from '@ink/stone-global/utils';
 import { Subject } from 'rxjs';
 
@@ -22,18 +22,8 @@ import type {
   TransformerSlots,
 } from './middleware.js';
 import { Slice } from './slice.js';
-import type {
-  BlobCRUD,
-  BlockSnapshot,
-  DocCRUD,
-  DocSnapshot,
-  SliceSnapshot,
-} from './type.js';
-import {
-  BlockSnapshotSchema,
-  DocSnapshotSchema,
-  SliceSnapshotSchema,
-} from './type.js';
+import type { BlobCRUD, BlockSnapshot, DocCRUD, DocSnapshot, SliceSnapshot } from './type.js';
+import { BlockSnapshotSchema, DocSnapshotSchema, SliceSnapshotSchema } from './type.js';
 
 export type TransformerOptions = {
   schema: Schema;
@@ -77,12 +67,9 @@ export class Transformer {
     afterExport: new Subject<AfterExportPayload>(),
   };
 
-  blockToSnapshot = (
-    model: DraftModel | BlockModel
-  ): BlockSnapshot | undefined => {
+  blockToSnapshot = (model: DraftModel | BlockModel): BlockSnapshot | undefined => {
     try {
-      const draftModel =
-        model instanceof BlockModel ? toDraftModel(model) : model;
+      const draftModel = model instanceof BlockModel ? toDraftModel(model) : model;
 
       const snapshot = this._blockToSnapshot(draftModel);
 
@@ -109,10 +96,7 @@ export class Transformer {
       const rootModel = doc.root;
       const meta = this._exportDocMeta(doc);
       if (!rootModel) {
-        throw new InkStoneError(
-          ErrorCode.TransformerError,
-          'Root block not found in doc'
-        );
+        throw new InkStoneError(ErrorCode.TransformerError, 'Root block not found in doc');
       }
       const blocks = this.blockToSnapshot(toDraftModel(rootModel));
       if (!blocks) {
@@ -178,7 +162,7 @@ export class Transformer {
     snapshot: BlockSnapshot,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ): Promise<BlockModel | undefined> => {
     try {
       BlockSnapshotSchema.parse(snapshot);
@@ -246,7 +230,7 @@ export class Transformer {
     snapshot: SliceSnapshot,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ): Promise<Slice | undefined> => {
     try {
       SliceSnapshotSchema.parse(snapshot);
@@ -280,26 +264,25 @@ export class Transformer {
       if (first && doc.hasBlock(first.id)) {
         // if the slice is already in the doc, we need to move the blocks instead of adding them
         const models = content
-          .map(block => doc.getBlock(block.id)?.model)
+          .map((block) => doc.getBlock(block.id)?.model)
           .filter(Boolean) as BlockModel[];
         const parentModel = parent ? doc.getBlock(parent)?.model : undefined;
         if (!parentModel) {
           throw new InkStoneError(
             ErrorCode.TransformerError,
-            'Parent block not found in doc when moving slice'
+            'Parent block not found in doc when moving slice',
           );
         }
-        const targetSibling =
-          index !== undefined ? parentModel.children[index] : null;
+        const targetSibling = index !== undefined ? parentModel.children[index] : null;
         doc.moveBlocks(models, parentModel, targetSibling);
       } else {
         await this._insertBlockTree(blockTree.children, doc, parent, index);
       }
 
       const contentBlocks = blockTree.children
-        .map(tree => doc.getModelById(tree.draft.id))
+        .map((tree) => doc.getModelById(tree.draft.id))
         .filter((x): x is BlockModel => x !== null)
-        .map(model => toDraftModel(model));
+        .map((model) => toDraftModel(model));
 
       const slice = new Slice({
         content: contentBlocks,
@@ -358,17 +341,12 @@ export class Transformer {
     return this._docCRUD;
   }
 
-  constructor({
-    blobCRUD,
-    schema,
-    docCRUD,
-    middlewares = [],
-  }: TransformerOptions) {
+  constructor({ blobCRUD, schema, docCRUD, middlewares = [] }: TransformerOptions) {
     this._assetsManager = new AssetsManager({ blob: blobCRUD });
     this._schema = schema;
     this._docCRUD = docCRUD;
 
-    middlewares.forEach(middleware => {
+    middlewares.forEach((middleware) => {
       const cleanup = middleware({
         slots: this._slots,
         docCRUD: this._docCRUD,
@@ -395,7 +373,7 @@ export class Transformer {
       assets: this._assetsManager,
     });
     const children = model.children
-      .map(child => {
+      .map((child) => {
         return this._blockToSnapshot(child);
       })
       .filter(Boolean) as BlockSnapshot[];
@@ -431,7 +409,7 @@ export class Transformer {
     }
 
     // Phase 2: Filter out the models that failed to convert
-    const validDraftModels = draftModels.filter(item => !!item.draft) as {
+    const validDraftModels = draftModels.filter((item) => !!item.draft) as {
       draft: DraftModel;
       snapshot: BlockSnapshot;
       parentId?: string;
@@ -443,9 +421,7 @@ export class Transformer {
     return blockTree;
   }
 
-  private async _convertSnapshotToDraftModel(
-    flat: FlatSnapshot
-  ): Promise<DraftModel | undefined> {
+  private async _convertSnapshotToDraftModel(flat: FlatSnapshot): Promise<DraftModel | undefined> {
     try {
       const { children, flavour } = flat.snapshot;
       const schema = this._getSchema(flavour);
@@ -477,10 +453,7 @@ export class Transformer {
     const docMeta = doc.meta;
 
     if (!docMeta) {
-      throw new InkStoneError(
-        ErrorCode.TransformerError,
-        'Doc meta not found'
-      );
+      throw new InkStoneError(ErrorCode.TransformerError, 'Doc meta not found');
     }
     return {
       id: docMeta.id,
@@ -494,7 +467,7 @@ export class Transformer {
     snapshot: BlockSnapshot,
     flatSnapshots: FlatSnapshot[],
     parentId?: string,
-    index?: number
+    index?: number,
   ) {
     flatSnapshots.push({ snapshot, parentId, index });
     if (snapshot.children) {
@@ -509,7 +482,7 @@ export class Transformer {
     if (!schema) {
       throw new InkStoneError(
         ErrorCode.TransformerError,
-        `Flavour schema not found for ${flavour}`
+        `Flavour schema not found for ${flavour}`,
       );
     }
     return schema;
@@ -527,23 +500,19 @@ export class Transformer {
     doc: Store,
     parentId?: string,
     startIndex?: number,
-    counter: number = 0
+    counter: number = 0,
   ) {
     for (let index = 0; index < nodes.length; index++) {
       const node = nodes[index];
       const { draft } = node;
       const { id, flavour, props } = draft;
 
-      const actualIndex =
-        startIndex !== undefined ? startIndex + index : undefined;
+      const actualIndex = startIndex !== undefined ? startIndex + index : undefined;
       doc.addBlock(flavour, { id, ...props }, parentId, actualIndex);
 
       const model = doc.getBlock(id)?.model;
       if (!model) {
-        throw new InkStoneError(
-          ErrorCode.TransformerError,
-          `Block not found by id ${id}`
-        );
+        throw new InkStoneError(ErrorCode.TransformerError, `Block not found by id ${id}`);
       }
 
       this._slots.afterImport.next({
@@ -558,13 +527,7 @@ export class Transformer {
       }
 
       if (node.children.length > 0) {
-        counter = await this._insertBlockTree(
-          node.children,
-          doc,
-          id,
-          undefined,
-          counter
-        );
+        counter = await this._insertBlockTree(node.children, doc, id, undefined, counter);
       }
     }
 
@@ -577,7 +540,7 @@ export class Transformer {
       snapshot: BlockSnapshot;
       parentId?: string;
       index?: number;
-    }[]
+    }[],
   ): DraftBlockTreeNode {
     const nodeMap = new Map<string, DraftBlockTreeNode>();
     // First pass: create nodes and add them to the map
@@ -610,7 +573,7 @@ export class Transformer {
     snapshot: BlockSnapshot,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ): Promise<BlockModel | null> {
     this._triggerBeforeImportEvent(snapshot, parent, index);
 
@@ -624,16 +587,8 @@ export class Transformer {
     return doc.getBlock(snapshot.id)?.model ?? null;
   }
 
-  private _triggerBeforeImportEvent(
-    snapshot: BlockSnapshot,
-    parent?: string,
-    index?: number
-  ) {
-    const traverseAndTrigger = (
-      node: BlockSnapshot,
-      parent?: string,
-      index?: number
-    ) => {
+  private _triggerBeforeImportEvent(snapshot: BlockSnapshot, parent?: string, index?: number) {
+    const traverseAndTrigger = (node: BlockSnapshot, parent?: string, index?: number) => {
       this._slots.beforeImport.next({
         type: 'block',
         snapshot: node,

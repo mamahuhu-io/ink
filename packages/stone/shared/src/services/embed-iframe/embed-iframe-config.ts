@@ -1,7 +1,4 @@
-import {
-  createIdentifier,
-  type ServiceIdentifier,
-} from '@ink/stone-global/di';
+import { createIdentifier, type ServiceIdentifier } from '@ink/stone-global/di';
 import type { ExtensionType } from '@ink/stone-store';
 
 /**
@@ -75,17 +72,14 @@ export type EmbedIframeConfig = {
   options?: IframeOptions;
 };
 
-export const EmbedIframeConfigIdentifier =
-  createIdentifier<EmbedIframeConfig>('EmbedIframeConfig');
+export const EmbedIframeConfigIdentifier = createIdentifier<EmbedIframeConfig>('EmbedIframeConfig');
 
-export function EmbedIframeConfigExtension(
-  config: EmbedIframeConfig
-): ExtensionType & {
+export function EmbedIframeConfigExtension(config: EmbedIframeConfig): ExtensionType & {
   identifier: ServiceIdentifier<EmbedIframeConfig>;
 } {
   const identifier = EmbedIframeConfigIdentifier(config.name);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => config);
     },
     identifier,

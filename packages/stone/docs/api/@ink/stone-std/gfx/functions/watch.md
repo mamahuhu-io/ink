@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / watch
 
@@ -19,7 +19,7 @@ You can thinks of it as a decorator version of `elementUpdated` slot of the surf
 
 ### T
 
-`T` *extends* `GfxPrimitiveElementModel`\<`BaseElementProps`\>
+`T` _extends_ `GfxPrimitiveElementModel`\<`BaseElementProps`\>
 
 ## Parameters
 

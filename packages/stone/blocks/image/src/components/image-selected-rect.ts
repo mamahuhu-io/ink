@@ -76,7 +76,7 @@ export function ImageSelectedRect(readonly: boolean) {
           <div class="resize bottom-right">
             <div class="resize-inner"></div>
           </div>
-        `
+        `,
       )}
     </div>
   `;

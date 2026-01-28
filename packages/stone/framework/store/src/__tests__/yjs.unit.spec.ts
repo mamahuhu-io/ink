@@ -106,12 +106,8 @@ describe('object', () => {
     proxy.arr = [];
     expect(map.get('arr')).toBeInstanceOf(Y.Array);
     proxy.arr.push({ counter: 1 });
-    expect((map.get('arr') as Y.Array<Y.Map<number>>).get(0)).toBeInstanceOf(
-      Y.Map
-    );
-    expect(
-      (map.get('arr') as Y.Array<Y.Map<number>>).get(0).get('counter')
-    ).toBe(1);
+    expect((map.get('arr') as Y.Array<Y.Map<number>>).get(0)).toBeInstanceOf(Y.Map);
+    expect((map.get('arr') as Y.Array<Y.Map<number>>).get(0).get('counter')).toBe(1);
   });
 
   test('with y text', () => {
@@ -148,11 +144,7 @@ describe('object', () => {
     proxy.inner.native.setValue(['hello', 'world', 'foo']);
     expect(native.getValue()).toEqual(['hello', 'world', 'foo']);
     // @ts-expect-error ignore
-    expect(map.get('inner').get('native').get('value')).toEqual([
-      'hello',
-      'world',
-      'foo',
-    ]);
+    expect(map.get('inner').get('native').get('value')).toEqual(['hello', 'world', 'foo']);
 
     const native2 = new Boxed(0);
     proxy.inner.native2 = native2;

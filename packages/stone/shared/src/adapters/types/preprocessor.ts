@@ -41,7 +41,7 @@ export abstract class PreprocessorManager<T, P extends AdapterPreprocessor<T>> {
 
   constructor(
     protected readonly provider: ServiceProvider,
-    protected readonly identifier: ServiceIdentifier<P>
+    protected readonly identifier: ServiceIdentifier<P>,
   ) {
     this.preprocessors = new Map();
 
@@ -58,9 +58,7 @@ export abstract class PreprocessorManager<T, P extends AdapterPreprocessor<T>> {
    * Initialize preprocessors from provider
    */
   private initializePreprocessors(): void {
-    const preprocessors = Array.from(
-      this.provider.getAll(this.identifier).values()
-    );
+    const preprocessors = Array.from(this.provider.getAll(this.identifier).values());
 
     for (const preprocessor of preprocessors) {
       for (const level of preprocessor.levels) {
@@ -82,7 +80,7 @@ export abstract class PreprocessorManager<T, P extends AdapterPreprocessor<T>> {
     const processors = this.preprocessors.get(level) ?? new Set();
     return Array.from(processors).reduce(
       (result, preprocessor) => preprocessor.preprocess(result),
-      content
+      content,
     );
   }
 }

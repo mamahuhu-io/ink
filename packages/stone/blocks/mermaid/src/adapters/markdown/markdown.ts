@@ -14,8 +14,8 @@ const isMermaidNode = (node: MarkdownAST) => {
 
 export const mermaidBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: MermaidBlockSchema.model.flavour,
-  toMatch: o => isMermaidNode(o.node),
-  fromMatch: o => o.node.flavour === MermaidBlockSchema.model.flavour,
+  toMatch: (o) => isMermaidNode(o.node),
+  fromMatch: (o) => o.node.flavour === MermaidBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       // Skip if this is not a code node with mermaid lang
@@ -37,15 +37,14 @@ export const mermaidBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
   },
   fromBlockSnapshot: {
     enter: (o, context) => {
-      const code =
-        'code' in o.node.props ? (o.node.props.code as string) : '';
+      const code = 'code' in o.node.props ? (o.node.props.code as string) : '';
       const { walkerContext } = context;
       walkerContext
         .openNode(
@@ -55,7 +54,7 @@ export const mermaidBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             meta: null,
             value: code,
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -63,5 +62,5 @@ export const mermaidBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const MermaidBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  mermaidBlockMarkdownAdapterMatcher
+  mermaidBlockMarkdownAdapterMatcher,
 );

@@ -51,9 +51,7 @@ export class PointerEventState extends UIEventState {
     this.point = { x: offsetX, y: offsetY };
     this.containerOffset = { x: rect.left, y: rect.top };
     this.start = { x: startX, y: startY };
-    this.delta = last
-      ? { x: offsetX - last.point.x, y: offsetY - last.point.y }
-      : { x: 0, y: 0 };
+    this.delta = last ? { x: offsetX - last.point.x, y: offsetY - last.point.y } : { x: 0, y: 0 };
     this.keys = {
       shift: event.shiftKey,
       cmd: event.metaKey || event.ctrlKey,

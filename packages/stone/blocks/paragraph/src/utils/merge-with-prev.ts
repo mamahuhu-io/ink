@@ -1,3 +1,4 @@
+import { IS_ANDROID, IS_MOBILE } from '@ink/stone-global/env';
 import {
   AttachmentBlockModel,
   BookmarkBlockModel,
@@ -12,10 +13,7 @@ import {
   ParagraphBlockModel,
   type RootBlockModel,
 } from '@ink/stone-model';
-import {
-  asyncSetInlineRange,
-  focusTextModel,
-} from '@ink/stone-rich-text';
+import { asyncSetInlineRange, focusTextModel } from '@ink/stone-rich-text';
 import { EMBED_BLOCK_MODEL_LIST } from '@ink/stone-shared/consts';
 import type { ExtendedModel } from '@ink/stone-shared/types';
 import {
@@ -24,7 +22,6 @@ import {
   getPrevContentBlock,
   matchModels,
 } from '@ink/stone-shared/utils';
-import { IS_ANDROID, IS_MOBILE } from '@ink/stone-global/env';
 import { BlockSelection, type EditorHost } from '@ink/stone-std';
 import type { BlockModel, Text } from '@ink/stone-store';
 
@@ -53,7 +50,6 @@ export function mergeWithPrev(editorHost: EditorHost, model: BlockModel) {
   }
 
   const modelIndex = parent.children.indexOf(model);
-  const prevSibling = doc.getPrev(model);
 
   if (matchModels(prevBlock, [ParagraphBlockModel, ListBlockModel])) {
     if (
@@ -178,10 +174,7 @@ function handleNoPreviousSibling(editorHost: EditorHost, model: ExtendedModel) {
     }
 
     // Preserve at least one block to be able to focus on container click
-    if (
-      text?.length === 0 &&
-      (model.children.length > 0 || doc.getNext(model))
-    ) {
+    if (text?.length === 0 && (model.children.length > 0 || doc.getNext(model))) {
       doc.deleteBlock(model, {
         bringChildrenTo: parent,
       });

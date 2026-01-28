@@ -1,44 +1,42 @@
-import { useEffect, useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useFileTreeStore } from '../../stores/fileTree'
-import { FileTreeItem } from './FileTreeItem'
-import { ContextMenu } from '../ContextMenu'
-import { useFileTreeMenu } from './hooks'
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useFileTreeStore } from '../../stores/fileTree';
+import { ContextMenu } from '../ContextMenu';
+import { FileTreeItem } from './FileTreeItem';
+import { useFileTreeMenu } from './hooks';
 
 export function FileTree() {
-  const { t } = useTranslation()
-  const {
-    rootPath,
-    entries,
-    isLoading,
-    openFolderPicker,
-    refresh,
-    setRootPath,
-  } = useFileTreeStore()
-  
-  const { getMenuItems } = useFileTreeMenu()
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
+  const { t } = useTranslation();
+  const { rootPath, entries, isLoading, openFolderPicker, refresh, setRootPath } =
+    useFileTreeStore();
+
+  const { getMenuItems } = useFileTreeMenu();
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
 
   // Load entries when rootPath changes
   useEffect(() => {
     if (rootPath && entries.length === 0) {
-      refresh()
+      refresh();
     }
-  }, [rootPath, entries.length, refresh])
+  }, [rootPath, entries.length, refresh]);
 
   const handleCloseWorkspace = useCallback(() => {
-    setRootPath(null)
-  }, [setRootPath])
+    setRootPath(null);
+  }, [setRootPath]);
 
-  const handleContextMenu = useCallback((e: React.MouseEvent) => {
-    if (!rootPath) return
-    
-    // Prevent default context menu
-    e.preventDefault()
-    e.stopPropagation() // Stop bubbling to avoid double menus if nested
-    
-    setContextMenu({ x: e.clientX, y: e.clientY })
-  }, [rootPath])
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      if (!rootPath) return;
+
+      // Prevent default context menu
+      e.preventDefault();
+      e.stopPropagation(); // Stop bubbling to avoid double menus if nested
+
+      setContextMenu({ x: e.clientX, y: e.clientY });
+    },
+    [rootPath],
+  );
 
   if (!rootPath) {
     return (
@@ -48,11 +46,11 @@ export function FileTree() {
           {t('fileTree.openFolder')}
         </button>
       </div>
-    )
+    );
   }
 
-  const workspaceName = rootPath.split(/[/\\]/).pop() || rootPath
-  const menuItems = getMenuItems({ isRoot: true, isDirectory: true, path: rootPath })
+  const workspaceName = rootPath.split(/[/\\]/).pop() || rootPath;
+  const menuItems = getMenuItems({ isRoot: true, isDirectory: true, path: rootPath });
 
   return (
     <div className="file-tree">
@@ -79,13 +77,14 @@ export function FileTree() {
         </div>
       </div>
 
-      <div 
-        className="file-tree-content" 
-        role="tree" 
+      <div
+        className="file-tree-content"
+        role="tree"
+        tabIndex={0}
         onContextMenu={(e) => {
           // Only trigger if clicking on the background, not on an item
           if (e.target === e.currentTarget) {
-            handleContextMenu(e)
+            handleContextMenu(e);
           }
         }}
       >
@@ -94,13 +93,7 @@ export function FileTree() {
         ) : entries.length === 0 ? (
           <div className="file-tree-empty">{t('fileTree.noFiles')}</div>
         ) : (
-          entries.map((node) => (
-            <FileTreeItem
-              key={node.path}
-              node={node}
-              depth={0}
-            />
-          ))
+          entries.map((node) => <FileTreeItem key={node.path} node={node} depth={0} />)
         )}
       </div>
 
@@ -113,5 +106,5 @@ export function FileTree() {
         />
       )}
     </div>
-  )
+  );
 }

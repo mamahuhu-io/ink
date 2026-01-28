@@ -1,17 +1,10 @@
-import {
-  type InkThemeKeyV2,
-  darkThemeV2,
-  lightThemeV2,
-} from '@ink/stone-theme';
+import { darkThemeV2, type InkThemeKeyV2, lightThemeV2 } from '@ink/stone-theme';
 
 import type { Color } from './color';
 import type { Palette } from './types';
 
 // Converts a color map to color list.
-export function buildPalettes(
-  obj: Record<string, Color>,
-  prefix = ''
-): Palette[] {
+export function buildPalettes(obj: Record<string, Color>, prefix = ''): Palette[] {
   return Object.entries<Color>(obj).map(([key, value]) => ({
     key: `${prefix}${key}`,
     value,

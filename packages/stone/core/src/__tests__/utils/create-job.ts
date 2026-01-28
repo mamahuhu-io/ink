@@ -1,8 +1,4 @@
-import {
-  Schema,
-  Transformer,
-  type TransformerMiddleware,
-} from '@ink/stone-store';
+import { Schema, Transformer, type TransformerMiddleware } from '@ink/stone-store';
 import { TestWorkspace } from '@ink/stone-store/test';
 
 import { InkSchemas } from '../../schemas.js';

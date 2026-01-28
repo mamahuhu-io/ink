@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { IS_MOBILE } from '@ink/stone-global/env';
 
 import { effects } from './effects';

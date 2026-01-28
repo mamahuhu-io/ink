@@ -10,10 +10,7 @@ import { isPeekable, peek } from './peekable.js';
 const getSelectedPeekableBlocks = (cmd: InitCommandCtx) => {
   const [result, ctx] = cmd.std.command
     .chain()
-    .tryAll(chain => [
-      chain.pipe(getTextSelectionCommand),
-      chain.pipe(getBlockSelectionsCommand),
-    ])
+    .tryAll((chain) => [chain.pipe(getTextSelectionCommand), chain.pipe(getBlockSelectionsCommand)])
     .pipe(getSelectedBlocksCommand, { types: ['text', 'block'] })
     .run();
   return ((result ? ctx.selectedBlocks : []) || []).filter(isPeekable);

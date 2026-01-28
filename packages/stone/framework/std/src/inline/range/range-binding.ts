@@ -10,9 +10,7 @@ import type { RangeManager } from './range-manager.js';
  * Two-way binding between native range and text selection
  */
 export class RangeBinding {
-  private _compositionStartCallback:
-    | ((event: CompositionEvent) => Promise<void>)
-    | null = null;
+  private _compositionStartCallback: ((event: CompositionEvent) => Promise<void>) | null = null;
 
   private readonly _computePath = (modelId: string) => {
     const block = this.host.std.store.getBlock(modelId)?.model;
@@ -64,7 +62,7 @@ export class RangeBinding {
         .slice(1)
         // delete from lowest to highest
         .reverse()
-        .forEach(block => {
+        .forEach((block) => {
           const parent = this.host.store.getParent(block.model);
           if (!parent) return;
           this.host.store.deleteBlock(block.model, {
@@ -117,7 +115,7 @@ export class RangeBinding {
     const endText = end.model.text;
     if (!startText || !endText) return;
 
-    this._compositionStartCallback = async event => {
+    this._compositionStartCallback = async (event) => {
       this.isComposing = false;
 
       this.host.renderRoot.replaceChildren();
@@ -141,7 +139,7 @@ export class RangeBinding {
           .slice(1)
           // delete from lowest to highest
           .reverse()
-          .forEach(block => {
+          .forEach((block) => {
             const parent = this.host.store.getParent(block.model);
             if (!parent) return;
             this.host.store.deleteBlock(block.model, {
@@ -234,9 +232,7 @@ export class RangeBinding {
       return;
     }
 
-    const inlineEditor = this.rangeManager?.getClosestInlineEditor(
-      range.commonAncestorContainer
-    );
+    const inlineEditor = this.rangeManager?.getClosestInlineEditor(range.commonAncestorContainer);
     if (inlineEditor?.isComposing) return;
 
     const isRangeReversed =
@@ -246,10 +242,7 @@ export class RangeBinding {
         ? selection.anchorOffset > selection.focusOffset
         : selection.anchorNode.compareDocumentPosition(selection.focusNode) ===
           Node.DOCUMENT_POSITION_PRECEDING);
-    const textSelection = this.rangeManager?.rangeToTextSelection(
-      range,
-      isRangeReversed
-    );
+    const textSelection = this.rangeManager?.rangeToTextSelection(range, isRangeReversed);
     if (!textSelection) {
       this._prevTextSelection = null;
       this.selectionManager.clear(['text']);
@@ -275,14 +268,12 @@ export class RangeBinding {
     if (!active) return;
 
     const text =
-      selections.find((selection): selection is TextSelection =>
-        selection.is(TextSelection)
-      ) ?? null;
+      selections.find((selection): selection is TextSelection => selection.is(TextSelection)) ??
+      null;
 
     if (!text && selections.length > 0) {
-      const hasRecoverable = selections.find(selection => {
-        const selectionConstructor =
-          selection.constructor as typeof BaseSelection;
+      const hasRecoverable = selections.find((selection) => {
+        const selectionConstructor = selection.constructor as typeof BaseSelection;
         return selectionConstructor.recoverable;
       });
       if (!hasRecoverable) {
@@ -350,7 +341,7 @@ export class RangeBinding {
 
   constructor(public manager: RangeManager) {
     this.host.disposables.add(
-      this.selectionManager.slots.changed.subscribe(this._onStdSelectionChanged)
+      this.selectionManager.slots.changed.subscribe(this._onStdSelectionChanged),
     );
 
     this.host.disposables.addFromEvent(
@@ -358,29 +349,20 @@ export class RangeBinding {
       'selectionchange',
       throttle(() => {
         this._onNativeSelectionChanged().catch(console.error);
-      }, 10)
+      }, 10),
     );
 
     this.host.disposables.add(
-      this.host.event.add('beforeInput', ctx => {
+      this.host.event.add('beforeInput', (ctx) => {
         const event = ctx.get('defaultState').event as InputEvent;
         this._onBeforeInput(event);
-      })
+      }),
     );
 
-    this.host.disposables.addFromEvent(
-      this.host,
-      'compositionstart',
-      this._onCompositionStart
-    );
-    this.host.disposables.addFromEvent(
-      this.host,
-      'compositionend',
-      this._onCompositionEnd,
-      {
-        capture: true,
-      }
-    );
+    this.host.disposables.addFromEvent(this.host, 'compositionstart', this._onCompositionStart);
+    this.host.disposables.addFromEvent(this.host, 'compositionend', this._onCompositionEnd, {
+      capture: true,
+    });
   }
 }
 

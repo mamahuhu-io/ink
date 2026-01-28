@@ -10,10 +10,7 @@ export const LinkExtension = InlineMarkdownExtension<InkTextAttributes>({
 
     const linkText = match[1];
     const linkUrl = match[2];
-    const annotatedText = match[0].slice(
-      -(linkText.length + linkUrl.length + 4 + 1),
-      -1
-    );
+    const annotatedText = match[0].slice(-(linkText.length + linkUrl.length + 4 + 1), -1);
     const startIndex = inlineRange.index - annotatedText.length - 1;
 
     undoManager.stopCapturing();
@@ -42,7 +39,7 @@ export const LinkExtension = InlineMarkdownExtension<InkTextAttributes>({
       },
       {
         link: linkUrl,
-      }
+      },
     );
 
     inlineEditor.setInlineRange({

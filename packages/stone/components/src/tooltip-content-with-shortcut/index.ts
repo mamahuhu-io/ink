@@ -40,7 +40,7 @@ export class TooltipContentWithShortcut extends LitElement {
   `;
 
   get shortcuts() {
-    let shortcut = this.shortcut;
+    const shortcut = this.shortcut;
     if (!shortcut) return [];
     return shortcut.split(' ');
   }
@@ -54,7 +54,7 @@ export class TooltipContentWithShortcut extends LitElement {
         <div class="tooltip__shortcuts">
           ${repeat(
             shortcuts,
-            shortcut => html`<span class="tooltip__shortcut">${shortcut}</span>`
+            (shortcut) => html`<span class="tooltip__shortcut">${shortcut}</span>`,
           )}
         </div>
         ${postfix ? html`<span class="tooltip__postfix">${postfix}</span>` : ''}
@@ -73,10 +73,7 @@ export class TooltipContentWithShortcut extends LitElement {
 }
 
 export function effects() {
-  customElements.define(
-    'ink-tooltip-content-with-shortcut',
-    TooltipContentWithShortcut
-  );
+  customElements.define('ink-tooltip-content-with-shortcut', TooltipContentWithShortcut);
 }
 
 declare global {

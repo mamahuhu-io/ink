@@ -2,12 +2,7 @@ import type { Map as YMap, YMapEvent } from 'yjs';
 
 import { y2Native } from '../native-y';
 import type { UnRecord } from '../types';
-import {
-  deleteEmptyObject,
-  getFirstKey,
-  isEmptyObject,
-  keyWithoutPrefix,
-} from './utils';
+import { deleteEmptyObject, getFirstKey, isEmptyObject, keyWithoutPrefix } from './utils';
 
 type YEventHandlerOptions = {
   event: YMapEvent<unknown>;
@@ -24,7 +19,7 @@ export const getYEventHandler = (options: YEventHandlerOptions) => {
   const { event } = options;
   const { keysChanged, changes } = event;
 
-  keysChanged.forEach(key => {
+  keysChanged.forEach((key) => {
     const type = changes.keys.get(key);
     if (!type) return;
 
@@ -45,14 +40,7 @@ function isStashed(key: string, stashed: Set<string | number>) {
 
 function handleUpdateOrAdd(
   key: string,
-  {
-    yMap,
-    proxy,
-    stashed,
-    updateWithYjsSkip,
-    transform,
-    onChange,
-  }: YEventHandlerOptions
+  { yMap, proxy, stashed, updateWithYjsSkip, transform, onChange }: YEventHandlerOptions,
 ) {
   if (isStashed(key, stashed)) {
     return;
@@ -79,7 +67,7 @@ function handleUpdateOrAdd(
 
 function handleDelete(
   key: string,
-  { proxy, stashed, updateWithYjsSkip, onChange }: YEventHandlerOptions
+  { proxy, stashed, updateWithYjsSkip, onChange }: YEventHandlerOptions,
 ) {
   if (isStashed(key, stashed)) {
     return;

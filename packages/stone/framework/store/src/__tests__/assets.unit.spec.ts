@@ -21,17 +21,13 @@ describe('getAssetName', () => {
   });
 
   test('should return blobId with extension if name does not exist', () => {
-    const assets = new Map<string, Blob>([
-      ['blobId', new Blob([], { type: 'image/jpeg' })],
-    ]);
+    const assets = new Map<string, Blob>([['blobId', new Blob([], { type: 'image/jpeg' })]]);
     const result = getAssetName(assets, 'blobId');
     expect(result).toBe('blobId.jpeg');
   });
 
   test('should return the name if it exists but type is empty', () => {
-    const assets = new Map<string, Blob>([
-      ['blobId', new File([], 'document.test', { type: '' })],
-    ]);
+    const assets = new Map<string, Blob>([['blobId', new File([], 'document.test', { type: '' })]]);
     const result = getAssetName(assets, 'blobId');
     expect(result).toBe('document.test');
   });
@@ -70,8 +66,6 @@ describe('getAssetName', () => {
   test('should throw InkStoneError if blob is not found', () => {
     const assets = new Map<string, Blob>();
     expect(() => getAssetName(assets, 'blobId')).toThrow(InkStoneError);
-    expect(() => getAssetName(assets, 'blobId')).toThrowError(
-      'blob not found for blobId: blobId'
-    );
+    expect(() => getAssetName(assets, 'blobId')).toThrowError('blob not found for blobId: blobId');
   });
 });

@@ -1,3 +1,6 @@
+import { createIdentifier } from '@ink/stone-global/di';
+import type { IVec } from '@ink/stone-global/gfx';
+import { Point } from '@ink/stone-global/gfx';
 import { NoteBlockModel } from '@ink/stone-model';
 import {
   calcDropTarget,
@@ -6,9 +9,6 @@ import {
   isInsidePageEditor,
   matchModels,
 } from '@ink/stone-shared/utils';
-import { createIdentifier } from '@ink/stone-global/di';
-import type { IVec } from '@ink/stone-global/gfx';
-import { Point } from '@ink/stone-global/gfx';
 import {
   type BlockComponent,
   type BlockStdScope,
@@ -87,12 +87,7 @@ export class FileDropExtension extends LifeCycleWatcher {
     if (lastItem) {
       model = lastItem;
     } else {
-      const newParagraphId = this.doc.addBlock(
-        'ink:paragraph',
-        {},
-        lastNote,
-        0
-      );
+      const newParagraphId = this.doc.addBlock('ink:paragraph', {}, lastNote, 0);
       model = this.doc.getBlock(newParagraphId)?.model ?? null;
     }
 
@@ -170,7 +165,7 @@ export class FileDropExtension extends LifeCycleWatcher {
     std.event.disposables.add(
       this.point$.subscribe(
         throttle(
-          value => {
+          (value) => {
             if (!value) {
               this.closestElement$.value = null;
               return;
@@ -188,28 +183,26 @@ export class FileDropExtension extends LifeCycleWatcher {
             this.closestElement$.value = element;
           },
           144,
-          { leading: true, trailing: true }
-        )
-      )
+          { leading: true, trailing: true },
+        ),
+      ),
     );
 
     std.event.disposables.add(
-      this.dropTarget$.subscribe(target => {
-        this.indicator.rect = this._disableIndicator
-          ? null
-          : (target?.rect ?? null);
-      })
+      this.dropTarget$.subscribe((target) => {
+        this.indicator.rect = this._disableIndicator ? null : (target?.rect ?? null);
+      }),
     );
 
     std.event.disposables.add(
       std.event.add('nativeDragStart', () => {
         this.dragging$.value = true;
-      })
+      }),
     );
     std.event.disposables.add(
       std.event.add('nativeDragEnd', () => {
         this.dragging$.value = false;
-      })
+      }),
     );
     std.event.disposables.add(
       std.dnd.monitor({
@@ -219,11 +212,11 @@ export class FileDropExtension extends LifeCycleWatcher {
         onDrop: () => {
           this._disableIndicator = false;
         },
-      })
+      }),
     );
 
     std.event.disposables.add(
-      std.event.add('nativeDragOver', context => {
+      std.event.add('nativeDragOver', (context) => {
         const event = context.get('dndState').raw;
 
         if (this.dragging$.peek()) {
@@ -233,15 +226,15 @@ export class FileDropExtension extends LifeCycleWatcher {
         }
 
         this.onDragOver(event);
-      })
+      }),
     );
     std.event.disposables.add(
       std.event.add('nativeDragLeave', () => {
         this.onDragLeave();
-      })
+      }),
     );
     std.event.disposables.add(
-      std.event.add('nativeDrop', context => {
+      std.event.add('nativeDrop', (context) => {
         const event = context.get('dndState').raw;
         const { x, y, dataTransfer } = event;
         const droppedFiles = dataTransfer?.files;
@@ -255,14 +248,10 @@ export class FileDropExtension extends LifeCycleWatcher {
 
         const target = this.dropTarget$.peek();
         const std = this.std;
-        const targetModel = this.getDropTargetModel(
-          target?.modelState.model ?? null
-        );
+        const targetModel = this.getDropTargetModel(target?.modelState.model ?? null);
         const placement = target?.placement === 'before' ? 'before' : 'after';
 
-        const values = std.provider
-          .getAll(FileDropConfigExtensionIdentifier)
-          .values();
+        const values = std.provider.getAll(FileDropConfigExtensionIdentifier).values();
 
         for (const ext of values) {
           if (!ext.onDrop) continue;
@@ -279,21 +268,18 @@ export class FileDropExtension extends LifeCycleWatcher {
         }
 
         this.onDragLeave();
-      })
+      }),
     );
   }
 }
 
-const FileDropConfigExtensionIdentifier = createIdentifier<FileDropOptions>(
-  'FileDropConfigExtension'
-);
+const FileDropConfigExtensionIdentifier =
+  createIdentifier<FileDropOptions>('FileDropConfigExtension');
 
-export const FileDropConfigExtension = (
-  options: FileDropOptions
-): ExtensionType => {
+export const FileDropConfigExtension = (options: FileDropOptions): ExtensionType => {
   const identifier = FileDropConfigExtensionIdentifier(options.flavour);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => options);
     },
   };

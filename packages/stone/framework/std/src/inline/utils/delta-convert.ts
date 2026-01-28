@@ -1,7 +1,7 @@
 import type { BaseTextAttributes, DeltaInsert } from '@ink/stone-store';
 
 export function transformDelta<TextAttributes extends BaseTextAttributes>(
-  delta: DeltaInsert<TextAttributes>
+  delta: DeltaInsert<TextAttributes>,
 ): (DeltaInsert<TextAttributes> | '\n')[] {
   const result: (DeltaInsert<TextAttributes> | '\n')[] = [];
 
@@ -34,7 +34,7 @@ export function transformDelta<TextAttributes extends BaseTextAttributes>(
  * convert a delta insert array to chunks, each chunk is a line
  */
 export function deltaInsertsToChunks<TextAttributes extends BaseTextAttributes>(
-  delta: DeltaInsert<TextAttributes>[]
+  delta: DeltaInsert<TextAttributes>[],
 ): DeltaInsert<TextAttributes>[][] {
   if (delta.length === 0) {
     return [[]];

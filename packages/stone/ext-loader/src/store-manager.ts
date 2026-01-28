@@ -38,7 +38,7 @@ export class StoreExtensionManager extends ExtensionManager<'store'> {
   override get(scope: 'store') {
     const extensions = super.get(scope);
     const selfExtension: ExtensionType = {
-      setup: di => {
+      setup: (di) => {
         di.addImpl(StoreExtensionManagerIdentifier, () => this);
       },
     };

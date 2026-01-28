@@ -1,11 +1,8 @@
-import {
-  cleanSpecifiedTail,
-  getTextContentFromInlineRange,
-} from '@ink/stone-rich-text';
-import { VirtualKeyboardProvider } from '@ink/stone-shared/services';
-import { getViewportElement } from '@ink/stone-shared/utils';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { MoreHorizontalIcon } from '@ink/stone-icons/lit';
+import { cleanSpecifiedTail, getTextContentFromInlineRange } from '@ink/stone-rich-text';
+import { VirtualKeyboardProvider } from '@ink/stone-shared/services';
+import { getViewportElement } from '@ink/stone-shared/utils';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import { signal } from '@preact/signals-core';
 import { html, LitElement, nothing } from 'lit';
@@ -13,11 +10,7 @@ import { property } from 'lit/decorators.js';
 import { join } from 'lit/directives/join.js';
 import { repeat } from 'lit/directives/repeat.js';
 
-import type {
-  LinkedDocContext,
-  LinkedMenuGroup,
-  LinkedMenuItem,
-} from './config.js';
+import type { LinkedDocContext, LinkedMenuGroup, LinkedMenuItem } from './config.js';
 import { mobileLinkedDocMenuStyles } from './styles.js';
 import { resolveSignal } from './utils.js';
 
@@ -26,9 +19,7 @@ export const INK_MOBILE_LINKED_DOC_MENU = 'ink-mobile-linked-doc-menu';
 @requiredProperties({
   context: PropTypes.object,
 })
-export class InkMobileLinkedDocMenu extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class InkMobileLinkedDocMenu extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = mobileLinkedDocMenuStyles;
 
   private readonly _expand = new Set<string>();
@@ -57,17 +48,10 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
       </div>`;
     }
 
-    return html`
-      ${repeat(items, item => item.key, this._renderItem)} ${moreItem}
-    `;
+    return html` ${repeat(items, (item) => item.key, this._renderItem)} ${moreItem} `;
   };
 
-  private readonly _renderItem = ({
-    key,
-    name,
-    icon,
-    action,
-  }: LinkedMenuItem) => {
+  private readonly _renderItem = ({ key, name, icon, action }: LinkedMenuItem) => {
     return html`<button
       class="mobile-linked-doc-menu-item"
       data-id=${key}
@@ -109,10 +93,7 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
 
     if (!inlineEditor.rootElement || !container) return;
     container.scrollTo({
-      top:
-        inlineEditor.rootElement.getBoundingClientRect().top +
-        containerScrollTop -
-        offset,
+      top: inlineEditor.rootElement.getBoundingClientRect().top + containerScrollTop - offset,
       behavior: 'smooth',
     });
   };
@@ -129,22 +110,19 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
         cleanSpecifiedTail(
           this.context.std,
           this.context.inlineEditor,
-          this.context.triggerKey + (this._query ?? '')
+          this.context.triggerKey + (this._query ?? ''),
         );
       },
       this.context.std.host,
       this.context.inlineEditor,
-      this._updateLinkedDocGroupAbortController.signal
+      this._updateLinkedDocGroupAbortController.signal,
     );
   };
 
   private _updateLinkedDocGroupAbortController: AbortController | null = null;
 
   private get _query() {
-    return getTextContentFromInlineRange(
-      this.context.inlineEditor,
-      this.context.startRange
-    );
+    return getTextContentFromInlineRange(this.context.inlineEditor, this.context.startRange);
   }
 
   get keyboard() {
@@ -159,7 +137,7 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
     this._updateLinkedDocGroup().catch(console.error);
 
     // prevent editor blur when click menu
-    this._disposables.addFromEvent(this, 'pointerdown', e => {
+    this._disposables.addFromEvent(this, 'pointerdown', (e) => {
       e.preventDefault();
     });
 
@@ -167,11 +145,11 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
     this.disposables.addFromEvent(
       window,
       'pointerdown',
-      e => {
+      (e) => {
         if (e.target === this) return;
         close();
       },
-      true
+      true,
     );
 
     // bind some key events
@@ -206,9 +184,7 @@ export class InkMobileLinkedDocMenu extends SignalWatcher(
 
     this.style.bottom = `${this.keyboard.height$.value}px`;
 
-    return html`
-      ${join(groups.map(this._renderGroup), html`<div class="divider"></div>`)}
-    `;
+    return html` ${join(groups.map(this._renderGroup), html`<div class="divider"></div>`)} `;
   }
 
   @property({ attribute: false })

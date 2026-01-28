@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 
 import type { BlockProps } from '../model';
 import type { BlobCRUD } from './type';
@@ -96,7 +96,7 @@ export class AssetsManager {
     if (!blob) {
       throw new InkStoneError(
         ErrorCode.TransformerError,
-        `Blob ${blobId} not found in assets manager`
+        `Blob ${blobId} not found in assets manager`,
       );
     }
 

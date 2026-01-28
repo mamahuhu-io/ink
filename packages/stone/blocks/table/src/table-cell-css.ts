@@ -1,5 +1,5 @@
-import { cssVar, cssVarV2 } from '@ink/stone-shared/theme';
 import { css } from '@emotion/css';
+import { cssVar, cssVarV2 } from '@ink/stone-shared/theme';
 
 export const cellContainerStyle = css({
   position: 'relative',

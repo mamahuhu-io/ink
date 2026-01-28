@@ -1,6 +1,6 @@
 **InkStone API Documentation**
 
-***
+---
 
 # InkStone API Documentation
 

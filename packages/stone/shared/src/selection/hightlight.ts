@@ -21,12 +21,7 @@ export class HighlightSelection extends BaseSelection {
 
   readonly highlight: boolean = true;
 
-  constructor({
-    mode,
-    blockIds,
-    elementIds,
-    highlight = true,
-  }: HighlightSelectionParams) {
+  constructor({ mode, blockIds, elementIds, highlight = true }: HighlightSelectionParams) {
     super({ blockId: '[scene-highlight]' });
 
     this.mode = mode ?? 'page';
@@ -62,5 +57,4 @@ export class HighlightSelection extends BaseSelection {
   }
 }
 
-export const HighlightSelectionExtension =
-  SelectionExtension(HighlightSelection);
+export const HighlightSelectionExtension = SelectionExtension(HighlightSelection);

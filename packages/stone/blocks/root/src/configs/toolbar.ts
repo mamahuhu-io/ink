@@ -10,13 +10,21 @@
 //   notifyDocCreated,
 //   promptDocTitle,
 // } from '@ink/stone-block-embed';
-import {
-  updateBlockAlign,
-  updateBlockType,
-} from '@ink/stone-block-note';
+import { updateBlockAlign, updateBlockType } from '@ink/stone-block-note';
 import type { HighlightType } from '@ink/stone-components/highlight-dropdown-menu';
 import { toast } from '@ink/stone-components/toast';
 import { EditorChevronDown } from '@ink/stone-components/toolbar';
+// [REMOVED] Database modules - not needed for local markdown editor
+// import { tableViewMeta } from '@ink/stone-data-view/view-presets';
+import {
+  CopyIcon,
+  // [REMOVED] Database modules - not needed for local markdown editor
+  // DatabaseTableViewIcon,
+  DeleteIcon,
+  DuplicateIcon,
+  // [REMOVED] Embed modules - not needed for local markdown editor
+  // LinkedPageIcon,
+} from '@ink/stone-icons/lit';
 import {
   deleteTextCommand,
   formatBlockCommand,
@@ -31,10 +39,7 @@ import {
   // EmbedSyncedDocBlockSchema,
   type TextAlign,
 } from '@ink/stone-model';
-import {
-  getTextAlignConfigs,
-  getTextConversionConfigs,
-} from '@ink/stone-rich-text';
+import { getTextAlignConfigs, getTextConversionConfigs } from '@ink/stone-rich-text';
 import {
   copySelectedModelsCommand,
   deleteSelectedModelsCommand,
@@ -52,22 +57,8 @@ import type {
   ToolbarActionGroup,
   ToolbarModuleConfig,
 } from '@ink/stone-shared/services';
-import {
-  ActionPlacement,
-  blockCommentToolbarButton,
-} from '@ink/stone-shared/services';
+import { ActionPlacement, blockCommentToolbarButton } from '@ink/stone-shared/services';
 import { getMostCommonValue } from '@ink/stone-shared/utils';
-// [REMOVED] Database modules - not needed for local markdown editor
-// import { tableViewMeta } from '@ink/stone-data-view/view-presets';
-import {
-  CopyIcon,
-  // [REMOVED] Database modules - not needed for local markdown editor
-  // DatabaseTableViewIcon,
-  DeleteIcon,
-  DuplicateIcon,
-  // [REMOVED] Embed modules - not needed for local markdown editor
-  // LinkedPageIcon,
-} from '@ink/stone-icons/lit';
 import {
   // [REMOVED] These imports no longer needed
   // type BlockComponent,
@@ -107,7 +98,7 @@ const conversionsActionGroup = {
   generate({ chain }) {
     const textConversionConfigs = getTextConversionConfigs();
     const [ok, { selectedModels = [] }] = chain
-      .tryAll(chain => [
+      .tryAll((chain) => [
         chain.pipe(getTextSelectionCommand),
         chain.pipe(getBlockSelectionsCommand),
       ])
@@ -116,7 +107,7 @@ const conversionsActionGroup = {
 
     // only support model with text
     // TODO(@fundon): displays only in a single paragraph, `length === 1`.
-    const allowed = ok && selectedModels.filter(model => model.text).length > 0;
+    const allowed = ok && selectedModels.filter((model) => model.text).length > 0;
     if (!allowed) return null;
 
     const model = selectedModels[0];
@@ -124,7 +115,7 @@ const conversionsActionGroup = {
       textConversionConfigs.find(
         ({ flavour, type }) =>
           flavour === model.flavour &&
-          (type ? 'type' in model.props && type === model.props.type : true)
+          (type ? 'type' in model.props && type === model.props.type : true),
       ) ?? textConversionConfigs[0];
     const update = (flavour: string, type?: string) => {
       chain
@@ -140,18 +131,15 @@ const conversionsActionGroup = {
         <editor-menu-button
           .contentPadding="${'8px'}"
           .button=${html`
-            <editor-icon-button
-              aria-label="Conversions"
-              .tooltip="${t('turnInto', 'Turn into')}"
-            >
+            <editor-icon-button aria-label="Conversions" .tooltip="${t('turnInto', 'Turn into')}">
               ${conversion.icon} ${EditorChevronDown}
             </editor-icon-button>
           `}
         >
           <div data-size="large" data-orientation="vertical">
             ${repeat(
-              textConversionConfigs.filter(c => c.flavour !== 'ink:divider'),
-              item => item.name,
+              textConversionConfigs.filter((c) => c.flavour !== 'ink:divider'),
+              (item) => item.name,
               ({ flavour, type, name, icon }) => html`
                 <editor-menu-action
                   aria-label=${name}
@@ -160,7 +148,7 @@ const conversionsActionGroup = {
                 >
                   ${icon}<span class="label">${name}</span>
                 </editor-menu-action>
-              `
+              `,
             )}
           </div>
         </editor-menu-button>
@@ -175,7 +163,7 @@ const alignActionGroup = {
   generate({ chain }) {
     const textAlignConfigs = getTextAlignConfigs();
     const [ok, { selectedModels = [] }] = chain
-      .tryAll(chain => [
+      .tryAll((chain) => [
         chain.pipe(getTextSelectionCommand),
         chain.pipe(getBlockSelectionsCommand),
       ])
@@ -188,11 +176,9 @@ const alignActionGroup = {
         ({ textAlign }) =>
           textAlign ===
           getMostCommonValue(
-            selectedModels.map(
-              ({ props }) => props as { textAlign?: TextAlign }
-            ),
-            'textAlign'
-          )
+            selectedModels.map(({ props }) => props as { textAlign?: TextAlign }),
+            'textAlign',
+          ),
       ) ?? textAlignConfigs[0];
     const update = (textAlign: TextAlign) => {
       chain.pipe(updateBlockAlign, { textAlign }).run();
@@ -211,15 +197,12 @@ const alignActionGroup = {
           <div data-size="large" data-orientation="vertical">
             ${repeat(
               textAlignConfigs,
-              item => item.name,
+              (item) => item.name,
               ({ textAlign, name, icon }) => html`
-                <editor-menu-action
-                  aria-label=${name}
-                  @click=${() => update(textAlign)}
-                >
+                <editor-menu-action aria-label=${name} @click=${() => update(textAlign)}>
                   ${icon}<span class="label">${name}</span>
                 </editor-menu-action>
-              `
+              `,
             )}
           </div>
         </editor-menu-button>
@@ -232,18 +215,16 @@ const inlineTextActionGroup = {
   id: 'b.inline-text',
   when: ({ chain }) => isFormatSupported(chain).run()[0],
   get actions() {
-    return getTextFormatConfigs().map(
-      ({ id, name, action, activeWhen, icon }, score) => {
-        return {
-          id,
-          icon,
-          score,
-          tooltip: name,
-          run: ({ host }) => action(host),
-          active: ({ host }) => activeWhen(host),
-        };
-      }
-    );
+    return getTextFormatConfigs().map(({ id, name, action, activeWhen, icon }, score) => {
+      return {
+        id,
+        icon,
+        score,
+        tooltip: name,
+        run: ({ host }) => action(host),
+        active: ({ host }) => activeWhen(host),
+      };
+    });
   },
 } satisfies ToolbarActionGroup;
 
@@ -254,11 +235,9 @@ const highlightActionGroup = {
     const updateHighlight = (styles: HighlightType) => {
       const payload = { styles };
       chain
-        .try(chain => [
+        .try((chain) => [
           chain.pipe(getTextSelectionCommand).pipe(formatTextCommand, payload),
-          chain
-            .pipe(getBlockSelectionsCommand)
-            .pipe(formatBlockCommand, payload),
+          chain.pipe(getBlockSelectionsCommand).pipe(formatBlockCommand, payload),
           chain.pipe(formatNativeCommand, payload),
         ])
         .run();
@@ -444,11 +423,11 @@ export const builtinToolbarConfig = {
               if (ok && selectedBlocks.length) {
                 selection.setGroup(
                   'note',
-                  selectedBlocks.map(block =>
+                  selectedBlocks.map((block) =>
                     selection.create(BlockSelection, {
                       blockId: block.model.id,
-                    })
-                  )
+                    }),
+                  ),
                 );
               }
 
@@ -479,16 +458,13 @@ export const builtinToolbarConfig = {
             variant: 'destructive',
             run({ chain }) {
               // removes text
-              const [ok] = chain
-                .pipe(getTextSelectionCommand)
-                .pipe(deleteTextCommand)
-                .run();
+              const [ok] = chain.pipe(getTextSelectionCommand).pipe(deleteTextCommand).run();
 
               if (ok) return;
 
               // removes blocks
               chain
-                .tryAll(chain => [
+                .tryAll((chain) => [
                   chain.pipe(getBlockSelectionsCommand),
                   chain.pipe(getImageSelectionsCommand),
                 ])

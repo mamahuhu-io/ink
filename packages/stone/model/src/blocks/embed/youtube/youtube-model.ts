@@ -21,6 +21,4 @@ export type EmbedYoutubeBlockProps = {
   caption: string | null;
 } & EmbedYoutubeBlockUrlData;
 
-export class EmbedYoutubeModel extends defineEmbedModel<EmbedYoutubeBlockProps>(
-  BlockModel
-) {}
+export class EmbedYoutubeModel extends defineEmbedModel<EmbedYoutubeBlockProps>(BlockModel) {}

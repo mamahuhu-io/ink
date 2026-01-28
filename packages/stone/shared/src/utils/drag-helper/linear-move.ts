@@ -2,7 +2,7 @@ import type { OffsetList } from './types';
 export const getTargetIndexByDraggingOffset = (
   offsets: OffsetList,
   draggingIndex: number,
-  indicatorLeft: number
+  indicatorLeft: number,
 ) => {
   const originalStart = offsets[draggingIndex];
   const originalWidth = offsets[draggingIndex + 1] - originalStart;

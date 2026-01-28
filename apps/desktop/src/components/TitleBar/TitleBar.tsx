@@ -1,16 +1,17 @@
-import { isWindows } from '../../services/platform'
-import { MenuBar } from './MenuBar'
-import { WindowControls } from './WindowControls'
-import './TitleBar.css'
+import './TitleBar.css';
+
+import { isWindows } from '../../services/platform';
+import { MenuBar } from './MenuBar';
+import { WindowControls } from './WindowControls';
 
 interface TitleBarProps {
-  title?: string
+  title?: string;
 }
 
 export function TitleBar({ title = 'Ink' }: TitleBarProps) {
   // Only render on Windows
   if (!isWindows()) {
-    return null
+    return null;
   }
 
   return (
@@ -26,5 +27,5 @@ export function TitleBar({ title = 'Ink' }: TitleBarProps) {
       <div className="title-bar-spacer" data-tauri-drag-region />
       <WindowControls />
     </div>
-  )
+  );
 }

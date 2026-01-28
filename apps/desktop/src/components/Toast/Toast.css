@@ -63,19 +63,19 @@
 }
 
 /* Dark mode support */
-[data-theme="dark"] .toast-success {
+[data-theme='dark'] .toast-success {
   background: rgba(16, 185, 129, 0.15);
   color: #6ee7b7;
   border-color: rgba(16, 185, 129, 0.3);
 }
 
-[data-theme="dark"] .toast-error {
+[data-theme='dark'] .toast-error {
   background: rgba(239, 68, 68, 0.15);
   color: #fca5a5;
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-[data-theme="dark"] .toast-info {
+[data-theme='dark'] .toast-info {
   background: rgba(59, 130, 246, 0.15);
   color: #93c5fd;
   border-color: rgba(59, 130, 246, 0.3);

@@ -1,13 +1,6 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
+import { BlockViewExtension, FlavourExtension, WidgetViewExtension } from '@ink/stone-std';
 import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
-import {
-  BlockViewExtension,
-  FlavourExtension,
-  WidgetViewExtension,
-} from '@ink/stone-std';
 import { literal, unsafeStatic } from 'lit/static-html.js';
 
 import { getCodeClipboardExtensions } from './clipboard/index.js';
@@ -27,7 +20,7 @@ import { MermaidPreviewExtension } from './mermaid-preview.js';
 const codeToolbarWidget = WidgetViewExtension(
   'ink:code',
   INK_CODE_TOOLBAR_WIDGET,
-  literal`${unsafeStatic(INK_CODE_TOOLBAR_WIDGET)}`
+  literal`${unsafeStatic(INK_CODE_TOOLBAR_WIDGET)}`,
 );
 
 export class CodeBlockViewExtension extends ViewExtensionProvider {
@@ -50,17 +43,14 @@ export class CodeBlockViewExtension extends ViewExtensionProvider {
       ...getCodeClipboardExtensions(),
       MermaidPreviewExtension,
     ]);
-    context.register([
-      CodeBlockInlineManagerExtension,
-      CodeBlockUnitSpecExtension,
-    ]);
+    context.register([CodeBlockInlineManagerExtension, CodeBlockUnitSpecExtension]);
     if (!this.isMobile(context.scope)) {
       context.register(codeToolbarWidget);
     } else {
       context.register(
         CodeBlockConfigExtension({
           showLineNumbers: false,
-        })
+        }),
       );
     }
   }

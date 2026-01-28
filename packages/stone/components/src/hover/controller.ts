@@ -1,17 +1,11 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
 import type { ReactiveController, ReactiveElement } from 'lit';
 
-import {
-  type AdvancedPortalOptions,
-  createLitPortal,
-} from '../portal/index.js';
+import { type AdvancedPortalOptions, createLitPortal } from '../portal/index.js';
 import type { HoverOptions } from './types.js';
 import { whenHover } from './when-hover.js';
 
-type OptionsParams = Omit<
-  ReturnType<typeof whenHover>,
-  'setFloating' | 'dispose'
-> & {
+type OptionsParams = Omit<ReturnType<typeof whenHover>, 'setFloating' | 'dispose'> & {
   abortController: AbortController;
 };
 type HoverPortalOptions = Omit<AdvancedPortalOptions, 'abortController'>;
@@ -53,14 +47,14 @@ const abortHoverPortal = ({
     () => {
       abortController.abort();
     },
-    { signal: abortController.signal }
+    { signal: abortController.signal },
   );
   portal.addEventListener(
     'transitioncancel',
     () => {
       abortController.abort();
     },
-    { signal: abortController.signal }
+    { signal: abortController.signal },
   );
 
   // Make sure the portal is aborted after the transition ends
@@ -76,9 +70,7 @@ export class HoverController implements ReactiveController {
 
   private _isHovering = false;
 
-  private readonly _onHover: (
-    options: OptionsParams
-  ) => HoverPortalOptions | null;
+  private readonly _onHover: (options: OptionsParams) => HoverPortalOptions | null;
 
   private _portal?: HTMLDivElement;
 
@@ -117,7 +109,7 @@ export class HoverController implements ReactiveController {
   constructor(
     host: ReactiveElement,
     onHover: (options: OptionsParams) => HoverPortalOptions | null,
-    hoverOptions?: Partial<HoverOptions>
+    hoverOptions?: Partial<HoverOptions>,
   ) {
     this._hoverOptions = { ...DEFAULT_HOVER_OPTIONS, ...hoverOptions };
     (this.host = host).addController(this);
@@ -142,7 +134,7 @@ export class HoverController implements ReactiveController {
       this._disposables = new DisposableGroup();
     }
     // Start a timer when the host is connected
-    const { setReference, setFloating, dispose } = whenHover(isHover => {
+    const { setReference, setFloating, dispose } = whenHover((isHover) => {
       if (!this.host.isConnected) {
         return;
       }

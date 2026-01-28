@@ -18,10 +18,7 @@ export const dedupe = (keepWhenFloatingNotReady = true): HoverMiddleware => {
       if (curState !== hoverState)
         // state changed, so we should keep the event
         return KEEP;
-      if (
-        keepWhenFloatingNotReady &&
-        (!floatingElement || !floatingElement.isConnected)
-      ) {
+      if (keepWhenFloatingNotReady && (!floatingElement || !floatingElement.isConnected)) {
         // Already hovered
         // But the floating element is not ready
         // so we should not skip the event

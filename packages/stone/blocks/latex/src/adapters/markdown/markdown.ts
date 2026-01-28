@@ -10,8 +10,8 @@ const isLatexNode = (node: MarkdownAST) => node.type === 'math';
 
 export const latexBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: LatexBlockSchema.model.flavour,
-  toMatch: o => isLatexNode(o.node),
-  fromMatch: o => o.node.flavour === LatexBlockSchema.model.flavour,
+  toMatch: (o) => isLatexNode(o.node),
+  fromMatch: (o) => o.node.flavour === LatexBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       const latex = 'value' in o.node ? o.node.value : '';
@@ -27,15 +27,14 @@ export const latexBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
   },
   fromBlockSnapshot: {
     enter: (o, context) => {
-      const latex =
-        'latex' in o.node.props ? (o.node.props.latex as string) : '';
+      const latex = 'latex' in o.node.props ? (o.node.props.latex as string) : '';
       const { walkerContext } = context;
       walkerContext
         .openNode(
@@ -43,7 +42,7 @@ export const latexBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             type: 'math',
             value: latex,
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -51,5 +50,5 @@ export const latexBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const LatexBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  latexBlockMarkdownAdapterMatcher
+  latexBlockMarkdownAdapterMatcher,
 );

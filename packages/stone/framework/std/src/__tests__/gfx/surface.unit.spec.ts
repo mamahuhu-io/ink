@@ -1,7 +1,4 @@
-import {
-  createAutoIncrementIdGenerator,
-  TestWorkspace,
-} from '@ink/stone-store/test';
+import { createAutoIncrementIdGenerator, TestWorkspace } from '@ink/stone-store/test';
 import { describe, expect, test, vi } from 'vitest';
 
 import { effects } from '../../effects.js';
@@ -92,7 +89,7 @@ describe('surface basic', () => {
     const { surfaceModel } = commonSetup();
 
     let expectPayload;
-    const elementAddedCallback = vi.fn(payload => (expectPayload = payload));
+    const elementAddedCallback = vi.fn((payload) => (expectPayload = payload));
 
     surfaceModel.elementAdded.subscribe(elementAddedCallback);
 
@@ -119,9 +116,9 @@ describe('surface basic', () => {
     const shapeModel = surfaceModel.getElementById(shapeId)!;
 
     let expectPayload;
-    const elementUpdatedCallback = vi.fn(payload => (expectPayload = payload));
+    const elementUpdatedCallback = vi.fn((payload) => (expectPayload = payload));
     let propsUpdatedPayload;
-    const propsUpdatedCallback = vi.fn(payload => {
+    const propsUpdatedCallback = vi.fn((payload) => {
       propsUpdatedPayload = payload;
     });
 
@@ -158,7 +155,7 @@ describe('surface basic', () => {
     });
 
     let expectPayload;
-    const deletedCallback = vi.fn(payload => (expectPayload = payload));
+    const deletedCallback = vi.fn((payload) => (expectPayload = payload));
 
     surfaceModel.elementRemoved.subscribe(deletedCallback);
     surfaceModel.deleteElement(shapeId);

@@ -1,22 +1,18 @@
-import { createLitPortal } from "@ink/stone-components/portal";
-import { unsafeCSSVar, unsafeCSSVarV2 } from "@ink/stone-shared/theme";
-import type { InkTextAttributes } from "@ink/stone-shared/types";
-import { SignalWatcher, WithDisposable } from "@ink/stone-global/lit";
-import {
-  type BlockComponent,
-  type BlockStdScope,
-  ShadowlessElement,
-} from "@ink/stone-std";
+import { createLitPortal } from '@ink/stone-components/portal';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
+import { type BlockComponent, type BlockStdScope, ShadowlessElement } from '@ink/stone-std';
 import {
   type InlineEditor,
   ZERO_WIDTH_FOR_EMBED_NODE,
   ZERO_WIDTH_FOR_EMPTY_LINE,
-} from "@ink/stone-std/inline";
-import type { DeltaInsert } from "@ink/stone-store";
-import { signal } from "@preact/signals-core";
-import katex from "katex";
-import { css, html, render } from "lit";
-import { property } from "lit/decorators.js";
+} from '@ink/stone-std/inline';
+import type { DeltaInsert } from '@ink/stone-store';
+import { signal } from '@preact/signals-core';
+import katex from 'katex';
+import { css, html, render } from 'lit';
+import { property } from 'lit/decorators.js';
 
 // i18n translation getter - can be overridden by the application
 let i18nGetter: ((key: string, fallback: string) => string) | null = null;
@@ -24,9 +20,7 @@ let i18nGetter: ((key: string, fallback: string) => string) | null = null;
 /**
  * Set a custom i18n getter function for LaTeX translations
  */
-export function setLatexI18nGetter(
-  getter: (key: string, fallback: string) => string,
-) {
+export function setLatexI18nGetter(getter: (key: string, fallback: string) => string) {
   i18nGetter = getter;
 }
 
@@ -40,9 +34,7 @@ function t(key: string, fallback: string): string {
   return fallback;
 }
 
-export class InkLatexNode extends SignalWatcher(
-  WithDisposable(ShadowlessElement),
-) {
+export class InkLatexNode extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     ink-latex-node {
       display: inline-block;
@@ -51,7 +43,7 @@ export class InkLatexNode extends SignalWatcher(
     ink-latex-node .ink-latex {
       white-space: nowrap;
       word-break: break-word;
-      color: ${unsafeCSSVar("textPrimaryColor")};
+      color: ${unsafeCSSVar('textPrimaryColor')};
       fill: var(--ink-icon-color);
       border-radius: 4px;
       text-decoration: none;
@@ -65,10 +57,10 @@ export class InkLatexNode extends SignalWatcher(
       margin: 0 2px;
     }
     ink-latex-node .ink-latex:hover {
-      background: ${unsafeCSSVar("hoverColor")};
+      background: ${unsafeCSSVar('hoverColor')};
     }
-    ink-latex-node .ink-latex[data-selected="true"] {
-      background: ${unsafeCSSVar("hoverColor")};
+    ink-latex-node .ink-latex[data-selected='true'] {
+      background: ${unsafeCSSVar('hoverColor')};
     }
     ink-latex-node .ink-latex > v-text {
       width: 0 !important;
@@ -83,9 +75,9 @@ export class InkLatexNode extends SignalWatcher(
       gap: 10px;
 
       border-radius: 4px;
-      background: ${unsafeCSSVarV2("chip/label/red")};
+      background: ${unsafeCSSVarV2('chip/label/red')};
 
-      color: ${unsafeCSSVarV2("text/highlight/fg/red")};
+      color: ${unsafeCSSVarV2('text/highlight/fg/red')};
       font-family: Inter;
       font-size: 12px;
       font-weight: 500;
@@ -99,9 +91,9 @@ export class InkLatexNode extends SignalWatcher(
       align-items: flex-start;
 
       border-radius: 4px;
-      background: ${unsafeCSSVarV2("layer/background/secondary")};
+      background: ${unsafeCSSVarV2('layer/background/secondary')};
 
-      color: ${unsafeCSSVarV2("text/secondary")};
+      color: ${unsafeCSSVarV2('text/secondary')};
       font-family: Inter;
       font-size: 12px;
       font-weight: 500;
@@ -111,16 +103,16 @@ export class InkLatexNode extends SignalWatcher(
 
   private _editorAbortController: AbortController | null = null;
 
-  readonly latex$ = signal("");
+  readonly latex$ = signal('');
 
-  readonly latexEditorSignal = signal("");
+  readonly latexEditorSignal = signal('');
 
   get deltaLatex() {
     return this.delta.attributes?.latex as string;
   }
 
   get latexContainer() {
-    return this.querySelector<HTMLElement>(".latex-container");
+    return this.querySelector<HTMLElement>('.latex-container');
   }
 
   override connectedCallback() {
@@ -155,13 +147,11 @@ export class InkLatexNode extends SignalWatcher(
 
             latexContainer.replaceChildren();
             // @ts-expect-error lit hack won't fix
-            delete latexContainer["_$litPart$"];
+            delete latexContainer['_$litPart$'];
 
             if (latex.length === 0) {
               render(
-                html`<span class="placeholder"
-                  >${t("equation", "Equation")}</span
-                >`,
+                html`<span class="placeholder">${t('equation', 'Equation')}</span>`,
                 latexContainer,
               );
             } else {
@@ -172,10 +162,10 @@ export class InkLatexNode extends SignalWatcher(
               } catch {
                 latexContainer.replaceChildren();
                 // @ts-expect-error lit hack won't fix
-                delete latexContainer["_$litPart$"];
+                delete latexContainer['_$litPart$'];
                 render(
                   html`<span class="error-placeholder"
-                    >${t("errorEquation", "Error equation")}</span
+                    >${t('errorEquation', 'Error equation')}</span
                   >`,
                   latexContainer,
                 );
@@ -192,7 +182,7 @@ export class InkLatexNode extends SignalWatcher(
       this._editorAbortController?.abort();
     });
 
-    this.disposables.addFromEvent(this, "click", (e) => {
+    this.disposables.addFromEvent(this, 'click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       if (this.readonly) {
@@ -212,13 +202,13 @@ export class InkLatexNode extends SignalWatcher(
   }
 
   toggleEditor() {
-    const blockComponent = this.closest<BlockComponent>("[data-block-id]");
+    const blockComponent = this.closest<BlockComponent>('[data-block-id]');
     if (!blockComponent) return;
 
     this._editorAbortController?.abort();
     this._editorAbortController = new AbortController();
 
-    blockComponent.selection.setGroup("note", []);
+    blockComponent.selection.setGroup('note', []);
 
     const { portal } = createLitPortal({
       template: html`<latex-editor-menu
@@ -229,7 +219,7 @@ export class InkLatexNode extends SignalWatcher(
       container: blockComponent.host,
       computePosition: {
         referenceElement: this,
-        placement: "bottom-start",
+        placement: 'bottom-start',
         autoUpdate: {
           animationFrame: true,
         },
@@ -238,12 +228,12 @@ export class InkLatexNode extends SignalWatcher(
       abortController: this._editorAbortController,
       shadowDom: false,
       portalStyles: {
-        zIndex: "var(--ink-z-index-popover)",
+        zIndex: 'var(--ink-z-index-popover)',
       },
     });
 
     this._editorAbortController.signal.addEventListener(
-      "abort",
+      'abort',
       () => {
         portal.remove();
         const latex = this.latexEditorSignal.peek();

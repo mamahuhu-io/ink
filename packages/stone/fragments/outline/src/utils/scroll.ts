@@ -1,9 +1,9 @@
 import { getDocTitleByEditorHost } from '@ink/stone-fragment-doc-title';
+import { DisposableGroup } from '@ink/stone-global/disposable';
+import { clamp } from '@ink/stone-global/gfx';
 import { NoteDisplayMode } from '@ink/stone-model';
 import { DocModeProvider } from '@ink/stone-shared/services';
 import type { Viewport } from '@ink/stone-shared/types';
-import { DisposableGroup } from '@ink/stone-global/disposable';
-import { clamp } from '@ink/stone-global/gfx';
 import type { EditorHost } from '@ink/stone-std';
 
 import { getHeadingBlocksFromDoc } from './query.js';
@@ -31,16 +31,11 @@ export function scrollToBlock(host: EditorHost, blockId: string) {
   }
 }
 
-export function isBlockBeforeViewportCenter(
-  blockId: string,
-  editorHost: EditorHost
-) {
+export function isBlockBeforeViewportCenter(blockId: string, editorHost: EditorHost) {
   const block = editorHost.view.getBlock(blockId);
   if (!block) return false;
 
-  const editorRect = (
-    editorHost.parentElement ?? editorHost
-  ).getBoundingClientRect();
+  const editorRect = (editorHost.parentElement ?? editorHost).getBoundingClientRect();
   const blockRect = block.getBoundingClientRect();
 
   const editorCenter =
@@ -54,7 +49,7 @@ export function isBlockBeforeViewportCenter(
 
 export const observeActiveHeadingDuringScroll = (
   getEditor: () => EditorHost, // workaround for editor changed
-  update: (activeHeading: string | null) => void
+  update: (activeHeading: string | null) => void,
 ) => {
   const handler = () => {
     const host = getEditor();
@@ -62,11 +57,11 @@ export const observeActiveHeadingDuringScroll = (
     const headings = getHeadingBlocksFromDoc(
       host.store,
       [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.DocOnly],
-      true
+      true,
     );
 
     let activeHeadingId = host.store.root?.id ?? null;
-    headings.forEach(heading => {
+    headings.forEach((heading) => {
       if (isBlockBeforeViewportCenter(heading.id, host)) {
         activeHeadingId = heading.id;
       }
@@ -89,9 +84,7 @@ function highlightBlock(host: EditorHost, blockId: string) {
 
   if (host.store.root?.id === blockId) return emptyClear;
 
-  const rootComponent = host.querySelector<
-    HTMLElement & { viewport: Viewport }
-  >('ink-page-root');
+  const rootComponent = host.querySelector<HTMLElement & { viewport: Viewport }>('ink-page-root');
   if (!rootComponent) return emptyClear;
 
   if (!rootComponent.viewport) {
@@ -99,12 +92,7 @@ function highlightBlock(host: EditorHost, blockId: string) {
     return emptyClear;
   }
 
-  const {
-    top: offsetY,
-    left: offsetX,
-    scrollTop,
-    scrollLeft,
-  } = rootComponent.viewport;
+  const { top: offsetY, left: offsetX, scrollTop, scrollLeft } = rootComponent.viewport;
 
   const block = host.view.getBlock(blockId);
   if (!block) return emptyClear;
@@ -156,13 +144,13 @@ let highlightIntervalId: ReturnType<typeof setInterval> | null = null;
 export async function scrollToBlockWithHighlight(
   host: EditorHost,
   blockId: string,
-  timeout = 3000
+  timeout = 3000,
 ) {
   scrollToBlock(host, blockId);
 
   let timeCount = 0;
 
-  return new Promise<ReturnType<typeof highlightBlock>>(resolve => {
+  return new Promise<ReturnType<typeof highlightBlock>>((resolve) => {
     if (highlightIntervalId !== null) {
       clearInterval(highlightIntervalId);
     }

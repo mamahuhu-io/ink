@@ -1,7 +1,4 @@
-import {
-  type TableBlockModel,
-  TableModelFlavour,
-} from '@ink/stone-model';
+import { type TableBlockModel, TableModelFlavour } from '@ink/stone-model';
 import type { Command } from '@ink/stone-std';
 import { type BlockModel } from '@ink/stone-store';
 
@@ -21,17 +18,11 @@ export const insertTableBlockCommand: Command<
   if (!selectedModels?.length) return;
 
   const targetModel =
-    place === 'before'
-      ? selectedModels[0]
-      : selectedModels[selectedModels.length - 1];
+    place === 'before' ? selectedModels[0] : selectedModels[selectedModels.length - 1];
 
   if (!targetModel) return;
 
-  const result = std.store.addSiblingBlocks(
-    targetModel,
-    [{ flavour: TableModelFlavour }],
-    place
-  );
+  const result = std.store.addSiblingBlocks(targetModel, [{ flavour: TableModelFlavour }], place);
   const blockId = result[0];
 
   if (blockId == null) return;

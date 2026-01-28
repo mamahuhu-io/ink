@@ -1,6 +1,6 @@
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import type { Color } from '@ink/stone-model';
 import { on, once, stopPropagation } from '@ink/stone-shared/utils';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { batch, computed, signal } from '@preact/signals-core';
 import { html, LitElement } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -44,9 +44,7 @@ const TABS: NavTab<NavType>[] = [
   { type: 'custom', name: 'Custom' },
 ];
 
-export class EdgelessColorPicker extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class EdgelessColorPicker extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = COLOR_PICKER_STYLE;
 
   #alphaRect = new DOMRect();
@@ -82,10 +80,7 @@ export class EdgelessColorPicker extends SignalWatcher(
       const orignalValue = target.value;
       let value = orignalValue.trim().replace(MATCHERS.other, '');
       let matched;
-      if (
-        (matched = value.match(MATCHERS.hex3)) ||
-        (matched = value.match(MATCHERS.hex6))
-      ) {
+      if ((matched = value.match(MATCHERS.hex3)) || (matched = value.match(MATCHERS.hex6))) {
         const oldHsva = this.hsva$.peek();
         const hsv = parseHexToHsva(matched[1]);
         const newHsva = { ...oldHsva, ...hsv };
@@ -197,25 +192,16 @@ export class EdgelessColorPicker extends SignalWatcher(
       left + offset,
       top + offset,
       Math.round(width - offset * 2),
-      Math.round(height - offset * 2)
+      Math.round(height - offset * 2),
     );
   }
 
   #setRects() {
-    this.#paletteRect = this.#setRect(
-      this.paletteControl.getBoundingClientRect(),
-      AREA_CIRCLE_R
-    );
+    this.#paletteRect = this.#setRect(this.paletteControl.getBoundingClientRect(), AREA_CIRCLE_R);
 
-    this.#hueRect = this.#setRect(
-      this.hueControl.getBoundingClientRect(),
-      SLIDER_CIRCLE_R
-    );
+    this.#hueRect = this.#setRect(this.hueControl.getBoundingClientRect(), SLIDER_CIRCLE_R);
 
-    this.#alphaRect = this.#setRect(
-      this.alphaControl.getBoundingClientRect(),
-      SLIDER_CIRCLE_R
-    );
+    this.#alphaRect = this.#setRect(this.alphaControl.getBoundingClientRect(), SLIDER_CIRCLE_R);
   }
 
   #switchModeTab(type: ModeType) {
@@ -418,19 +404,19 @@ export class EdgelessColorPicker extends SignalWatcher(
     // Updates controls' rects
     this.#setRects();
 
-    batch(() => batches.forEach(fn => fn()));
+    batch(() => batches.forEach((fn) => fn()));
 
     this.updateComplete
       .then(() => {
         this.disposables.add(
           this.hsva$.subscribe((hsva: Hsva) => {
             const type = this.modeType$.peek();
-            const mode = this.modes$.value.find(mode => mode.type === type);
+            const mode = this.modes$.value.find((mode) => mode.type === type);
 
             if (mode) {
               mode.hsva = { ...hsva };
             }
-          })
+          }),
         );
 
         this.disposables.add(
@@ -442,7 +428,7 @@ export class EdgelessColorPicker extends SignalWatcher(
             renderCanvas(this.canvas, rgb);
 
             this.hue$.value = rgb;
-          })
+          }),
         );
 
         this.disposables.add(
@@ -451,7 +437,7 @@ export class EdgelessColorPicker extends SignalWatcher(
             const h = rgbToHsv(rgb).h;
 
             this.hsva$.value = { ...hsva, h };
-          })
+          }),
         );
 
         this.disposables.add(
@@ -461,7 +447,7 @@ export class EdgelessColorPicker extends SignalWatcher(
             const a = bound01(x, width);
 
             this.hsva$.value = { ...hsva, a };
-          })
+          }),
         );
 
         this.disposables.add(
@@ -472,7 +458,7 @@ export class EdgelessColorPicker extends SignalWatcher(
             const v = bound01(height - y, height);
 
             this.hsva$.value = { ...hsva, s, v };
-          })
+          }),
         );
       })
       .catch(console.error);
@@ -484,7 +470,7 @@ export class EdgelessColorPicker extends SignalWatcher(
         <nav>
           ${repeat(
             TABS,
-            tab => tab.type,
+            (tab) => tab.type,
             ({ type, name }) => html`
               <button
                 ?active=${type === this.navType$.value}
@@ -492,7 +478,7 @@ export class EdgelessColorPicker extends SignalWatcher(
               >
                 ${name}
               </button>
-            `
+            `,
           )}
         </nav>
       </header>
@@ -500,7 +486,7 @@ export class EdgelessColorPicker extends SignalWatcher(
       <div class="modes" ?active=${this.navType$.value === 'custom'}>
         ${repeat(
           [this.light$.value, this.dark$.value],
-          mode => mode.type,
+          (mode) => mode.type,
           ({ type, name, hsva }) => html`
             <div
               class="${classMap({ mode: true, [type]: true })}"
@@ -517,30 +503,21 @@ export class EdgelessColorPicker extends SignalWatcher(
                 <div>${name}</div>
               </button>
             </div>
-          `
+          `,
         )}
       </div>
 
       <div class="content">
-        <div
-          class="color-palette-wrapper"
-          style=${styleMap(this.paletteStyle$.value)}
-        >
+        <div class="color-palette-wrapper" style=${styleMap(this.paletteStyle$.value)}>
           <canvas></canvas>
           <div class="color-circle"></div>
           <div class="color-palette"></div>
         </div>
-        <div
-          class="color-slider-wrapper hue"
-          style=${styleMap(this.hueStyle$.value)}
-        >
+        <div class="color-slider-wrapper hue" style=${styleMap(this.hueStyle$.value)}>
           <div class="color-circle"></div>
           <div class="color-slider"></div>
         </div>
-        <div
-          class="color-slider-wrapper alpha"
-          style=${styleMap(this.alphaStyle$.value)}
-        >
+        <div class="color-slider-wrapper alpha" style=${styleMap(this.alphaStyle$.value)}>
           <div class="color-circle"></div>
           <div class="color-slider"></div>
         </div>
@@ -579,9 +556,7 @@ export class EdgelessColorPicker extends SignalWatcher(
   }
 
   // 0-100
-  accessor alpha100$ = computed(
-    () => `${Math.round(this.hsva$.value.a * 100)}`
-  );
+  accessor alpha100$ = computed(() => `${Math.round(this.hsva$.value.a * 100)}`);
 
   @query('.color-slider-wrapper.alpha .color-slider')
   accessor alphaControl!: HTMLDivElement;
@@ -641,7 +616,7 @@ export class EdgelessColorPicker extends SignalWatcher(
 
   accessor mode$ = computed<ModeTab<ModeType>>(() => {
     const modeType = this.modeType$.value;
-    return this.modes$.value.find(mode => mode.type === modeType)!;
+    return this.modes$.value.find((mode) => mode.type === modeType)!;
   });
 
   accessor modes$ = signal<ModeTab<ModeType>[]>([

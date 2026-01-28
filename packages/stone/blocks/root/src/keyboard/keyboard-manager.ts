@@ -6,6 +6,7 @@
 //   promptDocTitle,
 // } from '@ink/stone-block-embed';
 import { ParagraphBlockComponent } from '@ink/stone-block-paragraph';
+import { IS_MAC, IS_WINDOWS } from '@ink/stone-global/env';
 import { ParagraphBlockModel } from '@ink/stone-model';
 // [REMOVED] These imports no longer needed since _createEmbedBlock is disabled
 // import {
@@ -13,20 +14,13 @@ import { ParagraphBlockModel } from '@ink/stone-model';
 //   getSelectedModelsCommand,
 // } from '@ink/stone-shared/commands';
 import { matchModels } from '@ink/stone-shared/utils';
-import { IS_MAC, IS_WINDOWS } from '@ink/stone-global/env';
-import {
-  type BlockComponent,
-  BlockSelection,
-  type UIEventHandler,
-} from '@ink/stone-std';
+import { type BlockComponent, BlockSelection, type UIEventHandler } from '@ink/stone-std';
 // import { toDraftModel } from '@ink/stone-store';
 
 export class PageKeyboardManager {
-  private readonly _handleDelete: UIEventHandler = ctx => {
+  private readonly _handleDelete: UIEventHandler = (ctx) => {
     const event = ctx.get('defaultState').event;
-    const blockSelections = this._currentSelection.filter(sel =>
-      sel.is(BlockSelection)
-    );
+    const blockSelections = this._currentSelection.filter((sel) => sel.is(BlockSelection));
     if (blockSelections.length === 0) {
       return;
     }
@@ -34,7 +28,7 @@ export class PageKeyboardManager {
     event.preventDefault();
 
     const deletedBlocks: string[] = [];
-    blockSelections.forEach(sel => {
+    blockSelections.forEach((sel) => {
       const id = sel.blockId;
       const block = this._doc.getBlock(id);
       if (!block) return;
@@ -50,9 +44,9 @@ export class PageKeyboardManager {
         const collapsedSiblings = component.collapsedSiblings;
 
         deletedBlocks.push(
-          ...[id, ...collapsedSiblings.map(sibling => sibling.id)].filter(
-            id => !deletedBlocks.includes(id)
-          )
+          ...[id, ...collapsedSiblings.map((sibling) => sibling.id)].filter(
+            (id) => !deletedBlocks.includes(id),
+          ),
         );
       } else {
         deletedBlocks.push(id);
@@ -60,7 +54,7 @@ export class PageKeyboardManager {
     });
 
     this._doc.transact(() => {
-      deletedBlocks.forEach(id => {
+      deletedBlocks.forEach((id) => {
         const block = this._doc.getBlock(id);
         if (block) {
           this._doc.deleteBlock(block.model);
@@ -99,7 +93,7 @@ export class PageKeyboardManager {
         //     this._doc.redo();
         //   }
         // },
-        'Control-y': ctx => {
+        'Control-y': (ctx) => {
           if (!IS_WINDOWS) return;
 
           ctx.get('defaultState').event.preventDefault();
@@ -110,7 +104,7 @@ export class PageKeyboardManager {
         'Mod-Backspace': () => true,
         Backspace: this._handleDelete,
         Delete: this._handleDelete,
-        'Control-d': ctx => {
+        'Control-d': (ctx) => {
           if (!IS_MAC) return;
           this._handleDelete(ctx);
         },
@@ -121,7 +115,7 @@ export class PageKeyboardManager {
       },
       {
         global: true,
-      }
+      },
     );
   }
 

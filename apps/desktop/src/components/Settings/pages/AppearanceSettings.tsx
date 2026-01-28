@@ -1,27 +1,29 @@
-import { useTranslation } from 'react-i18next'
-import { SettingHeader, SettingRow, SettingWrapper } from '../components'
-import { usePreferencesStore } from '../../../stores/preferences'
-import { useTheme } from '../../../hooks/useTheme'
-import { isTauri } from '../../../services'
-import './SettingPages.css'
+import './SettingPages.css';
+
+import { useTranslation } from 'react-i18next';
+
+import { useTheme } from '../../../hooks/useTheme';
+import { isTauri } from '../../../services';
+import { usePreferencesStore } from '../../../stores/preferences';
+import { SettingHeader, SettingRow, SettingWrapper } from '../components';
 
 export function AppearanceSettings() {
-  const { t } = useTranslation()
-  const { showDocStats, setShowDocStats } = usePreferencesStore()
-  const { themes, currentTheme, setThemeById, openThemesDirectory } = useTheme()
+  const { t } = useTranslation();
+  const { showDocStats, setShowDocStats } = usePreferencesStore();
+  const { themes, currentTheme, setThemeById, openThemesDirectory } = useTheme();
 
   const handleOpenThemeFolder = () => {
-    openThemesDirectory()
-  }
+    openThemesDirectory();
+  };
 
   const handleGetThemes = async () => {
     if (isTauri()) {
-      const { open } = await import('@tauri-apps/plugin-shell')
-      await open('https://ink.mamahuhu.io/themes')
+      const { open } = await import('@tauri-apps/plugin-shell');
+      await open('https://ink.mamahuhu.io/themes');
     } else {
-      window.open('https://ink.mamahuhu.io/themes', '_blank')
+      window.open('https://ink.mamahuhu.io/themes', '_blank');
     }
-  }
+  };
 
   return (
     <div className="setting-page">
@@ -59,18 +61,6 @@ export function AppearanceSettings() {
         </SettingRow>
       </SettingWrapper>
 
-      <SettingWrapper title={t('settings.appearance.window.title')}>
-        <SettingRow
-          name={t('settings.appearance.window.sidebarPosition')}
-          desc={t('settings.appearance.window.sidebarPositionDesc')}
-        >
-          <select className="setting-select" defaultValue="left">
-            <option value="left">{t('settings.appearance.window.left')}</option>
-            <option value="right">{t('settings.appearance.window.right')}</option>
-          </select>
-        </SettingRow>
-      </SettingWrapper>
-
       <SettingWrapper title={t('settings.appearance.display.title')}>
         <SettingRow
           name={t('settings.appearance.display.showDocStats')}
@@ -79,9 +69,19 @@ export function AppearanceSettings() {
           <div
             className={`setting-switch ${showDocStats ? 'active' : ''}`}
             onClick={() => setShowDocStats(!showDocStats)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setShowDocStats(!showDocStats);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={showDocStats}
+            aria-label={t('settings.appearance.display.showDocStats')}
           />
         </SettingRow>
       </SettingWrapper>
     </div>
-  )
+  );
 }

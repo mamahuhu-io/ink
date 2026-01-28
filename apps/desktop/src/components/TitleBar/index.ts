@@ -1,5 +1,5 @@
-export { TitleBar } from './TitleBar'
-export { MenuBar } from './MenuBar'
-export { WindowControls } from './WindowControls'
-export { DropdownMenu } from './DropdownMenu'
-export type { MenuItemData, MenuData } from './types'
+export { DropdownMenu } from './DropdownMenu';
+export { MenuBar } from './MenuBar';
+export { TitleBar } from './TitleBar';
+export type { MenuData, MenuItemData } from './types';
+export { WindowControls } from './WindowControls';

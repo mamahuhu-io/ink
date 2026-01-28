@@ -7,8 +7,5 @@ import { InkDragHandleWidget } from './drag-handle';
 
 export function effects() {
   customElements.define(INK_DRAG_HANDLE_WIDGET, InkDragHandleWidget);
-  customElements.define(
-    EDGELESS_DND_PREVIEW_ELEMENT,
-    EdgelessDndPreviewElement
-  );
+  customElements.define(EDGELESS_DND_PREVIEW_ELEMENT, EdgelessDndPreviewElement);
 }

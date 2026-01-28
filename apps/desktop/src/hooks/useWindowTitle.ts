@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
-import { useTabStore } from "../stores/tabs";
-import { isTauri } from "../services";
+import { useEffect, useRef } from 'react';
+
+import { isTauri } from '../services';
+import { useTabStore } from '../stores/tabs';
 
 /**
  * Hook to sync window title with active tab title
@@ -9,7 +10,7 @@ import { isTauri } from "../services";
 export function useWindowTitle() {
   const tabs = useTabStore((state) => state.tabs);
   const activeTabId = useTabStore((state) => state.activeTabId);
-  const lastTitleRef = useRef<string>("");
+  const lastTitleRef = useRef<string>('');
 
   useEffect(() => {
     const updateWindowTitle = async () => {
@@ -19,9 +20,9 @@ export function useWindowTitle() {
       const activeTab = tabs.find((t) => t.id === activeTabId);
 
       // Determine the title to use
-      let title = "Ink";
+      let title = 'Ink';
       if (activeTab) {
-        title = activeTab.title || "Untitled";
+        title = activeTab.title || 'Untitled';
       }
 
       // Skip if title hasn't changed
@@ -32,16 +33,16 @@ export function useWindowTitle() {
 
       try {
         // Update window title
-        const { getCurrentWindow } = await import("@tauri-apps/api/window");
+        const { getCurrentWindow } = await import('@tauri-apps/api/window');
         const currentWindow = getCurrentWindow();
         await currentWindow.setTitle(title);
-        console.log("[WindowTitle] Updated to:", title);
+        console.log('[WindowTitle] Updated to:', title);
 
         // Rebuild menu to update Window menu list
-        const { invoke } = await import("@tauri-apps/api/core");
-        await invoke("rebuild_menu");
+        const { invoke } = await import('@tauri-apps/api/core');
+        await invoke('rebuild_menu');
       } catch (error) {
-        console.error("[WindowTitle] Failed to update:", error);
+        console.error('[WindowTitle] Failed to update:', error);
       }
     };
 

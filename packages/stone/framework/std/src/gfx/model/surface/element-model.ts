@@ -66,8 +66,7 @@ export type SerializedElement = Record<string, unknown> & {
 };
 export abstract class GfxPrimitiveElementModel<
   Props extends BaseElementProps = BaseElementProps,
-> implements GfxCompatibleInterface
-{
+> implements GfxCompatibleInterface {
   private _lastXYWH!: SerializedXYWH;
 
   protected _disposable = new DisposableGroup();
@@ -127,9 +126,7 @@ export abstract class GfxPrimitiveElementModel<
 
   get externalBound(): Bound | null {
     if (!this._local.has('externalBound')) {
-      const bound = this.externalXYWH
-        ? Bound.deserialize(this.externalXYWH)
-        : null;
+      const bound = this.externalXYWH ? Bound.deserialize(this.externalXYWH) : null;
 
       this._local.set('externalBound', bound);
     }
@@ -202,9 +199,7 @@ export abstract class GfxPrimitiveElementModel<
   }
 
   containsBound(bounds: Bound): boolean {
-    return getPointsFromBoundWithRotation(this).some(point =>
-      bounds.containsPoint(point)
-    );
+    return getPointsFromBoundWithRotation(this).some((point) => bounds.containsPoint(point));
   }
 
   getLineIntersections(start: IVec, end: IVec) {
@@ -226,12 +221,7 @@ export abstract class GfxPrimitiveElementModel<
     return new PointLocation(rotatePoint, tangent);
   }
 
-  includesPoint(
-    x: number,
-    y: number,
-    opt: PointTestOptions,
-    __: EditorHost
-  ): boolean {
+  includesPoint(x: number, y: number, opt: PointTestOptions, __: EditorHost): boolean {
     const bound = opt.useElementBound ? this.elementBound : this.responseBound;
     return bound.isPointInBound([x, y]);
   }
@@ -240,7 +230,7 @@ export abstract class GfxPrimitiveElementModel<
     return (
       this.containsBound(bound) ||
       bound.points.some((point, i, points) =>
-        this.getLineIntersections(point, points[(i + 1) % points.length])
+        this.getLineIntersections(point, points[(i + 1) % points.length]),
       )
     );
   }
@@ -316,7 +306,7 @@ export abstract class GfxPrimitiveElementModel<
         const derivedProps = getDerivedProps(
           prop as string,
           original,
-          this as unknown as GfxPrimitiveElementModel
+          this as unknown as GfxPrimitiveElementModel,
         );
 
         this._stashed.set(prop, value);
@@ -330,10 +320,7 @@ export abstract class GfxPrimitiveElementModel<
           local: true,
         });
 
-        updateDerivedProps(
-          derivedProps,
-          this as unknown as GfxPrimitiveElementModel
-        );
+        updateDerivedProps(derivedProps, this as unknown as GfxPrimitiveElementModel);
       },
     });
   }
@@ -379,9 +366,7 @@ export abstract class GfxPrimitiveElementModel<
   accessor comments: Record<string, boolean> | undefined = undefined;
 }
 
-export abstract class GfxGroupLikeElementModel<
-    Props extends BaseElementProps = BaseElementProps,
-  >
+export abstract class GfxGroupLikeElementModel<Props extends BaseElementProps = BaseElementProps>
   extends GfxPrimitiveElementModel<Props>
   implements GfxGroupCompatibleInterface
 {
@@ -421,8 +406,7 @@ export abstract class GfxGroupLikeElementModel<
 
   get xywh() {
     this._mutex(() => {
-      const curXYWH =
-        (this._local.get('xywh') as SerializedXYWH) ?? '[0,0,0,0]';
+      const curXYWH = (this._local.get('xywh') as SerializedXYWH) ?? '[0,0,0,0]';
       const newXYWH = this._getXYWH().serialize();
 
       if (curXYWH !== newXYWH || !this._local.has('xywh')) {
@@ -450,7 +434,7 @@ export abstract class GfxGroupLikeElementModel<
   protected _getXYWH(): Bound {
     let bound: Bound | undefined;
 
-    this.childElements.forEach(child => {
+    this.childElements.forEach((child) => {
       if (child instanceof GfxPrimitiveElementModel && child.hidden) {
         return;
       }
@@ -516,17 +500,14 @@ export function syncElementFromY(
     props: Record<string, unknown>;
     oldValues: Record<string, unknown>;
     local: boolean;
-  }) => void
+  }) => void,
 ) {
   const disposables: Record<string, () => void> = {};
-  const observer = (
-    event: Y.YMapEvent<unknown>,
-    transaction: Y.Transaction
-  ) => {
+  const observer = (event: Y.YMapEvent<unknown>, transaction: Y.Transaction) => {
     const props: Record<string, unknown> = {};
     const oldValues: Record<string, unknown> = {};
 
-    event.keysChanged.forEach(key => {
+    event.keysChanged.forEach((key) => {
       const type = event.changes.keys.get(key);
       const oldValue = event.changes.keys.get(key)?.oldValue;
 
@@ -572,7 +553,7 @@ export function syncElementFromY(
   };
 
   return () => {
-    Object.values(disposables).forEach(fn => fn());
+    Object.values(disposables).forEach((fn) => fn());
   };
 }
 
@@ -583,7 +564,7 @@ function watchText(
     props: Record<string, unknown>;
     oldValues: Record<string, unknown>;
     local: boolean;
-  }) => void
+  }) => void,
 ) {
   const fn = (_: Y.YTextEvent, transaction: Y.Transaction) => {
     callback({

@@ -7,6 +7,8 @@ const EMBED_IFRAME_DEFAULT_WIDTH_IN_SURFACE = 752;
 const EMBED_IFRAME_DEFAULT_HEIGHT_IN_SURFACE = 423;
 import { ParagraphBlockComponent } from '@ink/stone-block-paragraph';
 import { DropIndicator } from '@ink/stone-components/drop-indicator';
+import { Bound, type IVec, Point, Rect, type SerializedXYWH } from '@ink/stone-global/gfx';
+import { assertType } from '@ink/stone-global/utils';
 import {
   AttachmentBlockModel,
   // [REMOVED] Embed modules - not needed for local markdown editor
@@ -41,14 +43,6 @@ import {
   getScrollContainer,
   matchModels,
 } from '@ink/stone-shared/utils';
-import {
-  Bound,
-  type IVec,
-  Point,
-  Rect,
-  type SerializedXYWH,
-} from '@ink/stone-global/gfx';
-import { assertType } from '@ink/stone-global/utils';
 import {
   BlockComponent,
   type BlockStdScope,
@@ -142,9 +136,7 @@ export class DragEventWatcher {
     while (topElement && topElement.parentElement !== body) {
       topElement = topElement.parentElement!;
     }
-    const zIndex = topElement
-      ? (parseInt(window.getComputedStyle(topElement).zIndex) || 1) + 1
-      : 2;
+    const zIndex = topElement ? (parseInt(window.getComputedStyle(topElement).zIndex) || 1) + 1 : 2;
 
     if (!this.dropIndicator) {
       this.dropIndicator = new DropIndicator();
@@ -164,14 +156,14 @@ export class DragEventWatcher {
     this._clearDropIndicator();
     this.widget.hide(true);
     this.std.selection.setGroup('gfx', []);
-    this.resetOpacityCallbacks.forEach(callback => callback());
+    this.resetOpacityCallbacks.forEach((callback) => callback());
   };
 
   private readonly _onDragMove = (
     point: Point,
     payload: DragBlockPayload,
     dropPayload: DropPayload,
-    block: BlockComponent
+    block: BlockComponent,
   ) => {
     this._createDropIndicator();
     this._updateDropIndicator(point, payload, dropPayload, block);
@@ -200,7 +192,7 @@ export class DragEventWatcher {
   private readonly _getDropResult = (
     dropBlock: BlockComponent,
     dragPayload: DragBlockPayload,
-    dropPayload: DropPayload
+    dropPayload: DropPayload,
   ): DropResult | null => {
     const dropModel = dropBlock.model;
 
@@ -225,16 +217,12 @@ export class DragEventWatcher {
       const domRect = getRectByBlockComponent(dropBlock);
       const placement = 'in';
 
-      if (
-        snapshot.content.every(block =>
-          schema.safeValidate(block.flavour, 'ink:list')
-        )
-      ) {
+      if (snapshot.content.every((block) => schema.safeValidate(block.flavour, 'ink:list'))) {
         const rect = Rect.fromLWTH(
           domRect.left + BLOCK_CHILDREN_CONTAINER_PADDING_LEFT,
           domRect.width - BLOCK_CHILDREN_CONTAINER_PADDING_LEFT,
           domRect.top + domRect.height,
-          3 * scale
+          3 * scale,
         );
 
         result = {
@@ -259,7 +247,7 @@ export class DragEventWatcher {
               domRect.left,
               domRect.width,
               domRect.top + domRect.height,
-              3 * scale
+              3 * scale,
             ),
             modelState: {
               model: fallbackModel,
@@ -271,17 +259,13 @@ export class DragEventWatcher {
       }
     } else {
       const placement =
-        isDropOnNoteBlock &&
-        schema.safeValidate(snapshot.content[0].flavour, 'ink:note')
+        isDropOnNoteBlock && schema.safeValidate(snapshot.content[0].flavour, 'ink:note')
           ? 'in'
           : edge === 'top'
             ? 'before'
             : 'after';
       const domRect = getRectByBlockComponent(dropBlock);
-      const y =
-        placement === 'after'
-          ? domRect.top + domRect.height
-          : domRect.top - 3 * scale;
+      const y = placement === 'after' ? domRect.top + domRect.height : domRect.top - 3 * scale;
 
       result = {
         placement,
@@ -301,26 +285,17 @@ export class DragEventWatcher {
     point: Point,
     dragPayload: DragBlockPayload,
     dropPayload: DropPayload,
-    dropBlock: BlockComponent
+    dropBlock: BlockComponent,
   ) => {
     const closestNoteBlock = dropBlock && getParentNoteBlock(dropBlock);
 
     if (
       !closestNoteBlock ||
-      isOutOfNoteBlock(
-        this.host,
-        closestNoteBlock,
-        point,
-        this.widget.scale.peek()
-      )
+      isOutOfNoteBlock(this.host, closestNoteBlock, point, this.widget.scale.peek())
     ) {
       this._resetDropResult();
     } else {
-      const dropResult = this._getDropResult(
-        dropBlock,
-        dragPayload,
-        dropPayload
-      );
+      const dropResult = this._getDropResult(dropBlock, dragPayload, dropPayload);
       this._updateDropResult(dropResult);
     }
   };
@@ -352,14 +327,11 @@ export class DragEventWatcher {
       };
     }
 
-    const getElementsInContainer = (
-      elem: GfxModel,
-      selectedElements: string[] = []
-    ) => {
+    const getElementsInContainer = (elem: GfxModel, selectedElements: string[] = []) => {
       selectedElements.push(elem.id);
 
       if (isGfxGroupCompatibleModel(elem)) {
-        elem.childElements.forEach(child => {
+        elem.childElements.forEach((child) => {
           getElementsInContainer(child, selectedElements);
         });
       }
@@ -371,7 +343,7 @@ export class DragEventWatcher {
       const blocks: BlockModel[] = [];
       const blocksUnderSurface: BlockModel[] = [];
 
-      selectedModels.forEach(id => {
+      selectedModels.forEach((id) => {
         const model = this.gfx.getElementById(id);
 
         if (!model) {
@@ -401,10 +373,7 @@ export class DragEventWatcher {
       }
     };
 
-    const selectedElements = getElementsInContainer(
-      selectedElm as GfxModel,
-      []
-    );
+    const selectedElements = getElementsInContainer(selectedElm as GfxModel, []);
     const blocksOfSnapshot = toSnapshotRequiredBlocks(selectedElements);
 
     return {
@@ -438,7 +407,7 @@ export class DragEventWatcher {
       if (nativeSelection && nativeSelection.rangeCount > 0 && rangeManager) {
         const range = nativeSelection.getRangeAt(0);
         const blocks = rangeManager.getSelectedBlockComponentsByRange(range, {
-          match: el => el.model.role === 'content',
+          match: (el) => el.model.role === 'content',
           mode: 'highest',
         });
         this.widget.selectionHelper.setSelectedBlocks(blocks);
@@ -452,40 +421,36 @@ export class DragEventWatcher {
     if (
       selections.length === 0 ||
       !containBlock(
-        selections.map(selection => selection.blockId),
-        this.widget.anchorBlockId.peek()!
+        selections.map((selection) => selection.blockId),
+        this.widget.anchorBlockId.peek()!,
       )
     ) {
       this.widget.selectionHelper.setSelectedBlocks([hoverBlock]);
     }
 
     const collapsedBlock: BlockComponent[] = [];
-    const blocks = this.widget.selectionHelper.selectedBlockComponents.flatMap(
-      block => {
-        // filter out collapsed siblings
-        if (collapsedBlock.includes(block)) return [];
+    const blocks = this.widget.selectionHelper.selectedBlockComponents.flatMap((block) => {
+      // filter out collapsed siblings
+      if (collapsedBlock.includes(block)) return [];
 
-        // if block is toggled heading, should select all siblings
-        if (
-          block instanceof ParagraphBlockComponent &&
-          block.model.props.type.startsWith('h') &&
-          block.model.props.collapsed
-        ) {
-          const collapsedSiblings = block.collapsedSiblings.flatMap(
-            sibling => this.widget.host.view.getBlock(sibling.id) ?? []
-          );
-          collapsedBlock.push(...collapsedSiblings);
-          return [block, ...collapsedSiblings];
-        }
-        return [block];
+      // if block is toggled heading, should select all siblings
+      if (
+        block instanceof ParagraphBlockComponent &&
+        block.model.props.type.startsWith('h') &&
+        block.model.props.collapsed
+      ) {
+        const collapsedSiblings = block.collapsedSiblings.flatMap(
+          (sibling) => this.widget.host.view.getBlock(sibling.id) ?? [],
+        );
+        collapsedBlock.push(...collapsedSiblings);
+        return [block, ...collapsedSiblings];
       }
-    );
+      return [block];
+    });
 
     // This could be skipped if we can ensure that all selected blocks are on the same level
     // Which means not selecting parent block and child block at the same time
-    const blocksExcludingChildren = getBlockComponentsExcludeSubtrees(
-      blocks
-    ) as BlockComponent[];
+    const blocksExcludingChildren = getBlockComponentsExcludeSubtrees(blocks) as BlockComponent[];
 
     return {
       snapshot: this._toSnapshot(blocksExcludingChildren),
@@ -496,7 +461,7 @@ export class DragEventWatcher {
     dropBlock: BlockComponent,
     dragPayload: DragBlockPayload,
     dropPayload: DropPayload,
-    point: Point
+    point: Point,
   ) => {
     /**
      * When drag gfx elements from edgeless editor to other editor, there's some limitation:
@@ -536,7 +501,7 @@ export class DragEventWatcher {
     dropBlock: BlockComponent,
     dragPayload: DragBlockPayload,
     dropPayload: DropPayload,
-    _: Point
+    _: Point,
   ) => {
     const result = this._getDropResult(dropBlock, dragPayload, dropPayload);
     const snapshot = dragPayload?.bsEntity?.snapshot;
@@ -546,13 +511,11 @@ export class DragEventWatcher {
     const store = this.std.store;
     const schema = store.schema;
     const model = result.modelState.model;
-    const parent =
-      result.placement === 'in' ? model : this.std.store.getParent(model)!;
+    const parent = result.placement === 'in' ? model : this.std.store.getParent(model)!;
     const index =
       result.placement === 'in'
         ? 0
-        : parent.children.indexOf(model) +
-          (result.placement === 'before' ? 0 : 1);
+        : parent.children.indexOf(model) + (result.placement === 'before' ? 0 : 1);
 
     if (!parent) return;
 
@@ -570,12 +533,10 @@ export class DragEventWatcher {
     // drop a note on other note
     if (
       matchModels(parent, [NoteBlockModel]) &&
-      snapshot.content.every(block => block.flavour === 'ink:note')
+      snapshot.content.every((block) => block.flavour === 'ink:note')
     ) {
       snapshot.content = snapshot.content.filter(
-        block =>
-          dragPayload.from?.docId !== this.widget.store.id ||
-          block.id !== parent.id
+        (block) => dragPayload.from?.docId !== this.widget.store.id || block.id !== parent.id,
       );
       if (snapshot.content.length) {
         this._onDropNoteOnNote(snapshot, parent.id, index);
@@ -584,19 +545,12 @@ export class DragEventWatcher {
     }
 
     // all blocks can be safely dropped in the target parent
-    if (
-      snapshot.content.every(block =>
-        schema.safeValidate(block.flavour, parent.flavour)
-      )
-    ) {
+    if (snapshot.content.every((block) => schema.safeValidate(block.flavour, parent.flavour))) {
       this._dropToModel(snapshot, parent.id, index).catch(console.error);
       return;
     }
 
-    if (
-      dragPayload.bsEntity?.fromMode === 'gfx' &&
-      matchModels(parent, [NoteBlockModel])
-    ) {
+    if (dragPayload.bsEntity?.fromMode === 'gfx' && matchModels(parent, [NoteBlockModel])) {
       // if the snapshot comes from the same doc, just create a surface-ref block
       if (dragPayload.from?.docId === this.widget.store.id) {
         let largestElem!: {
@@ -611,8 +565,8 @@ export class DragEventWatcher {
               block.props.elements as Record<
                 string,
                 { id: string; xywh: SerializedXYWH; type: string }
-              >
-            ).forEach(elem => {
+              >,
+            ).forEach((elem) => {
               if (elem.xywh) {
                 const bound = Bound.deserialize(elem.xywh);
                 const size = bound.w * bound.h;
@@ -624,9 +578,7 @@ export class DragEventWatcher {
             block.children.forEach(walk);
           } else {
             if (block.props.xywh) {
-              const bound = Bound.deserialize(
-                block.props.xywh as SerializedXYWH
-              );
+              const bound = Bound.deserialize(block.props.xywh as SerializedXYWH);
               const size = bound.w * bound.h;
               if ((largestElem?.size ?? 0) < size) {
                 largestElem = { size, id: block.id, flavour: block.flavour };
@@ -645,7 +597,7 @@ export class DragEventWatcher {
               refFlavour: largestElem.flavour,
             },
             parent.id,
-            index
+            index,
           );
         } else {
           store.addBlock(
@@ -654,7 +606,7 @@ export class DragEventWatcher {
               pageId: store.doc.id,
             },
             parent.id,
-            index
+            index,
           );
         }
       }
@@ -662,21 +614,19 @@ export class DragEventWatcher {
       // and create a surface-ref block or embed-linked-doc block
       else {
         this._mergeSnapshotToCurDoc(snapshot)
-          .then(idRemap => {
+          .then((idRemap) => {
             let largestElem!: {
               size: number;
               id: string;
               flavour: string;
             };
 
-            idRemap.forEach(val => {
+            idRemap.forEach((val) => {
               const gfxElement = this.gfx.getElementById(val) as GfxModel;
 
               if (gfxElement?.elementBound) {
                 const elemBound = gfxElement.elementBound;
-                const flavour = isPrimitiveModel(gfxElement)
-                  ? gfxElement.type
-                  : gfxElement.flavour;
+                const flavour = isPrimitiveModel(gfxElement) ? gfxElement.type : gfxElement.flavour;
 
                 largestElem =
                   (largestElem?.size ?? 0) < elemBound.w * elemBound.h
@@ -692,7 +642,7 @@ export class DragEventWatcher {
                   pageId: store.doc.id,
                 },
                 parent.id,
-                index
+                index,
               );
             } else {
               store.addBlock(
@@ -702,7 +652,7 @@ export class DragEventWatcher {
                   refFlavour: largestElem.flavour,
                 },
                 parent.id,
-                index
+                index,
               );
             }
           })
@@ -715,7 +665,7 @@ export class DragEventWatcher {
     dropBlock: BlockComponent,
     dragPayload: DragBlockPayload,
     dropPayload: DropPayload,
-    point: Point
+    point: Point,
   ) => {
     this.std.store.captureSync();
     if (this.mode === 'edgeless') {
@@ -728,7 +678,7 @@ export class DragEventWatcher {
   private readonly _onDropNoteOnNote = (
     snapshot: SliceSnapshot,
     parent?: string,
-    index?: number
+    index?: number,
   ) => {
     const [first] = snapshot.content;
     const id = first.id;
@@ -758,17 +708,12 @@ export class DragEventWatcher {
    * @param snapshot
    * @param point
    */
-  private readonly _mergeSnapshotToCurDoc = async (
-    snapshot: SliceSnapshot,
-    point?: Point
-  ) => {
+  private readonly _mergeSnapshotToCurDoc = async (snapshot: SliceSnapshot, point?: Point) => {
     if (!point) {
       const bound = this.gfx.elementsBound;
       point = new Point(bound.x + bound.w, bound.y + bound.h / 2);
     } else {
-      point = Point.from(
-        this.gfx.viewport.toModelCoordFromClientCoord([point.x, point.y])
-      );
+      point = Point.from(this.gfx.viewport.toModelCoordFromClientCoord([point.x, point.y]));
     }
 
     this._rewriteSnapshotXYWH(snapshot, point);
@@ -798,7 +743,7 @@ export class DragEventWatcher {
       const constructor = surface.getConstructor(elem.type);
       const isGroup = Object.isPrototypeOf.call(
         GfxGroupLikeElementModel.prototype,
-        constructor.prototype
+        constructor.prototype,
       );
 
       return isGroup;
@@ -814,16 +759,12 @@ export class DragEventWatcher {
       if (block.flavour === 'ink:surface') {
         elemMap = (block.props.elements as typeof elemMap) ?? {};
         Object.entries(elemMap).forEach(([elemId, elem]) => {
-          if (
-            Object.values(containerTree).every(
-              childSet => !childSet.has(elemId)
-            )
-          ) {
+          if (Object.values(containerTree).every((childSet) => !childSet.has(elemId))) {
             containerTree['root'].add(elemId);
           }
 
           if (isGroupLikeElem(elem)) {
-            Object.keys(elem.children?.json ?? {}).forEach(childId => {
+            Object.keys(elem.children?.json ?? {}).forEach((childId) => {
               containerTree[elemId] = containerTree[elemId] ?? new Set();
               containerTree[elemId].add(childId);
               // if the child was already added to the root, remove it
@@ -853,25 +794,18 @@ export class DragEventWatcher {
 
         block.children?.forEach(buildContainerTree);
       } else {
-        const isSurfaceChild = schema.safeValidate(
-          block.flavour,
-          'ink:surface'
-        );
+        const isSurfaceChild = schema.safeValidate(block.flavour, 'ink:surface');
         blockMap[block.id] = {
           surfaceChild: isSurfaceChild,
           snapshot: block,
         };
 
-        if (
-          Object.values(containerTree).every(
-            childSet => !childSet.has(block.id)
-          )
-        ) {
+        if (Object.values(containerTree).every((childSet) => !childSet.has(block.id))) {
           containerTree['root'].add(block.id);
         }
 
         if (isGroupLikeBlock(block.flavour)) {
-          Object.keys(block.props.childElementIds ?? {}).forEach(childId => {
+          Object.keys(block.props.childElementIds ?? {}).forEach((childId) => {
             containerTree[block.id] = containerTree[block.id] ?? new Set();
             containerTree[block.id].add(childId);
             // if the child was already added to the root, remove it
@@ -894,22 +828,18 @@ export class DragEventWatcher {
         const { surfaceChild, snapshot: blockSnapshot } = blockMap[id];
 
         if (isGroupLikeBlock(blockSnapshot.flavour)) {
-          Object.keys(blockSnapshot.props.childElementIds ?? {}).forEach(
-            childId => {
-              assertType<Record<string, unknown>>(
-                blockSnapshot.props.childElementIds
-              );
+          Object.keys(blockSnapshot.props.childElementIds ?? {}).forEach((childId) => {
+            assertType<Record<string, unknown>>(blockSnapshot.props.childElementIds);
 
-              if (idRemap.has(childId)) {
-                const remappedId = idRemap.get(childId)!;
-                blockSnapshot.props.childElementIds[remappedId] =
-                  blockSnapshot.props.childElementIds[childId];
-                delete blockSnapshot.props.childElementIds[childId];
-              } else {
-                delete blockSnapshot.props.childElementIds[childId];
-              }
+            if (idRemap.has(childId)) {
+              const remappedId = idRemap.get(childId)!;
+              blockSnapshot.props.childElementIds[remappedId] =
+                blockSnapshot.props.childElementIds[childId];
+              delete blockSnapshot.props.childElementIds[childId];
+            } else {
+              delete blockSnapshot.props.childElementIds[childId];
             }
-          );
+          });
         }
 
         const slices = await this._dropToModel(
@@ -917,7 +847,7 @@ export class DragEventWatcher {
             ...snapshot,
             content: [blockSnapshot],
           },
-          surfaceChild ? surface.id : root.id
+          surfaceChild ? surface.id : root.id,
         );
 
         if (slices) {
@@ -927,16 +857,10 @@ export class DragEventWatcher {
         const elem = elemMap[id];
 
         Object.entries(elem).forEach(([_, val]) => {
-          if (
-            val instanceof Object &&
-            Reflect.has(val, SURFACE_YMAP_UNIQ_IDENTIFIER)
-          ) {
-            const childJson = Reflect.get(val, 'json') as Record<
-              string,
-              unknown
-            >;
+          if (val instanceof Object && Reflect.has(val, SURFACE_YMAP_UNIQ_IDENTIFIER)) {
+            const childJson = Reflect.get(val, 'json') as Record<string, unknown>;
 
-            Object.keys(childJson).forEach(oldChildId => {
+            Object.keys(childJson).forEach((oldChildId) => {
               if (idRemap.has(oldChildId)) {
                 const remappedId = idRemap.get(oldChildId)!;
                 const val = structuredClone(childJson[oldChildId]);
@@ -963,7 +887,7 @@ export class DragEventWatcher {
             target: { position: IVec; id?: string };
           }>(elem);
 
-          (['source', 'target'] as const).forEach(key => {
+          (['source', 'target'] as const).forEach((key) => {
             const endpoint = elem[key];
             if (endpoint.id) {
               if (idRemap.get(endpoint.id)) {
@@ -996,7 +920,7 @@ export class DragEventWatcher {
   private readonly _rewriteSnapshotXYWH = (
     snapshot: SliceSnapshot,
     point: Point,
-    ignoreOriginalPos: boolean = false
+    ignoreOriginalPos: boolean = false,
   ) => {
     const rect = getSnapshotRect(snapshot) ?? new Bound(0, 0, 0, 0);
     const { x: modelX, y: modelY } = point;
@@ -1005,11 +929,8 @@ export class DragEventWatcher {
       if (block.flavour === 'ink:surface') {
         if (block.props.elements) {
           Object.values(
-            block.props.elements as Record<
-              string,
-              { type: string; xywh?: SerializedXYWH }
-            >
-          ).forEach(elem => {
+            block.props.elements as Record<string, { type: string; xywh?: SerializedXYWH }>,
+          ).forEach((elem) => {
             if (elem.type === 'connector') {
               assertType<{
                 type: 'connector';
@@ -1024,7 +945,7 @@ export class DragEventWatcher {
 
               delete elem.xywh;
 
-              (['source', 'target'] as const).forEach(key => {
+              (['source', 'target'] as const).forEach((key) => {
                 const endpoint = elem[key];
                 if (!endpoint.id) {
                   const originalPos = endpoint.position;
@@ -1035,10 +956,7 @@ export class DragEventWatcher {
                           originalPos[0] - connectorBound.x + modelX,
                           originalPos[1] - connectorBound.y + modelY,
                         ]
-                      : [
-                          originalPos[0] - rect.x + modelX,
-                          originalPos[1] - rect.y + modelY,
-                        ],
+                      : [originalPos[0] - rect.x + modelX, originalPos[1] - rect.y + modelY],
                   };
                 }
               });
@@ -1052,9 +970,7 @@ export class DragEventWatcher {
                 elemBound.y = modelY;
                 elem.xywh = elemBound.serialize();
               } else {
-                elem.xywh = elemBound
-                  .moveDelta(-rect.x + modelX, -rect.y + modelY)
-                  .serialize();
+                elem.xywh = elemBound.moveDelta(-rect.x + modelX, -rect.y + modelY).serialize();
               }
             }
           });
@@ -1062,30 +978,25 @@ export class DragEventWatcher {
         block.children.forEach(rewrite);
       } else {
         const schema = this.std.store.schema.get(block.flavour);
-        const isGfxModel =
-          schema?.model.toModel?.() instanceof GfxBlockElementModel;
+        const isGfxModel = schema?.model.toModel?.() instanceof GfxBlockElementModel;
 
         if (!isGfxModel) {
           return;
         }
 
         if (!block.props.xywh) {
-          block.props.xywh =
-            schema?.model.props?.(internalPrimitives).xywh ?? '[0,0,100,100]';
+          block.props.xywh = schema?.model.props?.(internalPrimitives).xywh ?? '[0,0,100,100]';
         }
 
         const blockBound =
-          Bound.deserialize(block.props.xywh as SerializedXYWH) ??
-          new Bound(0, 0, 0, 0);
+          Bound.deserialize(block.props.xywh as SerializedXYWH) ?? new Bound(0, 0, 0, 0);
 
         if (block.flavour === 'ink:embed-iframe') {
           let width = EMBED_IFRAME_DEFAULT_WIDTH_IN_SURFACE;
           let height = EMBED_IFRAME_DEFAULT_HEIGHT_IN_SURFACE;
           if (block.props.url && typeof block.props.url === 'string') {
             const embedIframeService = this.std.get(EmbedIframeService);
-            const options = embedIframeService.getConfig(
-              block.props.url
-            )?.options;
+            const options = embedIframeService.getConfig(block.props.url)?.options;
             if (options) {
               width = options.widthInSurface;
               height = options.heightInSurface;
@@ -1116,9 +1027,7 @@ export class DragEventWatcher {
           blockBound.y = modelY;
           block.props.xywh = blockBound.serialize();
         } else {
-          block.props.xywh = blockBound
-            .moveDelta(-rect.x + modelX, -rect.y + modelY)
-            .serialize();
+          block.props.xywh = blockBound.moveDelta(-rect.x + modelX, -rect.y + modelY).serialize();
         }
       }
     };
@@ -1136,26 +1045,21 @@ export class DragEventWatcher {
    * @param snapshot
    * @param point
    */
-  private readonly _dropAsGfxBlock = (
-    snapshot: SliceSnapshot,
-    point: Point
-  ) => {
+  private readonly _dropAsGfxBlock = (snapshot: SliceSnapshot, point: Point) => {
     const store = this.widget.std.store;
     const schema = store.schema;
 
-    point = Point.from(
-      this.gfx.viewport.toModelCoordFromClientCoord([point.x, point.y])
-    );
+    point = Point.from(this.gfx.viewport.toModelCoordFromClientCoord([point.x, point.y]));
 
     // check if all blocks can be dropped as gfx block
-    const groupByParent = groupBy(snapshot.content, block =>
+    const groupByParent = groupBy(snapshot.content, (block) =>
       schema.safeValidate(block.flavour, 'ink:surface')
         ? 'ink:surface'
         : schema.safeValidate(block.flavour, 'ink:page')
           ? 'ink:page'
           : // if the parent is not surface or page, it can't be dropped as gfx block
             // mark it as empty
-            'empty'
+            'empty',
     );
 
     // empty means all blocks can be dropped as gfx block
@@ -1171,7 +1075,7 @@ export class DragEventWatcher {
 
         this._rewriteSnapshotXYWH(surfaceSnapshot, point, true);
         this._dropToModel(surfaceSnapshot, this.gfx.surface!.id)
-          .then(slices => {
+          .then((slices) => {
             slices?.content.forEach((block, idx) => {
               if (block.id === content[idx].id) {
                 if (block.flavour === 'ink:embed-iframe') {
@@ -1204,7 +1108,7 @@ export class DragEventWatcher {
 
         this._rewriteSnapshotXYWH(pageSnapshot, point, true);
         this._dropToModel(pageSnapshot, this.widget.store.root!.id)
-          .then(slices => {
+          .then((slices) => {
             slices?.content.forEach((block, idx) => {
               if (block.flavour === 'ink:embed-iframe') {
                 store.updateBlock(block.id, {
@@ -1225,8 +1129,8 @@ export class DragEventWatcher {
       }
     } else {
       const dndExtApi = this.dndExtension;
-      const content = snapshot.content.filter(block =>
-        schema.safeValidate(block.flavour, 'ink:note')
+      const content = snapshot.content.filter((block) =>
+        schema.safeValidate(block.flavour, 'ink:note'),
       );
       const sourceDocId = snapshot.pageId;
 
@@ -1240,36 +1144,30 @@ export class DragEventWatcher {
         const linkedDocSnapshot = dndExtApi.fromEntity({
           docId: sourceDocId,
           props: {
-            blockIds: content.map(block => block.id),
+            blockIds: content.map((block) => block.id),
             style: 'vertical',
             xywh: new Bound(
               point.x,
               point.y,
               EMBED_CARD_WIDTH[style],
-              EMBED_CARD_HEIGHT[style]
+              EMBED_CARD_HEIGHT[style],
             ).serialize(),
           },
         });
 
         if (linkedDocSnapshot) {
-          this._dropToModel(linkedDocSnapshot, this.gfx.surface.id).catch(
-            console.error
-          );
+          this._dropToModel(linkedDocSnapshot, this.gfx.surface.id).catch(console.error);
         }
       }
       // create note to wrap the snapshot
       else {
         const originalModel = store.getModelById(snapshot.content[0].id);
-        const originalNote = originalModel
-          ? findNoteBlockModel(originalModel)
-          : null;
+        const originalNote = originalModel ? findNoteBlockModel(originalModel) : null;
 
         let noteId: string;
         if (originalNote) {
           const placement =
-            originalNote.children[0].id === snapshot.content[0].id
-              ? 'before'
-              : 'after';
+            originalNote.children[0].id === snapshot.content[0].id ? 'before' : 'after';
 
           noteId = store.addSiblingBlocks(
             originalNote,
@@ -1280,11 +1178,11 @@ export class DragEventWatcher {
                   point.x,
                   point.y,
                   DEFAULT_NOTE_WIDTH,
-                  DEFAULT_NOTE_HEIGHT
+                  DEFAULT_NOTE_HEIGHT,
                 ).serialize(),
               },
             ],
-            placement
+            placement,
           )[0];
         } else {
           noteId = store.addBlock(
@@ -1294,10 +1192,10 @@ export class DragEventWatcher {
                 point.x,
                 point.y,
                 DEFAULT_NOTE_WIDTH,
-                DEFAULT_NOTE_HEIGHT
+                DEFAULT_NOTE_HEIGHT,
               ).serialize(),
             },
-            this.widget.store.root!
+            this.widget.store.root!,
           );
         }
 
@@ -1306,7 +1204,7 @@ export class DragEventWatcher {
             ...snapshot,
             content,
           },
-          noteId
+          noteId,
         )
           .then(() => {
             const telemetry = this.std.getOptional(TelemetryProvider);
@@ -1326,13 +1224,11 @@ export class DragEventWatcher {
 
   private readonly _toSnapshot = (
     blocks: (BlockComponent | BlockModel)[],
-    selectedGfxElms?: string[]
+    selectedGfxElms?: string[],
   ) => {
     const slice = Slice.fromModels(
       this.std.store,
-      blocks.map(block =>
-        toDraftModel(block instanceof BlockComponent ? block.model : block)
-      )
+      blocks.map((block) => toDraftModel(block instanceof BlockComponent ? block.model : block)),
     );
     const job = this._getJob(selectedGfxElms);
 
@@ -1348,8 +1244,7 @@ export class DragEventWatcher {
       return;
     }
 
-    const mode =
-      this.std.getOptional(DocModeProvider)?.getEditorMode() ?? 'page';
+    const mode = this.std.getOptional(DocModeProvider)?.getEditorMode() ?? 'page';
 
     const telemetryService = this.std.getOptional(TelemetryProvider);
     telemetryService?.track('LinkedDocCreated', {
@@ -1368,21 +1263,17 @@ export class DragEventWatcher {
     const traverse = (block: BlockSnapshot) => {
       if (block.flavour === 'ink:surface') {
         block.children.forEach(traverse);
-        Object.keys(block.props.elements as Record<string, unknown>).forEach(
-          elemId => {
-            const element = gfx.getElementById(
-              elemId
-            ) as GfxPrimitiveElementModel;
+        Object.keys(block.props.elements as Record<string, unknown>).forEach((elemId) => {
+          const element = gfx.getElementById(elemId) as GfxPrimitiveElementModel;
 
-            if (element) {
-              const originalOpacity = element.opacity;
-              element.opacity = OPACITY;
-              resetCallbacks.push(() => {
-                element.opacity = originalOpacity;
-              });
-            }
+          if (element) {
+            const originalOpacity = element.opacity;
+            element.opacity = OPACITY;
+            resetCallbacks.push(() => {
+              element.opacity = originalOpacity;
+            });
           }
-        );
+        });
       } else {
         const blockView = this.std.view.getBlock(block.id);
 
@@ -1406,11 +1297,7 @@ export class DragEventWatcher {
 
   constructor(readonly widget: InkDragHandleWidget) {}
 
-  private async _dropToModel(
-    snapshot: SliceSnapshot,
-    parent?: string,
-    index?: number
-  ) {
+  private async _dropToModel(snapshot: SliceSnapshot, parent?: string, index?: number) {
     try {
       const std = this.std;
       const job = this._getJob();
@@ -1422,12 +1309,7 @@ export class DragEventWatcher {
         }
       }
       // use snapshot
-      const slice = await job.snapshotToSlice(
-        snapshot,
-        std.store,
-        parent,
-        index
-      );
+      const slice = await job.snapshotToSlice(snapshot, std.store, parent, index);
       return slice;
     } catch {
       return null;
@@ -1487,10 +1369,7 @@ export class DragEventWatcher {
         this._cleanup();
       },
       setDragPreview: ({ source, container, setOffset }) => {
-        if (
-          !source.data?.bsEntity?.modelIds.length ||
-          !source.data.bsEntity.snapshot
-        ) {
+        if (!source.data?.bsEntity?.modelIds.length || !source.data.bsEntity.snapshot) {
           return;
         }
 
@@ -1561,7 +1440,7 @@ export class DragEventWatcher {
           if (source.data.bsEntity?.type === 'blocks') {
             return (
               source.data.from?.docId !== widget.store.id ||
-              source.data.bsEntity.modelIds.every(id => id !== view.model.id)
+              source.data.bsEntity.modelIds.every((id) => id !== view.model.id)
             );
           }
 
@@ -1587,7 +1466,7 @@ export class DragEventWatcher {
             modelId: view.model.id,
           };
         },
-      })
+      }),
     );
 
     // [REMOVED] Embed modules - not needed for local markdown editor
@@ -1597,7 +1476,7 @@ export class DragEventWatcher {
     }
 
     if (this.dropTargetCleanUps.has(view.model.id)) {
-      this.dropTargetCleanUps.get(view.model.id)!.forEach(clean => clean());
+      this.dropTargetCleanUps.get(view.model.id)!.forEach((clean) => clean());
     }
 
     this.dropTargetCleanUps.set(view.model.id, cleanups);
@@ -1615,7 +1494,7 @@ export class DragEventWatcher {
 
         if (
           !this._isDropOnCurrentEditor(
-            (location.current.dropTargets[0]?.element as BlockComponent)?.std
+            (location.current.dropTargets[0]?.element as BlockComponent)?.std,
           )
         ) {
           return;
@@ -1626,31 +1505,23 @@ export class DragEventWatcher {
 
         if (
           !this._isDropOnCurrentEditor(
-            (location.current.dropTargets[0]?.element as BlockComponent)?.std
+            (location.current.dropTargets[0]?.element as BlockComponent)?.std,
           )
         ) {
           return;
         }
 
         const target = location.current.dropTargets[0];
-        const point = new Point(
-          location.current.input.clientX,
-          location.current.input.clientY
-        );
+        const point = new Point(location.current.input.clientX, location.current.input.clientY);
         const dragPayload = source.data;
         const dropPayload = target.data;
 
-        this._onDrop(
-          target.element as BlockComponent,
-          dragPayload,
-          dropPayload,
-          point
-        );
+        this._onDrop(target.element as BlockComponent, dragPayload, dropPayload, point);
       },
       onDrag: ({ location, source }) => {
         if (
           !this._isDropOnCurrentEditor(
-            (location.current.dropTargets[0]?.element as BlockComponent)?.std
+            (location.current.dropTargets[0]?.element as BlockComponent)?.std,
           ) ||
           !location.current.dropTargets[0]
         ) {
@@ -1658,25 +1529,17 @@ export class DragEventWatcher {
         }
 
         const target = location.current.dropTargets[0];
-        const point = new Point(
-          location.current.input.clientX,
-          location.current.input.clientY
-        );
+        const point = new Point(location.current.input.clientX, location.current.input.clientY);
         const dragPayload = source.data;
         const dropPayload = target.data;
 
-        this._onDragMove(
-          point,
-          dragPayload,
-          dropPayload,
-          target.element as BlockComponent
-        );
+        this._onDragMove(point, dragPayload, dropPayload, target.element as BlockComponent);
       },
     });
   }
 
   watch() {
-    this.widget.handleEvent('pointerDown', ctx => {
+    this.widget.handleEvent('pointerDown', (ctx) => {
       const state = ctx.get('pointerState');
       const event = state.raw;
       const target = captureEventTarget(event.target);
@@ -1689,7 +1552,7 @@ export class DragEventWatcher {
       return;
     });
 
-    this.widget.handleEvent('dragStart', ctx => {
+    this.widget.handleEvent('dragStart', (ctx) => {
       const state = ctx.get('pointerState');
       const event = state.raw;
       const target = captureEventTarget(event.target);
@@ -1714,7 +1577,7 @@ export class DragEventWatcher {
           canScroll: ({ source }) => {
             return source.data?.bsEntity?.type === 'blocks';
           },
-        })
+        }),
       );
     }
 
@@ -1724,26 +1587,23 @@ export class DragEventWatcher {
     disposables.add(this._monitorBlockDrag());
 
     disposables.add(
-      std.view.viewUpdated.subscribe(payload => {
+      std.view.viewUpdated.subscribe((payload) => {
         if (payload.type !== 'block') {
           return;
         }
         if (payload.method === 'add') {
           this._makeDropTarget(payload.view);
-        } else if (
-          payload.method === 'delete' &&
-          this.dropTargetCleanUps.has(payload.id)
-        ) {
-          this.dropTargetCleanUps.get(payload.id)!.forEach(clean => clean());
+        } else if (payload.method === 'delete' && this.dropTargetCleanUps.has(payload.id)) {
+          this.dropTargetCleanUps.get(payload.id)!.forEach((clean) => clean());
           this.dropTargetCleanUps.delete(payload.id);
         }
-      })
+      }),
     );
 
-    std.view.views.forEach(block => this._makeDropTarget(block));
+    std.view.views.forEach((block) => this._makeDropTarget(block));
 
     disposables.add(() => {
-      this.dropTargetCleanUps.forEach(cleanUps => cleanUps.forEach(fn => fn()));
+      this.dropTargetCleanUps.forEach((cleanUps) => cleanUps.forEach((fn) => fn()));
       this.dropTargetCleanUps.clear();
     });
   }

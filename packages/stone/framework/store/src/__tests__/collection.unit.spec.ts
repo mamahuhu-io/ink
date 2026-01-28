@@ -37,8 +37,8 @@ function serializCollection(doc: Doc): Record<string, any> {
 }
 
 function waitOnce<T>(slot: Subject<T>) {
-  return new Promise<T>(resolve => {
-    const subscription = slot.subscribe(val => {
+  return new Promise<T>((resolve) => {
+    const subscription = slot.subscribe((val) => {
       subscription.unsubscribe();
       resolve(val);
     });
@@ -69,10 +69,7 @@ function createTestDoc(docId = defaultDocId) {
   return store;
 }
 
-function requestIdleCallbackPolyfill(
-  callback: IdleRequestCallback,
-  options?: IdleRequestOptions
-) {
+function requestIdleCallbackPolyfill(callback: IdleRequestCallback, options?: IdleRequestOptions) {
   const timeout = options?.timeout ?? 1000;
   const start = Date.now();
   return setTimeout(function () {
@@ -289,7 +286,7 @@ describe('addBlock', () => {
         { flavour: 'ink:paragraph', blockProps: { type: 'h1' } },
         { flavour: 'ink:paragraph', blockProps: { type: 'h2' } },
       ],
-      noteId
+      noteId,
     );
 
     assert.deepEqual(serializCollection(doc.rootDoc).spaces[spaceId].blocks, {
@@ -342,7 +339,7 @@ describe('addBlock', () => {
     queueMicrotask(() =>
       doc.addBlock('ink:page', {
         title: new Text(),
-      })
+      }),
     );
     const blockId = await waitOnce(doc.slots.rootAdded);
     const block = doc.getModelById(blockId) as BlockModel;
@@ -369,8 +366,9 @@ describe('addBlock', () => {
     assert.equal(root.children[0].children[0].flavour, 'ink:paragraph');
     assert.equal(root.childMap.value.get('1'), 0);
 
-    const serializedChildren = serializCollection(doc.rootDoc).spaces[spaceId]
-      .blocks['0']['sys:children'];
+    const serializedChildren = serializCollection(doc.rootDoc).spaces[spaceId].blocks['0'][
+      'sys:children'
+    ];
     assert.deepEqual(serializedChildren, ['1']);
     assert.equal(root.children[0].id, '1');
   });
@@ -394,10 +392,7 @@ describe('addBlock', () => {
     collection.removeDoc(doc0.id);
 
     assert.equal(collection.docs.size, 1);
-    assert.equal(
-      serializCollection(doc0.rootDoc).spaces['doc:home'],
-      undefined
-    );
+    assert.equal(serializCollection(doc0.rootDoc).spaces['doc:home'], undefined);
 
     collection.removeDoc(doc1.id);
     assert.equal(collection.docs.size, 0);
@@ -429,7 +424,7 @@ describe('addBlock', () => {
           id: 'doc:home',
           title: '',
         },
-      ]
+      ],
     );
 
     let called = false;
@@ -450,7 +445,7 @@ describe('addBlock', () => {
           title: '',
           favorite: true,
         },
-      ]
+      ],
     );
     assert.ok(called);
   });
@@ -823,9 +818,7 @@ describe('getBlock', () => {
     doc.addBlock('ink:paragraph', {}, noteId);
     doc.addBlock('ink:paragraph', {}, noteId);
 
-    const result = doc.getParent(
-      rootModel.children[0].children[1]
-    ) as BlockModel;
+    const result = doc.getParent(rootModel.children[0].children[1]) as BlockModel;
     assert.equal(result, rootModel.children[0]);
 
     const invalid = doc.getParent(rootModel);

@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [index](../README.md) / BlockViewExtension
 
@@ -35,8 +35,5 @@ The view is a lit template that is used to render the block.
 ```ts
 import { BlockViewExtension } from '@ink/stone-std';
 
-const MyListBlockViewExtension = BlockViewExtension(
-  'ink:list',
-  literal`my-list-block`
-);
+const MyListBlockViewExtension = BlockViewExtension('ink:list', literal`my-list-block`);
 ```

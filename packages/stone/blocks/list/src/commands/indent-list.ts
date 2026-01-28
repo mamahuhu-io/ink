@@ -1,9 +1,6 @@
 import { ListBlockModel, ParagraphBlockModel } from '@ink/stone-model';
 import type { IndentContext } from '@ink/stone-shared/types';
-import {
-  getNearestHeadingBefore,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { getNearestHeadingBefore, matchModels } from '@ink/stone-shared/utils';
 import { type Command, TextSelection } from '@ink/stone-std';
 
 import { correctNumberedListsOrderToPrev } from './utils.js';
@@ -90,14 +87,8 @@ export const indentListCommand: Command<{
   indentContext: IndentContext;
 }> = (ctx, next) => {
   const { indentContext, std } = ctx;
-  if (
-    !indentContext ||
-    indentContext.type !== 'indent' ||
-    indentContext.flavour !== 'ink:list'
-  ) {
-    console.warn(
-      'you need to use `canIndentList` command before running `indentList` command'
-    );
+  if (!indentContext || indentContext.type !== 'indent' || indentContext.flavour !== 'ink:list') {
+    console.warn('you need to use `canIndentList` command before running `indentList` command');
     return;
   }
 

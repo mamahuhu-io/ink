@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const SingleSelect =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const SingleSelect = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const SingleSelect =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M3.75 12a8.25 8.25 0 1 1 16.5 0 8.25 8.25 0 0 1-16.5 0M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25m-2.47 8.22a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06L12 12.94z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M3.75 12a8.25 8.25 0 1 1 16.5 0 8.25 8.25 0 0 1-16.5 0M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25m-2.47 8.22a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06L12 12.94z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default SingleSelect;

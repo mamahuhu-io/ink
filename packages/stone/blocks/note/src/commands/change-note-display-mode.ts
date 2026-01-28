@@ -25,14 +25,12 @@ export const changeNoteDisplayMode: Command<{
   // 4. the changing edgeless note  -|   4. Edgeless mode note
   const parent = std.store.getParent(noteBlockModel);
   if (parent) {
-    const notes = parent.children.filter(child =>
-      matchModels(child, [NoteBlockModel])
-    );
+    const notes = parent.children.filter((child) => matchModels(child, [NoteBlockModel]));
     const firstEdgelessOnlyNote = notes.find(
-      note => note.props.displayMode === NoteDisplayMode.EdgelessOnly
+      (note) => note.props.displayMode === NoteDisplayMode.EdgelessOnly,
     );
     const lastPageVisibleNote = notes.findLast(
-      note => note.props.displayMode !== NoteDisplayMode.EdgelessOnly
+      (note) => note.props.displayMode !== NoteDisplayMode.EdgelessOnly,
     );
 
     if (currentMode === NoteDisplayMode.EdgelessOnly) {
@@ -40,14 +38,14 @@ export const changeNoteDisplayMode: Command<{
         [noteBlockModel],
         parent,
         lastPageVisibleNote ?? firstEdgelessOnlyNote,
-        lastPageVisibleNote ? false : true
+        lastPageVisibleNote ? false : true,
       );
     } else if (mode === NoteDisplayMode.EdgelessOnly) {
       std.store.moveBlocks(
         [noteBlockModel],
         parent,
         firstEdgelessOnlyNote ?? lastPageVisibleNote,
-        firstEdgelessOnlyNote ? true : false
+        firstEdgelessOnlyNote ? true : false,
       );
     }
   }

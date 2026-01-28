@@ -11,7 +11,7 @@ export function setObjectPropMeta(
   symbol: symbol,
   target: unknown,
   prop: string | symbol,
-  val: unknown
+  val: unknown,
 ) {
   // @ts-expect-error ignore
   target[symbol] = target[symbol] ?? {};
@@ -26,11 +26,7 @@ export function setObjectPropMeta(
  * @param prop The property name, if not provided, returns all metadata for that symbol
  * @returns
  */
-export function getObjectPropMeta(
-  target: unknown,
-  symbol: symbol,
-  prop?: string | symbol
-) {
+export function getObjectPropMeta(target: unknown, symbol: symbol, prop?: string | symbol) {
   if (prop) {
     // @ts-expect-error ignore
     return target[symbol]?.[prop] ?? null;

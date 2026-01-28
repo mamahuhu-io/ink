@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / observe
 
@@ -22,11 +22,11 @@ re-observe the property automatically when the value is altered.
 
 ### E
 
-`E` *extends* `YEvent`\<`any`\>
+`E` _extends_ `YEvent`\<`any`\>
 
 ### T
 
-`T` *extends* `GfxPrimitiveElementModel`\<`BaseElementProps`\>
+`T` _extends_ `GfxPrimitiveElementModel`\<`BaseElementProps`\>
 
 ## Parameters
 

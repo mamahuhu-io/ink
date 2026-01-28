@@ -1,20 +1,17 @@
+import { flip, offset } from '@floating-ui/dom';
 import { createLitPortal } from '@ink/stone-components/portal';
-import type {
-  EditorIconButton,
-  MenuItemGroup,
-} from '@ink/stone-components/toolbar';
+import type { EditorIconButton, MenuItemGroup } from '@ink/stone-components/toolbar';
 import { renderGroups } from '@ink/stone-components/toolbar';
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { noop } from '@ink/stone-global/utils';
 import { MoreVerticalIcon } from '@ink/stone-icons/lit';
-import { flip, offset } from '@floating-ui/dom';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { css, html, LitElement } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import type { CodeBlockToolbarContext } from '../context.js';
 import { t } from '../../configs/i18n.js';
+import type { CodeBlockToolbarContext } from '../context.js';
 
 export class InkCodeToolbar extends WithDisposable(LitElement) {
   static override styles = css`
@@ -75,9 +72,7 @@ export class InkCodeToolbar extends WithDisposable(LitElement) {
     this._currentOpenMenu = this._popMenuAbortController;
 
     if (!this._moreButton) {
-      console.error(
-        'Failed to open more menu in code toolbar! Unexpected missing more button'
-      );
+      console.error('Failed to open more menu in code toolbar! Unexpected missing more button');
       return;
     }
 
@@ -119,8 +114,7 @@ export class InkCodeToolbar extends WithDisposable(LitElement) {
   }
 
   override render() {
-    const hasMoreItems =
-      this.moreGroups && this.moreGroups.some(g => g.items.length > 0);
+    const hasMoreItems = this.moreGroups && this.moreGroups.some((g) => g.items.length > 0);
     return html`
       <editor-toolbar class="code-toolbar-container" data-without-bg>
         ${renderGroups(this.primaryGroups, this.context)}

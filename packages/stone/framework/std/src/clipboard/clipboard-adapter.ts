@@ -1,14 +1,7 @@
 import { createIdentifier, type ServiceProvider } from '@ink/stone-global/di';
-import type {
-  BaseAdapter,
-  ExtensionType,
-  Transformer,
-} from '@ink/stone-store';
+import type { BaseAdapter, ExtensionType, Transformer } from '@ink/stone-store';
 
-type AdapterConstructor = new (
-  job: Transformer,
-  provider: ServiceProvider
-) => BaseAdapter;
+type AdapterConstructor = new (job: Transformer, provider: ServiceProvider) => BaseAdapter;
 
 export interface ClipboardAdapterConfig {
   mimeType: string;
@@ -16,18 +9,14 @@ export interface ClipboardAdapterConfig {
   adapter: AdapterConstructor;
 }
 
-export const ClipboardAdapterConfigIdentifier =
-  createIdentifier<ClipboardAdapterConfig>('clipboard-adapter-config');
+export const ClipboardAdapterConfigIdentifier = createIdentifier<ClipboardAdapterConfig>(
+  'clipboard-adapter-config',
+);
 
-export function ClipboardAdapterConfigExtension(
-  config: ClipboardAdapterConfig
-): ExtensionType {
+export function ClipboardAdapterConfigExtension(config: ClipboardAdapterConfig): ExtensionType {
   return {
-    setup: di => {
-      di.addImpl(
-        ClipboardAdapterConfigIdentifier(config.mimeType),
-        () => config
-      );
+    setup: (di) => {
+      di.addImpl(ClipboardAdapterConfigIdentifier(config.mimeType), () => config);
     },
   };
 }

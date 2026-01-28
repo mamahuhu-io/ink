@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from "@ink/stone-global/exceptions";
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type {
   BlockSnapshot,
   DocSnapshot,
@@ -12,11 +12,11 @@ import type {
   ToBlockSnapshotPayload,
   ToDocSnapshotPayload,
   ToSliceSnapshotPayload,
-} from "@ink/stone-store";
-import { BaseAdapter } from "@ink/stone-store";
+} from '@ink/stone-store';
+import { BaseAdapter } from '@ink/stone-store';
 
-import { NotificationProvider } from "../../services/notification-service.js";
-import { decodeClipboardBlobs, encodeClipboardBlobs } from "./utils.js";
+import { NotificationProvider } from '../../services/notification-service.js';
+import { decodeClipboardBlobs, encodeClipboardBlobs } from './utils.js';
 
 export type FileSnapshot = {
   name: string;
@@ -25,7 +25,7 @@ export type FileSnapshot = {
 };
 
 export class ClipboardAdapter extends BaseAdapter<string> {
-  static MIME = "INK/SNAPSHOT";
+  static MIME = 'INK/SNAPSHOT';
 
   private readonly _onError = (message: string) => {
     const notification = this.provider.getOptional(NotificationProvider);
@@ -35,39 +35,36 @@ export class ClipboardAdapter extends BaseAdapter<string> {
   };
 
   override fromBlockSnapshot(
-    _payload: FromBlockSnapshotPayload
+    _payload: FromBlockSnapshotPayload,
   ): Promise<FromBlockSnapshotResult<string>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      "ClipboardAdapter.fromBlockSnapshot is not implemented"
+      'ClipboardAdapter.fromBlockSnapshot is not implemented',
     );
   }
 
   override fromDocSnapshot(
-    _payload: FromDocSnapshotPayload
+    _payload: FromDocSnapshotPayload,
   ): Promise<FromDocSnapshotResult<string>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      "ClipboardAdapter.fromDocSnapshot is not implemented"
+      'ClipboardAdapter.fromDocSnapshot is not implemented',
     );
   }
 
   override async fromSliceSnapshot(
-    payload: FromSliceSnapshotPayload
+    payload: FromSliceSnapshotPayload,
   ): Promise<FromSliceSnapshotResult<string>> {
     const snapshot = payload.snapshot;
     const assets = payload.assets;
     if (!assets) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        "ClipboardAdapter.fromSliceSnapshot: assets is not found"
+        'ClipboardAdapter.fromSliceSnapshot: assets is not found',
       );
     }
     const map = assets.getAssets();
-    const blobs: Record<string, FileSnapshot> = await encodeClipboardBlobs(
-      map,
-      this._onError
-    );
+    const blobs: Record<string, FileSnapshot> = await encodeClipboardBlobs(map, this._onError);
     return {
       file: JSON.stringify({
         snapshot,
@@ -77,27 +74,21 @@ export class ClipboardAdapter extends BaseAdapter<string> {
     };
   }
 
-  override toBlockSnapshot(
-    _payload: ToBlockSnapshotPayload<string>
-  ): Promise<BlockSnapshot> {
+  override toBlockSnapshot(_payload: ToBlockSnapshotPayload<string>): Promise<BlockSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      "ClipboardAdapter.toBlockSnapshot is not implemented"
+      'ClipboardAdapter.toBlockSnapshot is not implemented',
     );
   }
 
-  override toDocSnapshot(
-    _payload: ToDocSnapshotPayload<string>
-  ): Promise<DocSnapshot> {
+  override toDocSnapshot(_payload: ToDocSnapshotPayload<string>): Promise<DocSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      "ClipboardAdapter.toDocSnapshot is not implemented"
+      'ClipboardAdapter.toDocSnapshot is not implemented',
     );
   }
 
-  override toSliceSnapshot(
-    payload: ToSliceSnapshotPayload<string>
-  ): Promise<SliceSnapshot> {
+  override toSliceSnapshot(payload: ToSliceSnapshotPayload<string>): Promise<SliceSnapshot> {
     const json = JSON.parse(payload.file);
     const { blobs, snapshot } = json;
     const map = payload.assets?.getAssets();

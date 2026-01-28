@@ -12,10 +12,7 @@ import { createProxy } from './proxy';
 import type { OnChange } from './types';
 import { getYEventHandler } from './y-event-handler';
 
-export class ReactiveFlatYMap extends BaseReactiveYData<
-  UnRecord,
-  YMap<unknown>
-> {
+export class ReactiveFlatYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
   protected readonly _proxy: UnRecord;
   protected readonly _source: UnRecord;
   protected readonly _options?: ProxyOptions<UnRecord>;
@@ -38,11 +35,7 @@ export class ReactiveFlatYMap extends BaseReactiveYData<
     });
   };
 
-  private readonly _transform = (
-    key: string,
-    value: unknown,
-    origin: unknown
-  ) => {
+  private readonly _transform = (key: string, value: unknown, origin: unknown) => {
     const onChange = this._getPropOnChange(key);
     if (value instanceof Text) {
       value.bind(onChange as OnTextChange);
@@ -70,11 +63,7 @@ export class ReactiveFlatYMap extends BaseReactiveYData<
 
   private _byPassYjs = false;
 
-  private readonly _getProxy = (
-    source: UnRecord,
-    root: UnRecord,
-    path?: string
-  ): UnRecord =>
+  private readonly _getProxy = (source: UnRecord, root: UnRecord, path?: string): UnRecord =>
     createProxy({
       yMap: this._ySource,
       base: source,
@@ -100,7 +89,7 @@ export class ReactiveFlatYMap extends BaseReactiveYData<
     protected readonly _ySource: YMap<unknown>,
     private readonly _onDispose: Subject<void>,
     private readonly _onChange?: OnChange,
-    defaultProps?: Record<string, unknown>
+    defaultProps?: Record<string, unknown>,
   ) {
     super();
     this._initialized = false;
@@ -116,7 +105,7 @@ export class ReactiveFlatYMap extends BaseReactiveYData<
     const initSignals = (key: string, value: unknown) => {
       const signalData = signal(value);
       source[`${key}$`] = signalData;
-      const unsubscribe = signalData.subscribe(next => {
+      const unsubscribe = signalData.subscribe((next) => {
         if (!this._initialized) {
           return;
         }

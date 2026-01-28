@@ -18,7 +18,7 @@ type ObserveFn<
   /**
    * The transaction object of the Y.Map or Y.Array, the `null` value means the observer is initializing.
    */
-  transaction: Y.Transaction | null
+  transaction: Y.Transaction | null,
 ) => void;
 
 /**
@@ -30,15 +30,10 @@ type ObserveFn<
  * @param fn
  * @returns
  */
-export function observe<
-  V,
-  E extends Y.YEvent<any>,
-  T extends GfxPrimitiveElementModel,
->(fn: ObserveFn<E, T>) {
-  return function observeDecorator(
-    _: unknown,
-    context: ClassAccessorDecoratorContext
-  ) {
+export function observe<V, E extends Y.YEvent<any>, T extends GfxPrimitiveElementModel>(
+  fn: ObserveFn<E, T>,
+) {
+  return function observeDecorator(_: unknown, context: ClassAccessorDecoratorContext) {
     const prop = context.name;
     return {
       init(this: T, v: V) {
@@ -49,17 +44,11 @@ export function observe<
   };
 }
 
-function getObserveMeta(
-  proto: unknown,
-  prop: string | symbol
-): null | ObserveFn {
+function getObserveMeta(proto: unknown, prop: string | symbol): null | ObserveFn {
   return getObjectPropMeta(proto, observeSymbol, prop);
 }
 
-export function startObserve(
-  prop: string | symbol,
-  receiver: GfxPrimitiveElementModel
-) {
+export function startObserve(prop: string | symbol, receiver: GfxPrimitiveElementModel) {
   const proto = Object.getPrototypeOf(receiver);
   const observeFn = getObserveMeta(proto, prop as string)!;
   // @ts-expect-error ignore
@@ -98,25 +87,22 @@ export function startObserve(
     console.warn(
       `Failed to observe "${prop.toString()}" of ${
         receiver.type
-      } element, make sure it's a Y type.`
+      } element, make sure it's a Y type.`,
     );
   }
 }
 
-export function initializeObservers(
-  proto: unknown,
-  receiver: GfxPrimitiveElementModel
-) {
+export function initializeObservers(proto: unknown, receiver: GfxPrimitiveElementModel) {
   const observers = getObjectPropMeta(proto, observeSymbol);
 
-  Object.keys(observers).forEach(prop => {
+  Object.keys(observers).forEach((prop) => {
     startObserve(prop, receiver);
   });
 
   receiver['_disposable'].add(() => {
     // @ts-expect-error ignore
-    Object.values(receiver[observerDisposableSymbol] ?? {}).forEach(dispose =>
-      (dispose as () => void)()
+    Object.values(receiver[observerDisposableSymbol] ?? {}).forEach((dispose) =>
+      (dispose as () => void)(),
     );
   });
 }

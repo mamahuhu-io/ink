@@ -1,23 +1,16 @@
-import { DefaultTheme, NoteDisplayMode } from "@ink/stone-model";
-import {
-  embedSyncedDocMiddleware,
-  HtmlAdapter,
-} from "@ink/stone-shared/adapters";
-import type {
-  BlockSnapshot,
-  DocSnapshot,
-  TransformerMiddleware,
-} from "@ink/stone-store";
-import { AssetsManager, MemoryBlobCRUD } from "@ink/stone-store";
-import { describe, expect, test } from "vitest";
+import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
+import { embedSyncedDocMiddleware, HtmlAdapter } from '@ink/stone-shared/adapters';
+import type { BlockSnapshot, DocSnapshot, TransformerMiddleware } from '@ink/stone-store';
+import { AssetsManager, MemoryBlobCRUD } from '@ink/stone-store';
+import { describe, expect, test } from 'vitest';
 
-import { createJob } from "../utils/create-job.js";
-import { getProvider } from "../utils/get-provider.js";
-import { nanoidReplacement } from "../utils/nanoid-replacement.js";
+import { createJob } from '../utils/create-job.js';
+import { getProvider } from '../utils/get-provider.js';
+import { nanoidReplacement } from '../utils/nanoid-replacement.js';
 
 const provider = getProvider();
 
-describe("snapshot to html", () => {
+describe('snapshot to html', () => {
   const template = (html: string, title?: string) => {
     let htmlTemplate = `
   <!doctype html>
@@ -55,11 +48,11 @@ describe("snapshot to html", () => {
   </body>
   </html>
   `
-      .replace(/\s\s+|\n/g, "")
-      .replace("<!--HtmlTemplate-->", html);
+      .replace(/\s\s+|\n/g, '')
+      .replace('<!--HtmlTemplate-->', html);
     if (title) {
       htmlTemplate = htmlTemplate.replace(
-        "<!--InkStoneDocTitlePlaceholder-->",
+        '<!--InkStoneDocTitlePlaceholder-->',
         `<h1>${title}</h1>`,
       );
     }
@@ -69,50 +62,50 @@ describe("snapshot to html", () => {
   const paragraphTemplate = (html: string) =>
     `<div class="ink-paragraph-block-container">${html}<div class="ink-block-children-container" style="padding-left: 26px;"></div></div>`;
 
-  test("code", async () => {
+  test('code', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:8hOLxad5Fv",
-              flavour: "ink:code",
+              type: 'block',
+              id: 'block:8hOLxad5Fv',
+              flavour: 'ink:code',
               props: {
-                language: "python",
+                language: 'python',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "import this",
+                      insert: 'import this',
                     },
                   ],
                 },
@@ -124,9 +117,7 @@ describe("snapshot to html", () => {
       ],
     };
 
-    const html = template(
-      `<pre><code class="code-python">import this</code></pre>`,
-    );
+    const html = template(`<pre><code class="code-python">import this</code></pre>`);
 
     const htmlAdapter = new HtmlAdapter(createJob(), provider);
     const target = await htmlAdapter.fromBlockSnapshot({
@@ -135,50 +126,50 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("code upper case", async () => {
+  test('code upper case', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:8hOLxad5Fv",
-              flavour: "ink:code",
+              type: 'block',
+              id: 'block:8hOLxad5Fv',
+              flavour: 'ink:code',
               props: {
-                language: "PYTHON",
+                language: 'PYTHON',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "import this",
+                      insert: 'import this',
                     },
                   ],
                 },
@@ -190,9 +181,7 @@ describe("snapshot to html", () => {
       ],
     };
 
-    const html = template(
-      `<pre><code class="code-PYTHON">import this</code></pre>`,
-    );
+    const html = template(`<pre><code class="code-PYTHON">import this</code></pre>`);
 
     const htmlAdapter = new HtmlAdapter(createJob(), provider);
     const target = await htmlAdapter.fromBlockSnapshot({
@@ -201,50 +190,50 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("code unknown", async () => {
+  test('code unknown', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:8hOLxad5Fv",
-              flavour: "ink:code",
+              type: 'block',
+              id: 'block:8hOLxad5Fv',
+              flavour: 'ink:code',
               props: {
-                language: "unknown",
+                language: 'unknown',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "import this",
+                      insert: 'import this',
                     },
                   ],
                 },
@@ -256,9 +245,7 @@ describe("snapshot to html", () => {
       ],
     };
 
-    const html = template(
-      `<pre><code class="code-unknown">import this</code></pre>`,
-    );
+    const html = template(`<pre><code class="code-unknown">import this</code></pre>`);
 
     const htmlAdapter = new HtmlAdapter(createJob(), provider);
     const target = await htmlAdapter.fromBlockSnapshot({
@@ -267,66 +254,66 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("paragraph", async () => {
+  test('paragraph', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:Bdn8Yvqcny",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:Bdn8Yvqcny',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa",
+                      insert: 'aaa',
                     },
                   ],
                 },
               },
               children: [
                 {
-                  type: "block",
-                  id: "block:72SMa5mdLy",
-                  flavour: "ink:paragraph",
+                  type: 'block',
+                  id: 'block:72SMa5mdLy',
+                  flavour: 'ink:paragraph',
                   props: {
-                    type: "text",
+                    type: 'text',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "bbb",
+                          insert: 'bbb',
                         },
                       ],
                     },
@@ -334,32 +321,32 @@ describe("snapshot to html", () => {
                   children: [],
                 },
                 {
-                  type: "block",
-                  id: "block:f-Z6nRrGK_",
-                  flavour: "ink:paragraph",
+                  type: 'block',
+                  id: 'block:f-Z6nRrGK_',
+                  flavour: 'ink:paragraph',
                   props: {
-                    type: "text",
+                    type: 'text',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "ccc",
+                          insert: 'ccc',
                         },
                       ],
                     },
                   },
                   children: [
                     {
-                      type: "block",
-                      id: "block:sP3bU52el7",
-                      flavour: "ink:paragraph",
+                      type: 'block',
+                      id: 'block:sP3bU52el7',
+                      flavour: 'ink:paragraph',
                       props: {
-                        type: "text",
+                        type: 'text',
                         text: {
-                          "$stone:internal:text$": true,
+                          '$stone:internal:text$': true,
                           delta: [
                             {
-                              insert: "ddd",
+                              insert: 'ddd',
                             },
                           ],
                         },
@@ -367,16 +354,16 @@ describe("snapshot to html", () => {
                       children: [],
                     },
                     {
-                      type: "block",
-                      id: "block:X_HMxP4wxC",
-                      flavour: "ink:paragraph",
+                      type: 'block',
+                      id: 'block:X_HMxP4wxC',
+                      flavour: 'ink:paragraph',
                       props: {
-                        type: "text",
+                        type: 'text',
                         text: {
-                          "$stone:internal:text$": true,
+                          '$stone:internal:text$': true,
                           delta: [
                             {
-                              insert: "eee",
+                              insert: 'eee',
                             },
                           ],
                         },
@@ -384,35 +371,35 @@ describe("snapshot to html", () => {
                       children: [],
                     },
                     {
-                      type: "block",
-                      id: "block:iA34Rb-RvV",
-                      flavour: "ink:paragraph",
+                      type: 'block',
+                      id: 'block:iA34Rb-RvV',
+                      flavour: 'ink:paragraph',
                       props: {
                         text: {
-                          "$stone:internal:text$": true,
+                          '$stone:internal:text$': true,
                           delta: [
                             {
-                              insert: "fff",
+                              insert: 'fff',
                             },
                           ],
                         },
-                        type: "text",
+                        type: 'text',
                       },
                       children: [],
                     },
                   ],
                 },
                 {
-                  type: "block",
-                  id: "block:I0Fmz5Nv02",
-                  flavour: "ink:paragraph",
+                  type: 'block',
+                  id: 'block:I0Fmz5Nv02',
+                  flavour: 'ink:paragraph',
                   props: {
-                    type: "text",
+                    type: 'text',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "ggg",
+                          insert: 'ggg',
                         },
                       ],
                     },
@@ -422,16 +409,16 @@ describe("snapshot to html", () => {
               ],
             },
             {
-              type: "block",
-              id: "block:12lDwMD7ec",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:12lDwMD7ec',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "hhh",
+                      insert: 'hhh',
                     },
                   ],
                 },
@@ -453,50 +440,50 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("bulleted list", async () => {
+  test('bulleted list', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:imiLDMKSkx",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'block:imiLDMKSkx',
+              flavour: 'ink:list',
               props: {
-                type: "bulleted",
+                type: 'bulleted',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa",
+                      insert: 'aaa',
                     },
                   ],
                 },
@@ -505,16 +492,16 @@ describe("snapshot to html", () => {
               },
               children: [
                 {
-                  type: "block",
-                  id: "block:kYliRIovvL",
-                  flavour: "ink:list",
+                  type: 'block',
+                  id: 'block:kYliRIovvL',
+                  flavour: 'ink:list',
                   props: {
-                    type: "bulleted",
+                    type: 'bulleted',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "bbb",
+                          insert: 'bbb',
                         },
                       ],
                     },
@@ -523,16 +510,16 @@ describe("snapshot to html", () => {
                   },
                   children: [
                     {
-                      type: "block",
-                      id: "block:UyvxA_gqCJ",
-                      flavour: "ink:list",
+                      type: 'block',
+                      id: 'block:UyvxA_gqCJ',
+                      flavour: 'ink:list',
                       props: {
-                        type: "bulleted",
+                        type: 'bulleted',
                         text: {
-                          "$stone:internal:text$": true,
+                          '$stone:internal:text$': true,
                           delta: [
                             {
-                              insert: "ccc",
+                              insert: 'ccc',
                             },
                           ],
                         },
@@ -544,16 +531,16 @@ describe("snapshot to html", () => {
                   ],
                 },
                 {
-                  type: "block",
-                  id: "block:-guNZRm5u1",
-                  flavour: "ink:list",
+                  type: 'block',
+                  id: 'block:-guNZRm5u1',
+                  flavour: 'ink:list',
                   props: {
-                    type: "bulleted",
+                    type: 'bulleted',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "ddd",
+                          insert: 'ddd',
                         },
                       ],
                     },
@@ -565,16 +552,16 @@ describe("snapshot to html", () => {
               ],
             },
             {
-              type: "block",
-              id: "block:B9CaZzQ2CO",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'block:B9CaZzQ2CO',
+              flavour: 'ink:list',
               props: {
-                type: "bulleted",
+                type: 'bulleted',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "eee",
+                      insert: 'eee',
                     },
                   ],
                 },
@@ -598,50 +585,50 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("different list", async () => {
+  test('different list', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:imiLDMKSkx",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'block:imiLDMKSkx',
+              flavour: 'ink:list',
               props: {
-                type: "bulleted",
+                type: 'bulleted',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa",
+                      insert: 'aaa',
                     },
                   ],
                 },
@@ -651,16 +638,16 @@ describe("snapshot to html", () => {
               children: [],
             },
             {
-              type: "block",
-              id: "block:imiLDMKSkx",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'block:imiLDMKSkx',
+              flavour: 'ink:list',
               props: {
-                type: "todo",
+                type: 'todo',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "bbb",
+                      insert: 'bbb',
                     },
                   ],
                 },
@@ -670,16 +657,16 @@ describe("snapshot to html", () => {
               children: [],
             },
             {
-              type: "block",
-              id: "block:imiLDMKSkx",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'block:imiLDMKSkx',
+              flavour: 'ink:list',
               props: {
-                type: "bulleted",
+                type: 'bulleted',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "ccc",
+                      insert: 'ccc',
                     },
                   ],
                 },
@@ -703,59 +690,59 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("code inline", async () => {
+  test('code inline', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:qhpbuss-KN",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:qhpbuss-KN',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa ",
+                      insert: 'aaa ',
                     },
                     {
-                      insert: "bbb",
+                      insert: 'bbb',
                       attributes: {
                         code: true,
                       },
                     },
                     {
-                      insert: " ccc",
+                      insert: ' ccc',
                     },
                   ],
                 },
@@ -777,59 +764,59 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("link", async () => {
+  test('link', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:Bdn8Yvqcny",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:Bdn8Yvqcny',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa ",
+                      insert: 'aaa ',
                     },
                     {
-                      insert: "bbb",
+                      insert: 'bbb',
                       attributes: {
-                        link: "https://ink.pro/",
+                        link: 'https://ink.pro/',
                       },
                     },
                     {
-                      insert: " ccc",
+                      insert: ' ccc',
                     },
                   ],
                 },
@@ -851,59 +838,59 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("bold", async () => {
+  test('bold', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:zxDyvrg1Mh",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:zxDyvrg1Mh',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa",
+                      insert: 'aaa',
                     },
                     {
-                      insert: "bbb",
+                      insert: 'bbb',
                       attributes: {
                         bold: true,
                       },
                     },
                     {
-                      insert: "ccc",
+                      insert: 'ccc',
                     },
                   ],
                 },
@@ -926,59 +913,59 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("italic", async () => {
+  test('italic', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:zxDyvrg1Mh",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:zxDyvrg1Mh',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "aaa",
+                      insert: 'aaa',
                     },
                     {
-                      insert: "bbb",
+                      insert: 'bbb',
                       attributes: {
                         italic: true,
                       },
                     },
                     {
-                      insert: "ccc",
+                      insert: 'ccc',
                     },
                   ],
                 },
@@ -1001,62 +988,62 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("image", async () => {
+  test('image', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:WcYcyv-oZY",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:WcYcyv-oZY',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:zqtuv999Ww",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:zqtuv999Ww',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:UTUZojv22c",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:UTUZojv22c',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:Gan31s-dYK",
-              flavour: "ink:image",
+              type: 'block',
+              id: 'block:Gan31s-dYK',
+              flavour: 'ink:image',
               props: {
-                sourceId: "YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=",
-                caption: "aaa",
+                sourceId: 'YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=',
+                caption: 'aaa',
                 width: 0,
                 height: 0,
-                index: "a0",
-                xywh: "[0,0,0,0]",
+                index: 'a0',
+                xywh: '[0,0,0,0]',
                 rotate: 0,
               },
               children: [],
             },
             {
-              type: "block",
-              id: "block:If92CIQiOl",
-              flavour: "ink:paragraph",
+              type: 'block',
+              id: 'block:If92CIQiOl',
+              flavour: 'ink:paragraph',
               props: {
-                type: "text",
+                type: 'text',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [],
                 },
               },
@@ -1073,10 +1060,7 @@ describe("snapshot to html", () => {
 
     const htmlAdapter = new HtmlAdapter(createJob(), provider);
     const blobManager = new MemoryBlobCRUD();
-    await blobManager.set(
-      "YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=",
-      new Blob(),
-    );
+    await blobManager.set('YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=', new Blob());
     const assets = new AssetsManager({ blob: blobManager });
 
     const target = await htmlAdapter.fromBlockSnapshot({
@@ -1086,77 +1070,77 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  describe("embed link block", () => {
+  describe('embed link block', () => {
     const embedTestCases = [
       {
-        name: "bookmark",
-        flavour: "ink:bookmark",
-        url: "https://example.com",
-        title: "example",
+        name: 'bookmark',
+        flavour: 'ink:bookmark',
+        url: 'https://example.com',
+        title: 'example',
       },
       {
-        name: "embed github",
-        flavour: "ink:embed-github",
-        url: "https://github.com/mamahuhu-io/stone/pull/66666",
-        title: "example github pr title",
+        name: 'embed github',
+        flavour: 'ink:embed-github',
+        url: 'https://github.com/mamahuhu-io/stone/pull/66666',
+        title: 'example github pr title',
       },
       {
-        name: "embed figma",
-        flavour: "ink:embed-figma",
-        url: "https://www.figma.com/file/1234567890",
-        title: "example figma title",
+        name: 'embed figma',
+        flavour: 'ink:embed-figma',
+        url: 'https://www.figma.com/file/1234567890',
+        title: 'example figma title',
       },
       {
-        name: "embed youtube",
-        flavour: "ink:embed-youtube",
-        url: "https://www.youtube.com/watch?v=1234567890",
-        title: "example youtube title",
+        name: 'embed youtube',
+        flavour: 'ink:embed-youtube',
+        url: 'https://www.youtube.com/watch?v=1234567890',
+        title: 'example youtube title',
       },
       {
-        name: "embed loom",
-        flavour: "ink:embed-loom",
-        url: "https://www.loom.com/share/1234567890",
-        title: "example loom title",
+        name: 'embed loom',
+        flavour: 'ink:embed-loom',
+        url: 'https://www.loom.com/share/1234567890',
+        title: 'example loom title',
       },
     ];
 
     for (const testCase of embedTestCases) {
       test(testCase.name, async () => {
         const blockSnapshot: BlockSnapshot = {
-          type: "block",
-          id: "block:vu6SK6WJpW",
-          flavour: "ink:page",
+          type: 'block',
+          id: 'block:vu6SK6WJpW',
+          flavour: 'ink:page',
           props: {
             title: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [],
             },
           },
           children: [
             {
-              type: "block",
-              id: "block:Tk4gSPocAt",
-              flavour: "ink:surface",
+              type: 'block',
+              id: 'block:Tk4gSPocAt',
+              flavour: 'ink:surface',
               props: {
                 elements: {},
               },
               children: [],
             },
             {
-              type: "block",
-              id: "block:WfnS5ZDCJT",
-              flavour: "ink:note",
+              type: 'block',
+              id: 'block:WfnS5ZDCJT',
+              flavour: 'ink:note',
               props: {
-                xywh: "[0,0,800,95]",
+                xywh: '[0,0,800,95]',
                 background: DefaultTheme.noteBackgrounColor,
-                index: "a0",
+                index: 'a0',
                 hidden: false,
                 displayMode: NoteDisplayMode.DocAndEdgeless,
               },
               children: [
                 {
-                  type: "block",
-                  id: "block:Bdn8Yvqcny",
+                  type: 'block',
+                  id: 'block:Bdn8Yvqcny',
                   flavour: testCase.flavour,
                   props: {
                     url: testCase.url,
@@ -1182,224 +1166,224 @@ describe("snapshot to html", () => {
     }
   });
 
-  test("database", async () => {
+  test('database', async () => {
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "block:vu6SK6WJpW",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'block:vu6SK6WJpW',
+      flavour: 'ink:page',
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [],
         },
       },
       children: [
         {
-          type: "block",
-          id: "block:Tk4gSPocAt",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'block:Tk4gSPocAt',
+          flavour: 'ink:surface',
           props: {
             elements: {},
           },
           children: [],
         },
         {
-          type: "block",
-          id: "block:WfnS5ZDCJT",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'block:WfnS5ZDCJT',
+          flavour: 'ink:note',
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "block:8Wb7CSJ9Qe",
-              flavour: "ink:database",
+              type: 'block',
+              id: 'block:8Wb7CSJ9Qe',
+              flavour: 'ink:database',
               props: {
                 cells: {
-                  "block:P_-Wg7Rg9O": {
-                    "block:qyo8q9VPWU": {
-                      columnId: "block:qyo8q9VPWU",
-                      value: "TKip9uc7Yx",
+                  'block:P_-Wg7Rg9O': {
+                    'block:qyo8q9VPWU': {
+                      columnId: 'block:qyo8q9VPWU',
+                      value: 'TKip9uc7Yx',
                     },
-                    "block:5cglrBmAr3": {
-                      columnId: "block:5cglrBmAr3",
+                    'block:5cglrBmAr3': {
+                      columnId: 'block:5cglrBmAr3',
                       value: 1702598400000,
                     },
-                    "block:8Fa0JQe7WY": {
-                      columnId: "block:8Fa0JQe7WY",
+                    'block:8Fa0JQe7WY': {
+                      columnId: 'block:8Fa0JQe7WY',
                       value: 1,
                     },
-                    "block:5ej6StPuF_": {
-                      columnId: "block:5ej6StPuF_",
+                    'block:5ej6StPuF_': {
+                      columnId: 'block:5ej6StPuF_',
                       value: 65,
                     },
-                    "block:DPhZ6JBziD": {
-                      columnId: "block:DPhZ6JBziD",
-                      value: ["-2_QD3GZT1", "73UrEZWaKk"],
+                    'block:DPhZ6JBziD': {
+                      columnId: 'block:DPhZ6JBziD',
+                      value: ['-2_QD3GZT1', '73UrEZWaKk'],
                     },
-                    "block:O8dpIDiP7-": {
-                      columnId: "block:O8dpIDiP7-",
+                    'block:O8dpIDiP7-': {
+                      columnId: 'block:O8dpIDiP7-',
                       value: {
-                        "$stone:internal:text$": true,
+                        '$stone:internal:text$': true,
                         delta: [
                           {
-                            insert: "test2",
+                            insert: 'test2',
                             attributes: {
-                              link: "https://google.com",
+                              link: 'https://google.com',
                             },
                           },
                         ],
                       },
                     },
-                    "block:U8lPD59MkF": {
-                      columnId: "block:U8lPD59MkF",
-                      value: "https://google.com",
+                    'block:U8lPD59MkF': {
+                      columnId: 'block:U8lPD59MkF',
+                      value: 'https://google.com',
                     },
-                    "block:-DT7B0TafG": {
-                      columnId: "block:-DT7B0TafG",
+                    'block:-DT7B0TafG': {
+                      columnId: 'block:-DT7B0TafG',
                       value: true,
                     },
                   },
-                  "block:0vhfgcHtPF": {
-                    "block:qyo8q9VPWU": {
-                      columnId: "block:qyo8q9VPWU",
-                      value: "F2bgsaE3X2",
+                  'block:0vhfgcHtPF': {
+                    'block:qyo8q9VPWU': {
+                      columnId: 'block:qyo8q9VPWU',
+                      value: 'F2bgsaE3X2',
                     },
-                    "block:O8dpIDiP7-": {
-                      columnId: "block:O8dpIDiP7-",
+                    'block:O8dpIDiP7-': {
+                      columnId: 'block:O8dpIDiP7-',
                       value: {
-                        "$stone:internal:text$": true,
+                        '$stone:internal:text$': true,
                         delta: [
                           {
-                            insert: "test1",
+                            insert: 'test1',
                           },
                         ],
                       },
                     },
-                    "block:5cglrBmAr3": {
-                      columnId: "block:5cglrBmAr3",
+                    'block:5cglrBmAr3': {
+                      columnId: 'block:5cglrBmAr3',
                       value: 1703030400000,
                     },
                   },
-                  "block:b4_02QXMAM": {
-                    "block:qyo8q9VPWU": {
-                      columnId: "block:qyo8q9VPWU",
-                      value: "y3O1A2IHHu",
+                  'block:b4_02QXMAM': {
+                    'block:qyo8q9VPWU': {
+                      columnId: 'block:qyo8q9VPWU',
+                      value: 'y3O1A2IHHu',
                     },
                   },
-                  "block:W_eirvg7EJ": {
-                    "block:qyo8q9VPWU": {
-                      columnId: "block:qyo8q9VPWU",
+                  'block:W_eirvg7EJ': {
+                    'block:qyo8q9VPWU': {
+                      columnId: 'block:qyo8q9VPWU',
                     },
                   },
                 },
                 columns: [
                   {
-                    type: "title",
-                    name: "Title",
+                    type: 'title',
+                    name: 'Title',
                     data: {},
-                    id: "block:2VfUaitjf9",
+                    id: 'block:2VfUaitjf9',
                   },
                   {
-                    type: "select",
-                    name: "Status",
+                    type: 'select',
+                    name: 'Status',
                     data: {
                       options: [
                         {
-                          id: "TKip9uc7Yx",
-                          color: "var(--ink-tag-white)",
-                          value: "TODO",
+                          id: 'TKip9uc7Yx',
+                          color: 'var(--ink-tag-white)',
+                          value: 'TODO',
                         },
                         {
-                          id: "F2bgsaE3X2",
-                          color: "var(--ink-tag-green)",
-                          value: "In Progress",
+                          id: 'F2bgsaE3X2',
+                          color: 'var(--ink-tag-green)',
+                          value: 'In Progress',
                         },
                         {
-                          id: "y3O1A2IHHu",
-                          color: "var(--ink-tag-gray)",
-                          value: "Done",
+                          id: 'y3O1A2IHHu',
+                          color: 'var(--ink-tag-gray)',
+                          value: 'Done',
                         },
                       ],
                     },
-                    id: "block:qyo8q9VPWU",
+                    id: 'block:qyo8q9VPWU',
                   },
                   {
-                    type: "date",
-                    name: "Date",
+                    type: 'date',
+                    name: 'Date',
                     data: {},
-                    id: "block:5cglrBmAr3",
+                    id: 'block:5cglrBmAr3',
                   },
                   {
-                    type: "number",
-                    name: "Number",
+                    type: 'number',
+                    name: 'Number',
                     data: {
                       decimal: 0,
                     },
-                    id: "block:8Fa0JQe7WY",
+                    id: 'block:8Fa0JQe7WY',
                   },
                   {
-                    type: "progress",
-                    name: "Progress",
+                    type: 'progress',
+                    name: 'Progress',
                     data: {},
-                    id: "block:5ej6StPuF_",
+                    id: 'block:5ej6StPuF_',
                   },
                   {
-                    type: "multi-select",
-                    name: "MultiSelect",
+                    type: 'multi-select',
+                    name: 'MultiSelect',
                     data: {
                       options: [
                         {
-                          id: "73UrEZWaKk",
-                          value: "test2",
-                          color: "var(--ink-tag-purple)",
+                          id: '73UrEZWaKk',
+                          value: 'test2',
+                          color: 'var(--ink-tag-purple)',
                         },
                         {
-                          id: "-2_QD3GZT1",
-                          value: "test1",
-                          color: "var(--ink-tag-teal)",
+                          id: '-2_QD3GZT1',
+                          value: 'test1',
+                          color: 'var(--ink-tag-teal)',
                         },
                       ],
                     },
-                    id: "block:DPhZ6JBziD",
+                    id: 'block:DPhZ6JBziD',
                   },
                   {
-                    type: "rich-text",
-                    name: "RichText",
+                    type: 'rich-text',
+                    name: 'RichText',
                     data: {},
-                    id: "block:O8dpIDiP7-",
+                    id: 'block:O8dpIDiP7-',
                   },
                   {
-                    type: "link",
-                    name: "Link",
+                    type: 'link',
+                    name: 'Link',
                     data: {},
-                    id: "block:U8lPD59MkF",
+                    id: 'block:U8lPD59MkF',
                   },
                   {
-                    type: "checkbox",
-                    name: "Checkbox",
+                    type: 'checkbox',
+                    name: 'Checkbox',
                     data: {},
-                    id: "block:-DT7B0TafG",
+                    id: 'block:-DT7B0TafG',
                   },
                 ],
               },
               children: [
                 {
-                  type: "block",
-                  id: "block:P_-Wg7Rg9O",
-                  flavour: "ink:paragraph",
+                  type: 'block',
+                  id: 'block:P_-Wg7Rg9O',
+                  flavour: 'ink:paragraph',
                   props: {
-                    type: "text",
+                    type: 'text',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "Task 1",
+                          insert: 'Task 1',
                         },
                       ],
                     },
@@ -1407,16 +1391,16 @@ describe("snapshot to html", () => {
                   children: [],
                 },
                 {
-                  type: "block",
-                  id: "block:0vhfgcHtPF",
-                  flavour: "ink:paragraph",
+                  type: 'block',
+                  id: 'block:0vhfgcHtPF',
+                  flavour: 'ink:paragraph',
                   props: {
-                    type: "text",
+                    type: 'text',
                     text: {
-                      "$stone:internal:text$": true,
+                      '$stone:internal:text$': true,
                       delta: [
                         {
-                          insert: "Task 2",
+                          insert: 'Task 2',
                         },
                       ],
                     },
@@ -1439,27 +1423,27 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("linked doc block", async () => {
+  test('linked doc block', async () => {
     const blockSnapShot: BlockSnapshot = {
-      type: "block",
-      id: "VChAZIX7DM",
-      flavour: "ink:page",
+      type: 'block',
+      id: 'VChAZIX7DM',
+      flavour: 'ink:page',
       version: 2,
       props: {
         title: {
-          "$stone:internal:text$": true,
+          '$stone:internal:text$': true,
           delta: [
             {
-              insert: "Test Doc",
+              insert: 'Test Doc',
             },
           ],
         },
       },
       children: [
         {
-          type: "block",
-          id: "uRj8gejH4d",
-          flavour: "ink:surface",
+          type: 'block',
+          id: 'uRj8gejH4d',
+          flavour: 'ink:surface',
           version: 5,
           props: {
             elements: {},
@@ -1467,35 +1451,35 @@ describe("snapshot to html", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "AqFoVDUoW9",
-          flavour: "ink:note",
+          type: 'block',
+          id: 'AqFoVDUoW9',
+          flavour: 'ink:note',
           version: 1,
           props: {
-            xywh: "[0,0,800,95]",
+            xywh: '[0,0,800,95]',
             background: DefaultTheme.noteBackgrounColor,
-            index: "a0",
+            index: 'a0',
             hidden: false,
             displayMode: NoteDisplayMode.DocAndEdgeless,
           },
           children: [
             {
-              type: "block",
-              id: "C0sH2Ee6cz-MysVNLNrBt",
-              flavour: "ink:embed-linked-doc",
+              type: 'block',
+              id: 'C0sH2Ee6cz-MysVNLNrBt',
+              flavour: 'ink:embed-linked-doc',
               props: {
-                index: "a0",
-                xywh: "[0,0,0,0]",
+                index: 'a0',
+                xywh: '[0,0,0,0]',
                 rotate: 0,
-                pageId: "4T5ObMgEIMII-4Bexyta1",
-                style: "horizontal",
+                pageId: '4T5ObMgEIMII-4Bexyta1',
+                style: 'horizontal',
                 caption: null,
                 params: {
-                  mode: "page",
-                  blockIds: ["abc", "123"],
-                  elementIds: ["def", "456"],
-                  databaseId: "deadbeef",
-                  databaseRowId: "123",
+                  mode: 'page',
+                  blockIds: ['abc', '123'],
+                  elementIds: ['def', '456'],
+                  databaseId: 'deadbeef',
+                  databaseRowId: '123',
                 },
               },
               children: [],
@@ -1506,8 +1490,8 @@ describe("snapshot to html", () => {
     };
 
     const middleware: TransformerMiddleware = ({ adapterConfigs }) => {
-      adapterConfigs.set("title:4T5ObMgEIMII-4Bexyta1", "Test Doc");
-      adapterConfigs.set("docLinkBaseUrl", "https://example.com");
+      adapterConfigs.set('title:4T5ObMgEIMII-4Bexyta1', 'Test Doc');
+      adapterConfigs.set('docLinkBaseUrl', 'https://example.com');
     };
     const html = template(
       '<div class="ink-paragraph-block-container"><a href="https://example.com/4T5ObMgEIMII-4Bexyta1?mode=page&#x26;blockIds=abc%2C123&#x26;elementIds=def%2C456&#x26;databaseId=deadbeef&#x26;databaseRowId=123">Test Doc</a></div>',
@@ -1519,38 +1503,38 @@ describe("snapshot to html", () => {
     expect(target.file).toBe(html);
   });
 
-  test("synced doc block", async () => {
+  test('synced doc block', async () => {
     // doc -> synced doc block -> deepest synced doc block
     // The deepest synced doc block only export it's title
 
     const deepestSyncedDocSnapshot: DocSnapshot = {
-      type: "page",
+      type: 'page',
       meta: {
-        id: "deepestSyncedDoc",
-        title: "Deepest Doc",
+        id: 'deepestSyncedDoc',
+        title: 'Deepest Doc',
         createDate: 1715762171116,
         tags: [],
       },
       blocks: {
-        type: "block",
-        id: "8WdJmN5FTT",
-        flavour: "ink:page",
+        type: 'block',
+        id: '8WdJmN5FTT',
+        flavour: 'ink:page',
         version: 2,
         props: {
           title: {
-            "$stone:internal:text$": true,
+            '$stone:internal:text$': true,
             delta: [
               {
-                insert: "Deepest Doc",
+                insert: 'Deepest Doc',
               },
             ],
           },
         },
         children: [
           {
-            type: "block",
-            id: "zVN1EZFuZe",
-            flavour: "ink:surface",
+            type: 'block',
+            id: 'zVN1EZFuZe',
+            flavour: 'ink:surface',
             version: 5,
             props: {
               elements: {},
@@ -1558,52 +1542,52 @@ describe("snapshot to html", () => {
             children: [],
           },
           {
-            type: "block",
-            id: "2s9sJlphLH",
-            flavour: "ink:note",
+            type: 'block',
+            id: '2s9sJlphLH',
+            flavour: 'ink:note',
             version: 1,
             props: {
-              xywh: "[0,0,800,95]",
+              xywh: '[0,0,800,95]',
               background: DefaultTheme.noteBackgrounColor,
-              index: "a0",
+              index: 'a0',
               hidden: false,
-              displayMode: "both",
+              displayMode: 'both',
               edgeless: {
                 style: {
                   borderRadius: 8,
                   borderSize: 4,
-                  borderStyle: "solid",
-                  shadowType: "--ink-note-shadow-box",
+                  borderStyle: 'solid',
+                  shadowType: '--ink-note-shadow-box',
                 },
               },
             },
             children: [
               {
-                type: "block",
-                id: "vNp5XrR5yw",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'vNp5XrR5yw',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [],
                   },
                 },
                 children: [],
               },
               {
-                type: "block",
-                id: "JTdfSl1ygZ",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'JTdfSl1ygZ',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "Hello, This is deepest doc.",
+                        insert: 'Hello, This is deepest doc.',
                       },
                     ],
                   },
@@ -1617,33 +1601,33 @@ describe("snapshot to html", () => {
     };
 
     const syncedDocSnapshot: DocSnapshot = {
-      type: "page",
+      type: 'page',
       meta: {
-        id: "syncedDoc",
-        title: "Synced Doc",
+        id: 'syncedDoc',
+        title: 'Synced Doc',
         createDate: 1719212435051,
         tags: [],
       },
       blocks: {
-        type: "block",
-        id: "AGOahFisBN",
-        flavour: "ink:page",
+        type: 'block',
+        id: 'AGOahFisBN',
+        flavour: 'ink:page',
         version: 2,
         props: {
           title: {
-            "$stone:internal:text$": true,
+            '$stone:internal:text$': true,
             delta: [
               {
-                insert: "Synced Doc",
+                insert: 'Synced Doc',
               },
             ],
           },
         },
         children: [
           {
-            type: "block",
-            id: "gfVzx5tGpB",
-            flavour: "ink:surface",
+            type: 'block',
+            id: 'gfVzx5tGpB',
+            flavour: 'ink:surface',
             version: 5,
             props: {
               elements: {},
@@ -1651,38 +1635,38 @@ describe("snapshot to html", () => {
             children: [],
           },
           {
-            type: "block",
-            id: "CzEfaUret4",
-            flavour: "ink:note",
+            type: 'block',
+            id: 'CzEfaUret4',
+            flavour: 'ink:note',
             version: 1,
             props: {
-              xywh: "[0,0,800,95]",
-              background: "--ink-note-background-blue",
-              index: "a0",
+              xywh: '[0,0,800,95]',
+              background: '--ink-note-background-blue',
+              index: 'a0',
               hidden: false,
-              displayMode: "both",
+              displayMode: 'both',
               edgeless: {
                 style: {
                   borderRadius: 0,
                   borderSize: 4,
-                  borderStyle: "none",
-                  shadowType: "--ink-note-shadow-sticker",
+                  borderStyle: 'none',
+                  shadowType: '--ink-note-shadow-sticker',
                 },
               },
             },
             children: [
               {
-                type: "block",
-                id: "yFlNufsgke",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'yFlNufsgke',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "h1",
+                  type: 'h1',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "Heading 1",
+                        insert: 'Heading 1',
                       },
                     ],
                   },
@@ -1690,17 +1674,17 @@ describe("snapshot to html", () => {
                 children: [],
               },
               {
-                type: "block",
-                id: "oMuLcD6XS3",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'oMuLcD6XS3',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "h2",
+                  type: 'h2',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "heading 2",
+                        insert: 'heading 2',
                       },
                     ],
                   },
@@ -1708,17 +1692,17 @@ describe("snapshot to html", () => {
                 children: [],
               },
               {
-                type: "block",
-                id: "PQ8FhGV6VM",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'PQ8FhGV6VM',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "paragraph",
+                        insert: 'paragraph',
                       },
                     ],
                   },
@@ -1726,17 +1710,17 @@ describe("snapshot to html", () => {
                 children: [],
               },
               {
-                type: "block",
-                id: "sA9paSrdEN",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'sA9paSrdEN',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "strike",
+                        insert: 'strike',
                         attributes: {
                           strike: true,
                         },
@@ -1747,16 +1731,16 @@ describe("snapshot to html", () => {
                 children: [],
               },
               {
-                type: "block",
-                id: "-3bbVQTvI2",
-                flavour: "ink:embed-synced-doc",
+                type: 'block',
+                id: '-3bbVQTvI2',
+                flavour: 'ink:embed-synced-doc',
                 version: 1,
                 props: {
-                  index: "a0",
-                  xywh: "[0,0,0,0]",
+                  index: 'a0',
+                  xywh: '[0,0,0,0]',
                   rotate: 0,
-                  pageId: "deepestSyncedDoc",
-                  style: "syncedDoc",
+                  pageId: 'deepestSyncedDoc',
+                  style: 'syncedDoc',
                 },
                 children: [],
               },
@@ -1767,39 +1751,39 @@ describe("snapshot to html", () => {
     };
 
     const syncedDocHtml =
-      paragraphTemplate("<h1>Heading 1</h1>") +
-      paragraphTemplate("<h2>heading 2</h2>") +
-      paragraphTemplate("<p>paragraph</p>") +
-      paragraphTemplate("<p><del>strike</del></p>");
+      paragraphTemplate('<h1>Heading 1</h1>') +
+      paragraphTemplate('<h2>heading 2</h2>') +
+      paragraphTemplate('<p>paragraph</p>') +
+      paragraphTemplate('<p><del>strike</del></p>');
 
     const docSnapShot: DocSnapshot = {
-      type: "page",
+      type: 'page',
       meta: {
-        id: "y5nsrywQtr",
-        title: "Test Doc",
+        id: 'y5nsrywQtr',
+        title: 'Test Doc',
         createDate: 1719222172042,
         tags: [],
       },
       blocks: {
-        type: "block",
-        id: "VChAZIX7DM",
-        flavour: "ink:page",
+        type: 'block',
+        id: 'VChAZIX7DM',
+        flavour: 'ink:page',
         version: 2,
         props: {
           title: {
-            "$stone:internal:text$": true,
+            '$stone:internal:text$': true,
             delta: [
               {
-                insert: "Test Doc",
+                insert: 'Test Doc',
               },
             ],
           },
         },
         children: [
           {
-            type: "block",
-            id: "uRj8gejH4d",
-            flavour: "ink:surface",
+            type: 'block',
+            id: 'uRj8gejH4d',
+            flavour: 'ink:surface',
             version: 5,
             props: {
               elements: {},
@@ -1807,38 +1791,38 @@ describe("snapshot to html", () => {
             children: [],
           },
           {
-            type: "block",
-            id: "AqFoVDUoW9",
-            flavour: "ink:note",
+            type: 'block',
+            id: 'AqFoVDUoW9',
+            flavour: 'ink:note',
             version: 1,
             props: {
-              xywh: "[0,0,800,95]",
-              background: "--ink-note-background-blue",
-              index: "a0",
+              xywh: '[0,0,800,95]',
+              background: '--ink-note-background-blue',
+              index: 'a0',
               hidden: false,
-              displayMode: "both",
+              displayMode: 'both',
               edgeless: {
                 style: {
                   borderRadius: 0,
                   borderSize: 4,
-                  borderStyle: "none",
-                  shadowType: "--ink-note-shadow-sticker",
+                  borderStyle: 'none',
+                  shadowType: '--ink-note-shadow-sticker',
                 },
               },
             },
             children: [
               {
-                type: "block",
-                id: "cWBI4UGTqh",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'cWBI4UGTqh',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "Hello",
+                        insert: 'Hello',
                       },
                     ],
                   },
@@ -1846,31 +1830,31 @@ describe("snapshot to html", () => {
                 children: [],
               },
               {
-                type: "block",
-                id: "AqFoVxas19",
-                flavour: "ink:embed-synced-doc",
+                type: 'block',
+                id: 'AqFoVxas19',
+                flavour: 'ink:embed-synced-doc',
                 version: 1,
                 props: {
-                  index: "a0",
-                  xywh: "[0,0,0,0]",
+                  index: 'a0',
+                  xywh: '[0,0,0,0]',
                   rotate: 0,
-                  pageId: "syncedDoc",
-                  style: "syncedDoc",
+                  pageId: 'syncedDoc',
+                  style: 'syncedDoc',
                 },
                 children: [],
               },
               {
-                type: "block",
-                id: "Db976U9v18",
-                flavour: "ink:paragraph",
+                type: 'block',
+                id: 'Db976U9v18',
+                flavour: 'ink:paragraph',
                 version: 1,
                 props: {
-                  type: "text",
+                  type: 'text',
                   text: {
-                    "$stone:internal:text$": true,
+                    '$stone:internal:text$': true,
                     delta: [
                       {
-                        insert: "World!",
+                        insert: 'World!',
                       },
                     ],
                   },
@@ -1884,14 +1868,14 @@ describe("snapshot to html", () => {
     };
 
     const docHtml = template(
-      paragraphTemplate("<p>Hello</p>") +
+      paragraphTemplate('<p>Hello</p>') +
         syncedDocHtml +
         '<div class="ink-paragraph-block-container"><p>Deepest Doc</p></div>' +
-        paragraphTemplate("<p>World!</p>"),
-      "Test Doc",
+        paragraphTemplate('<p>World!</p>'),
+      'Test Doc',
     );
 
-    const job = createJob([embedSyncedDocMiddleware("content")]);
+    const job = createJob([embedSyncedDocMiddleware('content')]);
 
     // workaround for adding docs to collection
     await job.snapshotToDoc(deepestSyncedDocSnapshot);
@@ -1906,7 +1890,7 @@ describe("snapshot to html", () => {
   });
 });
 
-describe("html to snapshot", () => {
+describe('html to snapshot', () => {
   const template = (html: string) =>
     `
   <!doctype html>
@@ -1944,37 +1928,37 @@ describe("html to snapshot", () => {
 
   </body>
   </html>
-  `.replace("<!--HtmlTemplate-->", html);
+  `.replace('<!--HtmlTemplate-->', html);
 
-  test("code", async () => {
+  test('code', async () => {
     const html = template(
       `<pre><code class="code-python"><span style="word-wrap: break-word; color: #81A1C1;">import</span><span style="word-wrap: break-word; color: #D8DEE9FF;"> this</span></code></pre>`,
     );
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:code",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:code',
           props: {
-            language: "python",
+            language: 'python',
             wrap: false,
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "import this",
+                  insert: 'import this',
                 },
               ],
             },
@@ -1991,32 +1975,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("paragraph", async () => {
+  test('paragraph', async () => {
     const html = template(`<p>aaa</p><p>bbb</p><p>ccc</p><p>ddd</p><p>eee</p>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
               ],
             },
@@ -2024,16 +2008,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[2]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[2]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "bbb",
+                  insert: 'bbb',
                 },
               ],
             },
@@ -2041,16 +2025,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[3]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[3]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "ccc",
+                  insert: 'ccc',
                 },
               ],
             },
@@ -2058,16 +2042,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[4]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[4]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "ddd",
+                  insert: 'ddd',
                 },
               ],
             },
@@ -2075,16 +2059,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[5]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[5]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "eee",
+                  insert: 'eee',
                 },
               ],
             },
@@ -2101,32 +2085,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("nested list", async () => {
+  test('nested list', async () => {
     const html = template(`<ul><li>111<ul><li>222</li></ul></li></ul>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:list",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:list',
           props: {
-            type: "bulleted",
+            type: 'bulleted',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "111",
+                  insert: '111',
                 },
               ],
             },
@@ -2136,16 +2120,16 @@ describe("html to snapshot", () => {
           },
           children: [
             {
-              type: "block",
-              id: "matchesReplaceMap[2]",
-              flavour: "ink:list",
+              type: 'block',
+              id: 'matchesReplaceMap[2]',
+              flavour: 'ink:list',
               props: {
-                type: "bulleted",
+                type: 'bulleted',
                 text: {
-                  "$stone:internal:text$": true,
+                  '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert: "222",
+                      insert: '222',
                     },
                   ],
                 },
@@ -2167,32 +2151,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("p in list", async () => {
+  test('p in list', async () => {
     const html = template(`<ol><li><p>p in list</p></li></ol>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:list",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:list',
           props: {
-            type: "numbered",
+            type: 'numbered',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "p in list",
+                  insert: 'p in list',
                 },
               ],
             },
@@ -2212,29 +2196,29 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("iframe", async () => {
+  test('iframe', async () => {
     const html = template(
       `<iframe width="560" height="315" src="https://www.youtube.com/embed/QDsd0nyzwz0?start=&amp;end=" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`,
     );
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:embed-youtube",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:embed-youtube',
           props: {
-            url: "https://www.youtube.com/watch?v=QDsd0nyzwz0",
+            url: 'https://www.youtube.com/watch?v=QDsd0nyzwz0',
           },
           children: [],
         },
@@ -2248,34 +2232,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("wrap", async () => {
-    const html = template(
-      `<p>a\n aa</p><p>b\t bb</p><p>c  cc</p><p>ddd</p><p>eee</p>`,
-    );
+  test('wrap', async () => {
+    const html = template(`<p>a\n aa</p><p>b\t bb</p><p>c  cc</p><p>ddd</p><p>eee</p>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "a aa",
+                  insert: 'a aa',
                 },
               ],
             },
@@ -2283,16 +2265,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[2]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[2]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "b bb",
+                  insert: 'b bb',
                 },
               ],
             },
@@ -2300,16 +2282,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[3]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[3]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "c cc",
+                  insert: 'c cc',
                 },
               ],
             },
@@ -2317,16 +2299,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[4]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[4]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "ddd",
+                  insert: 'ddd',
                 },
               ],
             },
@@ -2334,16 +2316,16 @@ describe("html to snapshot", () => {
           children: [],
         },
         {
-          type: "block",
-          id: "matchesReplaceMap[5]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[5]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "eee",
+                  insert: 'eee',
                 },
               ],
             },
@@ -2360,46 +2342,44 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("should preserve space in p", async () => {
-    const html = template(
-      `<p>A <b>bold text</b> followed by a <i>italic text</i></p>`,
-    );
+  test('should preserve space in p', async () => {
+    const html = template(`<p>A <b>bold text</b> followed by a <i>italic text</i></p>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "A ",
+                  insert: 'A ',
                 },
                 {
-                  insert: "bold text",
+                  insert: 'bold text',
                   attributes: {
                     bold: true,
                   },
                 },
                 {
-                  insert: " followed by a ",
+                  insert: ' followed by a ',
                 },
                 {
-                  insert: "italic text",
+                  insert: 'italic text',
                   attributes: {
                     italic: true,
                   },
@@ -2419,34 +2399,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("span nested in p", async () => {
-    const html = template(
-      `<p><span>aaa</span><span>bbb</span><span>ccc</span></p>`,
-    );
+  test('span nested in p', async () => {
+    const html = template(`<p><span>aaa</span><span>bbb</span><span>ccc</span></p>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaabbbccc",
+                  insert: 'aaabbbccc',
                 },
               ],
             },
@@ -2463,34 +2441,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("span nested in div", async () => {
-    const html = template(
-      `<div><span>aaa</span><span>bbb</span><span>ccc</span></div>`,
-    );
+  test('span nested in div', async () => {
+    const html = template(`<div><span>aaa</span><span>bbb</span><span>ccc</span></div>`);
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaabbbccc",
+                  insert: 'aaabbbccc',
                 },
               ],
             },
@@ -2507,43 +2483,43 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("inline div", async () => {
+  test('inline div', async () => {
     const html = template(
       `<span>aaa</span><a href="https://www.google.com/">bbb</a><div style="display:inline">ccc</div>`,
     );
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
-                  insert: "bbb",
+                  insert: 'bbb',
                   attributes: {
-                    link: "https://www.google.com/",
+                    link: 'https://www.google.com/',
                   },
                 },
                 {
-                  insert: "ccc",
+                  insert: 'ccc',
                 },
               ],
             },
@@ -2560,43 +2536,43 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("flex div", async () => {
+  test('flex div', async () => {
     const html = template(
       `<div style="display:flex"><span>aaa</span><a href="https://www.google.com/">bbb</a><div>ccc</div></div>`,
     );
 
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
-                  insert: "bbb",
+                  insert: 'bbb',
                   attributes: {
-                    link: "https://www.google.com/",
+                    link: 'https://www.google.com/',
                   },
                 },
                 {
-                  insert: "ccc",
+                  insert: 'ccc',
                 },
               ],
             },
@@ -2613,31 +2589,31 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("span inside h1", async () => {
+  test('span inside h1', async () => {
     const html = template(`<h1><span>aaa</span></h1>`);
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "h1",
+            type: 'h1',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
               ],
             },
@@ -2654,34 +2630,34 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("p in ancestor", async () => {
+  test('p in ancestor', async () => {
     const html = template(`<p><b><span>aaa</span></b></p>`);
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
                   attributes: {
                     bold: true,
                   },
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
               ],
             },
@@ -2698,31 +2674,31 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("block level element in b should not be treated as inline", async () => {
+  test('block level element in b should not be treated as inline', async () => {
     const html = template(`<b><p><span>aaa</span></p></b>`);
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
               ],
             },
@@ -2739,32 +2715,32 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  describe("strong element", () => {
-    test("should not be bold when font-weight is normal", async () => {
+  describe('strong element', () => {
+    test('should not be bold when font-weight is normal', async () => {
       const html = template(`<span style="font-weight: normal;">aaa</span>`);
       const blockSnapshot: BlockSnapshot = {
-        type: "block",
-        id: "matchesReplaceMap[0]",
-        flavour: "ink:note",
+        type: 'block',
+        id: 'matchesReplaceMap[0]',
+        flavour: 'ink:note',
         props: {
-          xywh: "[0,0,800,95]",
+          xywh: '[0,0,800,95]',
           background: DefaultTheme.noteBackgrounColor,
-          index: "a0",
+          index: 'a0',
           hidden: false,
           displayMode: NoteDisplayMode.DocAndEdgeless,
         },
         children: [
           {
-            type: "block",
-            id: "matchesReplaceMap[1]",
-            flavour: "ink:paragraph",
+            type: 'block',
+            id: 'matchesReplaceMap[1]',
+            flavour: 'ink:paragraph',
             props: {
-              type: "text",
+              type: 'text',
               text: {
-                "$stone:internal:text$": true,
+                '$stone:internal:text$': true,
                 delta: [
                   {
-                    insert: "aaa",
+                    insert: 'aaa',
                   },
                 ],
               },
@@ -2781,63 +2757,63 @@ describe("html to snapshot", () => {
       expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
     });
 
-    test("should be bold when font-weight is bold or 500-900 ", async () => {
+    test('should be bold when font-weight is bold or 500-900 ', async () => {
       const html = template(
         `<p><span style="font-weight: bold;">aaa</span><span style="font-weight: 100;">aaa</span><span style="font-weight: 500;">bbb</span><span style="font-weight: 200;">bbb</span><span style="font-weight: 600;">ccc</span><span style="font-weight: 300;">ccc</span><span style="font-weight: 700;">ddd</span></p>`,
       );
       const blockSnapshot: BlockSnapshot = {
-        type: "block",
-        id: "matchesReplaceMap[0]",
-        flavour: "ink:note",
+        type: 'block',
+        id: 'matchesReplaceMap[0]',
+        flavour: 'ink:note',
         props: {
-          xywh: "[0,0,800,95]",
+          xywh: '[0,0,800,95]',
           background: DefaultTheme.noteBackgrounColor,
-          index: "a0",
+          index: 'a0',
           hidden: false,
           displayMode: NoteDisplayMode.DocAndEdgeless,
         },
         children: [
           {
-            type: "block",
-            id: "matchesReplaceMap[1]",
-            flavour: "ink:paragraph",
+            type: 'block',
+            id: 'matchesReplaceMap[1]',
+            flavour: 'ink:paragraph',
             props: {
-              type: "text",
+              type: 'text',
               text: {
-                "$stone:internal:text$": true,
+                '$stone:internal:text$': true,
                 delta: [
                   {
                     attributes: {
                       bold: true,
                     },
-                    insert: "aaa",
+                    insert: 'aaa',
                   },
                   {
-                    insert: "aaa",
-                  },
-                  {
-                    attributes: {
-                      bold: true,
-                    },
-                    insert: "bbb",
-                  },
-                  {
-                    insert: "bbb",
+                    insert: 'aaa',
                   },
                   {
                     attributes: {
                       bold: true,
                     },
-                    insert: "ccc",
+                    insert: 'bbb',
                   },
                   {
-                    insert: "ccc",
+                    insert: 'bbb',
                   },
                   {
                     attributes: {
                       bold: true,
                     },
-                    insert: "ddd",
+                    insert: 'ccc',
+                  },
+                  {
+                    insert: 'ccc',
+                  },
+                  {
+                    attributes: {
+                      bold: true,
+                    },
+                    insert: 'ddd',
                   },
                 ],
               },
@@ -2855,54 +2831,54 @@ describe("html to snapshot", () => {
     });
   });
 
-  test("should be italic when tag is i or em or span with style font-style: italic", async () => {
+  test('should be italic when tag is i or em or span with style font-style: italic', async () => {
     const html = template(
       `<p><i>aaa</i><span>aaa</span><em>bbb</em><span>bbb</span><span style="font-style: italic;">ccc</span></p>`,
     );
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
                   attributes: {
                     italic: true,
                   },
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
-                  insert: "aaa",
-                },
-                {
-                  attributes: {
-                    italic: true,
-                  },
-                  insert: "bbb",
-                },
-                {
-                  insert: "bbb",
+                  insert: 'aaa',
                 },
                 {
                   attributes: {
                     italic: true,
                   },
-                  insert: "ccc",
+                  insert: 'bbb',
+                },
+                {
+                  insert: 'bbb',
+                },
+                {
+                  attributes: {
+                    italic: true,
+                  },
+                  insert: 'ccc',
                 },
               ],
             },
@@ -2919,45 +2895,45 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("should be underline when tag is u or span with style text-decoration: underline", async () => {
+  test('should be underline when tag is u or span with style text-decoration: underline', async () => {
     const html = template(
       `<p><u>aaa</u><span>aaa</span><span style="text-decoration: underline;">bbb</span></p>`,
     );
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
                   attributes: {
                     underline: true,
                   },
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
                   attributes: {
                     underline: true,
                   },
-                  insert: "bbb",
+                  insert: 'bbb',
                 },
               ],
             },
@@ -2974,45 +2950,45 @@ describe("html to snapshot", () => {
     expect(nanoidReplacement(rawBlockSnapshot)).toEqual(blockSnapshot);
   });
 
-  test("should be strike when tag is del or span with style text-decoration: line-through", async () => {
+  test('should be strike when tag is del or span with style text-decoration: line-through', async () => {
     const html = template(
       `<p><del>aaa</del><span>aaa</span><span style="text-decoration: line-through;">bbb</span></p>`,
     );
     const blockSnapshot: BlockSnapshot = {
-      type: "block",
-      id: "matchesReplaceMap[0]",
-      flavour: "ink:note",
+      type: 'block',
+      id: 'matchesReplaceMap[0]',
+      flavour: 'ink:note',
       props: {
-        xywh: "[0,0,800,95]",
+        xywh: '[0,0,800,95]',
         background: DefaultTheme.noteBackgrounColor,
-        index: "a0",
+        index: 'a0',
         hidden: false,
         displayMode: NoteDisplayMode.DocAndEdgeless,
       },
       children: [
         {
-          type: "block",
-          id: "matchesReplaceMap[1]",
-          flavour: "ink:paragraph",
+          type: 'block',
+          id: 'matchesReplaceMap[1]',
+          flavour: 'ink:paragraph',
           props: {
-            type: "text",
+            type: 'text',
             text: {
-              "$stone:internal:text$": true,
+              '$stone:internal:text$': true,
               delta: [
                 {
                   attributes: {
                     strike: true,
                   },
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
-                  insert: "aaa",
+                  insert: 'aaa',
                 },
                 {
                   attributes: {
                     strike: true,
                   },
-                  insert: "bbb",
+                  insert: 'bbb',
                 },
               ],
             },

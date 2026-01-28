@@ -6,5 +6,5 @@ import type { GfxController } from './controller.js';
 export const gfxControllerKey = 'GfxController';
 
 export const GfxControllerIdentifier = LifeCycleWatcherIdentifier(
-  gfxControllerKey
+  gfxControllerKey,
 ) as ServiceIdentifier<GfxController>;

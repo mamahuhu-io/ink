@@ -1,7 +1,7 @@
-import type { DocMode } from '@ink/stone-model';
 import type { Container } from '@ink/stone-global/di';
 import { createIdentifier } from '@ink/stone-global/di';
 import { noop } from '@ink/stone-global/utils';
+import type { DocMode } from '@ink/stone-model';
 import type { ExtensionType } from '@ink/stone-store';
 import { Extension } from '@ink/stone-store';
 import { Subject, type Subscription } from 'rxjs';
@@ -39,10 +39,7 @@ export interface DocModeProvider {
    * @param docId - The id of the doc.
    * @returns A disposable to stop the subscription.
    */
-  onPrimaryModeChange: (
-    handler: (mode: DocMode) => void,
-    docId: string
-  ) => Subscription;
+  onPrimaryModeChange: (handler: (mode: DocMode) => void, docId: string) => Subscription;
   /**
    * Set the editor mode. Normally, it would be used to set the mode of the current editor.
    * When patch or override the doc mode service, can pass a callback to set the editor mode.
@@ -56,9 +53,7 @@ export interface DocModeProvider {
   getEditorMode: () => DocMode | null;
 }
 
-export const DocModeProvider = createIdentifier<DocModeProvider>(
-  'InkDocModeService'
-);
+export const DocModeProvider = createIdentifier<DocModeProvider>('InkDocModeService');
 
 const modeMap = new Map<string, DocMode>();
 const slotMap = new Map<string, Subject<DocMode>>();
@@ -102,7 +97,7 @@ export class DocModeService extends Extension implements DocModeProvider {
 
 export function DocModeExtension(service: DocModeProvider): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.override(DocModeProvider, () => service);
     },
   };

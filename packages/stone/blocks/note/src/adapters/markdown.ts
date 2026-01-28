@@ -10,10 +10,7 @@ import type { Root } from 'mdast';
 
 const isRootNode = (node: MarkdownAST): node is Root => node.type === 'root';
 
-const createFootnoteDefinition = (
-  identifier: string,
-  content: string
-): MarkdownAST => ({
+const createFootnoteDefinition = (identifier: string, content: string): MarkdownAST => ({
   type: 'footnoteDefinition',
   label: identifier,
   identifier,
@@ -38,11 +35,11 @@ const createFootnoteDefinition = (
  * @returns The markdown adapter matcher.
  */
 const createNoteBlockMarkdownAdapterMatcher = (
-  displayModeToSkip: NoteDisplayMode
+  displayModeToSkip: NoteDisplayMode,
 ): BlockMarkdownAdapterMatcher => ({
   flavour: NoteBlockSchema.model.flavour,
-  toMatch: o => isRootNode(o.node),
-  fromMatch: o => o.node.flavour === NoteBlockSchema.model.flavour,
+  toMatch: (o) => isRootNode(o.node),
+  fromMatch: (o) => o.node.flavour === NoteBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!isRootNode(o.node)) {
@@ -51,14 +48,14 @@ const createNoteBlockMarkdownAdapterMatcher = (
       const noteAst = o.node;
       // Find all the footnoteDefinition in the noteAst
       const { configs } = context;
-      noteAst.children.forEach(child => {
+      noteAst.children.forEach((child) => {
         if (isFootnoteDefinitionNode(child)) {
           const identifier = child.identifier;
           const definitionKey = `${FOOTNOTE_DEFINITION_PREFIX}${identifier}`;
           // Get the text content of the footnoteDefinition
           const textContent = child.children
-            .find(child => child.type === 'paragraph')
-            ?.children.find(child => child.type === 'text')?.value;
+            .find((child) => child.type === 'paragraph')
+            ?.children.find((child) => child.type === 'text')?.value;
           if (textContent) {
             configs.set(definitionKey, textContent);
           }
@@ -66,8 +63,8 @@ const createNoteBlockMarkdownAdapterMatcher = (
       });
 
       // if there are footnoteDefinition nodes, add a heading node to the noteAst before the first footnoteDefinition node
-      const footnoteDefinitionIndex = noteAst.children.findIndex(child =>
-        isFootnoteDefinitionNode(child)
+      const footnoteDefinitionIndex = noteAst.children.findIndex((child) =>
+        isFootnoteDefinitionNode(child),
       );
       if (footnoteDefinitionIndex !== -1) {
         noteAst.children.splice(footnoteDefinitionIndex, 0, {
@@ -93,8 +90,8 @@ const createNoteBlockMarkdownAdapterMatcher = (
       // Get all the footnote definitions config starts with FOOTNOTE_DEFINITION_PREFIX
       // And create footnoteDefinition AST node for each of them
       Array.from(configs.keys())
-        .filter(key => key.startsWith(FOOTNOTE_DEFINITION_PREFIX))
-        .forEach(key => {
+        .filter((key) => key.startsWith(FOOTNOTE_DEFINITION_PREFIX))
+        .forEach((key) => {
           const hasFootnoteDefinition = !!walkerContext.getGlobalContext(key);
           // If the footnoteDefinition node is already in md ast, skip it
           // In markdown file, we only need to create footnoteDefinition once
@@ -105,10 +102,7 @@ const createNoteBlockMarkdownAdapterMatcher = (
           const identifier = key.slice(FOOTNOTE_DEFINITION_PREFIX.length);
           if (definition && identifier) {
             walkerContext
-              .openNode(
-                createFootnoteDefinition(identifier, definition),
-                'children'
-              )
+              .openNode(createFootnoteDefinition(identifier, definition), 'children')
               .closeNode();
             // Set the footnoteDefinition node as global context to avoid duplicate creation
             walkerContext.setGlobalContext(key, true);
@@ -118,14 +112,18 @@ const createNoteBlockMarkdownAdapterMatcher = (
   },
 });
 
-export const docNoteBlockMarkdownAdapterMatcher =
-  createNoteBlockMarkdownAdapterMatcher(NoteDisplayMode.EdgelessOnly);
+export const docNoteBlockMarkdownAdapterMatcher = createNoteBlockMarkdownAdapterMatcher(
+  NoteDisplayMode.EdgelessOnly,
+);
 
-export const edgelessNoteBlockMarkdownAdapterMatcher =
-  createNoteBlockMarkdownAdapterMatcher(NoteDisplayMode.DocOnly);
+export const edgelessNoteBlockMarkdownAdapterMatcher = createNoteBlockMarkdownAdapterMatcher(
+  NoteDisplayMode.DocOnly,
+);
 
-export const DocNoteBlockMarkdownAdapterExtension =
-  BlockMarkdownAdapterExtension(docNoteBlockMarkdownAdapterMatcher);
+export const DocNoteBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
+  docNoteBlockMarkdownAdapterMatcher,
+);
 
-export const EdgelessNoteBlockMarkdownAdapterExtension =
-  BlockMarkdownAdapterExtension(edgelessNoteBlockMarkdownAdapterMatcher);
+export const EdgelessNoteBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
+  edgelessNoteBlockMarkdownAdapterMatcher,
+);

@@ -11,14 +11,13 @@ import { HastUtils } from '../../utils/hast';
 const inlineElements = new Set(['b']);
 
 export const rehypeInlineToBlock: Plugin<[], Root> = () => {
-  return tree => {
-    visit(tree, 'element', node => {
+  return (tree) => {
+    visit(tree, 'element', (node) => {
       // Check if the current node is an inline element
       if (inlineElements.has(node.tagName)) {
         // Check if the node has a block element child
         const hasBlockChild = node.children.some(
-          child =>
-            child.type === 'element' && HastUtils.isTagBlock(child.tagName)
+          (child) => child.type === 'element' && HastUtils.isTagBlock(child.tagName),
         );
 
         if (hasBlockChild) {

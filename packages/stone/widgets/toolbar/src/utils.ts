@@ -1,17 +1,3 @@
-import {
-  type EditorMenuButton,
-  type EditorToolbar,
-  renderToolbarSeparator,
-} from '@ink/stone-components/toolbar';
-import {
-  ActionPlacement,
-  type ToolbarAction,
-  type ToolbarActions,
-  type ToolbarContext,
-  type ToolbarPlacement,
-} from '@ink/stone-shared/services';
-import { nextTick } from '@ink/stone-global/utils';
-import { MoreVerticalIcon } from '@ink/stone-icons/lit';
 import type {
   AutoUpdateOptions,
   ComputePositionConfig,
@@ -29,6 +15,20 @@ import {
   shift,
   size,
 } from '@floating-ui/dom';
+import {
+  type EditorMenuButton,
+  type EditorToolbar,
+  renderToolbarSeparator,
+} from '@ink/stone-components/toolbar';
+import { nextTick } from '@ink/stone-global/utils';
+import { MoreVerticalIcon } from '@ink/stone-icons/lit';
+import {
+  ActionPlacement,
+  type ToolbarAction,
+  type ToolbarActions,
+  type ToolbarContext,
+  type ToolbarPlacement,
+} from '@ink/stone-shared/services';
 import { html, render } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { join } from 'lit/directives/join.js';
@@ -56,7 +56,7 @@ export function autoUpdatePosition(
   flavour: string,
   placement: ToolbarPlacement,
   sideOptions: Partial<SideObject> | null,
-  options: AutoUpdateOptions = { elementResize: false, animationFrame: true }
+  options: AutoUpdateOptions = { elementResize: false, animationFrame: true },
 ) {
   const isInline = flavour === 'ink:note';
   const hasSurfaceScope = flavour.includes('surface');
@@ -87,7 +87,7 @@ export function autoUpdatePosition(
             },
           }),
           isInline ? inline() : undefined,
-          shift(state => ({
+          shift((state) => ({
             padding: {
               top: 10,
               right: 10,
@@ -103,7 +103,7 @@ export function autoUpdatePosition(
       };
   const update = async () => {
     await Promise.race([
-      new Promise(resolve => {
+      new Promise((resolve) => {
         signal.addEventListener('abort', () => resolve(signal.reason), {
           once: true,
         });
@@ -120,9 +120,7 @@ export function autoUpdatePosition(
     const result = await computePosition(referenceElement, toolbar, config);
 
     const { x, middlewareData, placement: currentPlacement } = result;
-    const y =
-      result.y -
-      (currentPlacement.includes('top') ? 0 : offsetTop + offsetBottom);
+    const y = result.y - (currentPlacement.includes('top') ? 0 : offsetTop + offsetBottom);
 
     toolbar.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 
@@ -131,9 +129,7 @@ export function autoUpdatePosition(
         if (middlewareData.hide.referenceHidden) {
           delete toolbar.dataset.open;
           // Closes dropdown menus
-          toolbar
-            .querySelector<EditorMenuButton>('editor-menu-button[data-open]')
-            ?.hide();
+          toolbar.querySelector<EditorMenuButton>('editor-menu-button[data-open]')?.hide();
         }
       } else {
         toolbar.dataset.open = 'true';
@@ -147,14 +143,14 @@ export function autoUpdatePosition(
     () => {
       update().catch(console.error);
     },
-    options
+    options,
   );
 }
 
 export function combine(actions: ToolbarActions, context: ToolbarContext) {
   const grouped = group(actions);
 
-  const generated = grouped.map(action => {
+  const generated = grouped.map((action) => {
     const newAction = {
       ...action,
       placement: action.placement ?? ActionPlacement.Normal,
@@ -171,7 +167,7 @@ export function combine(actions: ToolbarActions, context: ToolbarContext) {
     return newAction;
   });
 
-  const filtered = generated.filter(action => {
+  const filtered = generated.filter((action) => {
     if (typeof action.when === 'function') return action.when(context);
     return action.when ?? true;
   });
@@ -180,7 +176,7 @@ export function combine(actions: ToolbarActions, context: ToolbarContext) {
 }
 
 function group(actions: ToolbarAction[]): ToolbarAction[] {
-  const grouped = groupBy(actions, a => a.id);
+  const grouped = groupBy(actions, (a) => a.id);
 
   const paired = toPairs(grouped).map(([_, items]) => {
     if (items.length === 1) return items[0];
@@ -193,9 +189,7 @@ function group(actions: ToolbarAction[]): ToolbarAction[] {
 }
 
 const merge = (a: any, b: any) =>
-  mergeWith(a, b, (obj, src) =>
-    Array.isArray(obj) ? group(obj.concat(src)) : src
-  );
+  mergeWith(a, b, (obj, src) => (Array.isArray(obj) ? group(obj.concat(src)) : src));
 
 /**
  * Renders toolbar
@@ -206,11 +200,7 @@ const merge = (a: any, b: any) =>
  * 3. `ink:*`
  * 4. `custom:ink:*`
  */
-export function renderToolbar(
-  toolbar: EditorToolbar,
-  context: ToolbarContext,
-  flavour: string
-) {
+export function renderToolbar(toolbar: EditorToolbar, context: ToolbarContext, flavour: string) {
   const hasSurfaceScope = flavour.includes('surface');
   const toolbarRegistry = context.toolbarRegistry;
 
@@ -222,26 +212,22 @@ export function renderToolbar(
     'custom:ink:*',
   ]
     .flat()
-    .map(key => toolbarRegistry.modules.get(key))
-    .filter(module => !!module)
-    .filter(module =>
+    .map((key) => toolbarRegistry.modules.get(key))
+    .filter((module) => !!module)
+    .filter((module) =>
       typeof module.config.when === 'function'
         ? module.config.when(context)
-        : (module.config.when ?? true)
+        : (module.config.when ?? true),
     )
-    .flatMap(module => module.config.actions);
+    .flatMap((module) => module.config.actions);
 
   const combined = combine(actions, context);
 
-  const ordered = orderBy(
-    combined,
-    ['placement', 'id', 'score'],
-    ['asc', 'asc', 'asc']
-  );
+  const ordered = orderBy(combined, ['placement', 'id', 'score'], ['asc', 'asc', 'asc']);
 
   const [moreActionGroup, primaryActionGroup] = partition(
     ordered,
-    a => a.placement === ActionPlacement.More
+    (a) => a.placement === ActionPlacement.More,
   );
 
   // Resets
@@ -253,11 +239,7 @@ export function renderToolbar(
   const innerToolbar = context.placement$.value === 'inner';
 
   if (moreActionGroup.length) {
-    const moreMenuItems = renderActions(
-      moreActionGroup,
-      context,
-      renderMenuActionItem
-    );
+    const moreMenuItems = renderActions(moreActionGroup, context, renderMenuActionItem);
     if (moreMenuItems.length) {
       const key = `${context.getCurrentModel()?.id}`;
 
@@ -280,14 +262,11 @@ export function renderToolbar(
                 </editor-icon-button>
               `}
             >
-              <div
-                data-size=${innerToolbar ? '' : 'large'}
-                data-orientation="vertical"
-              >
+              <div data-size=${innerToolbar ? '' : 'large'} data-orientation="vertical">
                 ${join(moreMenuItems, renderToolbarSeparator('horizontal'))}
               </div>
             </editor-menu-button>
-          `
+          `,
         )}`,
       });
     }
@@ -296,9 +275,9 @@ export function renderToolbar(
   render(
     join(
       renderActions(primaryActionGroup, context),
-      innerToolbar ? null : renderToolbarSeparator()
+      innerToolbar ? null : renderToolbarSeparator(),
     ),
-    toolbar
+    toolbar,
   );
 
   // Avoids shaking
@@ -319,10 +298,10 @@ export function renderToolbar(
 function renderActions(
   actions: ToolbarActions,
   context: ToolbarContext,
-  render = renderActionItem
+  render = renderActionItem,
 ) {
   return actions
-    .map(action => {
+    .map((action) => {
       if ('content' in action) {
         if (typeof action.content === 'function') {
           return action.content(context);
@@ -340,8 +319,8 @@ function renderActions(
 
         return repeat(
           ordered,
-          a => a.id,
-          a => {
+          (a) => a.id,
+          (a) => {
             if ('content' in a) {
               if (typeof a.content === 'function') {
                 return a.content(context);
@@ -350,7 +329,7 @@ function renderActions(
               }
             }
             return render(a, context);
-          }
+          },
         );
       }
 
@@ -360,7 +339,7 @@ function renderActions(
 
       return null;
     })
-    .filter(action => action !== null);
+    .filter((action) => action !== null);
 }
 
 // TODO(@fundon): supports templates
@@ -369,14 +348,9 @@ function renderActionItem(action: ToolbarAction, context: ToolbarContext) {
   const ids = action.id.split('.');
   const id = ids[ids.length - 1];
   const label = action.label ?? action.tooltip ?? id;
-  const actived =
-    typeof action.active === 'function'
-      ? action.active(context)
-      : action.active;
+  const actived = typeof action.active === 'function' ? action.active(context) : action.active;
   const disabled =
-    typeof action.disabled === 'function'
-      ? action.disabled(context)
-      : action.disabled;
+    typeof action.disabled === 'function' ? action.disabled(context) : action.disabled;
 
   return html`
     <editor-icon-button
@@ -390,9 +364,7 @@ function renderActionItem(action: ToolbarAction, context: ToolbarContext) {
       @click=${() => action.run?.(context)}
     >
       ${action.icon}
-      ${action.showLabel && action.label
-        ? html`<span class="label">${action.label}</span>`
-        : null}
+      ${action.showLabel && action.label ? html`<span class="label">${action.label}</span>` : null}
     </editor-icon-button>
   `;
 }
@@ -402,14 +374,9 @@ function renderMenuActionItem(action: ToolbarAction, context: ToolbarContext) {
   const ids = action.id.split('.');
   const id = ids[ids.length - 1];
   const label = action.label ?? action.tooltip ?? id;
-  const actived =
-    typeof action.active === 'function'
-      ? action.active(context)
-      : action.active;
+  const actived = typeof action.active === 'function' ? action.active(context) : action.active;
   const disabled =
-    typeof action.disabled === 'function'
-      ? action.disabled(context)
-      : action.disabled;
+    typeof action.disabled === 'function' ? action.disabled(context) : action.disabled;
   const destructive = action.variant === 'destructive' ? 'delete' : undefined;
 
   return html`
@@ -424,8 +391,7 @@ function renderMenuActionItem(action: ToolbarAction, context: ToolbarContext) {
       .iconSize=${innerToolbar ? '16px' : undefined}
       @click=${() => action.run?.(context)}
     >
-      ${action.icon}
-      ${action.label ? html`<span class="label">${action.label}</span>` : null}
+      ${action.icon} ${action.label ? html`<span class="label">${action.label}</span>` : null}
     </editor-menu-action>
   `;
 }

@@ -1,21 +1,14 @@
 import type { SerializedXYWH } from '@ink/stone-global/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 import * as Y from 'yjs';
 
 import { SurfaceBlockModel as BaseSurfaceModel } from '../gfx/index.js';
-import {
-  GfxCompatibleBlockModel,
-  type GfxCompatibleProps,
-} from '../gfx/model/gfx-block-model.js';
+import { GfxCompatibleBlockModel, type GfxCompatibleProps } from '../gfx/model/gfx-block-model.js';
 import { TestShapeElement } from './test-gfx-element.js';
 
 export const RootBlockSchema = defineBlockSchema({
   flavour: 'test:page',
-  props: internal => ({
+  props: (internal) => ({
     title: internal.Text(),
     count: 0,
     style: {} as Record<string, unknown>,
@@ -53,7 +46,7 @@ export class NoteBlockModel extends BlockModel<
 
 export const HeadingBlockSchema = defineBlockSchema({
   flavour: 'test:heading',
-  props: internal => ({
+  props: (internal) => ({
     type: 'h1',
     text: internal.Text(),
   }),
@@ -64,8 +57,7 @@ export const HeadingBlockSchema = defineBlockSchema({
   },
 });
 
-export const HeadingBlockSchemaExtension =
-  BlockSchemaExtension(HeadingBlockSchema);
+export const HeadingBlockSchemaExtension = BlockSchemaExtension(HeadingBlockSchema);
 
 export class HeadingBlockModel extends BlockModel<
   ReturnType<(typeof HeadingBlockSchema)['model']['props']>
@@ -73,7 +65,7 @@ export class HeadingBlockModel extends BlockModel<
 
 export const SurfaceBlockSchema = defineBlockSchema({
   flavour: 'test:surface',
-  props: internal => ({
+  props: (internal) => ({
     elements: internal.Boxed<Y.Map<Y.Map<unknown>>>(new Y.Map()),
   }),
   metadata: {
@@ -84,8 +76,7 @@ export const SurfaceBlockSchema = defineBlockSchema({
   toModel: () => new SurfaceBlockModel(),
 });
 
-export const SurfaceBlockSchemaExtension =
-  BlockSchemaExtension(SurfaceBlockSchema);
+export const SurfaceBlockSchemaExtension = BlockSchemaExtension(SurfaceBlockSchema);
 
 export class SurfaceBlockModel extends BaseSurfaceModel {
   override _init() {
@@ -119,9 +110,6 @@ export const TestGfxBlockSchema = defineBlockSchema({
   toModel: () => new TestGfxBlockModel(),
 });
 
-export const TestGfxBlockSchemaExtension =
-  BlockSchemaExtension(TestGfxBlockSchema);
+export const TestGfxBlockSchemaExtension = BlockSchemaExtension(TestGfxBlockSchema);
 
-export class TestGfxBlockModel extends GfxCompatibleBlockModel<GfxTestBlockProps>(
-  BlockModel
-) {}
+export class TestGfxBlockModel extends GfxCompatibleBlockModel<GfxTestBlockProps>(BlockModel) {}

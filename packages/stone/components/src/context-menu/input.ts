@@ -1,5 +1,5 @@
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { IS_MOBILE } from '@ink/stone-global/env';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { cssVarV2 } from '@ink/stone-theme';
 import { css, html, type TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -86,7 +86,7 @@ export class MenuInput extends MenuFocusable {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.disposables.addFromEvent(this, 'click', e => {
+    this.disposables.addFromEvent(this, 'click', (e) => {
       e.stopPropagation();
     });
     this.disposables.addFromEvent(this, 'mouseenter', () => {
@@ -206,11 +206,7 @@ const renderInput = (data: MenuInputData, menu: Menu) => {
       .menu="${menu}"
     ></mobile-menu-input>`;
   }
-  return html` <ink-menu-input
-    style="flex:1"
-    .data="${data}"
-    .menu="${menu}"
-  ></ink-menu-input>`;
+  return html` <ink-menu-input style="flex:1" .data="${data}" .menu="${menu}"></ink-menu-input>`;
 };
 export const menuInputItems = {
   input:
@@ -225,7 +221,7 @@ export const menuInputItems = {
       class?: string;
       style?: Readonly<StyleInfo>;
     }) =>
-    menu => {
+    (menu) => {
       if (menu.showSearch$.value) {
         return;
       }
@@ -254,9 +250,7 @@ export const menuInputItems = {
         ...config.style,
       });
       return html`
-        <div style="${style}">
-          ${config.prefix} ${renderInput(data, menu)} ${config.postfix}
-        </div>
+        <div style="${style}">${config.prefix} ${renderInput(data, menu)} ${config.postfix}</div>
       `;
     },
 } satisfies Record<string, MenuItemRender<never>>;

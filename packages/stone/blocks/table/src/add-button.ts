@@ -1,13 +1,7 @@
+import { autoPlacement, autoUpdate, computePosition, offset, shift } from '@floating-ui/dom';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { PlusIcon } from '@ink/stone-icons/lit';
 import { ShadowlessElement } from '@ink/stone-std';
-import {
-  autoPlacement,
-  autoUpdate,
-  computePosition,
-  offset,
-  shift,
-} from '@floating-ui/dom';
 import { signal } from '@preact/signals-core';
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -25,9 +19,7 @@ import { DefaultColumnWidth, DefaultRowHeight } from './consts';
 import type { TableDataManager } from './table-data-manager';
 
 export const AddButtonComponentName = 'ink-table-add-button';
-export class AddButton extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class AddButton extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   @property({ type: Boolean })
   accessor vertical = false;
 
@@ -64,17 +56,13 @@ export class AddButton extends SignalWatcher(
     document.body.append(tip);
     const dispose = autoUpdate(ele, tip, () => {
       computePosition(ele, tip, {
-        middleware: [
-          autoPlacement({ allowedPlacements: ['bottom'] }),
-          offset(4),
-          shift(),
-        ],
+        middleware: [autoPlacement({ allowedPlacements: ['bottom'] }), offset(4), shift()],
       })
         .then(({ x, y }) => {
           tip.style.left = `${x}px`;
           tip.style.top = `${y}px`;
         })
-        .catch(e => {
+        .catch((e) => {
           console.error(e);
         });
     });
@@ -96,7 +84,7 @@ export class AddButton extends SignalWatcher(
       if (!row) {
         break;
       }
-      const hasText = columns.some(column => {
+      const hasText = columns.some((column) => {
         const cell = this.dataManager.getCell(row.rowId, column.columnId);
         if (!cell) {
           return false;
@@ -120,7 +108,7 @@ export class AddButton extends SignalWatcher(
       if (!column) {
         break;
       }
-      const hasText = rows.some(row => {
+      const hasText = rows.some((row) => {
         const cell = this.dataManager.getCell(row.rowId, column.columnId);
         if (!cell) {
           return false;
@@ -131,8 +119,7 @@ export class AddButton extends SignalWatcher(
         break;
       }
       columnWidths.push(
-        (columnWidths[columnWidths.length - 1] ?? 0) +
-          (column.width ?? DefaultColumnWidth)
+        (columnWidths[columnWidths.length - 1] ?? 0) + (column.width ?? DefaultColumnWidth),
       );
     }
     return columnWidths;
@@ -174,7 +161,7 @@ export class AddButton extends SignalWatcher(
       if (addColumn) {
         if (deltaX > 0) {
           this.dataManager.virtualColumnCount$.value = Math.floor(
-            (deltaX + 30) / DefaultColumnWidth
+            (deltaX + 30) / DefaultColumnWidth,
           );
         } else {
           let count = 0;
@@ -194,9 +181,7 @@ export class AddButton extends SignalWatcher(
       }
       if (addRow) {
         if (deltaY > 0) {
-          this.dataManager.virtualRowCount$.value = Math.floor(
-            deltaY / DefaultRowHeight
-          );
+          this.dataManager.virtualRowCount$.value = Math.floor(deltaY / DefaultRowHeight);
         } else {
           let count = 0;
           while (count < emptyRows.length) {
@@ -242,8 +227,6 @@ export class AddButton extends SignalWatcher(
   }
 
   renderAddColumnButton() {
-    const hovered =
-      this.hoverColumnIndex$.value === this.columns$.value.length - 1;
     const dragging = this.columnDragging$.value;
     return html` <div
       data-testid="add-column-button"
@@ -254,7 +237,7 @@ export class AddButton extends SignalWatcher(
       })}"
       ${ref(this.addColumnButtonRef$)}
       style=${styleMap({
-        opacity: dragging ? 1 : (this.hoverColumnIndex$.value !== undefined ? 0.6 : undefined),
+        opacity: dragging ? 1 : this.hoverColumnIndex$.value !== undefined ? 0.6 : undefined,
       })}
       @click="${(e: MouseEvent) => {
         e.preventDefault();

@@ -19,12 +19,7 @@ export interface GfxElementGeometry {
   getNearestPoint(point: IVec): IVec;
   getLineIntersections(start: IVec, end: IVec): PointLocation[] | null;
   getRelativePointLocation(point: IVec): PointLocation;
-  includesPoint(
-    x: number,
-    y: number,
-    options: PointTestOptions,
-    host: EditorHost
-  ): boolean;
+  includesPoint(x: number, y: number, options: PointTestOptions, host: EditorHost): boolean;
   intersectsBound(bound: Bound): boolean;
 }
 
@@ -100,13 +95,9 @@ export const gfxGroupCompatibleSymbol = Symbol('GfxGroupCompatible');
 /**
  * Check if the element is a container element.
  */
-export const isGfxGroupCompatibleModel = (
-  elm: unknown
-): elm is GfxGroupModel => {
+export const isGfxGroupCompatibleModel = (elm: unknown): elm is GfxGroupModel => {
   if (typeof elm !== 'object' || elm === null) return false;
-  return (
-    gfxGroupCompatibleSymbol in elm && elm[gfxGroupCompatibleSymbol] === true
-  );
+  return gfxGroupCompatibleSymbol in elm && elm[gfxGroupCompatibleSymbol] === true;
 };
 
 /**

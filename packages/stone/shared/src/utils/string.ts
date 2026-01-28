@@ -19,16 +19,16 @@ export function isFuzzyMatch(name: string, query: string) {
     .trim()
     .toLowerCase()
     .split('')
-    .filter(char => char !== ' ')
+    .filter((char) => char !== ' ')
     .join('');
 
   const regex = new RegExp(
     query
       .split('')
-      .filter(char => char !== ' ')
-      .map(item => `${escapeRegExp(item)}.*`)
+      .filter((char) => char !== ' ')
+      .map((item) => `${escapeRegExp(item)}.*`)
       .join(''),
-    'i'
+    'i',
   );
   return regex.test(pureName);
 }

@@ -121,13 +121,6 @@
         "themeDesc": "导出文档时使用的主题",
         "auto": "自动（与当前一致）"
       },
-      "window": {
-        "title": "窗口",
-        "sidebarPosition": "侧边栏位置",
-        "sidebarPositionDesc": "文件侧边栏的位置",
-        "left": "左",
-        "right": "右"
-      },
       "display": {
         "title": "显示",
         "showDocStats": "显示文档统计信息",
@@ -502,13 +495,13 @@
       "rename": "重命名",
       "horizontalStyle": "横向样式",
       "verticalStyle": "纵向样式",
-    "reload": "重新加载"
-  },
-  "note": {
-    "slicer": "切片器",
-    "size": "尺寸",
-    "viewInToc": "在目录中查看"
-  },
+      "reload": "重新加载"
+    },
+    "note": {
+      "slicer": "切片器",
+      "size": "尺寸",
+      "viewInToc": "在目录中查看"
+    },
     "search": "搜索"
   },
   "updater": {

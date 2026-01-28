@@ -12,22 +12,22 @@ declare global {
     addEventListener<K extends keyof VirtualKeyboardEventMap>(
       type: K,
       listener: (this: VirtualKeyboard, ev: VirtualKeyboardEventMap[K]) => any,
-      options?: boolean | AddEventListenerOptions
+      options?: boolean | AddEventListenerOptions,
     ): void;
     addEventListener(
       type: string,
       listener: EventListenerOrEventListenerObject,
-      options?: boolean | AddEventListenerOptions
+      options?: boolean | AddEventListenerOptions,
     ): void;
     removeEventListener<K extends keyof VirtualKeyboardEventMap>(
       type: K,
       listener: (this: VirtualKeyboard, ev: VirtualKeyboardEventMap[K]) => any,
-      options?: boolean | EventListenerOptions
+      options?: boolean | EventListenerOptions,
     ): void;
     removeEventListener(
       type: string,
       listener: EventListenerOrEventListenerObject,
-      options?: boolean | EventListenerOptions
+      options?: boolean | EventListenerOptions,
     ): void;
   }
 

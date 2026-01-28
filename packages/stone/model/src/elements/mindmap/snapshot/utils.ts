@@ -12,9 +12,7 @@ function isMindMapElement(element: unknown): element is MindMapElement {
   );
 }
 
-function getMindMapChildrenJson(
-  element: Record<string, unknown>
-): MindMapJson | null {
+function getMindMapChildrenJson(element: Record<string, unknown>): MindMapJson | null {
   if (!isMindMapElement(element)) {
     return null;
   }
@@ -22,9 +20,7 @@ function getMindMapChildrenJson(
   return element.children.json;
 }
 
-export function getMindMapNodeMap(
-  element: Record<string, unknown>
-): Map<string, MindMapTreeNode> {
+export function getMindMapNodeMap(element: Record<string, unknown>): Map<string, MindMapTreeNode> {
   const nodeMap = new Map<string, MindMapTreeNode>();
   const childrenJson = getMindMapChildrenJson(element);
   if (!childrenJson) {

@@ -1,14 +1,9 @@
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { TocIcon } from '@ink/stone-icons/lit';
 import { NoteDisplayMode } from '@ink/stone-model';
 import { DocModeProvider } from '@ink/stone-shared/services';
 import { scrollbarStyle } from '@ink/stone-shared/styles';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { TocIcon } from '@ink/stone-icons/lit';
-import {
-  type EditorHost,
-  PropTypes,
-  requiredProperties,
-  ShadowlessElement,
-} from '@ink/stone-std';
+import { type EditorHost, PropTypes, requiredProperties, ShadowlessElement } from '@ink/stone-std';
 import { provide } from '@lit/context';
 import { signal } from '@preact/signals-core';
 import { css, html, nothing, type PropertyValues } from 'lit';
@@ -18,19 +13,14 @@ import { repeat } from 'lit/directives/repeat.js';
 
 import { type TocContext, tocContext } from './config.js';
 import { getHeadingBlocksFromDoc } from './utils/query.js';
-import {
-  observeActiveHeadingDuringScroll,
-  scrollToBlockWithHighlight,
-} from './utils/scroll.js';
+import { observeActiveHeadingDuringScroll, scrollToBlockWithHighlight } from './utils/scroll.js';
 
 export const INK_OUTLINE_VIEWER = 'ink-outline-viewer';
 
 @requiredProperties({
   editor: PropTypes.object,
 })
-export class OutlineViewer extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class OutlineViewer extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     ink-outline-viewer {
       display: flex;
@@ -164,10 +154,7 @@ export class OutlineViewer extends SignalWatcher(
   private async _scrollToBlock(blockId: string) {
     this._lockActiveHeadingId = true;
     this._activeHeadingId$.value = blockId;
-    this._highlightMaskDisposable = await scrollToBlockWithHighlight(
-      this.editor,
-      blockId
-    );
+    this._highlightMaskDisposable = await scrollToBlockWithHighlight(this.editor, blockId);
     this._lockActiveHeadingId = false;
   }
 
@@ -193,18 +180,18 @@ export class OutlineViewer extends SignalWatcher(
     this.disposables.add(
       observeActiveHeadingDuringScroll(
         () => this.editor,
-        newHeadingId => {
+        (newHeadingId) => {
           if (this._lockActiveHeadingId) return;
           this._activeHeadingId$.value = newHeadingId;
-        }
-      )
+        },
+      ),
     );
 
     // title update
     this.disposables.add(
       this.editor.store.workspace.meta.docMetaUpdated.subscribe(() => {
         this.requestUpdate();
-      })
+      }),
     );
 
     this._setContext();
@@ -229,7 +216,7 @@ export class OutlineViewer extends SignalWatcher(
     const headingBlocks = getHeadingBlocksFromDoc(
       this.editor.store,
       [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.DocOnly],
-      true
+      true,
     );
 
     if (headingBlocks.length === 0) return nothing;
@@ -257,8 +244,8 @@ export class OutlineViewer extends SignalWatcher(
         <div class="outline-viewer-indicators-container">
           ${repeat(
             items,
-            block => block.id,
-            block =>
+            (block) => block.id,
+            (block) =>
               html`<div class="outline-viewer-indicator-wrapper">
                 <div
                   class=${classMap({
@@ -266,7 +253,7 @@ export class OutlineViewer extends SignalWatcher(
                     active: this._activeHeadingId$.value === block.id,
                   })}
                 ></div>
-              </div>`
+              </div>`,
           )}
         </div>
         <div class="outline-viewer-panel">
@@ -276,8 +263,8 @@ export class OutlineViewer extends SignalWatcher(
           </div>
           ${repeat(
             items,
-            block => block.id,
-            block => {
+            (block) => block.id,
+            (block) => {
               return html`<div
                 class=${classMap({
                   'outline-viewer-item': true,
@@ -295,7 +282,7 @@ export class OutlineViewer extends SignalWatcher(
                 >
                 </ink-outline-block-preview>
               </div>`;
-            }
+            },
           )}
         </div>
       </div>

@@ -1,11 +1,5 @@
+import { flip, offset } from '@floating-ui/dom';
 import { createLitPortal } from '@ink/stone-components/portal';
-import { AttachmentBlockModel } from '@ink/stone-model';
-import {
-  type ToolbarAction,
-  type ToolbarModuleConfig,
-  ToolbarModuleExtension,
-} from '@ink/stone-shared/services';
-import { getBlockProps } from '@ink/stone-shared/utils';
 import {
   CopyIcon,
   DeleteIcon,
@@ -14,9 +8,15 @@ import {
   ReplaceIcon,
   ResetIcon,
 } from '@ink/stone-icons/lit';
+import { AttachmentBlockModel } from '@ink/stone-model';
+import {
+  type ToolbarAction,
+  type ToolbarModuleConfig,
+  ToolbarModuleExtension,
+} from '@ink/stone-shared/services';
+import { getBlockProps } from '@ink/stone-shared/utils';
 import { BlockFlavourIdentifier } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
-import { flip, offset } from '@floating-ui/dom';
 import { html } from 'lit';
 
 import { AttachmentBlockComponent } from '../attachment-block';
@@ -28,9 +28,7 @@ const trackBaseProps = {
   type: 'card view',
 };
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
   const replaceAction = {
     id: 'b.replace',
     tooltip: t('editor.attachment.replaceAttachment', 'Replace attachment'),

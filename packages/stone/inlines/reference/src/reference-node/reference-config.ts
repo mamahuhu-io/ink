@@ -13,9 +13,7 @@ export const ReferenceNodeConfigExtension =
   ConfigExtensionFactory<ReferenceNodeConfig>('InkReferenceNodeConfig');
 
 export class ReferenceNodeConfigProvider {
-  private _customContent:
-    | ((reference: InkReference) => TemplateResult)
-    | undefined = undefined;
+  private _customContent: ((reference: InkReference) => TemplateResult) | undefined = undefined;
 
   private _hidePopup = false;
 

@@ -5,11 +5,6 @@ import {
   popupTargetFromElement,
 } from '@ink/stone-components/context-menu';
 import { TextBackgroundDuotoneIcon } from '@ink/stone-components/icons';
-import { DefaultInlineManagerExtension } from '@ink/stone-inline-preset';
-import type { TableColumn, TableRow } from '@ink/stone-model';
-import { RichText } from '@ink/stone-rich-text';
-import { cssVarV2 } from '@ink/stone-shared/theme';
-import { getViewportElement } from '@ink/stone-shared/utils';
 import { IS_MAC } from '@ink/stone-global/env';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import {
@@ -28,6 +23,11 @@ import {
   InsertRightIcon,
   PasteIcon,
 } from '@ink/stone-icons/lit';
+import { DefaultInlineManagerExtension } from '@ink/stone-inline-preset';
+import type { TableColumn, TableRow } from '@ink/stone-model';
+import { RichText } from '@ink/stone-rich-text';
+import { cssVarV2 } from '@ink/stone-shared/theme';
+import { getViewportElement } from '@ink/stone-shared/utils';
 import { ShadowlessElement } from '@ink/stone-std';
 import type { Text } from '@ink/stone-store';
 import { computed, effect, signal } from '@preact/signals-core';
@@ -39,12 +39,9 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 import { colorList } from './color';
 import { t } from './configs/i18n';
-import { ColumnMaxWidth, DefaultColumnWidth } from './consts';
+import { DefaultColumnWidth } from './consts';
 import type { SelectionController } from './selection-controller';
-import {
-  type TableAreaSelection,
-  TableSelectionData,
-} from './selection-schema';
+import { type TableAreaSelection, TableSelectionData } from './selection-schema';
 import type { TableBlockComponent } from './table-block';
 import {
   cellContainerStyle,
@@ -61,9 +58,7 @@ import {
 } from './table-cell-css';
 import type { TableDataManager } from './table-data-manager';
 export const TableCellComponentName = 'ink-table-cell';
-export class TableCell extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class TableCell extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   @property({ attribute: false })
   accessor text: Text | undefined = undefined;
 
@@ -103,20 +98,15 @@ export class TableCell extends SignalWatcher(
   }
   get inlineManager() {
     return this.closest<TableBlockComponent>('ink-table')?.std.get(
-      DefaultInlineManagerExtension.identifier
+      DefaultInlineManagerExtension.identifier,
     );
   }
 
   get topContenteditableElement() {
-    return this.closest<TableBlockComponent>('ink-table')
-      ?.topContenteditableElement;
+    return this.closest<TableBlockComponent>('ink-table')?.topContenteditableElement;
   }
 
-  openColumnOptions(
-    target: PopupTarget,
-    column: TableColumn,
-    columnIndex: number
-  ) {
+  openColumnOptions(target: PopupTarget, column: TableColumn, columnIndex: number) {
     this.selectionController.setSelected({
       type: 'column',
       columnId: column.columnId,
@@ -137,7 +127,7 @@ export class TableCell extends SignalWatcher(
                   items: [
                     { name: t('editor.table.default', 'Default'), color: undefined },
                     ...colorList,
-                  ].map(item =>
+                  ].map((item) =>
                     menu.action({
                       prefix: html`<div
                         style="color: ${item.color ??
@@ -146,15 +136,12 @@ export class TableCell extends SignalWatcher(
                       >
                         ${TextBackgroundDuotoneIcon}
                       </div>`,
-                                name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
+                      name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
                       isSelected: column.backgroundColor === item.color,
                       select: () => {
-                        this.dataManager.setColumnBackgroundColor(
-                          column.columnId,
-                          item.color
-                        );
+                        this.dataManager.setColumnBackgroundColor(column.columnId, item.color);
                       },
-                    })
+                    }),
                   ),
                 },
               }),
@@ -164,10 +151,7 @@ export class TableCell extends SignalWatcher(
                       name: t('editor.table.clearColumnStyle', 'Clear column style'),
                       prefix: CloseIcon(),
                       select: () => {
-                        this.dataManager.setColumnBackgroundColor(
-                          column.columnId,
-                          undefined
-                        );
+                        this.dataManager.setColumnBackgroundColor(column.columnId, undefined);
                       },
                     }),
                   ]
@@ -180,9 +164,7 @@ export class TableCell extends SignalWatcher(
                 name: t('editor.table.insertLeft', 'Insert Left'),
                 prefix: InsertLeftIcon(),
                 select: () => {
-                  this.dataManager.insertColumn(
-                    columnIndex > 0 ? columnIndex - 1 : undefined
-                  );
+                  this.dataManager.insertColumn(columnIndex > 0 ? columnIndex - 1 : undefined);
                 },
               }),
               menu.action({
@@ -281,7 +263,7 @@ export class TableCell extends SignalWatcher(
                   items: [
                     { name: t('editor.table.default', 'Default'), color: undefined },
                     ...colorList,
-                  ].map(item =>
+                  ].map((item) =>
                     menu.action({
                       prefix: html`<div
                         style="color: ${item.color ??
@@ -290,15 +272,12 @@ export class TableCell extends SignalWatcher(
                       >
                         ${TextBackgroundDuotoneIcon}
                       </div>`,
-                                name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
+                      name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
                       isSelected: row.backgroundColor === item.color,
                       select: () => {
-                        this.dataManager.setRowBackgroundColor(
-                          row.rowId,
-                          item.color
-                        );
+                        this.dataManager.setRowBackgroundColor(row.rowId, item.color);
                       },
-                    })
+                    }),
                   ),
                 },
               }),
@@ -308,10 +287,7 @@ export class TableCell extends SignalWatcher(
                       name: t('editor.table.clearRowStyle', 'Clear row style'),
                       prefix: CloseIcon(),
                       select: () => {
-                        this.dataManager.setRowBackgroundColor(
-                          row.rowId,
-                          undefined
-                        );
+                        this.dataManager.setRowBackgroundColor(row.rowId, undefined);
                       },
                     }),
                   ]
@@ -324,9 +300,7 @@ export class TableCell extends SignalWatcher(
                 name: t('editor.table.insertAbove', 'Insert Above'),
                 prefix: InsertAboveIcon(),
                 select: () => {
-                  this.dataManager.insertRow(
-                    rowIndex > 0 ? rowIndex - 1 : undefined
-                  );
+                  this.dataManager.insertRow(rowIndex > 0 ? rowIndex - 1 : undefined);
                 },
               }),
               menu.action({
@@ -402,29 +376,27 @@ export class TableCell extends SignalWatcher(
     });
   }
 
-  createColorPickerMenu(
-    currentColor: string | undefined,
-    select: (color?: string) => void
-  ) {
+  createColorPickerMenu(currentColor: string | undefined, select: (color?: string) => void) {
     return menu.subMenu({
       name: t('editor.table.backgroundColor', 'Background color'),
       prefix: ColorPickerIcon(),
       options: {
-        items: [{ name: t('editor.table.default', 'Default'), color: undefined }, ...colorList].map(item =>
-          menu.action({
-            prefix: html`<div
-              style="color: ${item.color ??
-              cssVarV2.layer.background
-                .primary};display: flex;align-items: center;justify-content: center;"
-            >
-              ${TextBackgroundDuotoneIcon}
-            </div>`,
-                      name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
-            isSelected: currentColor === item.color,
-            select: () => {
-              select(item.color);
-            },
-          })
+        items: [{ name: t('editor.table.default', 'Default'), color: undefined }, ...colorList].map(
+          (item) =>
+            menu.action({
+              prefix: html`<div
+                style="color: ${item.color ??
+                cssVarV2.layer.background
+                  .primary};display: flex;align-items: center;justify-content: center;"
+              >
+                ${TextBackgroundDuotoneIcon}
+              </div>`,
+              name: t(`editor.highlight.${item.name.toLowerCase()}`, item.name),
+              isSelected: currentColor === item.color,
+              select: () => {
+                select(item.color);
+              },
+            }),
         ),
       },
     });
@@ -455,7 +427,7 @@ export class TableCell extends SignalWatcher(
                   name: t('editor.table.paste', 'Paste'),
                   prefix: PasteIcon(),
                   select: () => {
-                    navigator.clipboard.readText().then(text => {
+                    navigator.clipboard.readText().then((text) => {
                       this.selectionController.doPaste(text, selected);
                     });
                   },
@@ -484,11 +456,7 @@ export class TableCell extends SignalWatcher(
       e.stopPropagation();
       const element = e.currentTarget;
       if (element instanceof HTMLElement) {
-        this.openColumnOptions(
-          popupTargetFromElement(element),
-          column,
-          columnIndex
-        );
+        this.openColumnOptions(popupTargetFromElement(element), column, columnIndex);
       }
     };
     return html`<div class=${columnOptionsCellStyle}>
@@ -537,12 +505,8 @@ export class TableCell extends SignalWatcher(
       return nothing;
     }
     return html`
-      ${this.rowIndex === 0
-        ? this.renderColumnOptions(this.column, this.columnIndex)
-        : nothing}
-      ${this.columnIndex === 0
-        ? this.renderRowOptions(this.row, this.rowIndex)
-        : nothing}
+      ${this.rowIndex === 0 ? this.renderColumnOptions(this.column, this.columnIndex) : nothing}
+      ${this.columnIndex === 0 ? this.renderRowOptions(this.row, this.rowIndex) : nothing}
     `;
   }
 
@@ -566,8 +530,7 @@ export class TableCell extends SignalWatcher(
 
   tdStyle() {
     const columnWidth = this.virtualWidth$.value ?? this.column?.width;
-    const backgroundColor =
-      this.column?.backgroundColor ?? this.row?.backgroundColor ?? undefined;
+    const backgroundColor = this.column?.backgroundColor ?? this.row?.backgroundColor ?? undefined;
     const textAlign = this.column?.textAlign;
     // 如果有设置列宽，使用固定宽度；否则让列自动分配空间
     if (columnWidth) {
@@ -587,8 +550,7 @@ export class TableCell extends SignalWatcher(
   }
 
   showColumnIndicator$ = computed(() => {
-    const indicatorIndex =
-      this.dataManager.ui.columnIndicatorIndex$.value ?? -1;
+    const indicatorIndex = this.dataManager.ui.columnIndicatorIndex$.value ?? -1;
     if (indicatorIndex === 0 && this.columnIndex === 0) {
       return 'left';
     }
@@ -613,33 +575,20 @@ export class TableCell extends SignalWatcher(
     }
     const columnIndex = this.columnIndex;
     const isFirstColumn = columnIndex === 0;
-    const isLastColumn =
-      columnIndex === this.dataManager.uiColumns$.value.length - 1;
+    const isLastColumn = columnIndex === this.dataManager.uiColumns$.value.length - 1;
     const showIndicator = this.showRowIndicator$.value;
     const style = (show: boolean) =>
       styleMap({
         opacity: show ? 1 : 0,
-        borderRadius: isFirstColumn
-          ? '3px 0 0 3px'
-          : isLastColumn
-            ? '0 3px 3px 0'
-            : '0',
+        borderRadius: isFirstColumn ? '3px 0 0 3px' : isLastColumn ? '0 3px 3px 0' : '0',
       });
     const indicator0 =
       this.rowIndex === 0
-        ? html`
-            <div
-              style=${style(showIndicator === 'top')}
-              class=${rowTopIndicatorStyle}
-            ></div>
-          `
+        ? html` <div style=${style(showIndicator === 'top')} class=${rowTopIndicatorStyle}></div> `
         : nothing;
     return html`
       ${indicator0}
-      <div
-        style=${style(showIndicator === 'bottom')}
-        class=${rowBottomIndicatorStyle}
-      ></div>
+      <div style=${style(showIndicator === 'bottom')} class=${rowBottomIndicatorStyle}></div>
     `;
   }
   renderColumnIndicator() {
@@ -658,19 +607,12 @@ export class TableCell extends SignalWatcher(
     const style = (show: boolean) =>
       styleMap({
         opacity: show ? 1 : 0,
-        borderRadius: isFirstRow
-          ? '3px 3px 0 0'
-          : isLastRow
-            ? '0 0 3px 3px'
-            : '0',
+        borderRadius: isFirstRow ? '3px 3px 0 0' : isLastRow ? '0 0 3px 3px' : '0',
       });
     const indicator0 =
       this.columnIndex === 0
         ? html`
-            <div
-              style=${style(showIndicator === 'left')}
-              class=${columnLeftIndicatorStyle}
-            ></div>
+            <div style=${style(showIndicator === 'left')} class=${columnLeftIndicatorStyle}></div>
           `
         : nothing;
     const mouseEnter = () => {
@@ -736,9 +678,7 @@ export class TableCell extends SignalWatcher(
       .then(() => {
         const inlineEditor = this.inlineEditor;
         if (inlineEditor) {
-          this.disposables.add(
-            inlineEditor.slots.keydown.subscribe(this._handleKeyDown)
-          );
+          this.disposables.add(inlineEditor.slots.keydown.subscribe(this._handleKeyDown));
         }
 
         this.disposables.add(
@@ -760,13 +700,10 @@ export class TableCell extends SignalWatcher(
               columnEndIndex: this.columnIndex,
             };
             const currentSelection = this.selectionController.selected$.peek();
-            if (
-              inlineRange &&
-              !TableSelectionData.equals(targetSelection, currentSelection)
-            ) {
+            if (inlineRange && !TableSelectionData.equals(targetSelection, currentSelection)) {
               this.selectionController.setSelected(targetSelection, false);
             }
-          })
+          }),
         );
       })
       .catch(console.error);
@@ -820,8 +757,7 @@ export class TableCell extends SignalWatcher(
               : null}"
           data-parent-flavour="ink:table"
         ></rich-text>
-        ${this.renderOptionsButton()} ${this.renderColumnIndicator()}
-        ${this.renderRowIndicator()}
+        ${this.renderOptionsButton()} ${this.renderColumnIndicator()} ${this.renderRowIndicator()}
       </td>
     `;
   }

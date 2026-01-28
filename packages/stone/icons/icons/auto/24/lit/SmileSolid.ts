@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const SmileSolid =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const SmileSolid = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const SmileSolid =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M11.95 2.3c5.385 0 9.75 4.365 9.75 9.75s-4.365 9.75-9.75 9.75-9.75-4.365-9.75-9.75S6.565 2.3 11.95 2.3m4.368 11.397c-1.008.162-2.93.439-4.318.439-1.375 0-3.275-.272-4.291-.435-.37-.059-.71.229-.638.596.412 2.086 2.572 3.764 4.929 3.764 2.367 0 4.61-1.691 4.956-3.79.06-.36-.277-.632-.638-.574M8.55 7.75a.75.75 0 0 0-.75.75V10a.75.75 0 0 0 1.5 0V8.5a.75.75 0 0 0-.75-.75m6.8 0a.75.75 0 0 0-.75.75V10a.75.75 0 0 0 1.5 0V8.5a.75.75 0 0 0-.75-.75" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M11.95 2.3c5.385 0 9.75 4.365 9.75 9.75s-4.365 9.75-9.75 9.75-9.75-4.365-9.75-9.75S6.565 2.3 11.95 2.3m4.368 11.397c-1.008.162-2.93.439-4.318.439-1.375 0-3.275-.272-4.291-.435-.37-.059-.71.229-.638.596.412 2.086 2.572 3.764 4.929 3.764 2.367 0 4.61-1.691 4.956-3.79.06-.36-.277-.632-.638-.574M8.55 7.75a.75.75 0 0 0-.75.75V10a.75.75 0 0 0 1.5 0V8.5a.75.75 0 0 0-.75-.75m6.8 0a.75.75 0 0 0-.75.75V10a.75.75 0 0 0 1.5 0V8.5a.75.75 0 0 0-.75-.75"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default SmileSolid;

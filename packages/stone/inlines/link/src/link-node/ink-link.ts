@@ -1,29 +1,26 @@
-import { whenHover } from "@ink/stone-components/hover";
-import { RefNodeSlotsProvider } from "@ink/stone-inline-reference";
-import type { ReferenceInfo } from "@ink/stone-model";
-import {
-  ParseDocUrlProvider,
-  ToolbarRegistryIdentifier,
-} from "@ink/stone-shared/services";
-import { inkTextStyles } from "@ink/stone-shared/styles";
-import type { InkTextAttributes } from "@ink/stone-shared/types";
-import { normalizeUrl } from "@ink/stone-shared/utils";
-import { WithDisposable } from "@ink/stone-global/lit";
-import type { BlockComponent, BlockStdScope } from "@ink/stone-std";
-import { BLOCK_ID_ATTR, ShadowlessElement } from "@ink/stone-std";
+import { whenHover } from '@ink/stone-components/hover';
+import { WithDisposable } from '@ink/stone-global/lit';
+import { RefNodeSlotsProvider } from '@ink/stone-inline-reference';
+import type { ReferenceInfo } from '@ink/stone-model';
+import { ParseDocUrlProvider, ToolbarRegistryIdentifier } from '@ink/stone-shared/services';
+import { inkTextStyles } from '@ink/stone-shared/styles';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
+import { normalizeUrl } from '@ink/stone-shared/utils';
+import type { BlockComponent, BlockStdScope } from '@ink/stone-std';
+import { BLOCK_ID_ATTR, ShadowlessElement } from '@ink/stone-std';
 import {
   INLINE_ROOT_ATTR,
   type InlineRootElement,
   ZERO_WIDTH_FOR_EMPTY_LINE,
-} from "@ink/stone-std/inline";
-import type { DeltaInsert } from "@ink/stone-store";
-import { css, html } from "lit";
-import { property } from "lit/decorators.js";
-import { type StyleInfo, styleMap } from "lit/directives/style-map.js";
+} from '@ink/stone-std/inline';
+import type { DeltaInsert } from '@ink/stone-store';
+import { css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import { type StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
 export class InkLink extends WithDisposable(ShadowlessElement) {
   static override styles = css`
-    ink-link a:hover [data-v-text="true"] {
+    ink-link a:hover [data-v-text='true'] {
       text-decoration: underline;
     }
   `;
@@ -32,11 +29,11 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
   private _identified: boolean = false;
 
   private readonly _onMouseUp = () => {
-    const anchorElement = this.querySelector("a");
+    const anchorElement = this.querySelector('a');
     if (!anchorElement || !anchorElement.isContentEditable) return;
-    anchorElement.contentEditable = "false";
+    anchorElement.contentEditable = 'false';
     setTimeout(() => {
-      anchorElement.removeAttribute("contenteditable");
+      anchorElement.removeAttribute('contenteditable');
     }, 0);
   };
 
@@ -58,7 +55,7 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
 
     refNodeSlotsProvider.docLinkClicked.next({
       ...referenceInfo,
-      openMode: e?.button === 1 ? "open-in-new-tab" : undefined,
+      openMode: e?.button === 1 ? 'open-in-new-tab' : undefined,
       host: this.std.host,
     });
   };
@@ -69,7 +66,7 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
 
       if (hovered) {
         message$.value = {
-          flavour: "ink:link",
+          flavour: 'ink:link',
           element: this,
           setFloating: this._whenHover.setFloating,
         };
@@ -80,7 +77,7 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
       message$.value = null;
       this._whenHover.setFloating();
     },
-    { enterDelay: 500 }
+    { enterDelay: 500 },
   );
 
   override connectedCallback() {
@@ -107,21 +104,17 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
   // this workaround is not necessary and links work normally.
   get block() {
     if (!this.inlineEditor?.rootElement) return null;
-    const block = this.inlineEditor.rootElement.closest<BlockComponent>(
-      `[${BLOCK_ID_ATTR}]`
-    );
+    const block = this.inlineEditor.rootElement.closest<BlockComponent>(`[${BLOCK_ID_ATTR}]`);
     return block;
   }
 
   get inlineEditor() {
-    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(
-      `[${INLINE_ROOT_ATTR}]`
-    );
+    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(`[${INLINE_ROOT_ATTR}]`);
     return inlineRoot?.inlineEditor;
   }
 
   get link() {
-    return normalizeUrl(this.delta.attributes?.link ?? "");
+    return normalizeUrl(this.delta.attributes?.link ?? '');
   }
 
   get selfInlineRange() {
@@ -157,22 +150,18 @@ export class InkLink extends WithDisposable(ShadowlessElement) {
 
   override render() {
     const linkStyle = {
-      color: "var(--ink-link-color)",
-      fill: "var(--ink-link-color)",
-      "text-decoration": "none",
-      cursor: "pointer",
+      color: 'var(--ink-link-color)',
+      fill: 'var(--ink-link-color)',
+      'text-decoration': 'none',
+      cursor: 'pointer',
     };
 
     if (this.delta.attributes && this.delta.attributes?.code) {
       const codeStyle = inkTextStyles(this.delta.attributes);
-      return html`<code style=${styleMap(codeStyle)}>
-        ${this._renderLink(linkStyle)}
-      </code>`;
+      return html`<code style=${styleMap(codeStyle)}> ${this._renderLink(linkStyle)} </code>`;
     }
 
-    const style = this.delta.attributes
-      ? inkTextStyles(this.delta.attributes, linkStyle)
-      : {};
+    const style = this.delta.attributes ? inkTextStyles(this.delta.attributes, linkStyle) : {};
 
     return this._renderLink(style);
   }

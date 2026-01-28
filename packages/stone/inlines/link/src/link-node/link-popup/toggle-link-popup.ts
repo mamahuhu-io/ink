@@ -9,7 +9,7 @@ export function toggleLinkPopup(
   type: LinkPopup['type'],
   inlineEditor: InkInlineEditor,
   targetInlineRange: InlineRange,
-  abortController: AbortController
+  abortController: AbortController,
 ): LinkPopup {
   const popup = new LinkPopup();
   popup.std = std;
@@ -18,9 +18,7 @@ export function toggleLinkPopup(
   popup.targetInlineRange = targetInlineRange;
   popup.abortController = abortController;
 
-  const root =
-    inlineEditor.rootElement?.closest('editor-host')?.parentElement ??
-    document.body;
+  const root = inlineEditor.rootElement?.closest('editor-host')?.parentElement ?? document.body;
   root.append(popup);
 
   return popup;

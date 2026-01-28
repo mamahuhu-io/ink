@@ -8,7 +8,7 @@ import type { DeltaInsert } from '@ink/stone-store';
 export const listBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   flavour: ListBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === ListBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === ListBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
@@ -23,5 +23,6 @@ export const listBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   },
 };
 
-export const ListBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(listBlockPlainTextAdapterMatcher);
+export const ListBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  listBlockPlainTextAdapterMatcher,
+);

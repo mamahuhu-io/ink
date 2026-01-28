@@ -1,6 +1,6 @@
-import { dedupe, delayHide, delayShow } from "./middlewares/basic.js";
-import { safeBridge, safeTriangle } from "./middlewares/safe-area.js";
-import type { HoverMiddleware, WhenHoverOptions } from "./types.js";
+import { dedupe, delayHide, delayShow } from './middlewares/basic.js';
+import { safeBridge, safeTriangle } from './middlewares/safe-area.js';
+import type { HoverMiddleware, WhenHoverOptions } from './types.js';
 
 /**
  * Call the `whenHoverChange` callback when the element is hovered.
@@ -56,16 +56,11 @@ export const whenHover = (
   const middlewares: HoverMiddleware[] = [
     dedupe(alwayRunWhenNoFloating),
     triangleOptions &&
-      safeTriangle(
-        typeof triangleOptions === "boolean" ? undefined : triangleOptions,
-      ),
-    bridgeOptions &&
-      safeBridge(
-        typeof bridgeOptions === "boolean" ? undefined : bridgeOptions,
-      ),
+      safeTriangle(typeof triangleOptions === 'boolean' ? undefined : triangleOptions),
+    bridgeOptions && safeBridge(typeof bridgeOptions === 'boolean' ? undefined : bridgeOptions),
     delayShow(enterDelay),
     delayHide(leaveDelay),
-  ].filter((v) => typeof v !== "boolean") as HoverMiddleware[];
+  ].filter((v) => typeof v !== 'boolean') as HoverMiddleware[];
 
   let currentEvent: Event | null = null;
   const onHoverChange = (async (e: Event) => {
@@ -80,23 +75,23 @@ export const whenHover = (
     }
     // ignore expired event
     if (e !== currentEvent) return;
-    const isHover = e.type === "mouseenter" ? true : false;
+    const isHover = e.type === 'mouseenter' ? true : false;
     whenHoverChange(isHover, e);
   }) as (e: Event) => void;
 
   const addHoverListener = (element?: Element) => {
     if (!element) return;
     // see https://stackoverflow.com/questions/14795099/pure-javascript-to-check-if-something-has-hover-without-setting-on-mouseover-ou
-    const alreadyHover = element.matches(":hover");
+    const alreadyHover = element.matches(':hover');
     if (alreadyHover && !abortController.signal.aborted) {
       // When the element is already hovered, we need to trigger the callback manually
-      onHoverChange(new MouseEvent("mouseenter"));
+      onHoverChange(new MouseEvent('mouseenter'));
     }
-    element.addEventListener("mouseenter", onHoverChange, {
+    element.addEventListener('mouseenter', onHoverChange, {
       capture: true,
       signal: abortController.signal,
     });
-    element.addEventListener("mouseleave", onHoverChange, {
+    element.addEventListener('mouseleave', onHoverChange, {
       // Please refrain use `capture: true` here.
       // It will cause the `mouseleave` trigger incorrectly when the pointer is still within the element.
       // The issue is detailed in https://github.com/mamahuhu-io/stone/issues/6241
@@ -112,10 +107,10 @@ export const whenHover = (
 
   const removeHoverListener = (element?: Element) => {
     if (!element) return;
-    element.removeEventListener("mouseenter", onHoverChange, {
+    element.removeEventListener('mouseenter', onHoverChange, {
       capture: true,
     });
-    element.removeEventListener("mouseleave", onHoverChange);
+    element.removeEventListener('mouseleave', onHoverChange);
   };
 
   const setReference = (element?: Element) => {

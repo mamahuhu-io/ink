@@ -18,10 +18,7 @@ import {
 } from '../utils/layer.js';
 import { GfxExtension } from './extension.js';
 import type { GfxController } from './index.js';
-import {
-  type GfxGroupCompatibleInterface,
-  isGfxGroupCompatibleModel,
-} from './model/base.js';
+import { type GfxGroupCompatibleInterface, isGfxGroupCompatibleModel } from './model/base.js';
 import { GfxBlockElementModel } from './model/gfx-block-model.js';
 import type { GfxModel } from './model/model.js';
 import { GfxPrimitiveElementModel } from './model/surface/element-model.js';
@@ -115,10 +112,8 @@ export class LayerManager extends GfxExtension {
 
   private _buildCanvasLayers() {
     const canvasLayers = this.layers
-      .filter<CanvasLayer>(
-        (layer): layer is CanvasLayer => layer.type === 'canvas'
-      )
-      .map(layer => {
+      .filter<CanvasLayer>((layer): layer is CanvasLayer => layer.type === 'canvas')
+      .map((layer) => {
         return {
           set: layer.set,
           elements: layer.elements,
@@ -139,11 +134,8 @@ export class LayerManager extends GfxExtension {
     this.canvasLayers = canvasLayers;
   }
 
-  private _getModelType(
-    element: GfxModel | GfxLocalElementModel
-  ): 'block' | 'canvas' {
-    return element instanceof GfxLocalElementModel ||
-      element instanceof GfxPrimitiveElementModel
+  private _getModelType(element: GfxModel | GfxLocalElementModel): 'block' | 'canvas' {
+    return element instanceof GfxLocalElementModel || element instanceof GfxPrimitiveElementModel
       ? 'canvas'
       : 'block';
   }
@@ -159,9 +151,7 @@ export class LayerManager extends GfxExtension {
       if (curLayer) {
         curLayer.indexes = [
           getElementIndex(curLayer.elements[0]),
-          getElementIndex(
-            last(curLayer.elements as GfxPrimitiveElementModel[])!
-          ),
+          getElementIndex(last(curLayer.elements as GfxPrimitiveElementModel[])!),
         ];
         curLayer.zIndex = currentCSSZindex;
         layers.push(curLayer as LayerManager['layers'][number]);
@@ -189,10 +179,7 @@ export class LayerManager extends GfxExtension {
             } as BlockLayer);
     };
 
-    while (
-      blockIdx < this.blocks.length ||
-      canvasIdx < this.canvasElements.length
-    ) {
+    while (blockIdx < this.blocks.length || canvasIdx < this.canvasElements.length) {
       const curBlock = this.blocks[blockIdx];
       const curCanvas = this.canvasElements[canvasIdx];
 
@@ -209,7 +196,7 @@ export class LayerManager extends GfxExtension {
         const remains = this.canvasElements.slice(canvasIdx);
 
         curLayer!.elements = curLayer.elements.concat(remains);
-        remains.forEach(element => (curLayer as CanvasLayer).set.add(element));
+        remains.forEach((element) => (curLayer as CanvasLayer).set.add(element));
 
         break;
       }
@@ -224,7 +211,7 @@ export class LayerManager extends GfxExtension {
         const remains = this.blocks.slice(blockIdx);
 
         curLayer.elements = curLayer.elements.concat(remains);
-        remains.forEach(block => (curLayer as BlockLayer).set.add(block));
+        remains.forEach((block) => (curLayer as BlockLayer).set.add(block));
 
         break;
       }
@@ -283,18 +270,14 @@ export class LayerManager extends GfxExtension {
     }
 
     this.layers = layers;
-    this._surface?.localElementModels.forEach(el => this.add(el));
+    this._surface?.localElementModels.forEach((el) => this.add(el));
   }
 
   private _insertIntoLayer(target: GfxModel, type: 'block' | 'canvas') {
     const layers = this.layers;
     let cur = layers.length - 1;
 
-    const addToLayer = (
-      layer: Layer,
-      element: GfxModel,
-      position: number | 'tail'
-    ) => {
+    const addToLayer = (layer: Layer, element: GfxModel, position: number | 'tail') => {
       assertType<CanvasLayer>(layer);
       assertType<GfxPrimitiveElementModel>(element);
 
@@ -306,11 +289,7 @@ export class LayerManager extends GfxExtension {
 
       layer.set.add(element);
 
-      if (
-        position === 'tail' ||
-        position === 0 ||
-        position === layer.elements.length - 1
-      ) {
+      if (position === 'tail' || position === 0 || position === layer.elements.length - 1) {
         layer.indexes = [
           getElementIndex(layer.elements[0]),
           getElementIndex(last(layer.elements)!),
@@ -320,15 +299,12 @@ export class LayerManager extends GfxExtension {
     const createLayer = (
       type: 'block' | 'canvas',
       targets: GfxModel[],
-      curZIndex: number
+      curZIndex: number,
     ): Layer => {
       const newLayer = {
         type,
         set: new Set(targets),
-        indexes: [
-          getElementIndex(targets[0]),
-          getElementIndex(last(targets)!),
-        ] as [string, string],
+        indexes: [getElementIndex(targets[0]), getElementIndex(last(targets)!)] as [string, string],
         zIndex: curZIndex + 1,
         elements: targets,
       } as BlockLayer;
@@ -339,10 +315,7 @@ export class LayerManager extends GfxExtension {
     if (
       !last(this.layers) ||
       [SortOrder.AFTER, SortOrder.SAME].includes(
-        compare(
-          target,
-          last(last(this.layers)!.elements as GfxPrimitiveElementModel[])!
-        )
+        compare(target, last(last(this.layers)!.elements as GfxPrimitiveElementModel[])!),
       )
     ) {
       const layer = last(this.layers);
@@ -351,13 +324,7 @@ export class LayerManager extends GfxExtension {
         addToLayer(layer, target, 'tail');
         updateLayersZIndex(layers, cur);
       } else {
-        this.layers.push(
-          createLayer(
-            type,
-            [target],
-            getLayerEndZIndex(layers, layers.length - 1)
-          )
-        );
+        this.layers.push(createLayer(type, [target], getLayerEndZIndex(layers, layers.length - 1)));
       }
     } else {
       while (cur > -1) {
@@ -365,20 +332,11 @@ export class LayerManager extends GfxExtension {
         const layerElements = layer.elements;
 
         if (
-          isInRange(
-            [
-              layerElements[0],
-              last(layerElements as GfxPrimitiveElementModel[])!,
-            ],
-            target
-          )
+          isInRange([layerElements[0], last(layerElements as GfxPrimitiveElementModel[])!], target)
         ) {
           const insertIdx = layerElements.findIndex((_, idx) => {
             const pre = layerElements[idx - 1];
-            return (
-              compare(target, layerElements[idx]) < 0 &&
-              (!pre || compare(target, pre) >= 0)
-            );
+            return compare(target, layerElements[idx]) < 0 && (!pre || compare(target, pre) >= 0);
           });
 
           if (layer.type === type) {
@@ -388,11 +346,7 @@ export class LayerManager extends GfxExtension {
             const splicedElements = layer.elements.splice(insertIdx);
             layer.set = new Set(layer.elements as GfxPrimitiveElementModel[]);
 
-            layers.splice(
-              cur + 1,
-              0,
-              createLayer(layer.type, splicedElements, 1)
-            );
+            layers.splice(cur + 1, 0, createLayer(layer.type, splicedElements, 1));
             layers.splice(cur + 1, 0, createLayer(type, [target], 1));
             updateLayersZIndex(layers, cur);
           }
@@ -402,10 +356,7 @@ export class LayerManager extends GfxExtension {
 
           if (
             !nextLayer ||
-            compare(
-              target,
-              last(nextLayer.elements as GfxPrimitiveElementModel[])!
-            ) >= 0
+            compare(target, last(nextLayer.elements as GfxPrimitiveElementModel[])!) >= 0
           ) {
             if (layer.type === type) {
               addToLayer(layer, target, 0);
@@ -429,12 +380,9 @@ export class LayerManager extends GfxExtension {
     }
   }
 
-  private _removeFromLayer(
-    target: GfxModel | GfxLocalElementModel,
-    type: 'block' | 'canvas'
-  ) {
+  private _removeFromLayer(target: GfxModel | GfxLocalElementModel, type: 'block' | 'canvas') {
     const layers = this.layers;
-    const index = layers.findIndex(layer => {
+    const index = layers.findIndex((layer) => {
       if (layer.type !== type) return false;
 
       assertType<CanvasLayer>(layer);
@@ -492,17 +440,16 @@ export class LayerManager extends GfxExtension {
       this._doc
         .getAllModels()
         .filter(
-          model =>
+          (model) =>
             model instanceof GfxBlockElementModel &&
-            (model.parent instanceof SurfaceBlockModel ||
-              model.parent?.role === 'root')
+            (model.parent instanceof SurfaceBlockModel || model.parent?.role === 'root'),
         ) as GfxModel[]
     ).concat(this._surface?.elementModels ?? []);
 
     this.canvasElements = [];
     this.blocks = [];
 
-    elements.forEach(element => {
+    elements.forEach((element) => {
       if (element instanceof GfxPrimitiveElementModel) {
         this.canvasElements.push(element);
       } else {
@@ -520,16 +467,12 @@ export class LayerManager extends GfxExtension {
   /**
    * @returns a boolean value to indicate whether the layers have been updated
    */
-  private _updateLayer(
-    element: GfxModel | GfxLocalElementModel,
-    props?: Record<string, unknown>
-  ) {
+  private _updateLayer(element: GfxModel | GfxLocalElementModel, props?: Record<string, unknown>) {
     const modelType = this._getModelType(element);
     const isLocalElem = element instanceof GfxLocalElementModel;
 
     const indexChanged = !props || 'index' in props;
-    const childIdsChanged =
-      props && ('childIds' in props || 'childElementIds' in props);
+    const childIdsChanged = props && ('childIds' in props || 'childElementIds' in props);
     const shouldUpdateGroupChildren =
       isGfxGroupCompatibleModel(element) && (indexChanged || childIdsChanged);
     const updateArray = (array: GfxModel[], element: GfxModel) => {
@@ -566,25 +509,22 @@ export class LayerManager extends GfxExtension {
     const isLocalElem = element instanceof GfxLocalElementModel;
 
     if (isContainer) {
-      element.childElements.forEach(child => {
+      element.childElements.forEach((child) => {
         const childModelType = this._getModelType(child);
         removeFromOrderedArray(
           childModelType === 'canvas' ? this.canvasElements : this.blocks,
-          child
+          child,
         );
       });
     }
 
     if (!isLocalElem) {
-      insertToOrderedArray(
-        modelType === 'canvas' ? this.canvasElements : this.blocks,
-        element
-      );
+      insertToOrderedArray(modelType === 'canvas' ? this.canvasElements : this.blocks, element);
     }
     this._insertIntoLayer(element as GfxModel, modelType);
 
     if (isContainer) {
-      element.childElements.forEach(child => child && this._updateLayer(child));
+      element.childElements.forEach((child) => child && this._updateLayer(child));
     }
     this._buildCanvasLayers();
     this.slots.layerUpdated.next({
@@ -656,10 +596,7 @@ export class LayerManager extends GfxExtension {
       return;
     }
 
-    if (
-      element instanceof GfxPrimitiveElementModel ||
-      element instanceof GfxLocalElementModel
-    ) {
+    if (element instanceof GfxPrimitiveElementModel || element instanceof GfxLocalElementModel) {
       deleteType = 'canvas';
       if (!isLocalElem) {
         removeFromOrderedArray(this.canvasElements, element);
@@ -719,8 +656,8 @@ export class LayerManager extends GfxExtension {
     } else {
       elements = this.layers.reduce(
         (pre: GfxModel[], current) =>
-          pre.concat(current.elements.filter(element => element.group == null)),
-        []
+          pre.concat(current.elements.filter((element) => element.group == null)),
+        [],
       );
     }
 
@@ -729,24 +666,16 @@ export class LayerManager extends GfxExtension {
     switch (direction) {
       case 'forward':
       case 'front':
-        if (currentIdx === -1 || currentIdx === elements.length - 1)
-          return element.index;
+        if (currentIdx === -1 || currentIdx === elements.length - 1) return element.index;
 
         {
           const next =
-            direction === 'forward'
-              ? elements[currentIdx + 1]
-              : elements[elements.length - 1];
-          const next2 =
-            direction === 'forward' ? elements[currentIdx + 2] : null;
+            direction === 'forward' ? elements[currentIdx + 1] : elements[elements.length - 1];
+          const next2 = direction === 'forward' ? elements[currentIdx + 2] : null;
 
           return generateKeyBetween(
             next.index,
-            next2?.index
-              ? next.index < next2.index
-                ? next2.index
-                : null
-              : null
+            next2?.index ? (next.index < next2.index ? next2.index : null) : null,
           );
         }
       case 'backward':
@@ -754,14 +683,12 @@ export class LayerManager extends GfxExtension {
         if (currentIdx === -1 || currentIdx === 0) return element.index;
 
         {
-          const pre =
-            direction === 'backward' ? elements[currentIdx - 1] : elements[0];
-          const pre2 =
-            direction === 'backward' ? elements[currentIdx - 2] : null;
+          const pre = direction === 'backward' ? elements[currentIdx - 1] : elements[0];
+          const pre2 = direction === 'backward' ? elements[currentIdx - 2] : null;
 
           return generateKeyBetween(
             !pre2 || pre2?.index >= pre.index ? null : pre2.index,
-            pre.index
+            pre.index,
           );
         }
     }
@@ -769,16 +696,13 @@ export class LayerManager extends GfxExtension {
 
   getZIndex(element: GfxModel): number {
     // @ts-expect-error FIXME: ts error
-    const layer = this.layers.find(layer => layer.set.has(element));
+    const layer = this.layers.find((layer) => layer.set.has(element));
     if (!layer) return 0;
     // @ts-expect-error FIXME: ts error
     return layer.zIndex + layer.elements.indexOf(element);
   }
 
-  update(
-    element: GfxModel | GfxLocalElementModel,
-    props?: Record<string, unknown>
-  ) {
+  update(element: GfxModel | GfxLocalElementModel, props?: Record<string, unknown>) {
     if (this._updateLayer(element, props)) {
       this._buildCanvasLayers();
       this.slots.layerUpdated.next({
@@ -792,14 +716,13 @@ export class LayerManager extends GfxExtension {
     const store = this._doc;
 
     this._disposable.add(
-      store.slots.blockUpdated.subscribe(payload => {
+      store.slots.blockUpdated.subscribe((payload) => {
         if (payload.type === 'add') {
           const block = store.getModelById(payload.id)!;
 
           if (
             block instanceof GfxBlockElementModel &&
-            (block.parent instanceof SurfaceBlockModel ||
-              block.parent?.role === 'root') &&
+            (block.parent instanceof SurfaceBlockModel || block.parent?.role === 'root') &&
             this.blocks.indexOf(block) === -1
           ) {
             this.add(block as GfxBlockElementModel);
@@ -809,11 +732,9 @@ export class LayerManager extends GfxExtension {
           const block = store.getModelById(payload.id)!;
 
           if (
-            (payload.props.key === 'index' ||
-              payload.props.key === 'childElementIds') &&
+            (payload.props.key === 'index' || payload.props.key === 'childElementIds') &&
             block instanceof GfxBlockElementModel &&
-            (block.parent instanceof SurfaceBlockModel ||
-              block.parent?.role === 'root')
+            (block.parent instanceof SurfaceBlockModel || block.parent?.role === 'root')
           ) {
             this.update(block as GfxBlockElementModel, {
               [payload.props.key]: true,
@@ -827,13 +748,13 @@ export class LayerManager extends GfxExtension {
             this.delete(block);
           }
         }
-      })
+      }),
     );
 
     const watchSurface = (surface: SurfaceBlockModel) => {
       let lastChildMap = new Map(surface.childMap.peek());
       this._disposable.add(
-        surface.childMap.subscribe(currentChildMap => {
+        surface.childMap.subscribe((currentChildMap) => {
           currentChildMap.forEach((_, id) => {
             if (lastChildMap.has(id)) {
               lastChildMap.delete(id);
@@ -848,48 +769,43 @@ export class LayerManager extends GfxExtension {
           });
           currentChildMap.forEach((_, id) => {
             const model = store.getModelById(id);
-            if (
-              model instanceof GfxBlockElementModel &&
-              !this.blocks.includes(model)
-            ) {
+            if (model instanceof GfxBlockElementModel && !this.blocks.includes(model)) {
               this.add(model);
             }
           });
           lastChildMap = new Map(currentChildMap);
-        })
+        }),
       );
 
       this._disposable.add(
-        surface.elementAdded.subscribe(payload =>
-          this.add(surface.getElementById(payload.id)!)
-        )
+        surface.elementAdded.subscribe((payload) => this.add(surface.getElementById(payload.id)!)),
       );
       this._disposable.add(
-        surface.elementUpdated.subscribe(payload => {
+        surface.elementUpdated.subscribe((payload) => {
           if (payload.props['index'] || payload.props['childIds']) {
             this.update(surface.getElementById(payload.id)!, payload.props);
           }
-        })
+        }),
       );
       this._disposable.add(
-        surface.elementRemoved.subscribe(payload => this.delete(payload.model!))
+        surface.elementRemoved.subscribe((payload) => this.delete(payload.model!)),
       );
       this._disposable.add(
-        surface.localElementAdded.subscribe(elm => {
+        surface.localElementAdded.subscribe((elm) => {
           this.add(elm);
-        })
+        }),
       );
       this._disposable.add(
-        surface.localElementUpdated.subscribe(payload => {
+        surface.localElementUpdated.subscribe((payload) => {
           if (payload.props['index'] || payload.props['groupId']) {
             this.update(payload.model, payload.props);
           }
-        })
+        }),
       );
       this._disposable.add(
-        surface.localElementDeleted.subscribe(elm => {
+        surface.localElementDeleted.subscribe((elm) => {
           this.delete(elm);
-        })
+        }),
       );
     };
 
@@ -897,11 +813,11 @@ export class LayerManager extends GfxExtension {
       watchSurface(this.gfx.surface);
     } else {
       this._disposable.add(
-        this.gfx.surface$.subscribe(surface => {
+        this.gfx.surface$.subscribe((surface) => {
           if (surface) {
             watchSurface(surface);
           }
-        })
+        }),
       );
     }
   }

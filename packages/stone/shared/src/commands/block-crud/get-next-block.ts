@@ -23,7 +23,7 @@ export const getNextBlockCommand: Command<
   const path = ctx.path ?? ctx.currentSelectionPath;
   if (!path) {
     console.error(
-      '`path` is required, you need to pass it in args or ctx before adding this command to the pipeline.'
+      '`path` is required, you need to pass it in args or ctx before adding this command to the pipeline.',
     );
     return;
   }

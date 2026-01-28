@@ -1,11 +1,6 @@
+import { autoPlacement, autoUpdate, computePosition, offset } from '@floating-ui/dom';
 import { IS_MOBILE } from '@ink/stone-global/env';
 import { ArrowRightSmallIcon } from '@ink/stone-icons/lit';
-import {
-  autoPlacement,
-  autoUpdate,
-  computePosition,
-  offset,
-} from '@floating-ui/dom';
 import { html, nothing, type TemplateResult } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -37,7 +32,7 @@ export class MenuSubMenu extends MenuFocusable {
     super.connectedCallback();
     this.createTime = Date.now();
     this.disposables.addFromEvent(this, 'mouseenter', this.onMouseEnter);
-    this.disposables.addFromEvent(this, 'click', e => {
+    this.disposables.addFromEvent(this, 'click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       if (this.data.select) {
@@ -82,7 +77,7 @@ export class MenuSubMenu extends MenuFocusable {
           menu.menuElement.style.left = `${x}px`;
           menu.menuElement.style.top = `${y}px`;
         })
-        .catch(err => console.error(err));
+        .catch((err) => console.error(err));
     });
     this.menu.openSubMenu(menu);
     // in case that the menu is not closed, but the component is removed,
@@ -105,7 +100,7 @@ export class MenuSubMenu extends MenuFocusable {
 export class MobileSubMenu extends MenuFocusable {
   override connectedCallback() {
     super.connectedCallback();
-    this.disposables.addFromEvent(this, 'click', e => {
+    this.disposables.addFromEvent(this, 'click', (e) => {
       e.preventDefault();
       e.stopPropagation();
       this.openSubMenu();
@@ -151,15 +146,9 @@ export class MobileSubMenu extends MenuFocusable {
 
 export const renderSubMenu = (data: MenuSubMenuData, menu: Menu) => {
   if (IS_MOBILE) {
-    return html` <mobile-sub-menu
-      .data="${data}"
-      .menu="${menu}"
-    ></mobile-sub-menu>`;
+    return html` <mobile-sub-menu .data="${data}" .menu="${menu}"></mobile-sub-menu>`;
   }
-  return html` <ink-menu-sub-menu
-    .data="${data}"
-    .menu="${menu}"
-  ></ink-menu-sub-menu>`;
+  return html` <ink-menu-sub-menu .data="${data}" .menu="${menu}"></ink-menu-sub-menu>`;
 };
 
 export const subMenuItems = {
@@ -176,18 +165,15 @@ export const subMenuItems = {
       disableArrow?: boolean;
       hide?: () => boolean;
     }) =>
-    menu => {
+    (menu) => {
       if (config.hide?.() || !menu.search(config.name)) {
         return;
       }
       const data: MenuSubMenuData = {
         content: () =>
           html`${config.prefix}
-            <div class="ink-menu-action-text">
-              ${config.label?.() ?? config.name}
-            </div>
-            ${config.postfix}
-            ${config.disableArrow ? nothing : ArrowRightSmallIcon()} `,
+            <div class="ink-menu-action-text">${config.label?.() ?? config.name}</div>
+            ${config.postfix} ${config.disableArrow ? nothing : ArrowRightSmallIcon()} `,
         class: config.class,
         options: config.options,
       };

@@ -1,11 +1,7 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
 import { IS_ANDROID, IS_MAC } from '@ink/stone-global/env';
 
-import {
-  type UIEventHandler,
-  UIEventState,
-  UIEventStateContext,
-} from '../base.js';
+import { type UIEventHandler, UIEventState, UIEventStateContext } from '../base.js';
 import type { EventOptions, UIEventDispatcher } from '../dispatcher.js';
 import { androidBindKeymapPatch, bindKeymap } from '../keymap.js';
 import { KeyboardEventState } from '../state/index.js';
@@ -20,10 +16,7 @@ export class KeyboardControl {
       event,
       composing: this.composition,
     });
-    this._dispatcher.run(
-      'keyDown',
-      this._createContext(event, keyboardEventState)
-    );
+    this._dispatcher.run('keyDown', this._createContext(event, keyboardEventState));
   };
 
   private readonly _shouldTrigger = (event: KeyboardEvent) => {
@@ -31,12 +24,7 @@ export class KeyboardControl {
       return false;
     }
     const mod = IS_MAC ? event.metaKey : event.ctrlKey;
-    if (
-      ['c', 'v', 'x'].includes(event.key) &&
-      mod &&
-      !event.shiftKey &&
-      !event.altKey
-    ) {
+    if (['c', 'v', 'x'].includes(event.key) && mod && !event.shiftKey && !event.altKey) {
       return false;
     }
     return true;
@@ -51,10 +39,7 @@ export class KeyboardControl {
       composing: this.composition,
     });
 
-    this._dispatcher.run(
-      'keyUp',
-      this._createContext(event, keyboardEventState)
-    );
+    this._dispatcher.run('keyUp', this._createContext(event, keyboardEventState));
   };
 
   private composition = false;
@@ -68,10 +53,7 @@ export class KeyboardControl {
       composing: this.composition,
     });
 
-    this._dispatcher.run(
-      'keyPress',
-      this._createContext(event, keyboardEventState)
-    );
+    this._dispatcher.run('keyPress', this._createContext(event, keyboardEventState));
   };
 
   constructor(private readonly _dispatcher: UIEventDispatcher) {}
@@ -83,7 +65,7 @@ export class KeyboardControl {
         event,
         sourceType: EventScopeSourceType.Selection,
       }),
-      keyboardState
+      keyboardState,
     );
   }
 
@@ -91,24 +73,24 @@ export class KeyboardControl {
     const disposables = new DisposableGroup();
     if (IS_ANDROID) {
       disposables.add(
-        this._dispatcher.add('beforeInput', ctx => {
+        this._dispatcher.add('beforeInput', (ctx) => {
           if (this.composition) return false;
           const binding = androidBindKeymapPatch(keymap);
           return binding(ctx);
-        })
+        }),
       );
     }
 
     disposables.add(
       this._dispatcher.add(
         'keyDown',
-        ctx => {
+        (ctx) => {
           if (this.composition) return false;
           const binding = bindKeymap(keymap);
           return binding(ctx);
         },
-        options
-      )
+        options,
+      ),
     );
     return () => disposables.dispose();
   }
@@ -116,11 +98,7 @@ export class KeyboardControl {
   listen() {
     this._dispatcher.disposables.addFromEvent(document, 'keydown', this._down);
     this._dispatcher.disposables.addFromEvent(document, 'keyup', this._up);
-    this._dispatcher.disposables.addFromEvent(
-      document,
-      'keypress',
-      this._press
-    );
+    this._dispatcher.disposables.addFromEvent(document, 'keypress', this._press);
     this._dispatcher.disposables.addFromEvent(
       document,
       'compositionstart',
@@ -129,7 +107,7 @@ export class KeyboardControl {
       },
       {
         capture: true,
-      }
+      },
     );
     this._dispatcher.disposables.addFromEvent(
       document,
@@ -139,7 +117,7 @@ export class KeyboardControl {
       },
       {
         capture: true,
-      }
+      },
     );
   }
 }

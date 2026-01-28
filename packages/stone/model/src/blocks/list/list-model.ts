@@ -1,9 +1,5 @@
 import type { Text } from '@ink/stone-store';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 import type { TextAlign } from '../../consts';
 import type { BlockMeta } from '../../utils/types';
@@ -23,7 +19,7 @@ export type ListProps = {
 
 export const ListBlockSchema = defineBlockSchema({
   flavour: 'ink:list',
-  props: internal =>
+  props: (internal) =>
     ({
       type: 'bulleted',
       text: internal.Text(),
@@ -42,13 +38,7 @@ export const ListBlockSchema = defineBlockSchema({
   metadata: {
     version: 1,
     role: 'content',
-    parent: [
-      'ink:note',
-      'ink:database',
-      'ink:list',
-      'ink:paragraph',
-      'ink:edgeless-text',
-    ],
+    parent: ['ink:note', 'ink:database', 'ink:list', 'ink:paragraph', 'ink:edgeless-text'],
   },
   toModel: () => new ListBlockModel(),
 });

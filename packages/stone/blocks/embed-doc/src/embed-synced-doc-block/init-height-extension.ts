@@ -1,5 +1,5 @@
-import { EmbedSyncedDocBlockSchema } from '@ink/stone-model';
 import { DisposableGroup } from '@ink/stone-global/disposable';
+import { EmbedSyncedDocBlockSchema } from '@ink/stone-model';
 import { LifeCycleWatcher } from '@ink/stone-std';
 
 import { EmbedEdgelessSyncedDocBlockComponent } from './embed-edgeless-synced-doc-block';
@@ -12,7 +12,7 @@ export class HeightInitializationExtension extends LifeCycleWatcher {
     super.mounted();
 
     this._disposables.add(
-      this.std.store.slots.blockUpdated.subscribe(payload => {
+      this.std.store.slots.blockUpdated.subscribe((payload) => {
         if (
           payload.type === 'add' &&
           payload.isLocal &&
@@ -21,11 +21,11 @@ export class HeightInitializationExtension extends LifeCycleWatcher {
         ) {
           this._initQueue.add(payload.id);
         }
-      })
+      }),
     );
 
     this._disposables.add(
-      this.std.view.viewUpdated.subscribe(payload => {
+      this.std.view.viewUpdated.subscribe((payload) => {
         if (
           payload.type === 'block' &&
           payload.method === 'add' &&
@@ -51,7 +51,7 @@ export class HeightInitializationExtension extends LifeCycleWatcher {
             })
             .catch(console.error);
         }
-      })
+      }),
     );
   }
 

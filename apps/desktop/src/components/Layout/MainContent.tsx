@@ -1,13 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface MainContentProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 export function MainContent({ children }: MainContentProps) {
-  return (
-    <main className="main-content">
-      {children}
-    </main>
-  )
+  return <main className="main-content">{children}</main>;
 }

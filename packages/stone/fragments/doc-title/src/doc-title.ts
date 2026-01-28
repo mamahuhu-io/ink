@@ -1,3 +1,4 @@
+import { WithDisposable } from '@ink/stone-global/lit';
 import {
   CodeBlockModel,
   ListBlockModel,
@@ -8,7 +9,6 @@ import {
 } from '@ink/stone-model';
 import { focusTextModel, type RichText } from '@ink/stone-rich-text';
 import { matchModels } from '@ink/stone-shared/utils';
-import { WithDisposable } from '@ink/stone-global/lit';
 import { ShadowlessElement } from '@ink/stone-std';
 import type { Store } from '@ink/stone-store';
 import { effect } from '@preact/signals-core';
@@ -38,14 +38,8 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
       margin-right: auto;
       padding: 38px 0;
 
-      padding-left: var(
-        --ink-editor-side-padding,
-        ${DOC_BLOCK_CHILD_PADDING}px
-      );
-      padding-right: var(
-        --ink-editor-side-padding,
-        ${DOC_BLOCK_CHILD_PADDING}px
-      );
+      padding-left: var(--ink-editor-side-padding, ${DOC_BLOCK_CHILD_PADDING}px);
+      padding-right: var(--ink-editor-side-padding, ${DOC_BLOCK_CHILD_PADDING}px);
     }
     .doc-icon-container + * .doc-title-container {
       /* when doc icon exists, remove the top padding */
@@ -78,7 +72,7 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
     const note = this._rootModel?.children.find(
       (child): child is NoteBlockModel =>
         matchModels(child, [NoteBlockModel]) &&
-        child.props.displayMode !== NoteDisplayMode.EdgelessOnly
+        child.props.displayMode !== NoteDisplayMode.EdgelessOnly,
     );
     if (note) return note;
 
@@ -102,7 +96,7 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
           'ink:paragraph',
           { text: rightText },
           this._getOrCreateFirstPageVisibleNote(),
-          0
+          0,
         );
         if (this._std) focusTextModel(this._std, newFirstParagraphId);
       }
@@ -112,22 +106,13 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
       event.stopPropagation();
 
       const note = this._getOrCreateFirstPageVisibleNote();
-      const firstText = note?.children.find(block =>
-        matchModels(block, [
-          ParagraphBlockModel,
-          ListBlockModel,
-          CodeBlockModel,
-        ])
+      const firstText = note?.children.find((block) =>
+        matchModels(block, [ParagraphBlockModel, ListBlockModel, CodeBlockModel]),
       );
       if (firstText) {
         if (this._std) focusTextModel(this._std, firstText.id);
       } else {
-        const newFirstParagraphId = this.doc.addBlock(
-          'ink:paragraph',
-          {},
-          note,
-          0
-        );
+        const newFirstParagraphId = this.doc.addBlock('ink:paragraph', {}, note, 0);
         if (this._std) focusTextModel(this._std, newFirstParagraphId);
       }
     } else if (event.key === 'Tab') {
@@ -176,23 +161,15 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
           this._isReadonly = this.doc.readonly;
           this.requestUpdate();
         }
-      })
+      }),
     );
 
     this._disposables.addFromEvent(this, 'keydown', this._onTitleKeyDown);
 
     // Workaround for inline editor skips composition event
-    this._disposables.addFromEvent(
-      this,
-      'compositionstart',
-      () => (this._isComposing = true)
-    );
+    this._disposables.addFromEvent(this, 'compositionstart', () => (this._isComposing = true));
 
-    this._disposables.addFromEvent(
-      this,
-      'compositionend',
-      () => (this._isComposing = false)
-    );
+    this._disposables.addFromEvent(this, 'compositionend', () => (this._isComposing = false));
 
     const updateMetaTitle = () => {
       this._updateTitleInMeta();
@@ -213,9 +190,7 @@ export class DocTitle extends WithDisposable(ShadowlessElement) {
 
     return html`
       <div
-        class="doc-title-container ${isEmpty
-          ? 'doc-title-container-empty'
-          : ''}"
+        class="doc-title-container ${isEmpty ? 'doc-title-container-empty' : ''}"
         data-block-is-title="true"
       >
         <rich-text

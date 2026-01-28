@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / Store
 
@@ -28,7 +28,7 @@ Get the number of blocks in the store
 
 `number`
 
-***
+---
 
 ### isEmpty
 
@@ -42,7 +42,7 @@ Check if there are no blocks in the store.
 
 `boolean`
 
-***
+---
 
 ### isEmpty$
 
@@ -56,7 +56,7 @@ Get the signal for the empty state of the store.
 
 `ReadonlySignal`\<`boolean`\>
 
-***
+---
 
 ### readonly
 
@@ -86,7 +86,7 @@ Set the readonly state of the store.
 
 `void`
 
-***
+---
 
 ### readonly$
 
@@ -100,7 +100,7 @@ Get the signal for the readonly state of the store.
 
 `Signal`\<`boolean`\>
 
-***
+---
 
 ### root
 
@@ -114,7 +114,7 @@ Get the root block of the store.
 
 `BlockModel`\<`object`\> \| `null`
 
-***
+---
 
 ### addBlock()
 
@@ -126,7 +126,7 @@ Creates and adds a new block to the store
 
 ##### T
 
-`T` *extends* `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
+`T` _extends_ `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
 
 #### Parameters
 
@@ -164,7 +164,7 @@ The ID of the newly created block
 
 When store is in readonly mode
 
-***
+---
 
 ### addBlocks()
 
@@ -198,7 +198,7 @@ Optional index position in parent's children
 
 Array of IDs of the newly created blocks
 
-***
+---
 
 ### addSiblingBlocks()
 
@@ -232,7 +232,7 @@ Optional position to place the new blocks ('after' or 'before')
 
 Array of IDs of the newly created blocks
 
-***
+---
 
 ### deleteBlock()
 
@@ -268,7 +268,7 @@ Optional flag to delete children
 
 `void`
 
-***
+---
 
 ### getAllModels()
 
@@ -282,7 +282,7 @@ Get all models in the store
 
 Array of all models
 
-***
+---
 
 ### getBlock()
 
@@ -304,7 +304,7 @@ The block's ID
 
 The block instance if found, undefined otherwise
 
-***
+---
 
 ### getBlock$()
 
@@ -326,7 +326,7 @@ The block's ID
 
 The block instance in signal if found, undefined otherwise
 
-***
+---
 
 ### getBlocksByFlavour()
 
@@ -348,7 +348,7 @@ Single flavour or array of flavours to filter by
 
 Array of matching blocks
 
-***
+---
 
 ### getModelById()
 
@@ -360,7 +360,7 @@ Get a model by its ID
 
 ##### Model
 
-`Model` *extends* `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
+`Model` _extends_ `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
 
 #### Parameters
 
@@ -376,7 +376,7 @@ The model's ID
 
 The model instance if found, null otherwise
 
-***
+---
 
 ### getModelsByFlavour()
 
@@ -398,7 +398,7 @@ Single flavour or array of flavours to filter by
 
 Array of matching models
 
-***
+---
 
 ### getNext()
 
@@ -420,7 +420,7 @@ Block model or block ID to find next sibling for
 
 The next sibling block model if found, null otherwise
 
-***
+---
 
 ### getNexts()
 
@@ -442,7 +442,7 @@ Block model or block ID to find next siblings for
 
 Array of next sibling blocks if found, empty array otherwise
 
-***
+---
 
 ### getParent()
 
@@ -464,7 +464,7 @@ Block model or block ID to find parent for
 
 The parent block model if found, null otherwise
 
-***
+---
 
 ### getPrev()
 
@@ -486,7 +486,7 @@ Block model or block ID to find previous sibling for
 
 The previous sibling block model if found, null otherwise
 
-***
+---
 
 ### getPrevs()
 
@@ -508,7 +508,7 @@ Block model or block ID to find previous siblings for
 
 Array of previous sibling blocks if found, empty array otherwise
 
-***
+---
 
 ### hasBlock()
 
@@ -530,7 +530,7 @@ The block's ID
 
 True if the block exists, false otherwise
 
-***
+---
 
 ### moveBlocks()
 
@@ -568,7 +568,7 @@ Optional flag to insert before sibling
 
 `void`
 
-***
+---
 
 ### updateBlock()
 
@@ -580,7 +580,7 @@ Updates a block's properties or executes a callback in a transaction
 
 ##### T
 
-`T` *extends* `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
+`T` _extends_ `BlockModel`\<`object`\> = `BlockModel`\<`object`\>
 
 #### Parameters
 
@@ -646,7 +646,7 @@ The extension instance
 
 `T`
 
-***
+---
 
 ### getOptional
 
@@ -689,7 +689,7 @@ The extension instance
 
 `T` \| `null`
 
-***
+---
 
 ### provider
 
@@ -717,7 +717,7 @@ Check if the store can redo
 
 `boolean`
 
-***
+---
 
 ### canUndo
 
@@ -731,7 +731,7 @@ Check if the store can undo
 
 `boolean`
 
-***
+---
 
 ### history
 
@@ -745,7 +745,7 @@ Get the Y.UndoManager instance for current store.
 
 `HistoryExtension`
 
-***
+---
 
 ### captureSync()
 
@@ -769,7 +769,7 @@ store.undo(); // undo op3
 store.undo(); // undo op1, op2
 ```
 
-***
+---
 
 ### redo()
 
@@ -781,7 +781,7 @@ Redo the last undone transaction.
 
 `void`
 
-***
+---
 
 ### resetHistory()
 
@@ -793,7 +793,7 @@ Reset the history of the store.
 
 `void`
 
-***
+---
 
 ### transact()
 
@@ -824,7 +824,7 @@ store.transact(() => {
 });
 ```
 
-***
+---
 
 ### undo()
 
@@ -836,7 +836,7 @@ Undo the last transaction.
 
 `void`
 
-***
+---
 
 ### withoutTransact()
 
@@ -871,7 +871,7 @@ store.withoutTransact(() => {
 
 Group of disposable resources managed by the store
 
-***
+---
 
 ### slots
 
@@ -888,7 +888,7 @@ store.slots.ready.subscribe(() => {
 
 You can also use rxjs operators to handle the events.
 
-***
+---
 
 ### id
 
@@ -902,7 +902,7 @@ Get the id of the store.
 
 `string`
 
-***
+---
 
 ### loaded
 
@@ -916,7 +916,7 @@ Check if the store is loaded.
 
 `boolean`
 
-***
+---
 
 ### ready
 
@@ -931,7 +931,7 @@ Which means the Y.Doc is loaded and the root block is added.
 
 `boolean`
 
-***
+---
 
 ### dispose()
 
@@ -943,7 +943,7 @@ Disposes the store and releases all resources
 
 `void`
 
-***
+---
 
 ### load()
 
@@ -1001,7 +1001,7 @@ Get the AwarenessStore instance for current store
 
 `AwarenessStore`
 
-***
+---
 
 ### blobSync
 
@@ -1015,7 +1015,7 @@ Get the BlobEngine instance for current store.
 
 `BlobEngine`
 
-***
+---
 
 ### doc
 
@@ -1029,7 +1029,7 @@ Get the Doc instance for current store.
 
 `Doc`
 
-***
+---
 
 ### schema
 
@@ -1043,7 +1043,7 @@ Get the [Schema](Schema.md) instance of the store.
 
 [`Schema`](Schema.md)
 
-***
+---
 
 ### workspace
 

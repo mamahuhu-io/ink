@@ -1,16 +1,12 @@
+import { type Container, createIdentifier } from '@ink/stone-global/di';
+import { DisposableGroup } from '@ink/stone-global/disposable';
 import { deleteTextCommand } from '@ink/stone-inline-preset';
-import {
-  HtmlAdapter,
-  pasteMiddleware,
-  PlainTextAdapter,
-} from '@ink/stone-shared/adapters';
+import { HtmlAdapter, pasteMiddleware, PlainTextAdapter } from '@ink/stone-shared/adapters';
 import {
   getBlockIndexCommand,
   getBlockSelectionsCommand,
   getTextSelectionCommand,
 } from '@ink/stone-shared/commands';
-import { type Container, createIdentifier } from '@ink/stone-global/di';
-import { DisposableGroup } from '@ink/stone-global/disposable';
 import {
   type BlockStdScope,
   Clipboard,
@@ -22,18 +18,14 @@ import {
 } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 
-export const CodeClipboardAdapterConfigIdentifier =
-  createIdentifier<ClipboardAdapterConfig>('code-clipboard-adapter-config');
+export const CodeClipboardAdapterConfigIdentifier = createIdentifier<ClipboardAdapterConfig>(
+  'code-clipboard-adapter-config',
+);
 
-export function CodeClipboardAdapterConfigExtension(
-  config: ClipboardAdapterConfig
-): ExtensionType {
+export function CodeClipboardAdapterConfigExtension(config: ClipboardAdapterConfig): ExtensionType {
   return {
-    setup: di => {
-      di.addImpl(
-        CodeClipboardAdapterConfigIdentifier(config.mimeType),
-        () => config
-      );
+    setup: (di) => {
+      di.addImpl(CodeClipboardAdapterConfigIdentifier(config.mimeType), () => config);
     },
   };
 }
@@ -54,9 +46,7 @@ export class CodeBlockClipboard extends Clipboard {
   static override readonly key = 'code-block-clipboard';
 
   override get _adapters() {
-    const adapterConfigs = this.std.provider.getAll(
-      CodeClipboardAdapterConfigIdentifier
-    );
+    const adapterConfigs = this.std.provider.getAll(CodeClipboardAdapterConfigIdentifier);
     return Array.from(adapterConfigs.values());
   }
 }
@@ -68,7 +58,7 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
 
   constructor(
     std: BlockStdScope,
-    readonly clipboard: CodeBlockClipboard
+    readonly clipboard: CodeBlockClipboard,
   ) {
     super(std);
   }
@@ -76,16 +66,11 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
   static override setup(di: Container) {
     di.add(
       this as unknown as {
-        new (
-          std: BlockStdScope,
-          clipboard: CodeBlockClipboard
-        ): CodeBlockClipboardController;
+        new (std: BlockStdScope, clipboard: CodeBlockClipboard): CodeBlockClipboardController;
       },
-      [StdIdentifier, CodeBlockClipboard]
+      [StdIdentifier, CodeBlockClipboard],
     );
-    di.addImpl(LifeCycleWatcherIdentifier(this.key), provider =>
-      provider.get(this)
-    );
+    di.addImpl(LifeCycleWatcherIdentifier(this.key), (provider) => provider.get(this));
   }
 
   protected _init = () => {
@@ -99,14 +84,14 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
     });
   };
 
-  onPaste: UIEventHandler = ctx => {
+  onPaste: UIEventHandler = (ctx) => {
     const e = ctx.get('clipboardState').raw;
     e.preventDefault();
 
     this.std.store.captureSync();
     this.std.command
       .chain()
-      .try(cmd => [
+      .try((cmd) => [
         cmd.pipe(getTextSelectionCommand).pipe((ctx, next) => {
           const textSelection = ctx.currentTextSelection;
           if (!textSelection) return;
@@ -122,7 +107,7 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
         }),
       ])
       .pipe(getBlockIndexCommand)
-      .try(cmd => [cmd.pipe(getTextSelectionCommand).pipe(deleteTextCommand)])
+      .try((cmd) => [cmd.pipe(getTextSelectionCommand).pipe(deleteTextCommand)])
       .pipe((ctx, next) => {
         if (!ctx.parentBlock) {
           return;
@@ -132,7 +117,7 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
             e,
             this.std.store,
             ctx.parentBlock.model.id,
-            ctx.blockIndex ? ctx.blockIndex + 1 : 1
+            ctx.blockIndex ? ctx.blockIndex + 1 : 1,
           )
           .catch(console.error);
 
@@ -146,15 +131,13 @@ export class CodeBlockClipboardController extends LifeCycleWatcher {
     this._init();
 
     // add paste event listener for code block
-    const subscription = this.std.view.viewUpdated.subscribe(
-      ({ type, method, view }) => {
-        if (type !== 'block' || view.model.flavour !== 'ink:code') return;
+    const subscription = this.std.view.viewUpdated.subscribe(({ type, method, view }) => {
+      if (type !== 'block' || view.model.flavour !== 'ink:code') return;
 
-        if (method === 'add') {
-          view.handleEvent('paste', this.onPaste);
-        }
+      if (method === 'add') {
+        view.handleEvent('paste', this.onPaste);
       }
-    );
+    });
     this._disposables.add(subscription);
   }
 

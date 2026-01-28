@@ -1,13 +1,6 @@
-import type {
-  GfxCommonBlockProps,
-  GfxElementGeometry,
-} from '@ink/stone-std/gfx';
+import type { GfxCommonBlockProps, GfxElementGeometry } from '@ink/stone-std/gfx';
 import { GfxCompatible } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 import type { TextAlign } from '../../consts';
 import type { BlockMeta } from '../../utils/types.js';
@@ -50,8 +43,7 @@ export const ImageBlockSchema = defineBlockSchema({
     version: 1,
     role: 'content',
   },
-  transformer: transformerConfigs =>
-    new ImageBlockTransformer(transformerConfigs),
+  transformer: (transformerConfigs) => new ImageBlockTransformer(transformerConfigs),
   toModel: () => new ImageBlockModel(),
 });
 

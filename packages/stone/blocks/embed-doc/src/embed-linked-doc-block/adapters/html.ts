@@ -8,7 +8,7 @@ import {
 export const embedLinkedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: EmbedLinkedDocBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === EmbedLinkedDocBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === EmbedLinkedDocBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
@@ -21,7 +21,7 @@ export const embedLinkedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       const url = AdapterTextUtils.generateDocUrl(
         configs.get('docLinkBaseUrl') ?? '',
         String(o.node.props.pageId),
-        o.node.props.params ?? Object.create(null)
+        o.node.props.params ?? Object.create(null),
       );
 
       walkerContext
@@ -34,7 +34,7 @@ export const embedLinkedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -50,7 +50,7 @@ export const embedLinkedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               },
             ],
           },
-          'children'
+          'children',
         )
         .closeNode()
         .closeNode();
@@ -59,5 +59,5 @@ export const embedLinkedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const EmbedLinkedDocHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  embedLinkedDocBlockHtmlAdapterMatcher
+  embedLinkedDocBlockHtmlAdapterMatcher,
 );

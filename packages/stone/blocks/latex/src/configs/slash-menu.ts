@@ -1,10 +1,7 @@
-import { insertInlineLatex } from '@ink/stone-inline-latex';
-import {
-  getSelectedModelsCommand,
-  getTextSelectionCommand,
-} from '@ink/stone-shared/commands';
-import { type SlashMenuConfig } from '@ink/stone-widget-slash-menu';
 import { TeXIcon } from '@ink/stone-icons/lit';
+import { insertInlineLatex } from '@ink/stone-inline-latex';
+import { getSelectedModelsCommand, getTextSelectionCommand } from '@ink/stone-shared/commands';
+import { type SlashMenuConfig } from '@ink/stone-widget-slash-menu';
 
 import { insertLatexBlockCommand } from '../commands';
 import { LatexTooltip } from './tooltips';
@@ -17,20 +14,12 @@ export const latexSlashMenuConfig: SlashMenuConfig = {
       description: 'Create a inline equation.',
       icon: TeXIcon(),
       tooltip: {
-        figure: LatexTooltip(
-          'Energy. Mass. Light. In a single equation,',
-          'E=mc^2',
-          false
-        ),
+        figure: LatexTooltip('Energy. Mass. Light. In a single equation,', 'E=mc^2', false),
         caption: 'Inline equation',
       },
       searchAlias: ['inlineMath, inlineEquation', 'inlineLatex'],
       action: ({ std }) => {
-        std.command
-          .chain()
-          .pipe(getTextSelectionCommand)
-          .pipe(insertInlineLatex)
-          .run();
+        std.command.chain().pipe(getTextSelectionCommand).pipe(insertInlineLatex).run();
       },
     },
     {
@@ -41,7 +30,7 @@ export const latexSlashMenuConfig: SlashMenuConfig = {
         figure: LatexTooltip(
           'Create a equation via LaTeX.',
           String.raw`\frac{a}{b} \pm \frac{c}{d} = \frac{ad \pm bc}{bd}`,
-          true
+          true,
         ),
         caption: 'Equation',
       },

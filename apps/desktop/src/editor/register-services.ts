@@ -10,9 +10,7 @@ export class ServiceRegistryViewExtension extends ViewExtensionProvider {
   override setup(context: any) {
     super.setup(context);
     // Register all service extensions
-    context.register([
-      IconPickerServiceExtension(),
-    ]);
+    context.register([IconPickerServiceExtension()]);
   }
 }
 

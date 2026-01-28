@@ -37,9 +37,7 @@ export class RangeManager extends LifeCycleWatcher {
       return;
     }
 
-    const topContenteditableElement = this.std.host.querySelector(
-      '[contenteditable="true"]'
-    );
+    const topContenteditableElement = this.std.host.querySelector('[contenteditable="true"]');
     if (
       topContenteditableElement instanceof HTMLElement &&
       topContenteditableElement.contains(document.activeElement)
@@ -90,15 +88,15 @@ export class RangeManager extends LifeCycleWatcher {
     options: {
       match?: (el: BlockComponent) => boolean;
       mode?: 'all' | 'flat' | 'highest';
-    } = {}
+    } = {},
   ): BlockComponent[] {
     const { mode = 'all', match = () => true } = options;
 
     let result = Array.from<BlockComponent>(
       this.std.host.querySelectorAll(
-        `[${BLOCK_ID_ATTR}]:not([${RANGE_QUERY_EXCLUDE_ATTR}="true"])`
-      )
-    ).filter(el => range.intersectsNode(el) && match(el));
+        `[${BLOCK_ID_ATTR}]:not([${RANGE_QUERY_EXCLUDE_ATTR}="true"])`,
+      ),
+    ).filter((el) => range.intersectsNode(el) && match(el));
 
     if (result.length === 0) {
       return [];
@@ -116,10 +114,7 @@ export class RangeManager extends LifeCycleWatcher {
       let parent = result[0];
       result = result.filter((node, index) => {
         if (index === 0) return true;
-        if (
-          parent.compareDocumentPosition(node) &
-          Node.DOCUMENT_POSITION_CONTAINED_BY
-        ) {
+        if (parent.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_CONTAINED_BY) {
           return false;
         } else {
           parent = node;
@@ -139,9 +134,7 @@ export class RangeManager extends LifeCycleWatcher {
     const block = this.std.host.view.getBlock(path);
     if (!block) return null;
 
-    const inlineRoot = block.querySelector<InlineRootElement>(
-      `[${INLINE_ROOT_ATTR}]`
-    );
+    const inlineRoot = block.querySelector<InlineRootElement>(`[${INLINE_ROOT_ATTR}]`);
     if (!inlineRoot) return null;
 
     if (this._isRangeSyncExcluded(inlineRoot)) return null;

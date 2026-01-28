@@ -1,4 +1,7 @@
+import { computePosition, inline, offset, shift } from '@floating-ui/dom';
 import type { EditorIconButton } from '@ink/stone-components/toolbar';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { DoneIcon, ResetIcon } from '@ink/stone-icons/lit';
 import type { ReferenceInfo } from '@ink/stone-model';
 import { REFERENCE_NODE } from '@ink/stone-shared/consts';
 import {
@@ -9,19 +12,14 @@ import {
 import { fontXSStyle, panelBaseStyle } from '@ink/stone-shared/styles';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import { stopPropagation } from '@ink/stone-shared/utils';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { DoneIcon, ResetIcon } from '@ink/stone-icons/lit';
 import { type BlockStdScope, ShadowlessElement } from '@ink/stone-std';
 import type { InlineEditor, InlineRange } from '@ink/stone-std/inline';
-import { computePosition, inline, offset, shift } from '@floating-ui/dom';
 import { signal } from '@preact/signals-core';
 import { css, html } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 
-export class ReferencePopup extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class ReferencePopup extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     :host {
       box-sizing: border-box;
@@ -162,7 +160,7 @@ export class ReferencePopup extends SignalWatcher(
     this.disposables.addFromEvent(this, 'cut', stopPropagation);
     this.disposables.addFromEvent(this, 'paste', stopPropagation);
 
-    this.disposables.addFromEvent(this.overlayMask, 'click', e => {
+    this.disposables.addFromEvent(this.overlayMask, 'click', (e) => {
       e.stopPropagation();
       this.remove();
     });
@@ -193,12 +191,7 @@ export class ReferencePopup extends SignalWatcher(
             ${ResetIcon({ width: '16px', height: '16px' })}
           </editor-icon-button>
           <editor-toolbar-separator></editor-toolbar-separator>
-          <editor-icon-button
-            aria-label="Save"
-            class="save"
-            .active=${true}
-            @click=${this._onSave}
-          >
+          <editor-icon-button aria-label="Save" class="save" .active=${true} @click=${this._onSave}>
             ${DoneIcon({ width: '16px', height: '16px' })}
             <span class="label">Save</span>
           </editor-icon-button>
@@ -266,11 +259,7 @@ export class ReferencePopup extends SignalWatcher(
   accessor title$ = signal<string>('');
 }
 
-function track(
-  std: BlockStdScope,
-  event: LinkEventType,
-  props: Partial<TelemetryEvent>
-) {
+function track(std: BlockStdScope, event: LinkEventType, props: Partial<TelemetryEvent>) {
   std.getOptional(TelemetryProvider)?.track(event, {
     segment: 'doc',
     page: 'doc editor',

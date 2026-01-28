@@ -47,8 +47,4 @@ export type URLCursorWithFallback =
   | `${URLCursor}, ${StandardCursor}`
   | `${URLCursorWithCoords}, ${StandardCursor}`;
 
-export type CursorType =
-  | StandardCursor
-  | URLCursor
-  | URLCursorWithCoords
-  | URLCursorWithFallback;
+export type CursorType = StandardCursor | URLCursor | URLCursorWithCoords | URLCursorWithFallback;

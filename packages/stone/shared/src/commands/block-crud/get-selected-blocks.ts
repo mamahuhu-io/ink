@@ -1,9 +1,4 @@
-import type {
-  BlockSelection,
-  Command,
-  SurfaceSelection,
-  TextSelection,
-} from '@ink/stone-std';
+import type { BlockSelection, Command, SurfaceSelection, TextSelection } from '@ink/stone-std';
 import { BlockComponent } from '@ink/stone-std';
 import type { RoleType } from '@ink/stone-store';
 
@@ -28,11 +23,7 @@ export const getSelectedBlocksCommand: Command<
     selectedBlocks: BlockComponent[];
   }
 > = (ctx, next) => {
-  const {
-    types = ['block', 'text', 'image', 'surface'],
-    roles = ['content'],
-    mode = 'flat',
-  } = ctx;
+  const { types = ['block', 'text', 'image', 'surface'], roles = ['content'], mode = 'flat' } = ctx;
 
   let dirtyResult: BlockComponent[] = [];
 
@@ -42,13 +33,10 @@ export const getSelectedBlocksCommand: Command<
       const range = ctx.std.range.textSelectionToRange(textSelection);
       if (!range) return;
 
-      const selectedBlocks = ctx.std.range.getSelectedBlockComponentsByRange(
-        range,
-        {
-          match: (el: BlockComponent) => roles.includes(el.model.role),
-          mode,
-        }
-      );
+      const selectedBlocks = ctx.std.range.getSelectedBlockComponentsByRange(range, {
+        match: (el: BlockComponent) => roles.includes(el.model.role),
+        mode,
+      });
       dirtyResult.push(...selectedBlocks);
     } catch {
       return;
@@ -59,7 +47,7 @@ export const getSelectedBlocksCommand: Command<
   if (types.includes('block') && blockSelections) {
     const viewStore = ctx.std.view;
     const doc = ctx.std.store;
-    const selectedBlockComponents = blockSelections.flatMap(selection => {
+    const selectedBlockComponents = blockSelections.flatMap((selection) => {
       const el = viewStore.getBlock(selection.blockId);
       if (!el) {
         return [];
@@ -74,10 +62,7 @@ export const getSelectedBlocksCommand: Command<
             break;
           }
           const view = parent;
-          if (
-            view instanceof BlockComponent &&
-            !roles.includes(view.model.role)
-          ) {
+          if (view instanceof BlockComponent && !roles.includes(view.model.role)) {
             break;
           }
           selectionPath = parent.id;
@@ -88,7 +73,7 @@ export const getSelectedBlocksCommand: Command<
         }
       }
       if (['all', 'flat'].includes(mode)) {
-        viewStore.walkThrough(node => {
+        viewStore.walkThrough((node) => {
           const view = node;
           if (!(view instanceof BlockComponent)) {
             return true;
@@ -108,7 +93,7 @@ export const getSelectedBlocksCommand: Command<
   if (types.includes('image') && imageSelections) {
     const viewStore = ctx.std.view;
     const selectedBlocks = imageSelections
-      .map(selection => {
+      .map((selection) => {
         const el = viewStore.getBlock(selection.blockId);
         return el;
       })
@@ -120,8 +105,8 @@ export const getSelectedBlocksCommand: Command<
   if (types.includes('surface') && surfaceSelection) {
     const viewStore = ctx.std.view;
     const selectedBlocks = surfaceSelection.elements
-      .map(id => viewStore.getBlock(id))
-      .filter(block => !!block);
+      .map((id) => viewStore.getBlock(id))
+      .filter((block) => !!block);
     dirtyResult.push(...selectedBlocks);
   }
 

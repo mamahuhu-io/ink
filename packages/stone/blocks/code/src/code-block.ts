@@ -1,18 +1,15 @@
 import { CaptionedBlockComponent } from '@ink/stone-components/caption';
+import { IS_MAC, IS_MOBILE } from '@ink/stone-global/env';
+import { noop } from '@ink/stone-global/utils';
 import type { CodeBlockModel } from '@ink/stone-model';
 import { focusTextModel, type RichText } from '@ink/stone-rich-text';
-import {
-  BRACKET_PAIRS,
-  EDGELESS_TOP_CONTENTEDITABLE_SELECTOR,
-} from '@ink/stone-shared/consts';
+import { BRACKET_PAIRS, EDGELESS_TOP_CONTENTEDITABLE_SELECTOR } from '@ink/stone-shared/consts';
 import {
   BlockElementCommentManager,
   DocModeProvider,
   NotificationProvider,
 } from '@ink/stone-shared/services';
 import { getViewportElement } from '@ink/stone-shared/utils';
-import { IS_MAC, IS_MOBILE } from '@ink/stone-global/env';
-import { noop } from '@ink/stone-global/utils';
 import type { BlockComponent } from '@ink/stone-std';
 import { BlockSelection, TextSelection } from '@ink/stone-std';
 import {
@@ -59,14 +56,12 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
       return 'Plain Text';
     }
 
-    const matchedInfo = this.langs.find(info => info.id === lang);
+    const matchedInfo = this.langs.find((info) => info.id === lang);
     return matchedInfo ? matchedInfo.name : 'Plain Text';
   });
 
   get inlineEditor() {
-    const inlineRoot = this.querySelector<InlineRootElement>(
-      `[${INLINE_ROOT_ATTR}]`
-    );
+    const inlineRoot = this.querySelector<InlineRootElement>(`[${INLINE_ROOT_ATTR}]`);
     return inlineRoot?.inlineEditor;
   }
 
@@ -83,10 +78,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
   }
 
   get langs() {
-    return (
-      this.std.getOptional(CodeBlockConfigExtension.identifier)?.langs ??
-      bundledLanguagesInfo
-    );
+    return this.std.getOptional(CodeBlockConfigExtension.identifier)?.langs ?? bundledLanguagesInfo;
   }
 
   get highlighter() {
@@ -95,9 +87,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
   override get topContenteditableElement() {
     if (this.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
-      return this.closest<BlockComponent>(
-        EDGELESS_TOP_CONTENTEDITABLE_SELECTOR
-      );
+      return this.closest<BlockComponent>(EDGELESS_TOP_CONTENTEDITABLE_SELECTOR);
     }
     return this.rootComponent;
   }
@@ -110,10 +100,8 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
     }
 
     const matchedInfo = this.langs.find(
-      info =>
-        info.id === modelLang ||
-        info.name === modelLang ||
-        info.aliases?.includes(modelLang)
+      (info) =>
+        info.id === modelLang || info.name === modelLang || info.aliases?.includes(modelLang),
     );
 
     if (matchedInfo) {
@@ -162,24 +150,19 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
     this.disposables.add(
       effect(() => {
         this._updateHighlightTokens();
-      })
+      }),
     );
     this.disposables.add(
       effect(() => {
         noop(this.highlightTokens$.value);
         this._richTextElement?.inlineEditor?.render();
-      })
+      }),
     );
 
     const selectionManager = this.host.selection;
     const INDENT_SYMBOL = '  ';
     const LINE_BREAK_SYMBOL = '\n';
-    const allIndexOf = (
-      text: string,
-      symbol: string,
-      start = 0,
-      end = text.length
-    ) => {
+    const allIndexOf = (text: string, symbol: string, start = 0, end = text.length) => {
       const indexArr: number[] = [];
       let i = start;
 
@@ -196,7 +179,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
     // TODO: move to service for better performance
     this.bindHotKey({
-      Backspace: ctx => {
+      Backspace: (ctx) => {
         const event = ctx.get('defaultState').event;
         const textSelection = selectionManager.find(TextSelection);
         if (!textSelection) {
@@ -219,7 +202,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
         if (!inlineRange || !inlineEditor) return;
         const left = inlineEditor.yText.toString()[inlineRange.index - 1];
         const right = inlineEditor.yText.toString()[inlineRange.index];
-        const leftBrackets = BRACKET_PAIRS.map(pair => pair.left);
+        const leftBrackets = BRACKET_PAIRS.map((pair) => pair.left);
         if (BRACKET_PAIRS[leftBrackets.indexOf(left)]?.right === right) {
           const index = inlineRange.index - 1;
           inlineEditor.deleteText({
@@ -236,7 +219,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
         return;
       },
-      Tab: ctx => {
+      Tab: (ctx) => {
         if (this.store.readonly) return;
         const state = ctx.get('keyboardState');
         const event = state.raw;
@@ -248,37 +231,33 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
           event.preventDefault();
 
           const text = this.inlineEditor.yText.toString();
-          const index = text.lastIndexOf(
-            LINE_BREAK_SYMBOL,
-            inlineRange.index - 1
-          );
+          const index = text.lastIndexOf(LINE_BREAK_SYMBOL, inlineRange.index - 1);
           const indexArr = allIndexOf(
             text,
             LINE_BREAK_SYMBOL,
             inlineRange.index,
-            inlineRange.index + inlineRange.length
+            inlineRange.index + inlineRange.length,
           )
-            .map(i => i + 1)
+            .map((i) => i + 1)
             .reverse();
           if (index !== -1) {
             indexArr.push(index + 1);
           } else {
             indexArr.push(0);
           }
-          indexArr.forEach(i => {
+          indexArr.forEach((i) => {
             if (!this.inlineEditor) return;
             this.inlineEditor.insertText(
               {
                 index: i,
                 length: 0,
               },
-              INDENT_SYMBOL
+              INDENT_SYMBOL,
             );
           });
           this.inlineEditor.setInlineRange({
             index: inlineRange.index + 2,
-            length:
-              inlineRange.length + (indexArr.length - 1) * INDENT_SYMBOL.length,
+            length: inlineRange.length + (indexArr.length - 1) * INDENT_SYMBOL.length,
           });
 
           return true;
@@ -286,7 +265,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
         return;
       },
-      'Shift-Tab': ctx => {
+      'Shift-Tab': (ctx) => {
         const state = ctx.get('keyboardState');
         const event = state.raw;
         const inlineEditor = this.inlineEditor;
@@ -297,27 +276,22 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
           event.preventDefault();
 
           const text = this.inlineEditor.yText.toString();
-          const index = text.lastIndexOf(
-            LINE_BREAK_SYMBOL,
-            inlineRange.index - 1
-          );
+          const index = text.lastIndexOf(LINE_BREAK_SYMBOL, inlineRange.index - 1);
           let indexArr = allIndexOf(
             text,
             LINE_BREAK_SYMBOL,
             inlineRange.index,
-            inlineRange.index + inlineRange.length
+            inlineRange.index + inlineRange.length,
           )
-            .map(i => i + 1)
+            .map((i) => i + 1)
             .reverse();
           if (index !== -1) {
             indexArr.push(index + 1);
           } else {
             indexArr.push(0);
           }
-          indexArr = indexArr.filter(
-            i => text.slice(i, i + 2) === INDENT_SYMBOL
-          );
-          indexArr.forEach(i => {
+          indexArr = indexArr.filter((i) => text.slice(i, i + 2) === INDENT_SYMBOL);
+          indexArr.forEach((i) => {
             if (!this.inlineEditor) return;
             this.inlineEditor.deleteText({
               index: i,
@@ -327,11 +301,8 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
           if (indexArr.length > 0) {
             this.inlineEditor.setInlineRange({
               index:
-                inlineRange.index -
-                (indexArr[indexArr.length - 1] < inlineRange.index ? 2 : 0),
-              length:
-                inlineRange.length -
-                (indexArr.length - 1) * INDENT_SYMBOL.length,
+                inlineRange.index - (indexArr[indexArr.length - 1] < inlineRange.index ? 2 : 0),
+              length: inlineRange.length - (indexArr.length - 1) * INDENT_SYMBOL.length,
             });
           }
 
@@ -363,12 +334,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
         if (!parent) return;
         const index = parent.children.indexOf(model);
         if (index === -1) return;
-        const id = this.store.addBlock(
-          'ink:paragraph',
-          {},
-          parent,
-          index + 1
-        );
+        const id = this.store.addBlock('ink:paragraph', {}, parent, index + 1);
         focusTextModel(std, id);
         return true;
       },
@@ -385,7 +351,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
       .then(() => {
         this.notificationService?.toast('Copied to clipboard');
       })
-      .catch(e => {
+      .catch((e) => {
         this.notificationService?.toast('Copied failed, something went wrong');
         console.error(e);
       });
@@ -393,9 +359,8 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
   get isCommentHighlighted() {
     return (
-      this.std
-        .getOptional(BlockElementCommentManager)
-        ?.isBlockCommentHighlighted(this.model) ?? false
+      this.std.getOptional(BlockElementCommentManager)?.isBlockCommentHighlighted(this.model) ??
+      false
     );
   }
 
@@ -412,7 +377,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
 
     const preview = this.preview$.value;
     const previewContext = this.std.getOptional(
-      CodeBlockPreviewIdentifier(this.model.props.language ?? '')
+      CodeBlockPreviewIdentifier(this.model.props.language ?? ''),
     );
     const shouldRenderPreview = preview && previewContext;
 
@@ -443,9 +408,7 @@ export class CodeBlockComponent extends CaptionedBlockComponent<CodeBlockModel> 
           .verticalScrollContainerGetter=${() => getViewportElement(this.host)}
           .vLineRenderer=${(vLine: VLine) => {
             return html`
-              <span contenteditable="false" class="line-number"
-                >${vLine.index + 1}</span
-              >
+              <span contenteditable="false" class="line-number">${vLine.index + 1}</span>
               ${vLine.renderVElements()}
             `;
           }}

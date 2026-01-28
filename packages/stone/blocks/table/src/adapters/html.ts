@@ -19,10 +19,10 @@ const TABLE_NODE_TYPES = new Set(['table', 'thead', 'tbody', 'th', 'tr']);
 
 export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: TableBlockSchema.model.flavour,
-  toMatch: o => {
+  toMatch: (o) => {
     return HastUtils.isElement(o.node) && TABLE_NODE_TYPES.has(o.node.tagName);
   },
-  fromMatch: o => o.node.flavour === TableBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === TableBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -30,9 +30,7 @@ export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       }
       const { walkerContext } = context;
       if (o.node.tagName === 'table') {
-        const astToDelta = context.deltaConverter.astToDelta.bind(
-          context.deltaConverter
-        );
+        const astToDelta = context.deltaConverter.astToDelta.bind(context.deltaConverter);
         const tableProps = parseTableFromHtml(o.node, astToDelta);
         walkerContext.openNode(
           {
@@ -42,7 +40,7 @@ export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             props: tableProps as unknown as Record<string, unknown>,
             children: [],
           },
-          'children'
+          'children',
         );
         walkerContext.skipAllChildren();
       }
@@ -60,12 +58,9 @@ export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   fromBlockSnapshot: {
     enter: (o, context) => {
       const { walkerContext } = context;
-      const { columns, rows, cells } = o.node
-        .props as unknown as TableBlockPropsSerialized;
+      const { columns, rows, cells } = o.node.props as unknown as TableBlockPropsSerialized;
       const table = processTable(columns, rows, cells);
-      const createAstTableCell = (
-        children: InlineHtmlAST[]
-      ): InlineHtmlAST => ({
+      const createAstTableCell = (children: InlineHtmlAST[]): InlineHtmlAST => ({
         type: 'element',
         tagName: 'td',
         properties: Object.create(null),
@@ -94,15 +89,15 @@ export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
         type: 'element',
         tagName: 'tbody',
         properties: Object.create(null),
-        children: table.rows.map(v => {
+        children: table.rows.map((v) => {
           return createAstTableRow(
-            v.cells.map(cell => {
+            v.cells.map((cell) => {
               return createAstTableCell(
                 typeof cell.value === 'string'
                   ? [{ type: 'text', value: cell.value }]
-                  : deltaConverter.deltaToAST(cell.value.delta)
+                  : deltaConverter.deltaToAST(cell.value.delta),
               );
-            })
+            }),
           );
         }),
       };
@@ -125,5 +120,5 @@ export const tableBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const TableBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  tableBlockHtmlAdapterMatcher
+  tableBlockHtmlAdapterMatcher,
 );

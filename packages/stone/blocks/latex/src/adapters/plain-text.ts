@@ -9,12 +9,11 @@ const latexPrefix = 'LaTex, with value: ';
 export const latexBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   flavour: LatexBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === LatexBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === LatexBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
-      const latex =
-        'latex' in o.node.props ? (o.node.props.latex as string) : '';
+      const latex = 'latex' in o.node.props ? (o.node.props.latex as string) : '';
 
       const { textBuffer } = context;
       if (latex) {
@@ -25,5 +24,6 @@ export const latexBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   },
 };
 
-export const LatexBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(latexBlockPlainTextAdapterMatcher);
+export const LatexBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  latexBlockPlainTextAdapterMatcher,
+);

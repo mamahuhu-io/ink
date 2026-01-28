@@ -20,24 +20,23 @@ import {
   UnderlineInlineSpecExtension,
 } from './inline-spec';
 
-export const DefaultInlineManagerExtension =
-  InlineManagerExtension<InkTextAttributes>({
-    id: 'DefaultInlineManager',
-    specs: [
-      BoldInlineSpecExtension.identifier,
-      ItalicInlineSpecExtension.identifier,
-      UnderlineInlineSpecExtension.identifier,
-      StrikeInlineSpecExtension.identifier,
-      CodeInlineSpecExtension.identifier,
-      BackgroundInlineSpecExtension.identifier,
-      ColorInlineSpecExtension.identifier,
-      LatexInlineSpecExtension.identifier,
-      ReferenceInlineSpecExtension.identifier,
-      LinkInlineSpecExtension.identifier,
-      FootNoteInlineSpecExtension.identifier,
-      EmojiInlineSpecExtension.identifier,
-      // [REMOVED] Collaboration features
-      // MentionInlineSpecExtension.identifier,
-      // CommentInlineSpecExtension.identifier,
-    ],
-  });
+export const DefaultInlineManagerExtension = InlineManagerExtension<InkTextAttributes>({
+  id: 'DefaultInlineManager',
+  specs: [
+    BoldInlineSpecExtension.identifier,
+    ItalicInlineSpecExtension.identifier,
+    UnderlineInlineSpecExtension.identifier,
+    StrikeInlineSpecExtension.identifier,
+    CodeInlineSpecExtension.identifier,
+    BackgroundInlineSpecExtension.identifier,
+    ColorInlineSpecExtension.identifier,
+    LatexInlineSpecExtension.identifier,
+    ReferenceInlineSpecExtension.identifier,
+    LinkInlineSpecExtension.identifier,
+    FootNoteInlineSpecExtension.identifier,
+    EmojiInlineSpecExtension.identifier,
+    // [REMOVED] Collaboration features
+    // MentionInlineSpecExtension.identifier,
+    // CommentInlineSpecExtension.identifier,
+  ],
+});

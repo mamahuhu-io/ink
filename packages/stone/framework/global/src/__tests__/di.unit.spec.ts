@@ -100,7 +100,7 @@ describe('di', () => {
     class PC {
       constructor(
         public typeA: USB,
-        public ports: USB[]
+        public ports: USB[],
       ) {}
     }
 
@@ -148,7 +148,7 @@ describe('di', () => {
       constructor(public commands: Command[]) {}
 
       execute(shortcut: string) {
-        const command = this.commands.find(c => c.shortcut === shortcut);
+        const command = this.commands.find((c) => c.shortcut === shortcut);
         if (command) {
           command.callback();
         }
@@ -157,11 +157,11 @@ describe('di', () => {
 
     container.add(PageSystem);
     container.add(CommandSystem, [[Command]]);
-    container.addImpl(Command('switch'), p => ({
+    container.addImpl(Command('switch'), (p) => ({
       shortcut: 'option+s',
       callback: () => p.get(PageSystem).switchToEdgeless(),
     }));
-    container.addImpl(Command('rename'), p => ({
+    container.addImpl(Command('rename'), (p) => ({
       shortcut: 'f2',
       callback: () => p.get(PageSystem).rename(),
     }));
@@ -169,10 +169,9 @@ describe('di', () => {
     const provider = container.provider();
     const commandSystem = provider.get(CommandSystem);
 
-    expect(
-      pageSystemInitialized,
-      "PageSystem won't be initialized until command executed"
-    ).toEqual(false);
+    expect(pageSystemInitialized, "PageSystem won't be initialized until command executed").toEqual(
+      false,
+    );
 
     commandSystem.execute('option+s');
     expect(pageSystemInitialized).toEqual(true);
@@ -228,7 +227,7 @@ describe('di', () => {
 
       constructor(
         public system: System,
-        public workspace: Workspace
+        public workspace: Workspace,
       ) {}
     }
 
@@ -264,9 +263,7 @@ describe('di', () => {
     const container = new Container();
 
     const provider = container.provider();
-    expect(() => provider.get(createIdentifier('SomeService'))).toThrowError(
-      ServiceNotFoundError
-    );
+    expect(() => provider.get(createIdentifier('SomeService'))).toThrowError(ServiceNotFoundError);
   });
 
   test('missing dependency', () => {
@@ -315,16 +312,12 @@ describe('di', () => {
     class A {}
 
     container.add(A);
-    expect(() => container.add(A)).toThrowError(
-      DuplicateServiceDefinitionError
-    );
+    expect(() => container.add(A)).toThrowError(DuplicateServiceDefinitionError);
 
     class B {}
     const Something = createIdentifier('something');
     container.addImpl(Something, A);
-    expect(() => container.addImpl(Something, B)).toThrowError(
-      DuplicateServiceDefinitionError
-    );
+    expect(() => container.addImpl(Something, B)).toThrowError(DuplicateServiceDefinitionError);
   });
 
   test('recursion limit', () => {
@@ -339,9 +332,7 @@ describe('di', () => {
         constructor(_next: any) {}
       }
 
-      container.addImpl(Something(i.toString()), Test, [
-        Something(next.toString()),
-      ]);
+      container.addImpl(Something(i.toString()), Test, [Something(next.toString())]);
     }
 
     class Final {
@@ -349,9 +340,7 @@ describe('di', () => {
     }
     container.addImpl(Something(i.toString()), Final);
     const provider = container.provider();
-    expect(() => provider.get(Something('0'))).toThrowError(
-      RecursionLimitError
-    );
+    expect(() => provider.get(Something('0'))).toThrowError(RecursionLimitError);
   });
 
   test('self resolve', () => {

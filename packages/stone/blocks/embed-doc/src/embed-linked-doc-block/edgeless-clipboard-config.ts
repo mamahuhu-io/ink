@@ -8,8 +8,7 @@ export class EdgelessClipboardEmbedLinkedDocConfig extends EdgelessClipboardConf
   override createBlock(linkedDocEmbed: BlockSnapshot): string | null {
     if (!this.surface) return null;
 
-    const { xywh, style, caption, pageId, params, title, description } =
-      linkedDocEmbed.props;
+    const { xywh, style, caption, pageId, params, title, description } = linkedDocEmbed.props;
     const referenceInfo = ReferenceInfoSchema.parse({
       pageId,
       params,
@@ -25,7 +24,7 @@ export class EdgelessClipboardEmbedLinkedDocConfig extends EdgelessClipboardConf
         caption,
         ...referenceInfo,
       },
-      this.surface.model.id
+      this.surface.model.id,
     );
   }
 }

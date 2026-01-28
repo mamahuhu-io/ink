@@ -1,11 +1,7 @@
 import type { GfxModel } from '@ink/stone-std/gfx';
 import { z } from 'zod';
 
-import type {
-  BrushElementModel,
-  ConnectorElementModel,
-  GroupElementModel,
-} from '../elements';
+import type { BrushElementModel, ConnectorElementModel, GroupElementModel } from '../elements';
 
 export type EmbedCardStyle =
   | 'horizontal'

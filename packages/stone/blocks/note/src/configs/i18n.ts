@@ -1,4 +1,4 @@
-import { createBlockI18n } from "@ink/stone-shared/utils";
+import { createBlockI18n } from '@ink/stone-shared/utils';
 
 const i18n = createBlockI18n();
 

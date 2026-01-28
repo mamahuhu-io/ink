@@ -13,7 +13,7 @@ export const getBlockIndexCommand: Command<
   const path = ctx.path ?? ctx.currentSelectionPath;
   if (!path) {
     console.error(
-      '`path` is required, you need to pass it in args or ctx before adding this command to the pipeline.'
+      '`path` is required, you need to pass it in args or ctx before adding this command to the pipeline.',
     );
     return;
   }
@@ -24,7 +24,7 @@ export const getBlockIndexCommand: Command<
   const parentBlock = ctx.std.view.getBlock(parentModel.id);
   if (!parentBlock) return;
 
-  const blockIndex = parentBlock.childBlocks.findIndex(x => x.blockId === path);
+  const blockIndex = parentBlock.childBlocks.findIndex((x) => x.blockId === path);
 
   next({
     blockIndex,

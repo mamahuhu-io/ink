@@ -1,30 +1,11 @@
-import {
-  CaptionedBlockComponent,
-  SelectedStyle,
-} from '@ink/stone-components/caption';
-import {
-  getAttachmentFileIcon,
-  LoadingIcon,
-} from '@ink/stone-components/icons';
-import {
-  type ResolvedStateInfo,
-  ResourceController,
-} from '@ink/stone-components/resource';
+import { CaptionedBlockComponent, SelectedStyle } from '@ink/stone-components/caption';
+import { getAttachmentFileIcon, LoadingIcon } from '@ink/stone-components/icons';
+import { type ResolvedStateInfo, ResourceController } from '@ink/stone-components/resource';
 import { toast } from '@ink/stone-components/toast';
+import { AttachmentIcon, ResetIcon, WarningIcon } from '@ink/stone-icons/lit';
 import type { AttachmentBlockModel } from '@ink/stone-model';
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
-import {
-  formatSize,
-  openSingleFileWith,
-} from '@ink/stone-shared/utils';
-import {
-  AttachmentIcon,
-  ResetIcon,
-  WarningIcon,
-} from '@ink/stone-icons/lit';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
+import { formatSize, openSingleFileWith } from '@ink/stone-shared/utils';
 import { BlockSelection } from '@ink/stone-std';
 import { Slice } from '@ink/stone-store';
 import { computed } from '@preact/signals-core';
@@ -45,9 +26,7 @@ export class AttachmentBlockComponent extends CaptionedBlockComponent<Attachment
 
   blockDraggable = true;
 
-  resourceController = new ResourceController(
-    computed(() => this.model.props.sourceId$.value)
-  );
+  resourceController = new ResourceController(computed(() => this.model.props.sourceId$.value));
 
   get blobUrl() {
     return this.resourceController.blobUrl$.value;
@@ -139,7 +118,7 @@ export class AttachmentBlockComponent extends CaptionedBlockComponent<Attachment
     this.disposables.add(
       this.model.props.sourceId$.subscribe(() => {
         this.refreshData();
-      })
+      }),
     );
   }
 
@@ -177,19 +156,16 @@ export class AttachmentBlockComponent extends CaptionedBlockComponent<Attachment
           run().catch(console.error);
 
           {
-            const mode =
-              this.std.get(DocModeProvider).getEditorMode() ?? 'page';
+            const mode = this.std.get(DocModeProvider).getEditorMode() ?? 'page';
             const segment = mode === 'page' ? 'doc' : 'whiteboard';
-            this.std
-              .getOptional(TelemetryProvider)
-              ?.track('AttachmentReloadedEvent', {
-                segment,
-                page: `${segment} editor`,
-                module: 'attachment',
-                control: label,
-                category: 'card',
-                type: this.filetype,
-              });
+            this.std.getOptional(TelemetryProvider)?.track('AttachmentReloadedEvent', {
+              segment,
+              page: `${segment} editor`,
+              module: 'attachment',
+              control: label,
+              category: 'card',
+              type: this.filetype,
+            });
           }
         }}
       >
@@ -200,29 +176,18 @@ export class AttachmentBlockComponent extends CaptionedBlockComponent<Attachment
 
   protected renderCardContent(
     classInfo: ClassInfo,
-    {
-      icon,
-      title,
-      description,
-      kind,
-      state,
-      needUpload,
-    }: AttachmentResolvedStateInfo
+    { icon, title, description, kind, state, needUpload }: AttachmentResolvedStateInfo,
   ) {
     return html`
       <div class=${classMap(classInfo)}>
         <div class="ink-attachment-content">
           <div class="ink-attachment-content-title">
             <div class="ink-attachment-content-title-icon">${icon}</div>
-            <div class="ink-attachment-content-title-text truncate">
-              ${title}
-            </div>
+            <div class="ink-attachment-content-title-text truncate">${title}</div>
           </div>
 
           <div class="ink-attachment-content-description">
-            <div class="ink-attachment-content-info truncate">
-              ${description}
-            </div>
+            <div class="ink-attachment-content-info truncate">${description}</div>
             ${state === 'error' ? this.renderNormalButton(needUpload) : null}
           </div>
         </div>
@@ -253,7 +218,7 @@ export class AttachmentBlockComponent extends CaptionedBlockComponent<Attachment
 
     const classInfo = {
       'ink-attachment-card': true,
-      'horizontalThin': true,
+      horizontalThin: true,
       loading: resolvedState.loading,
       error: resolvedState.error,
     };

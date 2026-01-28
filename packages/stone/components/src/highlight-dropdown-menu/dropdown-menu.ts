@@ -44,10 +44,7 @@ const colorConfig = {
 
 const colors = ['default', ...Object.keys(colorConfig)] as const;
 
-export type HighlightType = Pick<
-  InkTextStyleAttributes,
-  'color' | 'background'
->;
+export type HighlightType = Pick<InkTextStyleAttributes, 'color' | 'background'>;
 
 // TODO(@fundon): these recent settings should be added to the dropdown menu
 // tests/blocksutie/e2e/format-bar.spec.ts#253
@@ -86,7 +83,7 @@ export class HighlightDropdownMenu extends LitElement {
       >
         <div data-size="large" data-orientation="vertical">
           <div class="highlight-heading">${t('color', 'Color')}</div>
-          ${repeat(colors, color => {
+          ${repeat(colors, (color) => {
             const isDefault = color === 'default';
             const config = isDefault ? null : colorConfig[color as keyof typeof colorConfig];
             const value = config?.foreground ?? null;
@@ -102,20 +99,20 @@ export class HighlightDropdownMenu extends LitElement {
                     '--color': displayColor,
                   })}
                 ></ink-text-duotone-icon>
-                <span class="label capitalize"
-                  >${colorName}</span
-                >
+                <span class="label capitalize">${colorName}</span>
               </editor-menu-action>
             `;
           })}
 
           <div class="highlight-heading">${t('background', 'Background')}</div>
-          ${repeat(colors, color => {
+          ${repeat(colors, (color) => {
             const isDefault = color === 'default';
             const config = isDefault ? null : colorConfig[color as keyof typeof colorConfig];
             const value = config?.background ?? null;
             const displayColor = value ?? 'transparent';
-            const colorName = isDefault ? t('defaultBackground', 'default background') : t(color, color);
+            const colorName = isDefault
+              ? t('defaultBackground', 'default background')
+              : t(color, color);
             return html`
               <editor-menu-action
                 data-testid="background-${color}"
@@ -128,9 +125,7 @@ export class HighlightDropdownMenu extends LitElement {
                   })}
                 ></ink-text-duotone-icon>
 
-                <span class="label capitalize"
-                  >${colorName}</span
-                >
+                <span class="label capitalize">${colorName}</span>
               </editor-menu-action>
             `;
           })}

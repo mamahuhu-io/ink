@@ -1,13 +1,8 @@
-import { getSelectedModelsCommand } from '@ink/stone-shared/commands';
-import { type VirtualKeyboardProviderWithAction } from '@ink/stone-shared/services';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { ArrowLeftBigIcon, KeyboardIcon } from '@ink/stone-icons/lit';
-import {
-  BlockComponent,
-  PropTypes,
-  requiredProperties,
-  ShadowlessElement,
-} from '@ink/stone-std';
+import { getSelectedModelsCommand } from '@ink/stone-shared/commands';
+import { type VirtualKeyboardProviderWithAction } from '@ink/stone-shared/services';
+import { BlockComponent, PropTypes, requiredProperties, ShadowlessElement } from '@ink/stone-std';
 import { effect, type Signal, signal } from '@preact/signals-core';
 import { html } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -35,9 +30,7 @@ export const INK_KEYBOARD_TOOLBAR = 'ink-keyboard-toolbar';
   config: PropTypes.object,
   rootComponent: PropTypes.instanceOf(BlockComponent),
 })
-export class InkKeyboardToolbar extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class InkKeyboardToolbar extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = keyboardToolbarStyles;
 
   private readonly _expanded$ = signal(false);
@@ -52,19 +45,14 @@ export class InkKeyboardToolbar extends SignalWatcher(
 
   private get panelHeight() {
     return this._expanded$.value
-      ? `${
-          this.keyboard.staticHeight$.value !== 0
-            ? this.keyboard.staticHeight$.value
-            : 330
-        }px`
+      ? `${this.keyboard.staticHeight$.value !== 0 ? this.keyboard.staticHeight$.value : 330}px`
       : this.keyboard.appTabSafeArea$.value;
   }
 
   /**
    * Prevent flickering during keyboard opening
    */
-  private _resetPanelIndexTimeoutId: ReturnType<typeof setTimeout> | null =
-    null;
+  private _resetPanelIndexTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private readonly _closeToolPanel = () => {
     if (!this.keyboard.visible$.peek()) this.keyboard.show();
 
@@ -87,13 +75,9 @@ export class InkKeyboardToolbar extends SignalWatcher(
     this._path$.value = this._path$.value.slice(0, -1);
   };
 
-  private readonly _handleItemClick = (
-    item: KeyboardToolbarItem,
-    index: number
-  ) => {
+  private readonly _handleItemClick = (item: KeyboardToolbarItem, index: number) => {
     if (isKeyboardToolBarActionItem(item)) {
-      item.action &&
-        Promise.resolve(item.action(this._context)).catch(console.error);
+      item.action && Promise.resolve(item.action(this._context)).catch(console.error);
     } else if (isKeyboardSubToolBarConfig(item)) {
       this._closeToolPanel();
       this._path$.value = [...this._path$.value, index];
@@ -169,10 +153,8 @@ export class InkKeyboardToolbar extends SignalWatcher(
       }
     }
 
-    return items.filter(item =>
-      isKeyboardToolBarActionItem(item)
-        ? (item.showWhen?.(this._context) ?? true)
-        : true
+    return items.filter((item) =>
+      isKeyboardToolBarActionItem(item) ? (item.showWhen?.(this._context) ?? true) : true,
     );
   }
 
@@ -187,14 +169,11 @@ export class InkKeyboardToolbar extends SignalWatcher(
   private _renderItem(item: KeyboardToolbarItem, index: number) {
     let icon = item.icon;
     let style = styleMap({});
-    const disabled =
-      ('disableWhen' in item && item.disableWhen?.(this._context)) ?? false;
+    const disabled = ('disableWhen' in item && item.disableWhen?.(this._context)) ?? false;
 
     if (isKeyboardToolBarActionItem(item)) {
       const background =
-        typeof item.background === 'function'
-          ? item.background(this._context)
-          : item.background;
+        typeof item.background === 'function' ? item.background(this._context) : item.background;
       if (background)
         style = styleMap({
           background: background,
@@ -204,8 +183,7 @@ export class InkKeyboardToolbar extends SignalWatcher(
       const active = this._currentPanelIndex$.value === index;
 
       if (active && activeIcon) icon = activeIcon;
-      if (active && activeBackground)
-        style = styleMap({ background: activeBackground });
+      if (active && activeBackground) style = styleMap({ background: activeBackground });
     }
 
     return html`<icon-button
@@ -221,22 +199,19 @@ export class InkKeyboardToolbar extends SignalWatcher(
   }
 
   private _renderItems() {
-    if (!this.std.event.active$.value)
-      return html`<div class="item-container"></div>`;
+    if (!this.std.event.active$.value) return html`<div class="item-container"></div>`;
 
     const goPrevToolbarAction = when(
       this._isSubToolbarOpened,
       () =>
         html`<icon-button size="36px" @click=${this._goPrevToolbar}>
           ${ArrowLeftBigIcon()}
-        </icon-button>`
+        </icon-button>`,
     );
 
     return html`<div class="item-container">
       ${goPrevToolbarAction}
-      ${repeat(this._currentToolbarItems, (item, index) =>
-        this._renderItem(item, index)
-      )}
+      ${repeat(this._currentToolbarItems, (item, index) => this._renderItem(item, index))}
     </div>`;
   }
 
@@ -278,11 +253,11 @@ export class InkKeyboardToolbar extends SignalWatcher(
         } else {
           this._expanded$.value = false;
         }
-      })
+      }),
     );
 
     // prevent editor blur when click item in toolbar
-    this.disposables.addFromEvent(this, 'pointerdown', e => {
+    this.disposables.addFromEvent(this, 'pointerdown', (e) => {
       e.preventDefault();
     });
 
@@ -294,7 +269,7 @@ export class InkKeyboardToolbar extends SignalWatcher(
         requestAnimationFrame(() => {
           this._scrollCurrentBlockIntoView();
         });
-      })
+      }),
     );
 
     this.disposables.add(
@@ -304,7 +279,7 @@ export class InkKeyboardToolbar extends SignalWatcher(
         if (this.keyboard.visible$.value) {
           this._closeToolPanel();
         }
-      })
+      }),
     );
 
     this._watchAutoShow();
@@ -318,8 +293,7 @@ export class InkKeyboardToolbar extends SignalWatcher(
   }
 
   private _watchAutoShow() {
-    const autoShowSubToolbars: { path: number[]; signal: Signal<boolean> }[] =
-      [];
+    const autoShowSubToolbars: { path: number[]; signal: Signal<boolean> }[] = [];
 
     const traverse = (item: KeyboardToolbarItem, path: number[]) => {
       if (isKeyboardSubToolBarConfig(item) && item.autoShow) {
@@ -353,7 +327,7 @@ export class InkKeyboardToolbar extends SignalWatcher(
             this._path$.value = prevPath;
           }
         });
-      })
+      }),
     );
   }
 

@@ -10,8 +10,8 @@ import { processImageNodeToBlock } from './utils';
 
 export const imageBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: ImageBlockSchema.model.flavour,
-  toMatch: o => HastUtils.isElement(o.node) && o.node.tagName === 'img',
-  fromMatch: o => o.node.flavour === ImageBlockSchema.model.flavour,
+  toMatch: (o) => HastUtils.isElement(o.node) && o.node.tagName === 'img',
+  fromMatch: (o) => o.node.flavour === ImageBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: async (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -22,8 +22,7 @@ export const imageBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
         return;
       }
       const image = o.node;
-      const imageURL =
-        typeof image?.properties.src === 'string' ? image.properties.src : '';
+      const imageURL = typeof image?.properties.src === 'string' ? image.properties.src : '';
       if (!imageURL) {
         return;
       }
@@ -63,7 +62,7 @@ export const imageBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -77,7 +76,7 @@ export const imageBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode()
         .closeNode();
@@ -86,5 +85,5 @@ export const imageBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const ImageBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  imageBlockHtmlAdapterMatcher
+  imageBlockHtmlAdapterMatcher,
 );

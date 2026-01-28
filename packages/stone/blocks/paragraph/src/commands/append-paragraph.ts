@@ -6,10 +6,7 @@ import { Text } from '@ink/stone-store';
 /**
  * Append a paragraph block at the end of the whole page.
  */
-export const appendParagraphCommand: Command<{ text?: string }> = (
-  ctx,
-  next
-) => {
+export const appendParagraphCommand: Command<{ text?: string }> = (ctx, next) => {
   const { std, text = '' } = ctx;
   const { store } = std;
   if (!store.root) return;
@@ -19,11 +16,7 @@ export const appendParagraphCommand: Command<{ text?: string }> = (
   if (!noteId) {
     noteId = store.addBlock('ink:note', {}, store.root.id);
   }
-  const id = store.addBlock(
-    'ink:paragraph',
-    { text: new Text(text) },
-    noteId
-  );
+  const id = store.addBlock('ink:paragraph', { text: new Text(text) }, noteId);
 
   focusTextModel(std, id, text.length);
   next();

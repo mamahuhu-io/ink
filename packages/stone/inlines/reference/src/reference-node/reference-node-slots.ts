@@ -1,6 +1,6 @@
+import { createIdentifier } from '@ink/stone-global/di';
 import type { ReferenceInfo } from '@ink/stone-model';
 import type { OpenDocMode } from '@ink/stone-shared/services';
-import { createIdentifier } from '@ink/stone-global/di';
 import type { EditorHost } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 import { Subject } from 'rxjs';
@@ -16,15 +16,14 @@ export type RefNodeSlots = {
   docLinkClicked: Subject<DocLinkClickedEvent>;
 };
 
-export const RefNodeSlotsProvider =
-  createIdentifier<RefNodeSlots>('InkRefNodeSlots');
+export const RefNodeSlotsProvider = createIdentifier<RefNodeSlots>('InkRefNodeSlots');
 
 const slots: RefNodeSlots = {
   docLinkClicked: new Subject(),
 };
 
 export const RefNodeSlotsExtension: ExtensionType = {
-  setup: di => {
+  setup: (di) => {
     di.addImpl(RefNodeSlotsProvider, () => slots);
   },
 };

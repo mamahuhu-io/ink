@@ -12,8 +12,8 @@ const isImageNode = (node: MarkdownAST) => node.type === 'image';
 
 export const imageBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: ImageBlockSchema.model.flavour,
-  toMatch: o => isImageNode(o.node),
-  fromMatch: o => o.node.flavour === ImageBlockSchema.model.flavour,
+  toMatch: (o) => isImageNode(o.node),
+  fromMatch: (o) => o.node.flavour === ImageBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: async (o, context) => {
       const { configs, walkerContext, assets } = context;
@@ -44,7 +44,7 @@ export const imageBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             type: 'paragraph',
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -53,7 +53,7 @@ export const imageBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             title: (o.node.props.caption as string | undefined) ?? null,
             alt: (blob as File).name ?? null,
           },
-          'children'
+          'children',
         )
         .closeNode()
         .closeNode();
@@ -62,5 +62,5 @@ export const imageBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const ImageBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  imageBlockMarkdownAdapterMatcher
+  imageBlockMarkdownAdapterMatcher,
 );

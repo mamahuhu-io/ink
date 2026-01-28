@@ -5,14 +5,14 @@ import type { AwarenessSource } from './source.js';
 export class AwarenessEngine {
   constructor(
     readonly awareness: Awareness,
-    readonly sources: AwarenessSource[]
+    readonly sources: AwarenessSource[],
   ) {}
 
   connect() {
-    this.sources.forEach(source => source.connect(this.awareness));
+    this.sources.forEach((source) => source.connect(this.awareness));
   }
 
   disconnect() {
-    this.sources.forEach(source => source.disconnect());
+    this.sources.forEach((source) => source.disconnect());
   }
 }

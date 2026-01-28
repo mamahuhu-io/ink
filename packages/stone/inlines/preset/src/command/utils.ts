@@ -3,10 +3,7 @@ import {
   getSelectedBlocksCommand,
   getTextSelectionCommand,
 } from '@ink/stone-shared/commands';
-import type {
-  InkInlineEditor,
-  InkTextAttributes,
-} from '@ink/stone-shared/types';
+import type { InkInlineEditor, InkTextAttributes } from '@ink/stone-shared/types';
 import {
   BLOCK_ID_ATTR,
   type BlockComponent,
@@ -27,7 +24,7 @@ import {
 } from './consts.js';
 
 function getCombinedFormatFromInlineEditors(
-  inlineEditors: [InkInlineEditor, InlineRange | null][]
+  inlineEditors: [InkInlineEditor, InlineRange | null][],
 ): InkTextAttributes {
   const formatArr: InkTextAttributes[] = [];
   inlineEditors.forEach(([inlineEditor, inlineRange]) => {
@@ -57,13 +54,13 @@ function getCombinedFormatFromInlineEditors(
 function getSelectedInlineEditors(
   blocks: BlockComponent[],
   filter: (
-    inlineRoot: InlineRootElement<InkTextAttributes>
-  ) => InlineEditor<InkTextAttributes> | []
+    inlineRoot: InlineRootElement<InkTextAttributes>,
+  ) => InlineEditor<InkTextAttributes> | [],
 ) {
-  return blocks.flatMap(el => {
-    const inlineRoot = el.querySelector<
-      InlineRootElement<InkTextAttributes>
-    >(`[${INLINE_ROOT_ATTR}]`);
+  return blocks.flatMap((el) => {
+    const inlineRoot = el.querySelector<InlineRootElement<InkTextAttributes>>(
+      `[${INLINE_ROOT_ATTR}]`,
+    );
 
     if (inlineRoot) {
       return filter(inlineRoot);
@@ -76,34 +73,31 @@ function handleCurrentSelection(
   chain: Chain<InitCommandCtx>,
   handler: (
     type: 'text' | 'block' | 'native',
-    inlineEditors: InlineEditor<InkTextAttributes>[]
-  ) => { textAttributes: InkTextAttributes } | boolean | void
+    inlineEditors: InlineEditor<InkTextAttributes>[],
+  ) => { textAttributes: InkTextAttributes } | boolean | void,
 ): Chain<InitCommandCtx & { textAttributes: InkTextAttributes }> {
-  return chain.try(chain => [
+  return chain.try((chain) => [
     // text selection, corresponding to `formatText` command
     chain
       .pipe(getTextSelectionCommand)
       .pipe(getSelectedBlocksCommand, {
         types: ['text'],
-        filter: el => FORMAT_TEXT_SUPPORT_FLAVOURS.includes(el.model.flavour),
+        filter: (el) => FORMAT_TEXT_SUPPORT_FLAVOURS.includes(el.model.flavour),
       })
       .pipe((ctx, next) => {
         const { selectedBlocks } = ctx;
         if (!selectedBlocks) {
           console.error(
-            '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.'
+            '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.',
           );
           return false;
         }
 
-        const selectedInlineEditors = getSelectedInlineEditors(
-          selectedBlocks,
-          inlineRoot => {
-            const inlineRange = inlineRoot.inlineEditor.getInlineRange();
-            if (!inlineRange) return [];
-            return inlineRoot.inlineEditor;
-          }
-        );
+        const selectedInlineEditors = getSelectedInlineEditors(selectedBlocks, (inlineRoot) => {
+          const inlineRange = inlineRoot.inlineEditor.getInlineRange();
+          if (!inlineRange) return [];
+          return inlineRoot.inlineEditor;
+        });
 
         const result = handler('text', selectedInlineEditors);
         if (!result) return false;
@@ -117,23 +111,19 @@ function handleCurrentSelection(
       .pipe(getBlockSelectionsCommand)
       .pipe(getSelectedBlocksCommand, {
         types: ['block'],
-        filter: el => FORMAT_BLOCK_SUPPORT_FLAVOURS.includes(el.model.flavour),
+        filter: (el) => FORMAT_BLOCK_SUPPORT_FLAVOURS.includes(el.model.flavour),
       })
       .pipe((ctx, next) => {
         const { selectedBlocks } = ctx;
         if (!selectedBlocks) {
           console.error(
-            '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.'
+            '`selectedBlocks` is required, you need to pass it in args or use `getSelectedBlocksCommand` command before adding this command to the pipeline.',
           );
           return false;
         }
 
-        const selectedInlineEditors = getSelectedInlineEditors(
-          selectedBlocks,
-          inlineRoot =>
-            inlineRoot.inlineEditor.yTextLength > 0
-              ? inlineRoot.inlineEditor
-              : []
+        const selectedInlineEditors = getSelectedInlineEditors(selectedBlocks, (inlineRoot) =>
+          inlineRoot.inlineEditor.yTextLength > 0 ? inlineRoot.inlineEditor : [],
         );
 
         const result = handler('block', selectedInlineEditors);
@@ -146,16 +136,16 @@ function handleCurrentSelection(
     // native selection, corresponding to `formatNative` command
     chain.pipe((ctx, next) => {
       const selectedInlineEditors = Array.from<InlineRootElement>(
-        ctx.std.host.querySelectorAll(`[${INLINE_ROOT_ATTR}]`)
+        ctx.std.host.querySelectorAll(`[${INLINE_ROOT_ATTR}]`),
       )
-        .filter(el => {
+        .filter((el) => {
           const selection = document.getSelection();
           if (!selection || selection.rangeCount === 0) return false;
           const range = selection.getRangeAt(0);
 
           return range.intersectsNode(el);
         })
-        .filter(el => {
+        .filter((el) => {
           const block = el.closest<BlockComponent>(`[${BLOCK_ID_ATTR}]`);
           if (block) {
             return FORMAT_NATIVE_SUPPORT_FLAVOURS.includes(block.model.flavour);
@@ -179,21 +169,21 @@ export function getCombinedTextAttributes(chain: Chain<InitCommandCtx>) {
     if (type === 'text') {
       return {
         textAttributes: getCombinedFormatFromInlineEditors(
-          inlineEditors.map(e => [e, e.getInlineRange()])
+          inlineEditors.map((e) => [e, e.getInlineRange()]),
         ),
       };
     }
     if (type === 'block') {
       return {
         textAttributes: getCombinedFormatFromInlineEditors(
-          inlineEditors.map(e => [e, { index: 0, length: e.yTextLength }])
+          inlineEditors.map((e) => [e, { index: 0, length: e.yTextLength }]),
         ),
       };
     }
     if (type === 'native') {
       return {
         textAttributes: getCombinedFormatFromInlineEditors(
-          inlineEditors.map(e => [e, e.getInlineRange()])
+          inlineEditors.map((e) => [e, e.getInlineRange()]),
         ),
       };
     }

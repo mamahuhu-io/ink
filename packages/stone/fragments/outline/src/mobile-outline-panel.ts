@@ -1,17 +1,9 @@
-import {
-  NoteDisplayMode,
-  ParagraphBlockModel,
-  RootBlockModel,
-} from '@ink/stone-model';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { NoteDisplayMode, ParagraphBlockModel, RootBlockModel } from '@ink/stone-model';
 import { DocModeProvider } from '@ink/stone-shared/services';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { matchModels } from '@ink/stone-shared/utils';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  type EditorHost,
-  PropTypes,
-  requiredProperties,
-} from '@ink/stone-std';
+import { type EditorHost, PropTypes, requiredProperties } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
 import { signal } from '@preact/signals-core';
 import { css, html, LitElement, nothing } from 'lit';
@@ -20,19 +12,14 @@ import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import { getHeadingBlocksFromDoc } from './utils/query.js';
-import {
-  observeActiveHeadingDuringScroll,
-  scrollToBlockWithHighlight,
-} from './utils/scroll.js';
+import { observeActiveHeadingDuringScroll, scrollToBlockWithHighlight } from './utils/scroll.js';
 
 export const INK_MOBILE_OUTLINE_MENU = 'ink-mobile-outline-menu';
 
 @requiredProperties({
   editor: PropTypes.object,
 })
-export class MobileOutlineMenu extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class MobileOutlineMenu extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = css`
     :host {
       position: relative;
@@ -109,10 +96,7 @@ export class MobileOutlineMenu extends SignalWatcher(
   private async _scrollToBlock(blockId: string) {
     this._lockActiveHeadingId = true;
     this._activeHeadingId$.value = blockId;
-    this._highlightMaskDisposable = await scrollToBlockWithHighlight(
-      this.editor,
-      blockId
-    );
+    this._highlightMaskDisposable = await scrollToBlockWithHighlight(this.editor, blockId);
     this._lockActiveHeadingId = false;
   }
 
@@ -122,11 +106,11 @@ export class MobileOutlineMenu extends SignalWatcher(
     this.disposables.add(
       observeActiveHeadingDuringScroll(
         () => this.editor,
-        newHeadingId => {
+        (newHeadingId) => {
           if (this._lockActiveHeadingId) return;
           this._activeHeadingId$.value = newHeadingId;
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -173,7 +157,7 @@ export class MobileOutlineMenu extends SignalWatcher(
     const headingBlocks = getHeadingBlocksFromDoc(
       this.editor.store,
       [NoteDisplayMode.DocAndEdgeless, NoteDisplayMode.DocOnly],
-      true
+      true,
     );
 
     if (headingBlocks.length === 0) return nothing;
@@ -183,7 +167,7 @@ export class MobileOutlineMenu extends SignalWatcher(
       ...headingBlocks,
     ];
 
-    return repeat(items, block => block.id, this.renderItem);
+    return repeat(items, (block) => block.id, this.renderItem);
   }
 
   @property({ attribute: false })

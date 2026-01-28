@@ -6,13 +6,13 @@
  * MIME type mapping for common image extensions
  */
 export const IMAGE_MIME_TYPES: Record<string, string> = {
-  png: "image/png",
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  gif: "image/gif",
-  webp: "image/webp",
-  svg: "image/svg+xml",
-  bmp: "image/bmp",
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  gif: 'image/gif',
+  webp: 'image/webp',
+  svg: 'image/svg+xml',
+  bmp: 'image/bmp',
 };
 
 /**
@@ -20,29 +20,29 @@ export const IMAGE_MIME_TYPES: Record<string, string> = {
  * NOTE: Must match stone framework's mimeExtMap for consistency
  */
 export const MIME_TO_EXT: Record<string, string> = {
-  "image/png": "png",
-  "image/jpeg": "jpeg", // Match stone framework (not 'jpg')
-  "image/gif": "gif",
-  "image/webp": "webp",
-  "image/svg+xml": "svg",
-  "image/bmp": "bmp",
-  "image/apng": "apng",
-  "image/avif": "avif",
-  "image/tiff": "tiff",
+  'image/png': 'png',
+  'image/jpeg': 'jpeg', // Match stone framework (not 'jpg')
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'image/svg+xml': 'svg',
+  'image/bmp': 'bmp',
+  'image/apng': 'apng',
+  'image/avif': 'avif',
+  'image/tiff': 'tiff',
 };
 
 /**
  * Get file extension from MIME type
  */
 export function getExtFromMime(mimeType: string): string {
-  return MIME_TO_EXT[mimeType] || "png";
+  return MIME_TO_EXT[mimeType] || 'png';
 }
 
 /**
  * Get MIME type from file extension
  */
 export function getMimeFromExt(ext: string): string {
-  return IMAGE_MIME_TYPES[ext.toLowerCase()] || "image/png";
+  return IMAGE_MIME_TYPES[ext.toLowerCase()] || 'image/png';
 }
 
 /**
@@ -50,7 +50,7 @@ export function getMimeFromExt(ext: string): string {
  * Handles format like: <assets/image (4).png> -> assets/image (4).png
  */
 export function stripAngleBrackets(url: string): string {
-  return url.replace(/^<|>$/g, "");
+  return url.replace(/^<|>$/g, '');
 }
 
 /**
@@ -75,7 +75,7 @@ export function parseImagePath(rawPath: string): string {
  * Check if a path is a remote URL or data URI
  */
 export function isRemoteOrDataUrl(path: string): boolean {
-  return path.includes("://") || path.startsWith("data:");
+  return path.includes('://') || path.startsWith('data:');
 }
 
 /**
@@ -84,11 +84,11 @@ export function isRemoteOrDataUrl(path: string): boolean {
 export function resolveImagePath(imagePath: string, fileDir: string): string {
   const cleanPath = parseImagePath(imagePath);
 
-  if (cleanPath.startsWith("./")) {
+  if (cleanPath.startsWith('./')) {
     return `${fileDir}/${cleanPath.substring(2)}`;
-  } else if (cleanPath.startsWith("../")) {
+  } else if (cleanPath.startsWith('../')) {
     return `${fileDir}/${cleanPath}`;
-  } else if (!isRemoteOrDataUrl(cleanPath) && !cleanPath.startsWith("/")) {
+  } else if (!isRemoteOrDataUrl(cleanPath) && !cleanPath.startsWith('/')) {
     return `${fileDir}/${cleanPath}`;
   }
   return cleanPath;
@@ -98,10 +98,7 @@ export function resolveImagePath(imagePath: string, fileDir: string): string {
  * Extract directory path from a file path
  */
 export function getDirectoryFromPath(filePath: string): string {
-  return filePath.substring(
-    0,
-    Math.max(filePath.lastIndexOf("/"), filePath.lastIndexOf("\\"))
-  );
+  return filePath.substring(0, Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\')));
 }
 
 /**
@@ -109,14 +106,13 @@ export function getDirectoryFromPath(filePath: string): string {
  * Matches both ![alt](url) and ![alt](<url with spaces>)
  * Use with new RegExp(IMAGE_MARKDOWN_PATTERN, 'g') for global matching
  */
-export const IMAGE_MARKDOWN_PATTERN =
-  "!\\[([^\\]]*)\\]\\((<[^>]+>|[^)\\s]+)\\)";
+export const IMAGE_MARKDOWN_PATTERN = '!\\[([^\\]]*)\\]\\((<[^>]+>|[^)\\s]+)\\)';
 
 /**
  * Create a new regex for matching markdown images (global)
  */
 export function createImageMarkdownRegex(): RegExp {
-  return new RegExp(IMAGE_MARKDOWN_PATTERN, "g");
+  return new RegExp(IMAGE_MARKDOWN_PATTERN, 'g');
 }
 
 /**
@@ -130,12 +126,11 @@ export const IMAGE_LINE_REGEX = /^!\[([^\]]*)\]\((<[^>]+>|[^)\s]+)\)$/;
  * Does NOT match images (which start with !)
  * Use with new RegExp(LINK_MARKDOWN_PATTERN, 'g') for global matching
  */
-export const LINK_MARKDOWN_PATTERN =
-  "(?<!!)\\[([^\\]]*)\\]\\((<[^>]+>|[^)\\s]+)\\)";
+export const LINK_MARKDOWN_PATTERN = '(?<!!)\\[([^\\]]*)\\]\\((<[^>]+>|[^)\\s]+)\\)';
 
 /**
  * Create a new regex for matching markdown links (global)
  */
 export function createLinkMarkdownRegex(): RegExp {
-  return new RegExp(LINK_MARKDOWN_PATTERN, "g");
+  return new RegExp(LINK_MARKDOWN_PATTERN, 'g');
 }

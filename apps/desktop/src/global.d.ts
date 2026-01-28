@@ -13,12 +13,12 @@ interface VirtualKeyboard extends EventTarget {
   addEventListener<K extends keyof VirtualKeyboardEventMap>(
     type: K,
     listener: (this: VirtualKeyboard, ev: VirtualKeyboardEventMap[K]) => void,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void;
   removeEventListener<K extends keyof VirtualKeyboardEventMap>(
     type: K,
     listener: (this: VirtualKeyboard, ev: VirtualKeyboardEventMap[K]) => void,
-    options?: boolean | EventListenerOptions
+    options?: boolean | EventListenerOptions,
   ): void;
 }
 

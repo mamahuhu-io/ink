@@ -1,5 +1,5 @@
 import type { Container } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import { LifeCycleWatcherIdentifier, StdIdentifier } from '../identifier.js';
@@ -33,17 +33,13 @@ export abstract class LifeCycleWatcher extends Extension {
     if (!this.key) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'Key is not defined in the LifeCycleWatcher'
+        'Key is not defined in the LifeCycleWatcher',
       );
     }
 
-    di.add(this as unknown as { new (std: BlockStdScope): LifeCycleWatcher }, [
-      StdIdentifier,
-    ]);
+    di.add(this as unknown as { new (std: BlockStdScope): LifeCycleWatcher }, [StdIdentifier]);
 
-    di.addImpl(LifeCycleWatcherIdentifier(this.key), provider =>
-      provider.get(this)
-    );
+    di.addImpl(LifeCycleWatcherIdentifier(this.key), (provider) => provider.get(this));
   }
 
   /**

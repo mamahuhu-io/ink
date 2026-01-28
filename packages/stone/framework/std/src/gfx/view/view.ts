@@ -1,6 +1,6 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { type Bound, type IVec } from '@ink/stone-global/gfx';
 import type { Extension } from '@ink/stone-store';
 
@@ -33,24 +33,20 @@ export type EventsHandlerMap = {
 
 export type SupportedEvent = keyof EventsHandlerMap;
 
-export const GfxElementModelViewExtIdentifier = createIdentifier<
-  typeof GfxElementModelView
->('GfxElementModelView');
+export const GfxElementModelViewExtIdentifier =
+  createIdentifier<typeof GfxElementModelView>('GfxElementModelView');
 
 export class GfxElementModelView<
-    T extends GfxLocalElementModel | GfxPrimitiveElementModel =
-      | GfxPrimitiveElementModel
-      | GfxLocalElementModel,
-    RendererContext = object,
-  >
+  T extends GfxLocalElementModel | GfxPrimitiveElementModel =
+    | GfxPrimitiveElementModel
+    | GfxLocalElementModel,
+  RendererContext = object,
+>
   implements GfxElementGeometry, Extension, GfxViewTransformInterface
 {
   static type: string;
 
-  private readonly _handlers = new Map<
-    keyof EventsHandlerMap,
-    ((evt: any) => void)[]
-  >();
+  private readonly _handlers = new Map<keyof EventsHandlerMap, ((evt: any) => void)[]>();
 
   private _isConnected = true;
 
@@ -80,7 +76,7 @@ export class GfxElementModelView<
 
   constructor(
     model: T,
-    readonly gfx: GfxController
+    readonly gfx: GfxController,
   ) {
     this.model = model;
   }
@@ -89,7 +85,7 @@ export class GfxElementModelView<
     if (!this.type) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'The GfxElementModelView should have a static `type` property.'
+        'The GfxElementModelView should have a static `type` property.',
       );
     }
 
@@ -106,14 +102,11 @@ export class GfxElementModelView<
    * @param evt
    * @returns Whether the event view has any handlers for the event.
    */
-  dispatch<K extends keyof EventsHandlerMap>(
-    event: K,
-    evt: EventsHandlerMap[K]
-  ) {
+  dispatch<K extends keyof EventsHandlerMap>(event: K, evt: EventsHandlerMap[K]) {
     const handlers = this._handlers.get(event);
 
     if (handlers?.length) {
-      handlers.forEach(callback => callback(evt));
+      handlers.forEach((callback) => callback(evt));
       return true;
     }
 
@@ -132,12 +125,7 @@ export class GfxElementModelView<
     return this.model.getRelativePointLocation(relativePoint);
   }
 
-  includesPoint(
-    x: number,
-    y: number,
-    _: PointTestOptions,
-    __: EditorHost
-  ): boolean {
+  includesPoint(x: number, y: number, _: PointTestOptions, __: EditorHost): boolean {
     return this.model.includesPoint(x, y, _, __);
   }
 
@@ -145,15 +133,12 @@ export class GfxElementModelView<
     return (
       this.containsBound(bound) ||
       bound.points.some((point, i, points) =>
-        this.getLineIntersections(point, points[(i + 1) % points.length])
+        this.getLineIntersections(point, points[(i + 1) % points.length]),
       )
     );
   }
 
-  off<K extends keyof EventsHandlerMap>(
-    event: K,
-    callback: (evt: EventsHandlerMap[K]) => void
-  ) {
+  off<K extends keyof EventsHandlerMap>(event: K, callback: (evt: EventsHandlerMap[K]) => void) {
     if (!this._handlers.has(event)) {
       return;
     }
@@ -166,10 +151,7 @@ export class GfxElementModelView<
     }
   }
 
-  on<K extends keyof EventsHandlerMap>(
-    event: K,
-    callback: (evt: EventsHandlerMap[K]) => void
-  ) {
+  on<K extends keyof EventsHandlerMap>(event: K, callback: (evt: EventsHandlerMap[K]) => void) {
     if (!this._handlers.has(event)) {
       this._handlers.set(event, []);
     }
@@ -179,11 +161,8 @@ export class GfxElementModelView<
     return () => this.off(event, callback);
   }
 
-  once<K extends keyof EventsHandlerMap>(
-    event: K,
-    callback: (evt: EventsHandlerMap[K]) => void
-  ) {
-    const off = this.on(event, evt => {
+  once<K extends keyof EventsHandlerMap>(event: K, callback: (evt: EventsHandlerMap[K]) => void) {
+    const off = this.on(event, (evt) => {
       off();
       callback(evt);
     });

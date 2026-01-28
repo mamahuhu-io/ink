@@ -136,7 +136,7 @@ Extensions can be configured using the `configure` method:
 manager.configure(MyProvider, { enabled: true });
 
 // Update configuration using a function
-manager.configure(MyProvider, prev => {
+manager.configure(MyProvider, (prev) => {
   if (!prev) return prev;
   return {
     ...prev,

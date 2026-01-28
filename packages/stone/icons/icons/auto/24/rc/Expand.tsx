@@ -1,7 +1,24 @@
-import * as React from "react";
-import type { SVGProps } from "react";
-const ExpandIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
-  userSelect: "none",
-  flexShrink: 0
-}} {...props}><path fill="currentColor" fillRule="evenodd" d="M7.53 9.53a.75.75 0 0 1-1.06-1.06l5-5a.75.75 0 0 1 1.06 0l5 5a.75.75 0 0 1-1.06 1.06L12 5.06zm0 4.94a.75.75 0 0 0-1.06 1.06l5 5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06L12 18.94z" clipRule="evenodd" /></svg>;
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const ExpandIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M7.53 9.53a.75.75 0 0 1-1.06-1.06l5-5a.75.75 0 0 1 1.06 0l5 5a.75.75 0 0 1-1.06 1.06L12 5.06zm0 4.94a.75.75 0 0 0-1.06 1.06l5 5a.75.75 0 0 0 1.06 0l5-5a.75.75 0 1 0-1.06-1.06L12 18.94z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
 export default ExpandIcon;

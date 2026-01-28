@@ -87,7 +87,7 @@ export class BroadcastChannelDocSource implements DocSource {
         const { docId, data } = event.data;
         cb(docId, data);
       },
-      { signal: abortController.signal }
+      { signal: abortController.signal },
     );
     return () => {
       abortController.abort(MANUALLY_STOP);

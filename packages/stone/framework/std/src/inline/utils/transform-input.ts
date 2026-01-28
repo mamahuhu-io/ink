@@ -7,7 +7,7 @@ function handleInsertText<TextAttributes extends BaseTextAttributes>(
   inlineRange: InlineRange,
   data: string | null,
   editor: InlineEditor,
-  attributes: TextAttributes
+  attributes: TextAttributes,
 ) {
   if (!data) return;
   editor.insertText(inlineRange, data, attributes);
@@ -21,9 +21,9 @@ function handleInsertReplacementText<TextAttributes extends BaseTextAttributes>(
   inlineRange: InlineRange,
   data: string | null,
   editor: InlineEditor,
-  attributes: TextAttributes
+  attributes: TextAttributes,
 ) {
-  editor.getDeltasByInlineRange(inlineRange).forEach(deltaEntry => {
+  editor.getDeltasByInlineRange(inlineRange).forEach((deltaEntry) => {
     attributes = { ...deltaEntry[0].attributes, ...attributes };
   });
   if (data) {
@@ -56,16 +56,13 @@ export function transformInput<TextAttributes extends BaseTextAttributes>(
   data: string | null,
   attributes: TextAttributes,
   inlineRange: InlineRange,
-  editor: InlineEditor
+  editor: InlineEditor,
 ) {
   if (!editor.isValidInlineRange(inlineRange)) return;
 
   if (inputType === 'insertText') {
     handleInsertText(inlineRange, data, editor, attributes);
-  } else if (
-    inputType === 'insertParagraph' ||
-    inputType === 'insertLineBreak'
-  ) {
+  } else if (inputType === 'insertParagraph' || inputType === 'insertLineBreak') {
     handleInsertParagraph(inlineRange, editor);
   } else if (inputType.startsWith('delete')) {
     handleDelete(inlineRange, editor);

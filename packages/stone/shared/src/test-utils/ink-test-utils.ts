@@ -16,9 +16,7 @@ function blockToTemplate(block: BlockModel, indent: string = ''): string {
     .join(' ');
 
   const text = block.text ? block.text.toString() : '';
-  const children = block.children
-    .map(child => blockToTemplate(child, indent + '  '))
-    .join('\n');
+  const children = block.children.map((child) => blockToTemplate(child, indent + '  ')).join('\n');
 
   const tagName = `ink-${block.flavour}`;
   const propsStr = props ? ` ${props}` : '';
@@ -41,7 +39,7 @@ function docToTemplate(doc: Store): string {
 function compareBlocks(
   actual: BlockModel,
   expected: BlockModel,
-  compareId: boolean = false
+  compareId: boolean = false,
 ): boolean {
   if (actual.flavour !== expected.flavour) return false;
   if (compareId && actual.id !== expected.id) return false;
@@ -49,19 +47,14 @@ function compareBlocks(
 
   const actualText = actual.text;
   const expectedText = expected.text;
-  if (
-    actualText &&
-    expectedText &&
-    actualText.toString() !== expectedText.toString()
-  ) {
+  if (actualText && expectedText && actualText.toString() !== expectedText.toString()) {
     return false;
   }
 
   const actualProps = { ...actual.props };
   const expectedProps = { ...expected.props };
 
-  if (JSON.stringify(actualProps) !== JSON.stringify(expectedProps))
-    return false;
+  if (JSON.stringify(actualProps) !== JSON.stringify(expectedProps)) return false;
 
   for (const [i, child] of actual.children.entries()) {
     if (!compareBlocks(child, expected.children[i], compareId)) return false;
@@ -70,11 +63,7 @@ function compareBlocks(
   return true;
 }
 
-function compareDocs(
-  actual: Store,
-  expected: Store,
-  compareId: boolean = false
-): boolean {
+function compareDocs(actual: Store, expected: Store, compareId: boolean = false): boolean {
   if (!actual.root || !expected.root) return false;
 
   const actualRoot = actual.getBlock(actual.root.id);
@@ -89,7 +78,7 @@ expect.extend({
   toEqualDoc(
     received: Store,
     expected: Store,
-    options: { compareId?: boolean } = { compareId: false }
+    options: { compareId?: boolean } = { compareId: false },
   ) {
     const compareId = options.compareId;
     const pass = compareDocs(received, expected, compareId);

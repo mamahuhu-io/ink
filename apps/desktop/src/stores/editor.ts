@@ -1,35 +1,28 @@
-import { InkSchemas } from "@ink/stone-core/schemas";
+import { StoreExtensionManager } from '@ink/stone-core/ext-loader';
+import { getInternalStoreExtensions } from '@ink/stone-core/extensions/store';
+import { InkSchemas } from '@ink/stone-core/schemas';
+import { Container } from '@ink/stone-global/di';
+import { ATTACHMENT_SIZE_KEY_PREFIX, MarkdownAdapter } from '@ink/stone-shared/adapters';
 import {
-  ATTACHMENT_SIZE_KEY_PREFIX,
-  MarkdownAdapter,
-} from "@ink/stone-shared/adapters";
-import { Container } from "@ink/stone-global/di";
-import {
-  type Doc,
   type BlockModel,
+  type Doc,
+  getAssetName,
   Schema,
   type Store,
   Transformer,
-  getAssetName,
-} from "@ink/stone-store";
-import { TestWorkspace as TestWorkspaceImpl } from "@ink/stone-store/test";
-import { getInternalStoreExtensions } from "@ink/stone-core/extensions/store";
-import { StoreExtensionManager } from "@ink/stone-core/ext-loader";
+} from '@ink/stone-store';
+import { TestWorkspace as TestWorkspaceImpl } from '@ink/stone-store/test';
+
 import {
-  stripAngleBrackets,
-  parseImagePath,
-  isRemoteOrDataUrl,
-  resolveImagePath,
-  getDirectoryFromPath,
   createImageMarkdownRegex,
   createLinkMarkdownRegex,
-  IMAGE_LINE_REGEX,
+  getDirectoryFromPath,
   IMAGE_MIME_TYPES,
-} from "../utils/imageUtils";
-import {
-  parseMarkdownInWorker,
-  type BlockDef,
-} from "../workers/markdownParserManager";
+  isRemoteOrDataUrl,
+  parseImagePath,
+  resolveImagePath,
+} from '../utils/imageUtils';
+import { type BlockDef, parseMarkdownInWorker } from '../workers/markdownParserManager';
 
 // Batch processing configuration
 const BATCH_SIZE = 50; // Number of operations per batch
@@ -45,7 +38,7 @@ async function processBatched<T>(
   options?: {
     batchSize?: number;
     onProgress?: (progress: number) => void;
-  }
+  },
 ): Promise<void> {
   const batchSize = options?.batchSize ?? BATCH_SIZE;
   const total = items.length;
@@ -93,7 +86,7 @@ function getExtensionManagerLazy(): StoreExtensionManager {
 function getStoreExtensionsLazy() {
   if (!storeExtensions) {
     const manager = getExtensionManagerLazy();
-    storeExtensions = manager.get("store");
+    storeExtensions = manager.get('store');
   }
   return storeExtensions;
 }
@@ -121,7 +114,7 @@ const blobNameToPath = new Map<string, string>();
 
 export function getWorkspace(): TestWorkspaceImpl {
   if (!workspace) {
-    workspace = new TestWorkspaceImpl({ id: "workspace" });
+    workspace = new TestWorkspaceImpl({ id: 'workspace' });
     workspace.storeExtensions = getStoreExtensionsLazy();
     workspace.meta.initialize();
   }
@@ -174,7 +167,7 @@ export function setDocLoading(docId: string, loading: boolean): void {
  * Subscribe to loading state changes
  */
 export function onDocLoadingChange(
-  callback: (docId: string, isLoading: boolean) => void
+  callback: (docId: string, isLoading: boolean) => void,
 ): () => void {
   loadingListeners.add(callback);
   return () => loadingListeners.delete(callback);
@@ -183,9 +176,7 @@ export function onDocLoadingChange(
 // Listeners for store creation
 const storeListeners = new Set<(docId: string, store: Store) => void>();
 
-export function onStoreCreated(
-  callback: (docId: string, store: Store) => void
-) {
+export function onStoreCreated(callback: (docId: string, store: Store) => void) {
   storeListeners.add(callback);
   return () => storeListeners.delete(callback);
 }
@@ -212,9 +203,9 @@ export function getOrCreateDoc(docId: string): { doc: Doc; store: Store } {
 
   storeListeners.forEach((cb) => cb(docId, store));
 
-  const pageBlockId = store.addBlock("ink:page", {});
-  const noteId = store.addBlock("ink:note", {}, pageBlockId);
-  store.addBlock("ink:paragraph", {}, noteId);
+  const pageBlockId = store.addBlock('ink:page', {});
+  const noteId = store.addBlock('ink:note', {}, pageBlockId);
+  store.addBlock('ink:paragraph', {}, noteId);
 
   return { doc, store };
 }
@@ -253,21 +244,21 @@ interface DeltaItem {
  * Convert delta array to markdown formatted text
  */
 function deltaToMarkdown(textObj: any): string {
-  if (!textObj) return "";
+  if (!textObj) return '';
 
-  if (typeof textObj === "string") return textObj;
-  if (typeof textObj.toDelta !== "function") {
-    return textObj.toString?.() || "";
+  if (typeof textObj === 'string') return textObj;
+  if (typeof textObj.toDelta !== 'function') {
+    return textObj.toString?.() || '';
   }
 
   const deltas: DeltaItem[] = textObj.toDelta();
   if (!deltas || deltas.length === 0) {
-    return textObj.toString?.() || "";
+    return textObj.toString?.() || '';
   }
 
   return deltas
     .map((delta: DeltaItem) => {
-      let text = delta.insert || "";
+      let text = delta.insert || '';
       const attrs = delta.attributes;
 
       if (!attrs) return text;
@@ -299,21 +290,18 @@ function deltaToMarkdown(textObj: any): string {
         if (attrs.background) {
           styles.push(`background-color:${attrs.background}`);
         }
-        text = `<span style="${styles.join(";")}">${text}</span>`;
+        text = `<span style="${styles.join(';')}">${text}</span>`;
       }
 
       return text;
     })
-    .join("");
+    .join('');
 }
 
 /**
  * Parse text with HTML span style tags and create a Text object with proper delta attributes
  */
-function parseStyledText(
-  store: Store,
-  text: string
-): InstanceType<Store["Text"]> {
+function parseStyledText(store: Store, text: string): InstanceType<Store['Text']> {
   const textObj = new store.Text();
 
   // Regex to match <span style="...">content</span> patterns
@@ -334,13 +322,13 @@ function parseStyledText(
 
     // Parse style string
     const attributes: Record<string, string> = {};
-    const styleItems = styleStr.split(";").filter((s) => s.trim());
+    const styleItems = styleStr.split(';').filter((s) => s.trim());
 
     for (const item of styleItems) {
-      const [prop, value] = item.split(":").map((s) => s.trim());
-      if (prop === "color" && value) {
+      const [prop, value] = item.split(':').map((s) => s.trim());
+      if (prop === 'color' && value) {
         attributes.color = value;
-      } else if (prop === "background-color" && value) {
+      } else if (prop === 'background-color' && value) {
         attributes.background = value;
       }
     }
@@ -373,10 +361,7 @@ function hasStyledSpans(text: string): boolean {
 /**
  * Create text object, parsing styled spans if present
  */
-function createTextWithStyles(
-  store: Store,
-  text: string
-): InstanceType<Store["Text"]> {
+function createTextWithStyles(store: Store, text: string): InstanceType<Store['Text']> {
   if (hasStyledSpans(text)) {
     return parseStyledText(store, text);
   }
@@ -389,63 +374,63 @@ function createTextWithStyles(
 function extractBlockText(
   block: BlockModel,
   indent = 0,
-  imagePathMap?: Map<string, string>
+  imagePathMap?: Map<string, string>,
 ): string {
   const lines: string[] = [];
-  const prefix = "  ".repeat(indent);
+  const prefix = '  '.repeat(indent);
 
   switch (block.flavour) {
-    case "ink:paragraph": {
+    case 'ink:paragraph': {
       const text = deltaToMarkdown((block as any).text);
-      const type = (block as any).type || "text";
+      const type = (block as any).type || 'text';
 
-      if (type === "h1") {
+      if (type === 'h1') {
         lines.push(`# ${text}`);
-      } else if (type === "h2") {
+      } else if (type === 'h2') {
         lines.push(`## ${text}`);
-      } else if (type === "h3") {
+      } else if (type === 'h3') {
         lines.push(`### ${text}`);
-      } else if (type === "h4") {
+      } else if (type === 'h4') {
         lines.push(`#### ${text}`);
-      } else if (type === "h5") {
+      } else if (type === 'h5') {
         lines.push(`##### ${text}`);
-      } else if (type === "h6") {
+      } else if (type === 'h6') {
         lines.push(`###### ${text}`);
-      } else if (type === "quote") {
+      } else if (type === 'quote') {
         lines.push(`> ${text}`);
       } else {
         lines.push(text);
       }
       break;
     }
-    case "ink:list": {
+    case 'ink:list': {
       const text = deltaToMarkdown((block as any).text);
-      const type = (block as any).type || "bulleted";
+      const type = (block as any).type || 'bulleted';
       const checked = (block as any).checked;
 
-      if (type === "numbered") {
+      if (type === 'numbered') {
         lines.push(`${prefix}1. ${text}`);
-      } else if (type === "todo") {
-        lines.push(`${prefix}- [${checked ? "x" : " "}] ${text}`);
+      } else if (type === 'todo') {
+        lines.push(`${prefix}- [${checked ? 'x' : ' '}] ${text}`);
       } else {
         lines.push(`${prefix}- ${text}`);
       }
       break;
     }
-    case "ink:code": {
-      const text = (block as any).text?.toString() || "";
-      const language = (block as any).language || "";
+    case 'ink:code': {
+      const text = (block as any).text?.toString() || '';
+      const language = (block as any).language || '';
       lines.push(`\`\`\`${language}`);
       lines.push(text);
-      lines.push("```");
+      lines.push('```');
       break;
     }
-    case "ink:divider": {
-      lines.push("---");
+    case 'ink:divider': {
+      lines.push('---');
       break;
     }
-    case "ink:image": {
-      const caption = (block as any).caption || "";
+    case 'ink:image': {
+      const caption = (block as any).caption || '';
       const sourceId = (block as any).sourceId;
 
       if (sourceId && imagePathMap?.has(sourceId)) {
@@ -459,8 +444,8 @@ function extractBlockText(
       }
       break;
     }
-    case "ink:attachment": {
-      const name = (block as any).name || "attachment";
+    case 'ink:attachment': {
+      const name = (block as any).name || 'attachment';
       const sourceId = (block as any).sourceId;
 
       if (sourceId && imagePathMap?.has(sourceId)) {
@@ -481,11 +466,11 @@ function extractBlockText(
   }
 
   for (const child of block.children) {
-    const childIndent = block.flavour === "ink:list" ? indent + 1 : 0;
+    const childIndent = block.flavour === 'ink:list' ? indent + 1 : 0;
     lines.push(extractBlockText(child, childIndent, imagePathMap));
   }
 
-  return lines.filter(Boolean).join("\n");
+  return lines.filter(Boolean).join('\n');
 }
 
 /**
@@ -494,7 +479,7 @@ function extractBlockText(
 function collectAssetSourceIds(block: BlockModel): string[] {
   const sourceIds: string[] = [];
 
-  if (block.flavour === "ink:image" || block.flavour === "ink:attachment") {
+  if (block.flavour === 'ink:image' || block.flavour === 'ink:attachment') {
     const sourceId = (block as any).sourceId;
     if (sourceId) {
       sourceIds.push(sourceId);
@@ -511,10 +496,7 @@ function collectAssetSourceIds(block: BlockModel): string[] {
 /**
  * Save assets (images and attachments) from a document to the assets folder (used by fallback export)
  */
-async function saveDocAssets(
-  store: Store,
-  filePath: string
-): Promise<Map<string, string>> {
+async function saveDocAssets(store: Store, filePath: string): Promise<Map<string, string>> {
   const assetPathMap = new Map<string, string>();
 
   if (!filePath) {
@@ -529,7 +511,7 @@ async function saveDocAssets(
   // Collect all asset sourceIds (images and attachments) from the document
   const sourceIds: string[] = [];
   for (const child of root.children) {
-    if (child.flavour === "ink:note") {
+    if (child.flavour === 'ink:note') {
       for (const noteChild of child.children) {
         sourceIds.push(...collectAssetSourceIds(noteChild));
       }
@@ -542,7 +524,7 @@ async function saveDocAssets(
 
   const ws = getWorkspace();
   const blobStorage = ws.blobSync;
-  const { saveImage, saveAsset } = await import("../services/images");
+  const { saveImage, saveAsset } = await import('../services/images');
 
   for (const sourceId of sourceIds) {
     try {
@@ -570,7 +552,7 @@ async function saveDocAssets(
       let relativePath: string;
       const blobType = blob.type;
 
-      if (blobType.startsWith("image/")) {
+      if (blobType.startsWith('image/')) {
         // Save as image
         relativePath = await saveImage(filePath, blob);
       } else {
@@ -588,7 +570,7 @@ async function saveDocAssets(
       blobNameToPath.set(blobName, relativePath);
       blobNameToPath.set(sourceId, relativePath);
     } catch (error) {
-      console.error("[saveDocAssets] Failed to save asset:", sourceId, error);
+      console.error('[saveDocAssets] Failed to save asset:', sourceId, error);
     }
   }
 
@@ -601,7 +583,7 @@ async function saveDocAssets(
  */
 async function saveImagesFromAssetsManager(
   assetsManager: { getAssets: () => Map<string, Blob> },
-  filePath: string
+  filePath: string,
 ): Promise<Map<string, string>> {
   const imagePathMap = new Map<string, string>();
 
@@ -612,7 +594,7 @@ async function saveImagesFromAssetsManager(
     return imagePathMap;
   }
 
-  const { saveImage, saveAsset } = await import("../services/images");
+  const { saveImage, saveAsset } = await import('../services/images');
 
   // Convert to array to avoid potential iterator issues
   const assetEntries = Array.from(assets.entries());
@@ -636,13 +618,14 @@ async function saveImagesFromAssetsManager(
       const blobType = blob.type;
       let relativePath: string;
 
-      if (blobType.startsWith("image/")) {
+      if (blobType.startsWith('image/')) {
         // Save as image
         relativePath = await saveImage(filePath, blob);
       } else {
         // Save as attachment (non-image asset)
         // Get original filename from blob if available
-        const originalFileName = (blob as File).name || getAssetName(assets, blobId) || `attachment-${blobId}`;
+        const originalFileName =
+          (blob as File).name || getAssetName(assets, blobId) || `attachment-${blobId}`;
         relativePath = await saveAsset(filePath, blob, originalFileName);
       }
 
@@ -657,11 +640,7 @@ async function saveImagesFromAssetsManager(
       }
       blobNameToPath.set(blobId, relativePath);
     } catch (error) {
-      console.error(
-        "[saveImagesFromAssetsManager] Failed to save:",
-        blobId,
-        error
-      );
+      console.error('[saveImagesFromAssetsManager] Failed to save:', blobId, error);
     }
   }
 
@@ -694,10 +673,7 @@ function createMarkdownAdapter(transformer: Transformer): MarkdownAdapter {
 /**
  * Find saved path for an asset filename
  */
-function findSavedPath(
-  assetFilename: string,
-  imagePathMap: Map<string, string>
-): string | null {
+function findSavedPath(assetFilename: string, imagePathMap: Map<string, string>): string | null {
   // Try by blobName first
   const pathFromBlobName = blobNameToPath.get(assetFilename);
   if (pathFromBlobName) {
@@ -726,64 +702,55 @@ function findSavedPath(
 /**
  * Replace image URLs in markdown with actual saved paths
  */
-function replaceImageUrls(
-  markdown: string,
-  imagePathMap: Map<string, string>
-): string {
-  let result = markdown.replace(
-    createImageMarkdownRegex(),
-    (match, alt, rawUrl) => {
-      const url = parseImagePath(rawUrl);
+function replaceImageUrls(markdown: string, imagePathMap: Map<string, string>): string {
+  let result = markdown.replace(createImageMarkdownRegex(), (match, alt, rawUrl) => {
+    const url = parseImagePath(rawUrl);
 
-      // Handle assets/ URLs
-      if (url.startsWith("assets/")) {
-        const assetFilename = url.substring(7);
-        const savedPath = findSavedPath(assetFilename, imagePathMap);
-        if (savedPath) {
+    // Handle assets/ URLs
+    if (url.startsWith('assets/')) {
+      const assetFilename = url.substring(7);
+      const savedPath = findSavedPath(assetFilename, imagePathMap);
+      if (savedPath) {
+        return `![${alt}](${savedPath})`;
+      }
+    }
+
+    // Handle blob: URLs
+    if (url.startsWith('blob:')) {
+      for (const [sourceId, savedPath] of savedImagePaths.entries()) {
+        if (url.includes(sourceId)) {
           return `![${alt}](${savedPath})`;
         }
       }
-
-      // Handle blob: URLs
-      if (url.startsWith("blob:")) {
-        for (const [sourceId, savedPath] of savedImagePaths.entries()) {
-          if (url.includes(sourceId)) {
-            return `![${alt}](${savedPath})`;
-          }
-        }
-      }
-
-      return match;
     }
-  );
+
+    return match;
+  });
 
   // Also replace attachment link URLs (non-image links to assets)
-  result = result.replace(
-    createLinkMarkdownRegex(),
-    (match, text, rawUrl) => {
-      const url = parseImagePath(rawUrl);
+  result = result.replace(createLinkMarkdownRegex(), (match, text, rawUrl) => {
+    const url = parseImagePath(rawUrl);
 
-      // Handle assets/ URLs for attachments
-      if (url.startsWith("assets/")) {
-        const assetFilename = url.substring(7);
-        const savedPath = findSavedPath(assetFilename, imagePathMap);
-        if (savedPath) {
+    // Handle assets/ URLs for attachments
+    if (url.startsWith('assets/')) {
+      const assetFilename = url.substring(7);
+      const savedPath = findSavedPath(assetFilename, imagePathMap);
+      if (savedPath) {
+        return `[${text}](${savedPath})`;
+      }
+    }
+
+    // Handle blob: URLs for attachments
+    if (url.startsWith('blob:')) {
+      for (const [sourceId, savedPath] of savedImagePaths.entries()) {
+        if (url.includes(sourceId)) {
           return `[${text}](${savedPath})`;
         }
       }
-
-      // Handle blob: URLs for attachments
-      if (url.startsWith("blob:")) {
-        for (const [sourceId, savedPath] of savedImagePaths.entries()) {
-          if (url.includes(sourceId)) {
-            return `[${text}](${savedPath})`;
-          }
-        }
-      }
-
-      return match;
     }
-  );
+
+    return match;
+  });
 
   return result;
 }
@@ -795,18 +762,14 @@ function replaceImageUrls(
 export function normalizeMarkdown(markdown: string): string {
   return markdown
     .trim()
-    .replace(/\r\n/g, "\n") // Normalize line endings to LF
-    .replace(/\n{3,}/g, "\n\n\n") // Normalize excessive blank lines, keep one blank line for block separation
-    .replace(/[^\S\n]+$/gm, ""); // Remove trailing whitespace from lines
+    .replace(/\r\n/g, '\n') // Normalize line endings to LF
+    .replace(/[^\S\n]+$/gm, ''); // Remove trailing whitespace from lines
 }
 
 /**
  * Export a doc to markdown string using MarkdownAdapter
  */
-export async function docToMarkdown(
-  docId: string,
-  filePath?: string
-): Promise<string> {
+export async function docToMarkdown(docId: string, filePath?: string): Promise<string> {
   const store = stores.get(docId);
   if (!store) {
     throw new Error(`Store not found: ${docId}`);
@@ -814,7 +777,7 @@ export async function docToMarkdown(
 
   const root = store.root;
   if (!root) {
-    return "";
+    return '';
   }
 
   try {
@@ -823,12 +786,12 @@ export async function docToMarkdown(
 
     const snapshot = transformer.docToSnapshot(store);
     if (!snapshot) {
-      return "";
+      return '';
     }
 
     // Log blocks in snapshot for debugging
     const logBlockFlavours = (block: any, depth = 0): void => {
-      const prefix = "  ".repeat(depth);
+      const prefix = '  '.repeat(depth);
       console.log(`${prefix}[docToMarkdown] Block: ${block.flavour}`, {
         id: block.id,
         props: block.props ? Object.keys(block.props) : [],
@@ -837,7 +800,7 @@ export async function docToMarkdown(
         block.children.forEach((child: any) => logBlockFlavours(child, depth + 1));
       }
     };
-    console.log("[docToMarkdown] Snapshot blocks:");
+    console.log('[docToMarkdown] Snapshot blocks:');
     logBlockFlavours(snapshot.blocks);
 
     // Generate markdown - this populates assetsManager with blobs
@@ -847,22 +810,19 @@ export async function docToMarkdown(
     });
 
     let markdown = result.file;
-    console.log("[docToMarkdown] Generated markdown length:", markdown.length);
-    console.log("[docToMarkdown] Assets count:", transformer.assetsManager.getAssets().size);
+    console.log('[docToMarkdown] Generated markdown length:', markdown.length);
+    console.log('[docToMarkdown] Assets count:', transformer.assetsManager.getAssets().size);
 
     // Save images and replace URLs if filePath is provided
     if (filePath) {
-      const imagePathMap = await saveImagesFromAssetsManager(
-        transformer.assetsManager,
-        filePath
-      );
+      const imagePathMap = await saveImagesFromAssetsManager(transformer.assetsManager, filePath);
       markdown = replaceImageUrls(markdown, imagePathMap);
     }
 
     // Normalize markdown to reduce false positives in change detection
     return normalizeMarkdown(markdown);
   } catch (error) {
-    console.error("MarkdownAdapter export failed, using fallback:", error);
+    console.error('MarkdownAdapter export failed, using fallback:', error);
     const fallbackMarkdown = await fallbackDocToMarkdown(store, filePath);
     return normalizeMarkdown(fallbackMarkdown);
   }
@@ -871,13 +831,10 @@ export async function docToMarkdown(
 /**
  * Fallback manual markdown extraction
  */
-async function fallbackDocToMarkdown(
-  store: Store,
-  filePath?: string
-): Promise<string> {
+async function fallbackDocToMarkdown(store: Store, filePath?: string): Promise<string> {
   const root = store.root;
   if (!root) {
-    return "";
+    return '';
   }
 
   let assetPathMap: Map<string, string> | undefined;
@@ -887,14 +844,14 @@ async function fallbackDocToMarkdown(
 
   const lines: string[] = [];
   for (const child of root.children) {
-    if (child.flavour === "ink:note") {
+    if (child.flavour === 'ink:note') {
       for (const noteChild of child.children) {
         lines.push(extractBlockText(noteChild, 0, assetPathMap));
       }
     }
   }
 
-  return lines.join("\n\n");
+  return lines.join('\n\n');
 }
 
 /**
@@ -903,7 +860,7 @@ async function fallbackDocToMarkdown(
 export async function markdownToDoc(
   docId: string,
   markdown: string,
-  filePath?: string
+  filePath?: string,
 ): Promise<void> {
   const store = stores.get(docId);
   if (!store) {
@@ -921,9 +878,7 @@ export async function markdownToDoc(
 
   try {
     // Find all note blocks (in case there are multiple due to previous issues)
-    const noteBlocks = rootBlock.children.filter(
-      (child) => child.flavour === "ink:note"
-    );
+    const noteBlocks = rootBlock.children.filter((child) => child.flavour === 'ink:note');
 
     if (noteBlocks.length === 0) {
       return;
@@ -951,7 +906,7 @@ export async function markdownToDoc(
       store.deleteBlock(noteBlocks[i]);
     }
 
-    const fileDir = filePath ? getDirectoryFromPath(filePath) : "";
+    const fileDir = filePath ? getDirectoryFromPath(filePath) : '';
 
     try {
       const transformer = createTransformer();
@@ -976,12 +931,12 @@ export async function markdownToDoc(
           try {
             await transformer.snapshotToBlock(childSnapshot, store, noteBlock.id);
           } catch {
-          // Skip failed block imports
-        }
-      });
-    }
+            // Skip failed block imports
+          }
+        });
+      }
     } catch (error) {
-      console.error("MarkdownAdapter import failed, using fallback:", error);
+      console.error('MarkdownAdapter import failed, using fallback:', error);
       await fallbackMarkdownToDoc(store, noteBlock.id, markdown, fileDir);
     }
   } finally {
@@ -1000,7 +955,7 @@ async function preloadImagesToAssets(
   assetsManager: {
     getAssets: () => Map<string, Blob>;
     getPathBlobIdMap: () => Map<string, string>;
-  }
+  },
 ): Promise<void> {
   const imageRegex = createImageMarkdownRegex();
   let match;
@@ -1027,11 +982,11 @@ async function preloadImagesToAssets(
           const pathBlobIdMap = assetsManager.getPathBlobIdMap();
           pathBlobIdMap.set(imagePath, sourceId);
 
-          if (imagePath.startsWith("./")) {
+          if (imagePath.startsWith('./')) {
             pathBlobIdMap.set(imagePath.substring(2), sourceId);
           }
 
-          const filename = imagePath.split("/").pop();
+          const filename = imagePath.split('/').pop();
           if (filename) {
             pathBlobIdMap.set(filename, sourceId);
             pathBlobIdMap.set(`assets/${filename}`, sourceId);
@@ -1050,20 +1005,30 @@ async function preloadImagesToAssets(
  * Image file extensions that should NOT be treated as attachments
  */
 const IMAGE_EXTENSIONS = new Set([
-  "png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico", "tiff", "apng", "avif",
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'webp',
+  'svg',
+  'bmp',
+  'ico',
+  'tiff',
+  'apng',
+  'avif',
 ]);
 
 /**
  * Check if a URL points to an attachment file (not an image)
  */
 function isAttachmentUrl(url: string): boolean {
-  const extension = url.split(".").pop()?.toLowerCase();
+  const extension = url.split('.').pop()?.toLowerCase();
   if (extension && IMAGE_EXTENSIONS.has(extension)) {
     return false;
   }
   // Check if URL is a local file path (assets/ or ./assets/)
-  const cleanUrl = url.replace(/^<|>$/g, "");
-  return cleanUrl.startsWith("assets/") || cleanUrl.startsWith("./assets/");
+  const cleanUrl = url.replace(/^<|>$/g, '');
+  return cleanUrl.startsWith('assets/') || cleanUrl.startsWith('./assets/');
 }
 
 /**
@@ -1073,19 +1038,19 @@ function isAttachmentUrl(url: string): boolean {
  */
 function normalizeAttachmentUrl(url: string): string {
   let normalized = url;
-  
+
   // Decode URL-encoded characters
   try {
     normalized = decodeURIComponent(normalized);
   } catch {
     // Keep original if decoding fails
   }
-  
+
   // Remove leading ./
-  if (normalized.startsWith("./")) {
+  if (normalized.startsWith('./')) {
     normalized = normalized.substring(2);
   }
-  
+
   return normalized;
 }
 
@@ -1095,7 +1060,7 @@ function normalizeAttachmentUrl(url: string): string {
 async function preloadAttachmentSizes(
   markdown: string,
   fileDir: string,
-  adapterConfigs: Map<string, string>
+  adapterConfigs: Map<string, string>,
 ): Promise<void> {
   const linkRegex = createLinkMarkdownRegex();
   let match;
@@ -1117,11 +1082,11 @@ async function preloadAttachmentSizes(
     try {
       // Resolve the full path
       const fullPath = resolveImagePath(linkPath, fileDir);
-      
+
       // Get file metadata using the Tauri command
-      const { getFileMetadata } = await import("../services/fileSystem");
+      const { getFileMetadata } = await import('../services/fileSystem');
       const metadata = await getFileMetadata(fullPath);
-      
+
       if (metadata && !metadata.isDirectory) {
         // Store the size with normalized URL as key
         const normalizedUrl = normalizeAttachmentUrl(linkPath);
@@ -1142,23 +1107,23 @@ const SYNC_IMAGE_LINE_REGEX = /^!\[(.*?)\]\((.+?)\)$/;
  * Used when Web Worker is not available or fails
  */
 function parseMarkdownSync(markdown: string): BlockDef[] {
-  const lines = markdown.split("\n");
+  const lines = markdown.split('\n');
   const blockDefs: BlockDef[] = [];
   let inCodeBlock = false;
   let codeBlockContent: string[] = [];
-  let codeBlockLanguage = "";
+  let codeBlockLanguage = '';
 
   for (const line of lines) {
-    if (line.startsWith("```")) {
+    if (line.startsWith('```')) {
       if (!inCodeBlock) {
         inCodeBlock = true;
         codeBlockLanguage = line.slice(3).trim();
         codeBlockContent = [];
       } else {
         blockDefs.push({
-          type: "ink:code",
+          type: 'ink:code',
           props: {
-            text: codeBlockContent.join("\n"),
+            text: codeBlockContent.join('\n'),
             language: codeBlockLanguage,
           },
         });
@@ -1184,84 +1149,84 @@ function parseMarkdownSync(markdown: string): BlockDef[] {
         imagePath = imagePath.slice(1, -1);
       }
       blockDefs.push({
-        type: "ink:image",
+        type: 'ink:image',
         props: { caption },
         imagePath,
       });
       continue;
     }
 
-    if (line.startsWith("# ")) {
+    if (line.startsWith('# ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h1", text: line.slice(2) },
+        type: 'ink:paragraph',
+        props: { type: 'h1', text: line.slice(2) },
       });
-    } else if (line.startsWith("## ")) {
+    } else if (line.startsWith('## ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h2", text: line.slice(3) },
+        type: 'ink:paragraph',
+        props: { type: 'h2', text: line.slice(3) },
       });
-    } else if (line.startsWith("### ")) {
+    } else if (line.startsWith('### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h3", text: line.slice(4) },
+        type: 'ink:paragraph',
+        props: { type: 'h3', text: line.slice(4) },
       });
-    } else if (line.startsWith("#### ")) {
+    } else if (line.startsWith('#### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h4", text: line.slice(5) },
+        type: 'ink:paragraph',
+        props: { type: 'h4', text: line.slice(5) },
       });
-    } else if (line.startsWith("##### ")) {
+    } else if (line.startsWith('##### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h5", text: line.slice(6) },
+        type: 'ink:paragraph',
+        props: { type: 'h5', text: line.slice(6) },
       });
-    } else if (line.startsWith("###### ")) {
+    } else if (line.startsWith('###### ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "h6", text: line.slice(7) },
+        type: 'ink:paragraph',
+        props: { type: 'h6', text: line.slice(7) },
       });
-    } else if (line.startsWith("> ")) {
+    } else if (line.startsWith('> ')) {
       blockDefs.push({
-        type: "ink:paragraph",
-        props: { type: "quote", text: line.slice(2) },
+        type: 'ink:paragraph',
+        props: { type: 'quote', text: line.slice(2) },
       });
-    } else if (line === "---" || line === "***" || line === "___") {
+    } else if (line === '---' || line === '***' || line === '___') {
       blockDefs.push({
-        type: "ink:divider",
+        type: 'ink:divider',
         props: {},
       });
     } else if (line.match(/^\s*[-*+]\s/)) {
       const match = line.match(/^\s*[-*+]\s(.*)$/);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
-          props: { type: "bulleted", text: match[1] },
+          type: 'ink:list',
+          props: { type: 'bulleted', text: match[1] },
         });
       }
     } else if (line.match(/^\s*\d+\.\s/)) {
       const match = line.match(/^\s*\d+\.\s(.*)$/);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
-          props: { type: "numbered", text: match[1] },
+          type: 'ink:list',
+          props: { type: 'numbered', text: match[1] },
         });
       }
     } else if (line.match(/^\s*-\s*\[[ x]\]\s/i)) {
       const match = line.match(/^\s*-\s*\[([ x])\]\s(.*)$/i);
       if (match) {
         blockDefs.push({
-          type: "ink:list",
+          type: 'ink:list',
           props: {
-            type: "todo",
-            checked: match[1].toLowerCase() === "x",
+            type: 'todo',
+            checked: match[1].toLowerCase() === 'x',
             text: match[2],
           },
         });
       }
     } else {
       blockDefs.push({
-        type: "ink:paragraph",
+        type: 'ink:paragraph',
         props: { text: line },
       });
     }
@@ -1278,33 +1243,33 @@ async function fallbackMarkdownToDoc(
   store: Store,
   noteBlockId: string,
   markdown: string,
-  fileDir: string
+  fileDir: string,
 ): Promise<void> {
   // Parse markdown in Web Worker (non-blocking)
   let blockDefs: BlockDef[];
   try {
     blockDefs = await parseMarkdownInWorker(markdown);
   } catch (error) {
-    console.error("Web Worker parsing failed, using sync fallback:", error);
+    console.error('Web Worker parsing failed, using sync fallback:', error);
     // Fallback to synchronous parsing if worker fails
     blockDefs = parseMarkdownSync(markdown);
   }
 
   // Create blocks in batches (main thread, but batched to stay responsive)
   await processBatched(blockDefs, async (blockDef) => {
-    if (blockDef.type === "ink:image" && blockDef.imagePath) {
+    if (blockDef.type === 'ink:image' && blockDef.imagePath) {
       try {
         const sourceId = await loadImageToBlob(blockDef.imagePath, fileDir);
         if (sourceId) {
           store.addBlock(
-            "ink:image",
+            'ink:image',
             {
               sourceId,
               caption: blockDef.props.caption,
               width: 0,
               height: 0,
             },
-            noteBlockId
+            noteBlockId,
           );
           savedImagePaths.set(sourceId, blockDef.imagePath);
           return;
@@ -1314,40 +1279,42 @@ async function fallbackMarkdownToDoc(
       }
       // Fallback to paragraph with original line
       store.addBlock(
-        "ink:paragraph",
-        { text: createTextWithStyles(store, `![${blockDef.props.caption}](${blockDef.imagePath})`) },
-        noteBlockId
+        'ink:paragraph',
+        {
+          text: createTextWithStyles(store, `![${blockDef.props.caption}](${blockDef.imagePath})`),
+        },
+        noteBlockId,
       );
-    } else if (blockDef.type === "ink:code") {
+    } else if (blockDef.type === 'ink:code') {
       store.addBlock(
-        "ink:code",
+        'ink:code',
         {
           text: new store.Text(blockDef.props.text as string),
           language: blockDef.props.language,
         },
-        noteBlockId
+        noteBlockId,
       );
-    } else if (blockDef.type === "ink:divider") {
-      store.addBlock("ink:divider", {}, noteBlockId);
-    } else if (blockDef.type === "ink:list") {
+    } else if (blockDef.type === 'ink:divider') {
+      store.addBlock('ink:divider', {}, noteBlockId);
+    } else if (blockDef.type === 'ink:list') {
       store.addBlock(
-        "ink:list",
+        'ink:list',
         {
           type: blockDef.props.type,
           checked: blockDef.props.checked,
           text: createTextWithStyles(store, blockDef.props.text as string),
         },
-        noteBlockId
+        noteBlockId,
       );
     } else {
       // ink:paragraph
       store.addBlock(
-        "ink:paragraph",
+        'ink:paragraph',
         {
           type: blockDef.props.type,
           text: createTextWithStyles(store, blockDef.props.text as string),
         },
-        noteBlockId
+        noteBlockId,
       );
     }
   });
@@ -1356,10 +1323,7 @@ async function fallbackMarkdownToDoc(
 /**
  * Load an image from a path and store it in blob storage
  */
-async function loadImageToBlob(
-  imagePath: string,
-  fileDir: string
-): Promise<string | null> {
+async function loadImageToBlob(imagePath: string, fileDir: string): Promise<string | null> {
   // Skip remote URLs and data URIs
   if (isRemoteOrDataUrl(parseImagePath(imagePath))) {
     return null;
@@ -1368,8 +1332,8 @@ async function loadImageToBlob(
   const absolutePath = resolveImagePath(imagePath, fileDir);
 
   try {
-    const { invoke } = await import("@tauri-apps/api/core");
-    const imageData = await invoke<number[]>("read_binary_file", {
+    const { invoke } = await import('@tauri-apps/api/core');
+    const imageData = await invoke<number[]>('read_binary_file', {
       path: absolutePath,
     });
 
@@ -1377,8 +1341,8 @@ async function loadImageToBlob(
       return null;
     }
 
-    const ext = absolutePath.split(".").pop()?.toLowerCase() || "png";
-    const mimeType = IMAGE_MIME_TYPES[ext] || "image/png";
+    const ext = absolutePath.split('.').pop()?.toLowerCase() || 'png';
+    const mimeType = IMAGE_MIME_TYPES[ext] || 'image/png';
     const blob = new Blob([new Uint8Array(imageData)], { type: mimeType });
 
     const ws = getWorkspace();
@@ -1394,7 +1358,7 @@ async function loadImageToBlob(
 export async function createDocFromMarkdown(
   docId: string,
   markdown: string,
-  filePath?: string
+  filePath?: string,
 ): Promise<{ doc: Doc; store: Store }> {
   const ws = getWorkspace();
 
@@ -1407,8 +1371,8 @@ export async function createDocFromMarkdown(
   stores.set(docId, store);
 
   // Initialize with basic structure (Page mode only, no surface block needed)
-  const pageBlockId = store.addBlock("ink:page", {});
-  store.addBlock("ink:note", {}, pageBlockId);
+  const pageBlockId = store.addBlock('ink:page', {});
+  store.addBlock('ink:note', {}, pageBlockId);
 
   // Import markdown content
   await markdownToDoc(docId, markdown, filePath);

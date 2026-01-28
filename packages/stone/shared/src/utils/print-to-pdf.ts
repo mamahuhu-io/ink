@@ -1,7 +1,5 @@
 export async function printToPdf(
-  rootElement: HTMLElement | null = document.querySelector(
-    '.ink-page-viewport'
-  ),
+  rootElement: HTMLElement | null = document.querySelector('.ink-page-viewport'),
   options: {
     /**
      * Callback that is called when ready to print.
@@ -12,7 +10,7 @@ export async function printToPdf(
      * Notice: in some browser this may be triggered immediately.
      */
     afterprint?: () => Promise<void> | void;
-  } = {}
+  } = {},
 ) {
   return new Promise<void>((resolve, reject) => {
     const iframe = document.createElement('iframe');
@@ -28,8 +26,7 @@ export async function printToPdf(
         reject(new Error('Root element not defined, unable to print pdf'));
         return;
       }
-      iframe.contentWindow.document
-        .write(`<!DOCTYPE html><html><head><style>@media print {
+      iframe.contentWindow.document.write(`<!DOCTYPE html><html><head><style>@media print {
               html, body {
                 height: initial !important;
                 overflow: initial !important;
@@ -56,7 +53,7 @@ export async function printToPdf(
           if (element.href) {
             console.warn(
               'css cannot be applied when printing pdf, this may be because of CORS policy from its domain.',
-              element.href
+              element.href,
             );
           } else {
             reject(e);
@@ -71,7 +68,7 @@ export async function printToPdf(
       for (const canvas of allCanvas) {
         canvas.dataset['printToPdfCanvasKey'] = canvasKey.toString();
         canvasKey++;
-        const canvasImgObjectUrl = await new Promise<Blob | null>(resolve => {
+        const canvasImgObjectUrl = await new Promise<Blob | null>((resolve) => {
           try {
             canvas.toBlob(resolve);
           } catch {
@@ -80,19 +77,19 @@ export async function printToPdf(
         });
         if (!canvasImgObjectUrl) {
           console.warn(
-            'canvas cannot be converted to image when printing pdf, this may be because of CORS policy'
+            'canvas cannot be converted to image when printing pdf, this may be because of CORS policy',
           );
           continue;
         }
         canvasImgObjectUrlMap.set(
           canvas.dataset['printToPdfCanvasKey'],
-          URL.createObjectURL(canvasImgObjectUrl)
+          URL.createObjectURL(canvasImgObjectUrl),
         );
       }
 
       const importedRoot = iframe.contentWindow.document.importNode(
         rootElement,
-        true
+        true,
       ) as HTMLDivElement;
 
       // draw saved canvas image to canvas
@@ -117,7 +114,7 @@ export async function printToPdf(
       await options.beforeprint?.(iframe);
 
       // browser may take some time to load font
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
         }, 1000);

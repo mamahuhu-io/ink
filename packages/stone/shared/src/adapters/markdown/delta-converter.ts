@@ -1,7 +1,4 @@
-import {
-  createIdentifier,
-  type ServiceIdentifier,
-} from '@ink/stone-global/di';
+import { createIdentifier, type ServiceIdentifier } from '@ink/stone-global/di';
 import type { DeltaInsert, ExtensionType } from '@ink/stone-store';
 import type { PhrasingContent } from 'mdast';
 
@@ -13,24 +10,19 @@ import {
 } from '../types/delta-converter.js';
 import type { MarkdownAST } from './type.js';
 
-export type InlineDeltaToMarkdownAdapterMatcher =
-  InlineDeltaMatcher<PhrasingContent>;
+export type InlineDeltaToMarkdownAdapterMatcher = InlineDeltaMatcher<PhrasingContent>;
 
 export const InlineDeltaToMarkdownAdapterMatcherIdentifier =
-  createIdentifier<InlineDeltaToMarkdownAdapterMatcher>(
-    'InlineDeltaToMarkdownAdapterMatcher'
-  );
+  createIdentifier<InlineDeltaToMarkdownAdapterMatcher>('InlineDeltaToMarkdownAdapterMatcher');
 
 export function InlineDeltaToMarkdownAdapterExtension(
-  matcher: InlineDeltaToMarkdownAdapterMatcher
+  matcher: InlineDeltaToMarkdownAdapterMatcher,
 ): ExtensionType & {
   identifier: ServiceIdentifier<InlineDeltaToMarkdownAdapterMatcher>;
 } {
-  const identifier = InlineDeltaToMarkdownAdapterMatcherIdentifier(
-    matcher.name
-  );
+  const identifier = InlineDeltaToMarkdownAdapterMatcherIdentifier(matcher.name);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => matcher);
     },
     identifier,
@@ -39,38 +31,32 @@ export function InlineDeltaToMarkdownAdapterExtension(
 
 export type MarkdownASTToDeltaMatcher = ASTToDeltaMatcher<MarkdownAST>;
 
-export const MarkdownASTToDeltaMatcherIdentifier =
-  createIdentifier<MarkdownASTToDeltaMatcher>('MarkdownASTToDeltaMatcher');
+export const MarkdownASTToDeltaMatcherIdentifier = createIdentifier<MarkdownASTToDeltaMatcher>(
+  'MarkdownASTToDeltaMatcher',
+);
 
-export function MarkdownASTToDeltaExtension(
-  matcher: MarkdownASTToDeltaMatcher
-): ExtensionType & {
+export function MarkdownASTToDeltaExtension(matcher: MarkdownASTToDeltaMatcher): ExtensionType & {
   identifier: ServiceIdentifier<MarkdownASTToDeltaMatcher>;
 } {
   const identifier = MarkdownASTToDeltaMatcherIdentifier(matcher.name);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => matcher);
     },
     identifier,
   };
 }
 
-export class MarkdownDeltaConverter extends DeltaASTConverter<
-  InkTextAttributes,
-  MarkdownAST
-> {
+export class MarkdownDeltaConverter extends DeltaASTConverter<InkTextAttributes, MarkdownAST> {
   constructor(
     readonly configs: Map<string, string>,
     readonly inlineDeltaMatchers: InlineDeltaToMarkdownAdapterMatcher[],
-    readonly markdownASTToDeltaMatchers: MarkdownASTToDeltaMatcher[]
+    readonly markdownASTToDeltaMatchers: MarkdownASTToDeltaMatcher[],
   ) {
     super();
   }
 
-  applyTextFormatting(
-    delta: DeltaInsert<InkTextAttributes>
-  ): PhrasingContent {
+  applyTextFormatting(delta: DeltaInsert<InkTextAttributes>): PhrasingContent {
     let mdast: PhrasingContent = {
       type: 'text',
       value: delta.insert,
@@ -104,19 +90,14 @@ export class MarkdownDeltaConverter extends DeltaASTConverter<
         return matcher.toDelta(ast, context);
       }
     }
-    return 'children' in ast
-      ? ast.children.flatMap(child => this.astToDelta(child))
-      : [];
+    return 'children' in ast ? ast.children.flatMap((child) => this.astToDelta(child)) : [];
   }
 
-  deltaToAST(
-    deltas: DeltaInsert<InkTextAttributes>[],
-    depth = 0
-  ): PhrasingContent[] {
+  deltaToAST(deltas: DeltaInsert<InkTextAttributes>[], depth = 0): PhrasingContent[] {
     if (depth > 0) {
       deltas.unshift({ insert: ' '.repeat(4).repeat(depth) });
     }
 
-    return deltas.map(delta => this.applyTextFormatting(delta));
+    return deltas.map((delta) => this.applyTextFormatting(delta));
   }
 }

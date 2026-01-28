@@ -7,8 +7,8 @@ import {
 
 export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: RootBlockSchema.model.flavour,
-  toMatch: o => HastUtils.isElement(o.node) && o.node.tagName === 'header',
-  fromMatch: o => o.node.flavour === RootBlockSchema.model.flavour,
+  toMatch: (o) => HastUtils.isElement(o.node) && o.node.tagName === 'header',
+  fromMatch: (o) => o.node.flavour === RootBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -23,8 +23,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   fromBlockSnapshot: {
     enter: (_, context) => {
       const { walkerContext } = context;
-      const htmlRootDocContext =
-        walkerContext.getGlobalContext('hast:html-root-doc');
+      const htmlRootDocContext = walkerContext.getGlobalContext('hast:html-root-doc');
       const isRootDoc = htmlRootDocContext ?? true;
       if (!isRootDoc) {
         return;
@@ -38,7 +37,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -47,7 +46,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -56,7 +55,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -86,7 +85,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             }
             `.replace(/\s\s+/g, ''),
           },
-          'children'
+          'children',
         )
         .closeNode()
         .closeNode()
@@ -98,7 +97,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -109,7 +108,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode({
           type: 'comment',
@@ -119,8 +118,7 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
     },
     leave: (_, context) => {
       const { walkerContext } = context;
-      const htmlRootDocContext =
-        walkerContext.getGlobalContext('hast:html-root-doc');
+      const htmlRootDocContext = walkerContext.getGlobalContext('hast:html-root-doc');
       const isRootDoc = htmlRootDocContext ?? true;
       if (!isRootDoc) {
         return;
@@ -130,6 +128,4 @@ export const rootBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   },
 };
 
-export const RootBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  rootBlockHtmlAdapterMatcher
-);
+export const RootBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(rootBlockHtmlAdapterMatcher);

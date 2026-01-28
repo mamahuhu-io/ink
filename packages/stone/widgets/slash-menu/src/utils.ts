@@ -49,14 +49,14 @@ function itemCompareFn(a: SlashMenuItem, b: SlashMenuItem) {
 export function buildSlashMenuItems(
   items: SlashMenuItem[],
   context: SlashMenuContext,
-  transform?: (item: SlashMenuItem) => SlashMenuItem
+  transform?: (item: SlashMenuItem) => SlashMenuItem,
 ): SlashMenuItem[] {
   if (transform) items = items.map(transform);
 
   const result = items
-    .filter(item => (item.when ? item.when(context) : true))
+    .filter((item) => (item.when ? item.when(context) : true))
     .sort(itemCompareFn)
-    .map(item => {
+    .map((item) => {
       if (isSubMenuItem(item)) {
         return {
           ...item,
@@ -69,15 +69,13 @@ export function buildSlashMenuItems(
   return result;
 }
 
-export function mergeSlashMenuConfigs(
-  configs: Map<string, SlashMenuConfig>
-): SlashMenuConfig {
+export function mergeSlashMenuConfigs(configs: Map<string, SlashMenuConfig>): SlashMenuConfig {
   return {
-    items: ctx =>
+    items: (ctx) =>
       Array.from(configs.values()).flatMap(({ items }) =>
-        typeof items === 'function' ? items(ctx) : items
+        typeof items === 'function' ? items(ctx) : items,
       ),
-    disableWhen: ctx =>
+    disableWhen: (ctx) =>
       configs
         .values()
         .map(({ disableWhen }) => disableWhen?.(ctx) ?? false)

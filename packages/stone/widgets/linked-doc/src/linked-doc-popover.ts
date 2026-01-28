@@ -1,17 +1,14 @@
 import type { IconButton } from '@ink/stone-components/icon-button';
 import { LoadingIcon } from '@ink/stone-components/icons';
-import {
-  cleanSpecifiedTail,
-  getTextContentFromInlineRange,
-} from '@ink/stone-rich-text';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { MoreHorizontalIcon } from '@ink/stone-icons/lit';
+import { cleanSpecifiedTail, getTextContentFromInlineRange } from '@ink/stone-rich-text';
 import { unsafeCSSVar } from '@ink/stone-shared/theme';
 import {
   createKeydownObserver,
   getPopperPosition,
   getViewportElement,
 } from '@ink/stone-shared/utils';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { MoreHorizontalIcon } from '@ink/stone-icons/lit';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
 import { effect } from '@preact/signals-core';
@@ -27,9 +24,7 @@ import { resolveSignal } from './utils.js';
 @requiredProperties({
   context: PropTypes.object,
 })
-export class LinkedDocPopover extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class LinkedDocPopover extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = linkedDocPopoverStyles;
 
   private readonly _abort = () => {
@@ -39,7 +34,7 @@ export class LinkedDocPopover extends SignalWatcher(
     cleanSpecifiedTail(
       this.context.std,
       this.context.inlineEditor,
-      this.context.triggerKey + (this._query || '')
+      this.context.triggerKey + (this._query || ''),
     );
   };
 
@@ -63,7 +58,7 @@ export class LinkedDocPopover extends SignalWatcher(
       this._abort,
       this.context.std.host,
       this.context.inlineEditor,
-      this._updateLinkedDocGroupAbortController.signal
+      this._updateLinkedDocGroupAbortController.signal,
     );
 
     this._menusItemsEffectCleanup();
@@ -86,7 +81,7 @@ export class LinkedDocPopover extends SignalWatcher(
       this._query || '',
       this._activatedItemKey,
       this.context.std.host,
-      this.context.inlineEditor
+      this.context.inlineEditor,
     );
 
     if (autoFocusedItemKey) {
@@ -104,7 +99,7 @@ export class LinkedDocPopover extends SignalWatcher(
   private _updateLinkedDocGroupAbortController: AbortController | null = null;
 
   private get _actionGroup() {
-    return this._linkedDocGroup.map(group => {
+    return this._linkedDocGroup.map((group) => {
       return {
         ...group,
         items: this._getActionItems(group),
@@ -113,16 +108,13 @@ export class LinkedDocPopover extends SignalWatcher(
   }
 
   private get _flattenActionList() {
-    return this._actionGroup.flatMap(group =>
-      group.items.map(item => ({ ...item, groupName: group.name }))
+    return this._actionGroup.flatMap((group) =>
+      group.items.map((item) => ({ ...item, groupName: group.name })),
     );
   }
 
   private get _query() {
-    return getTextContentFromInlineRange(
-      this.context.inlineEditor,
-      this.context.startRange
-    );
+    return getTextContentFromInlineRange(this.context.inlineEditor, this.context.startRange);
   }
 
   private _getActionItems(group: LinkedMenuGroup) {
@@ -157,15 +149,15 @@ export class LinkedDocPopover extends SignalWatcher(
 
     // init
     this._updateLinkedDocGroup().catch(console.error);
-    this._disposables.addFromEvent(this, 'pointerdown', e => {
+    this._disposables.addFromEvent(this, 'pointerdown', (e) => {
       // Prevent input from losing focus
       e.preventDefault();
     });
-    this._disposables.addFromEvent(this, 'mousedown', e => {
+    this._disposables.addFromEvent(this, 'mousedown', (e) => {
       // Prevent input from losing focus in electron
       e.preventDefault();
     });
-    this._disposables.addFromEvent(window, 'pointerdown', e => {
+    this._disposables.addFromEvent(window, 'pointerdown', (e) => {
       if (e.target === this) return;
       // We don't clear the query when clicking outside the popover
       this.context.close();
@@ -198,15 +190,14 @@ export class LinkedDocPopover extends SignalWatcher(
         }
         next();
       },
-      onInput: isComposition => {
+      onInput: (isComposition) => {
         if (isComposition) {
           this._updateLinkedDocGroup().catch(console.error);
         } else {
-          const subscription =
-            this.context.inlineEditor.slots.renderComplete.subscribe(() => {
-              subscription.unsubscribe();
-              this._updateLinkedDocGroup().catch(console.error);
-            });
+          const subscription = this.context.inlineEditor.slots.renderComplete.subscribe(() => {
+            subscription.unsubscribe();
+            this._updateLinkedDocGroup().catch(console.error);
+          });
         }
       },
       onPaste: () => {
@@ -222,13 +213,12 @@ export class LinkedDocPopover extends SignalWatcher(
         if (curRange.index < this.context.startRange.index) {
           this.context.close();
         }
-        const subscription =
-          this.context.inlineEditor.slots.renderComplete.subscribe(() => {
-            subscription.unsubscribe();
-            this._updateLinkedDocGroup().catch(console.error);
-          });
+        const subscription = this.context.inlineEditor.slots.renderComplete.subscribe(() => {
+          subscription.unsubscribe();
+          this._updateLinkedDocGroup().catch(console.error);
+        });
       },
-      onMove: step => {
+      onMove: (step) => {
         const itemLen = this._flattenActionList.length;
         const nextIndex = (itemLen + this._activatedItemIndex + step) % itemLen;
         const item = this._flattenActionList[nextIndex];
@@ -238,9 +228,7 @@ export class LinkedDocPopover extends SignalWatcher(
         this.scrollToFocusedItem();
       },
       onConfirm: () => {
-        this._flattenActionList[this._activatedItemIndex]
-          .action()
-          ?.catch(console.error);
+        this._flattenActionList[this._activatedItemIndex].action()?.catch(console.error);
       },
       onAbort: () => {
         this.context.close();
@@ -265,7 +253,7 @@ export class LinkedDocPopover extends SignalWatcher(
           visibility: 'hidden',
         });
 
-    const actionGroups = this._actionGroup.map(group => {
+    const actionGroups = this._actionGroup.map((group) => {
       // Check if the group is loading or hidden
       const isLoading = resolveSignal(group.loading);
       const isHidden = resolveSignal(group.hidden);
@@ -278,10 +266,7 @@ export class LinkedDocPopover extends SignalWatcher(
 
     return html`<div class="linked-doc-popover" style="${style}">
       ${actionGroups
-        .filter(
-          group =>
-            (group.items.length > 0 || group.isLoading) && !group.isHidden
-        )
+        .filter((group) => (group.items.length > 0 || group.isLoading) && !group.isHidden)
         .map((group, idx) => {
           return html`
             <div class="divider" ?hidden=${idx === 0}></div>
@@ -324,9 +309,7 @@ export class LinkedDocPopover extends SignalWatcher(
                     // show tooltip whether text length overflows
                     for (const button of this.iconButtons.values()) {
                       if (button.dataset.id == key && button.textElement) {
-                        const isOverflowing = this._isTextOverflowing(
-                          button.textElement
-                        );
+                        const isOverflowing = this._isTextOverflowing(button.textElement);
                         this._showTooltip = isOverflowing;
                         break;
                       }
@@ -355,7 +338,7 @@ export class LinkedDocPopover extends SignalWatcher(
               };
             },
           },
-          this.context.startNativeRange
+          this.context.startNativeRange,
         );
       }, 10);
 
@@ -363,20 +346,13 @@ export class LinkedDocPopover extends SignalWatcher(
       const scrollContainer = getViewportElement(this.context.std.host);
       if (scrollContainer) {
         // Note: in edgeless mode, the scroll container is not exist!
-        this.disposables.addFromEvent(
-          scrollContainer,
-          'scroll',
-          updatePosition,
-          {
-            passive: true,
-          }
-        );
+        this.disposables.addFromEvent(scrollContainer, 'scroll', updatePosition, {
+          passive: true,
+        });
       }
 
       const gfx = this.context.std.get(GfxControllerIdentifier);
-      this.disposables.add(
-        gfx.viewport.viewportUpdated.subscribe(updatePosition)
-      );
+      this.disposables.add(gfx.viewport.viewportUpdated.subscribe(updatePosition));
 
       updatePosition();
     }
@@ -394,7 +370,7 @@ export class LinkedDocPopover extends SignalWatcher(
     }
 
     const ele = shadowRoot.querySelector(
-      `icon-button[data-id=${CSS.escape(this._activatedItemKey)}]`
+      `icon-button[data-id=${CSS.escape(this._activatedItemKey)}]`,
     );
 
     // If the element doesn't exist, don't log a warning
@@ -408,9 +384,7 @@ export class LinkedDocPopover extends SignalWatcher(
   }
 
   get _activatedItemIndex() {
-    const index = this._flattenActionList.findIndex(
-      item => item.key === this._activatedItemKey
-    );
+    const index = this._flattenActionList.findIndex((item) => item.key === this._activatedItemKey);
     return index === -1 ? 0 : index;
   }
 

@@ -71,13 +71,7 @@ export class TableSelection extends BaseSelection {
 
   readonly data: TableSelectionData;
 
-  constructor({
-    blockId,
-    data,
-  }: {
-    blockId: string;
-    data: TableSelectionData;
-  }) {
+  constructor({ blockId, data }: { blockId: string; data: TableSelectionData }) {
     super({
       blockId,
     });

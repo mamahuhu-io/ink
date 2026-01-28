@@ -126,10 +126,7 @@ export class CommandManager extends LifeCycleWatcher {
       },
       pipe: function (this: Chain, command: Command, input?: object) {
         const cmds = this[cmdSymbol];
-        return createChain([
-          ...cmds,
-          (ctx, next) => command({ ...ctx, ...input }, next),
-        ]);
+        return createChain([...cmds, (ctx, next) => command({ ...ctx, ...input }, next)]);
       },
       try: function (this: Chain, fn) {
         const cmds = this[cmdSymbol];
@@ -140,7 +137,7 @@ export class CommandManager extends LifeCycleWatcher {
 
             const commands = fn(chain());
 
-            commands.some(innerChain => {
+            commands.some((innerChain) => {
               innerChain[cmdSymbol] = [
                 (_, next) => {
                   next(ctx);
@@ -171,7 +168,7 @@ export class CommandManager extends LifeCycleWatcher {
 
             const commands = fn(chain());
 
-            commands.forEach(innerChain => {
+            commands.forEach((innerChain) => {
               innerChain[cmdSymbol] = [
                 (_, next) => {
                   next(ctx);
@@ -220,7 +217,7 @@ export class CommandManager extends LifeCycleWatcher {
 
   exec = <Output extends object, Input extends object>(
     command: Command<Input, Output>,
-    input?: Input
+    input?: Input,
   ) => {
     return this.chain().pipe(command, input).run();
   };
@@ -229,7 +226,7 @@ export class CommandManager extends LifeCycleWatcher {
 function runCmds(ctx: InitCommandCtx, [cmd, ...rest]: Command[]) {
   let _ctx = ctx;
   if (cmd) {
-    cmd(ctx, data => {
+    cmd(ctx, (data) => {
       _ctx = runCmds({ ...ctx, ...data }, rest);
     });
   }

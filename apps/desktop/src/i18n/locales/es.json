@@ -121,13 +121,6 @@
         "themeDesc": "Tema a usar al exportar documentos",
         "auto": "Automático (coincidir con actual)"
       },
-      "window": {
-        "title": "Ventana",
-        "sidebarPosition": "Posición de la barra lateral",
-        "sidebarPositionDesc": "Posición de la barra lateral de archivos",
-        "left": "Izquierda",
-        "right": "Derecha"
-      },
       "display": {
         "title": "Visualización",
         "showDocStats": "Estadísticas del documento",

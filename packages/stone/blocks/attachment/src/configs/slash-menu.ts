@@ -1,6 +1,6 @@
+import { ExportToPdfIcon, FileIcon } from '@ink/stone-icons/lit';
 import { openSingleFileWith } from '@ink/stone-shared/utils';
 import { type SlashMenuConfig } from '@ink/stone-widget-slash-menu';
-import { ExportToPdfIcon, FileIcon } from '@ink/stone-icons/lit';
 
 import { addSiblingAttachmentBlocks } from '../utils';
 import { AttachmentTooltip, PDFTooltip } from './tooltips';
@@ -17,8 +17,7 @@ export const attachmentSlashMenuConfig: SlashMenuConfig = {
       },
       searchAlias: ['file'],
       group: '4_Content & Media@3',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:attachment'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:attachment'),
       action: ({ std, model }) => {
         (async () => {
           const file = await openSingleFileWith();
@@ -40,8 +39,7 @@ export const attachmentSlashMenuConfig: SlashMenuConfig = {
         caption: 'PDF',
       },
       group: '4_Content & Media@4',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:attachment'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:attachment'),
       action: ({ std, model }) => {
         (async () => {
           const file = await openSingleFileWith();

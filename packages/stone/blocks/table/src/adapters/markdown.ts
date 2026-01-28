@@ -1,8 +1,8 @@
 import {
   type TableBlockPropsSerialized,
   TableBlockSchema,
-  TableModelFlavour,
   type TableColumn,
+  TableModelFlavour,
 } from '@ink/stone-model';
 import {
   BlockMarkdownAdapterExtension,
@@ -21,23 +21,19 @@ const isTableNode = (node: MarkdownAST) => TABLE_NODE_TYPES.has(node.type);
 type AlignType = 'left' | 'right' | 'center' | null;
 
 const getColumnAligns = (columns: Record<string, TableColumn>): AlignType[] => {
-  const sortedColumns = Object.values(columns).sort((a, b) =>
-    a.order.localeCompare(b.order)
-  );
-  return sortedColumns.map(col => (col.textAlign as AlignType) ?? null);
+  const sortedColumns = Object.values(columns).sort((a, b) => a.order.localeCompare(b.order));
+  return sortedColumns.map((col) => (col.textAlign as AlignType) ?? null);
 };
 
 export const tableBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: TableBlockSchema.model.flavour,
-  toMatch: o => isTableNode(o.node),
-  fromMatch: o => o.node.flavour === TableBlockSchema.model.flavour,
+  toMatch: (o) => isTableNode(o.node),
+  fromMatch: (o) => o.node.flavour === TableBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       const { walkerContext } = context;
       if (o.node.type === 'table') {
-        const astToDelta = context.deltaConverter.astToDelta.bind(
-          context.deltaConverter
-        );
+        const astToDelta = context.deltaConverter.astToDelta.bind(context.deltaConverter);
         walkerContext.openNode(
           {
             type: 'block',
@@ -46,7 +42,7 @@ export const tableBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             props: parseTableFromMarkdown(o.node, astToDelta),
             children: [],
           },
-          'children'
+          'children',
         );
         walkerContext.skipAllChildren();
       }
@@ -61,14 +57,13 @@ export const tableBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   fromBlockSnapshot: {
     enter: (o, context) => {
       const { walkerContext, deltaConverter } = context;
-      const { columns, rows, cells } = o.node
-        .props as unknown as TableBlockPropsSerialized;
+      const { columns, rows, cells } = o.node.props as unknown as TableBlockPropsSerialized;
       const table = processTable(columns, rows, cells);
       const result: TableRow[] = [];
-      table.rows.forEach(v => {
+      table.rows.forEach((v) => {
         result.push({
           type: 'tableRow',
-          children: v.cells.map(v => ({
+          children: v.cells.map((v) => ({
             type: 'tableCell',
             children: deltaConverter.deltaToAST(v.value.delta),
           })),
@@ -91,5 +86,5 @@ export const tableBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const TableBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  tableBlockMarkdownAdapterMatcher
+  tableBlockMarkdownAdapterMatcher,
 );

@@ -1,11 +1,7 @@
 import { Subject } from 'rxjs';
 import type * as Y from 'yjs';
 
-import type {
-  DocMeta,
-  DocsPropertiesMeta,
-  WorkspaceMeta,
-} from '../extension/index.js';
+import type { DocMeta, DocsPropertiesMeta, WorkspaceMeta } from '../extension/index.js';
 import { createYProxy } from '../reactive/proxy.js';
 
 type DocCollectionMetaState = {
@@ -17,17 +13,12 @@ type DocCollectionMetaState = {
 
 export class TestMeta implements WorkspaceMeta {
   private readonly _handleDocCollectionMetaEvents = (
-    events: Y.YEvent<Y.Array<unknown> | Y.Text | Y.Map<unknown>>[]
+    events: Y.YEvent<Y.Array<unknown> | Y.Text | Y.Map<unknown>>[],
   ) => {
-    events.forEach(e => {
-      const hasKey = (k: string) =>
-        e.target === this._yMap && e.changes.keys.has(k);
+    events.forEach((e) => {
+      const hasKey = (k: string) => e.target === this._yMap && e.changes.keys.has(k);
 
-      if (
-        e.target === this.yDocs ||
-        e.target.parent === this.yDocs ||
-        hasKey('pages')
-      ) {
+      if (e.target === this.yDocs || e.target.parent === this.yDocs || hasKey('pages')) {
         this._handleDocMetaEvent();
       }
     });
@@ -37,9 +28,7 @@ export class TestMeta implements WorkspaceMeta {
 
   protected readonly _proxy: DocCollectionMetaState;
 
-  protected readonly _yMap: Y.Map<
-    DocCollectionMetaState[keyof DocCollectionMetaState]
-  >;
+  protected readonly _yMap: Y.Map<DocCollectionMetaState[keyof DocCollectionMetaState]>;
 
   readonly doc: Y.Doc;
 
@@ -80,9 +69,7 @@ export class TestMeta implements WorkspaceMeta {
 
   constructor(doc: Y.Doc) {
     this.doc = doc;
-    const map = doc.getMap(this.id) as Y.Map<
-      DocCollectionMetaState[keyof DocCollectionMetaState]
-    >;
+    const map = doc.getMap(this.id) as Y.Map<DocCollectionMetaState[keyof DocCollectionMetaState]>;
     this._yMap = map;
     this._proxy = createYProxy(map);
     this._yMap.observeDeep(this._handleDocCollectionMetaEvents);
@@ -93,14 +80,14 @@ export class TestMeta implements WorkspaceMeta {
 
     const newDocs = new Set<string>();
 
-    docMetas.forEach(docMeta => {
+    docMetas.forEach((docMeta) => {
       if (!_prevDocs.has(docMeta.id)) {
         this.docMetaAdded.next(docMeta.id);
       }
       newDocs.add(docMeta.id);
     });
 
-    _prevDocs.forEach(prevDocId => {
+    _prevDocs.forEach((prevDocId) => {
       const isRemoved = newDocs.has(prevDocId) === false;
       if (isRemoved) {
         this.docMetaRemoved.next(prevDocId);
@@ -127,7 +114,7 @@ export class TestMeta implements WorkspaceMeta {
   }
 
   getDocMeta(id: string) {
-    return this.docMetas.find(doc => doc.id === id);
+    return this.docMetas.find((doc) => doc.id === id);
   }
 
   initialize() {

@@ -1,11 +1,5 @@
-import {
-  EmbedEdgelessIcon,
-  EmbedPageIcon,
-} from '@ink/stone-components/icons';
-import {
-  ColorScheme,
-  type EmbedLinkedDocStyles,
-} from '@ink/stone-model';
+import { EmbedEdgelessIcon, EmbedPageIcon } from '@ink/stone-components/icons';
+import { ColorScheme, type EmbedLinkedDocStyles } from '@ink/stone-model';
 import type { TemplateResult } from 'lit';
 
 import {
@@ -43,7 +37,7 @@ type EmbedCardImages = {
 export function getEmbedLinkedDocIcons(
   theme: ColorScheme,
   editorMode: 'page' | 'edgeless',
-  style: (typeof EmbedLinkedDocStyles)[number]
+  style: (typeof EmbedLinkedDocStyles)[number],
 ): EmbedCardImages {
   const small = style !== 'vertical';
   if (editorMode === 'page') {

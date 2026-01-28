@@ -19,15 +19,10 @@ export class InkCodeUnit extends ShadowlessElement {
 
   override render() {
     if (this.delta.attributes?.link && this.codeBlock) {
-      return html`<ink-link
-        .std=${this.codeBlock.std}
-        .delta=${this.delta}
-      ></ink-link>`;
+      return html`<ink-link .std=${this.codeBlock.std} .delta=${this.delta}></ink-link>`;
     }
 
-    let style = this.delta.attributes
-      ? inkTextStyles(this.delta.attributes)
-      : {};
+    let style = this.delta.attributes ? inkTextStyles(this.delta.attributes) : {};
     if (this.delta.attributes?.code) {
       style = {
         ...style,
@@ -52,14 +47,11 @@ export class InkCodeUnit extends ShadowlessElement {
     const startOffset = vElement.startOffset;
     const endOffset = vElement.endOffset;
     const includedTokens: ThemedToken[] = [];
-    lineTokens.forEach(token => {
+    lineTokens.forEach((token) => {
       if (
-        (token.offset <= startOffset &&
-          token.offset + token.content.length >= startOffset) ||
-        (token.offset >= startOffset &&
-          token.offset + token.content.length <= endOffset) ||
-        (token.offset <= endOffset &&
-          token.offset + token.content.length >= endOffset)
+        (token.offset <= startOffset && token.offset + token.content.length >= startOffset) ||
+        (token.offset >= startOffset && token.offset + token.content.length <= endOffset) ||
+        (token.offset <= endOffset && token.offset + token.content.length >= endOffset)
       ) {
         includedTokens.push(token);
       }
@@ -68,10 +60,7 @@ export class InkCodeUnit extends ShadowlessElement {
 
     if (includedTokens.length === 1) {
       const token = includedTokens[0];
-      const content = token.content.slice(
-        startOffset - token.offset,
-        endOffset - token.offset
-      );
+      const content = token.content.slice(startOffset - token.offset, endOffset - token.offset);
 
       return html`<span
         style=${styleMap({
@@ -86,16 +75,13 @@ export class InkCodeUnit extends ShadowlessElement {
 
       const firstContent = firstToken.content.slice(
         startOffset - firstToken.offset,
-        firstToken.content.length
+        firstToken.content.length,
       );
-      const lastContent = lastToken.content.slice(
-        0,
-        endOffset - lastToken.offset
-      );
+      const lastContent = lastToken.content.slice(0, endOffset - lastToken.offset);
       firstToken.content = firstContent;
       lastToken.content = lastContent;
 
-      const vTexts = includedTokens.map(token => {
+      const vTexts = includedTokens.map((token) => {
         return html`<v-text
           .str=${token.content}
           style=${styleMap({

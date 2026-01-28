@@ -1,8 +1,5 @@
 import { ParagraphBlockModel } from '@ink/stone-model';
-import {
-  focusTextModel,
-  getInlineEditorByModel,
-} from '@ink/stone-rich-text';
+import { focusTextModel, getInlineEditorByModel } from '@ink/stone-rich-text';
 import { matchModels } from '@ink/stone-shared/utils';
 import { type Command, TextSelection } from '@ink/stone-std';
 
@@ -49,7 +46,7 @@ export const splitParagraphCommand: Command<
         type: model.props.type,
       },
       model,
-      0
+      0,
     );
     focusTextModel(std, id);
     return next({ paragraphConvertedId: id });
@@ -68,7 +65,7 @@ export const splitParagraphCommand: Command<
       type: model.props.type,
     },
     parent,
-    index + 1
+    index + 1,
   );
   const newModel = store.getBlock(id)?.model;
   if (newModel) {

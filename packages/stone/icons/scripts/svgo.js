@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const svgo = require('svgo');
-
-
 
 module.exports = {
   optimize(input) {

@@ -1,1 +1,1 @@
-export { InkStoneEditor } from './InkStoneEditor'
+export { InkStoneEditor } from './InkStoneEditor';

@@ -98,7 +98,7 @@ export function getAttachmentFileIcon(
     width: '2.5em',
     height: '2.5em',
     style: 'font-size: 16px',
-  }
+  },
 ) {
   const Icon = iconMap.get(filetype) ?? FileIconNoneIcon;
   return Icon(options);

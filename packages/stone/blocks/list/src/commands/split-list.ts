@@ -1,17 +1,14 @@
-import { ListBlockModel } from "@ink/stone-model";
-import { focusTextModel } from "@ink/stone-rich-text";
-import {
-  getNextContinuousNumberedLists,
-  matchModels,
-} from "@ink/stone-shared/utils";
-import type { Command, EditorHost } from "@ink/stone-std";
-import { Text } from "@ink/stone-store";
+import { ListBlockModel } from '@ink/stone-model';
+import { focusTextModel } from '@ink/stone-rich-text';
+import { getNextContinuousNumberedLists, matchModels } from '@ink/stone-shared/utils';
+import type { Command, EditorHost } from '@ink/stone-std';
+import { Text } from '@ink/stone-store';
 
 // Monitor text changes and prevent auto-fill for numbered lists
 function monitorTextChanges(
   listModel: ListBlockModel,
   label: string,
-  onAutoFillCleared?: () => void
+  onAutoFillCleared?: () => void,
 ) {
   let lastText = listModel.props.text.toString();
 
@@ -19,7 +16,7 @@ function monitorTextChanges(
     const currentText = listModel.props.text.toString();
 
     // Detect and clear auto-fill text (like "3. ")
-    if (currentText.match(/^\d+\.\s*$/) && lastText === "") {
+    if (currentText.match(/^\d+\.\s*$/) && lastText === '') {
       console.log(`${label}: Clearing auto-fill text "${currentText}"`);
       const emptyText = new Text();
       listModel.store.transact(() => {
@@ -33,8 +30,8 @@ function monitorTextChanges(
   });
 }
 
-import { canDedentListCommand, dedentListCommand } from "./dedent-list.js";
-import { correctNumberedListsOrderToPrev } from "./utils.js";
+import { canDedentListCommand, dedentListCommand } from './dedent-list.js';
+import { correctNumberedListsOrderToPrev } from './utils.js';
 
 export const splitListCommand: Command<{
   blockId: string;
@@ -76,8 +73,8 @@ export const splitListCommand: Command<{
      * |
      *   - bbb
      */
-    if (parent.role === "hub") {
-      const id = doc.addBlock("ink:paragraph", {}, parent, modelIndex);
+    if (parent.role === 'hub') {
+      const id = doc.addBlock('ink:paragraph', {}, parent, modelIndex);
       const paragraph = doc.getBlock(id);
       if (!paragraph) return;
       doc.deleteBlock(model, {
@@ -85,10 +82,7 @@ export const splitListCommand: Command<{
       });
 
       // reset next continuous numbered list's order
-      const nextContinuousNumberedLists = getNextContinuousNumberedLists(
-        doc,
-        paragraph.model
-      );
+      const nextContinuousNumberedLists = getNextContinuousNumberedLists(doc, paragraph.model);
       let base = 1;
       nextContinuousNumberedLists.forEach((list) => {
         doc.transact(() => {
@@ -122,7 +116,7 @@ export const splitListCommand: Command<{
      * - |
      *   - ccc
      */
-    if (parent.role === "content") {
+    if (parent.role === 'content') {
       host.command
         .chain()
         .pipe(canDedentListCommand, {
@@ -156,28 +150,25 @@ export const splitListCommand: Command<{
        *   - bbb
        */
       newListId = doc.addBlock(
-        "ink:list",
+        'ink:list',
         {
           type: model.props.type,
           text: afterText,
           order:
-            model.props.type === "numbered" && model.props.order !== null
+            model.props.type === 'numbered' && model.props.order !== null
               ? model.props.order + 1
               : null,
         },
         parent,
-        modelIndex + 1
+        modelIndex + 1,
       );
       const newList = doc.getBlock(newListId)?.model;
       if (!newList) return;
       // move children to new list
       doc.moveBlocks(model.children, newList);
 
-      if (model.props.type === "numbered" && model.props.order !== null) {
-        const nextContinuousNumberedLists = getNextContinuousNumberedLists(
-          doc,
-          newListId
-        );
+      if (model.props.type === 'numbered' && model.props.order !== null) {
+        const nextContinuousNumberedLists = getNextContinuousNumberedLists(doc, newListId);
         let base = model.props.order + 2;
         nextContinuousNumberedLists.forEach((list) => {
           doc.transact(() => {
@@ -200,21 +191,18 @@ export const splitListCommand: Command<{
        *   - bbb
        */
       newListId = doc.addBlock(
-        "ink:list",
+        'ink:list',
         {
           type: model.props.type,
           text: afterText,
-          order: model.props.type === "numbered" ? 1 : null,
+          order: model.props.type === 'numbered' ? 1 : null,
         },
         model,
-        0
+        0,
       );
 
-      if (model.props.type === "numbered") {
-        const nextContinuousNumberedLists = getNextContinuousNumberedLists(
-          doc,
-          newListId
-        );
+      if (model.props.type === 'numbered') {
+        const nextContinuousNumberedLists = getNextContinuousNumberedLists(doc, newListId);
         let base = 2;
         nextContinuousNumberedLists.forEach((list) => {
           doc.transact(() => {
@@ -253,41 +241,31 @@ export const splitListCommand: Command<{
 
     // For numbered lists, ensure afterText is empty when splitting at the end
     let finalAfterText = afterText;
-    if (
-      model.props.type === "numbered" &&
-      inlineIndex >= model.props.text.length
-    ) {
+    if (model.props.type === 'numbered' && inlineIndex >= model.props.text.length) {
       finalAfterText = new Text();
     }
     newListId = doc.addBlock(
-      "ink:list",
+      'ink:list',
       {
         type: model.props.type,
         text: finalAfterText,
         order: null,
       },
       parent,
-      modelIndex + 1
+      modelIndex + 1,
     );
 
     // For numbered lists, set up auto-clear monitoring to prevent any auto-fill
-    if (model.props.type === "numbered") {
+    if (model.props.type === 'numbered') {
       const newListBlock = doc.getBlock(newListId);
-      if (
-        newListBlock?.model &&
-        matchModels(newListBlock.model, [ListBlockModel])
-      ) {
+      if (newListBlock?.model && matchModels(newListBlock.model, [ListBlockModel])) {
         const listId = newListId; // Capture the ID for the callback
-        monitorTextChanges(
-          newListBlock.model as ListBlockModel,
-          "New numbered list",
-          () => {
-            // When auto-fill is detected and cleared, refocus
-            setTimeout(() => {
-              focusTextModel(std, listId);
-            }, 10);
-          }
-        );
+        monitorTextChanges(newListBlock.model as ListBlockModel, 'New numbered list', () => {
+          // When auto-fill is detected and cleared, refocus
+          setTimeout(() => {
+            focusTextModel(std, listId);
+          }, 10);
+        });
       }
     }
 

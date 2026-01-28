@@ -1,8 +1,4 @@
-import {
-  type BlockComponent,
-  BlockSelection,
-  type Command,
-} from '@ink/stone-std';
+import { type BlockComponent, BlockSelection, type Command } from '@ink/stone-std';
 
 export const selectBlocksBetween: Command<{
   focusBlock?: BlockComponent;
@@ -24,24 +20,17 @@ export const selectBlocksBetween: Command<{
 
   // In different blocks
   const selections = [...selection.value];
-  if (selections.every(sel => sel.blockId !== focusBlock.blockId)) {
+  if (selections.every((sel) => sel.blockId !== focusBlock.blockId)) {
     if (tail) {
-      selections.push(
-        selection.create(BlockSelection, { blockId: focusBlock.blockId })
-      );
+      selections.push(selection.create(BlockSelection, { blockId: focusBlock.blockId }));
     } else {
-      selections.unshift(
-        selection.create(BlockSelection, { blockId: focusBlock.blockId })
-      );
+      selections.unshift(selection.create(BlockSelection, { blockId: focusBlock.blockId }));
     }
   }
 
   let start = false;
-  const sel = selections.filter(sel => {
-    if (
-      sel.blockId === anchorBlock.blockId ||
-      sel.blockId === focusBlock.blockId
-    ) {
+  const sel = selections.filter((sel) => {
+    if (sel.blockId === anchorBlock.blockId || sel.blockId === focusBlock.blockId) {
       start = !start;
       return true;
     }

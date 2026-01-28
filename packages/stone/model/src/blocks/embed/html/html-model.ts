@@ -12,6 +12,4 @@ export type EmbedHtmlBlockProps = {
   design?: string;
 };
 
-export class EmbedHtmlModel extends defineEmbedModel<EmbedHtmlBlockProps>(
-  BlockModel
-) {}
+export class EmbedHtmlModel extends defineEmbedModel<EmbedHtmlBlockProps>(BlockModel) {}

@@ -12,16 +12,13 @@ export const deleteTextCommand: Command<{
 
   const range = ctx.std.range.textSelectionToRange(textSelection);
   if (!range) return;
-  const selectedElements = ctx.std.range.getSelectedBlockComponentsByRange(
-    range,
-    {
-      mode: 'flat',
-    }
-  );
+  const selectedElements = ctx.std.range.getSelectedBlockComponentsByRange(range, {
+    mode: 'flat',
+  });
 
   const { from, to } = textSelection;
 
-  const fromElement = selectedElements.find(el => from.blockId === el.blockId);
+  const fromElement = selectedElements.find((el) => from.blockId === el.blockId);
   if (!fromElement) return;
 
   let fromText: Text | undefined;
@@ -46,7 +43,7 @@ export const deleteTextCommand: Command<{
     return next();
   }
 
-  const toElement = selectedElements.find(el => to.blockId === el.blockId);
+  const toElement = selectedElements.find((el) => to.blockId === el.blockId);
   if (!toElement) return;
 
   const toText = toElement.model.text;
@@ -58,11 +55,10 @@ export const deleteTextCommand: Command<{
   fromText.join(toText);
 
   selectedElements
-    .filter(el => el.model.id !== fromElement.model.id)
-    .forEach(el => {
+    .filter((el) => el.model.id !== fromElement.model.id)
+    .forEach((el) => {
       ctx.std.store.deleteBlock(el.model, {
-        bringChildrenTo:
-          el.model.id === toElement.model.id ? fromElement.model : undefined,
+        bringChildrenTo: el.model.id === toElement.model.id ? fromElement.model : undefined,
       });
     });
 

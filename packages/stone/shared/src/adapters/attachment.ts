@@ -1,5 +1,5 @@
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { AttachmentBlockSchema } from '@ink/stone-model';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
 import {
   type AssetsManager,
   BaseAdapter,
@@ -32,25 +32,25 @@ type AttachmentToSliceSnapshotPayload = {
 
 export class AttachmentAdapter extends BaseAdapter<Attachment> {
   override fromBlockSnapshot(
-    _payload: FromBlockSnapshotPayload
+    _payload: FromBlockSnapshotPayload,
   ): Promise<FromBlockSnapshotResult<Attachment>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'AttachmentAdapter.fromBlockSnapshot is not implemented.'
+      'AttachmentAdapter.fromBlockSnapshot is not implemented.',
     );
   }
 
   override fromDocSnapshot(
-    _payload: FromDocSnapshotPayload
+    _payload: FromDocSnapshotPayload,
   ): Promise<FromDocSnapshotResult<Attachment>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'AttachmentAdapter.fromDocSnapshot is not implemented.'
+      'AttachmentAdapter.fromDocSnapshot is not implemented.',
     );
   }
 
   override fromSliceSnapshot(
-    payload: FromSliceSnapshotPayload
+    payload: FromSliceSnapshotPayload,
   ): Promise<FromSliceSnapshotResult<Attachment>> {
     const attachments: Attachment = [];
     for (const contentSlice of payload.snapshot.content) {
@@ -58,9 +58,7 @@ export class AttachmentAdapter extends BaseAdapter<Attachment> {
         const { flavour, props } = contentSlice;
         if (flavour === 'ink:attachment') {
           const { sourceId } = props;
-          const file = payload.assets?.getAssets().get(sourceId as string) as
-            | File
-            | undefined;
+          const file = payload.assets?.getAssets().get(sourceId as string) as File | undefined;
           if (file) {
             attachments.push(file);
           }
@@ -70,21 +68,17 @@ export class AttachmentAdapter extends BaseAdapter<Attachment> {
     return Promise.resolve({ file: attachments, assetsIds: [] });
   }
 
-  override toBlockSnapshot(
-    _payload: ToBlockSnapshotPayload<Attachment>
-  ): Promise<BlockSnapshot> {
+  override toBlockSnapshot(_payload: ToBlockSnapshotPayload<Attachment>): Promise<BlockSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'AttachmentAdapter.toBlockSnapshot is not implemented.'
+      'AttachmentAdapter.toBlockSnapshot is not implemented.',
     );
   }
 
-  override toDocSnapshot(
-    _payload: ToDocSnapshotPayload<Attachment>
-  ): Promise<DocSnapshot> {
+  override toDocSnapshot(_payload: ToDocSnapshotPayload<Attachment>): Promise<DocSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'AttachmentAdapter.toDocSnapshot is not implemented.'
+      'AttachmentAdapter.toDocSnapshot is not implemented.',
     );
   }
 
@@ -105,7 +99,7 @@ export class AttachmentAdapter extends BaseAdapter<Attachment> {
 
       assets?.uploadingAssetsMap.set(id, {
         blob,
-        mapInto: sourceId => ({ sourceId }),
+        mapInto: (sourceId) => ({ sourceId }),
       });
 
       content.push({
@@ -135,12 +129,11 @@ export class AttachmentAdapter extends BaseAdapter<Attachment> {
   }
 }
 
-export const AttachmentAdapterFactoryIdentifier =
-  AdapterFactoryIdentifier('Attachment');
+export const AttachmentAdapterFactoryIdentifier = AdapterFactoryIdentifier('Attachment');
 
 export const AttachmentAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(AttachmentAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(AttachmentAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new AttachmentAdapter(job, provider),
     }));
   },

@@ -2,11 +2,11 @@
 
 import { LINE_COLORS } from '@ink/stone-model';
 import {
+  cssVar,
+  cssVarV2,
   type InkCssVariables,
   type InkTheme,
   type InkThemeKeyV2,
-  cssVar,
-  cssVarV2,
 } from '@ink/stone-theme';
 import { unsafeCSS } from 'lit';
 export { cssVar, cssVarV2 } from '@ink/stone-theme';
@@ -116,17 +116,12 @@ export const StyleVariables = [
 ] as const;
 
 type VariablesType = typeof StyleVariables;
-export type CssVariableName = Extract<
-  VariablesType[keyof VariablesType],
-  string
->;
+export type CssVariableName = Extract<VariablesType[keyof VariablesType], string>;
 
 export type CssVariablesMap = Record<CssVariableName, string>;
 
-export const unsafeCSSVar = (
-  key: keyof InkCssVariables | keyof InkTheme,
-  fallback?: string
-) => unsafeCSS(cssVar(key, fallback));
+export const unsafeCSSVar = (key: keyof InkCssVariables | keyof InkTheme, fallback?: string) =>
+  unsafeCSS(cssVar(key, fallback));
 
 export const unsafeCSSVarV2 = (key: InkThemeKeyV2, fallback?: string) =>
   unsafeCSS(cssVarV2(key, fallback));

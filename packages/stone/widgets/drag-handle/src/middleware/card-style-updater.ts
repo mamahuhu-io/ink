@@ -13,7 +13,7 @@ import type { TransformerMiddleware } from '@ink/stone-store';
 export const cardStyleUpdater =
   (std: BlockStdScope): TransformerMiddleware =>
   ({ slots }) => {
-    slots.beforeImport.subscribe(payload => {
+    slots.beforeImport.subscribe((payload) => {
       if (payload.type !== 'block' || !payload.parent) return;
       const parentModel = std.store.getModelById(payload.parent);
       if (!matchModels(parentModel, [NoteBlockModel])) return;

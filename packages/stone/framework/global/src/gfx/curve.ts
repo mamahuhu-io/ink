@@ -2,18 +2,13 @@
 import { CURVETIME_EPSILON, isZero } from './math.js';
 import { Bound, type IVec, PointLocation, Vec } from './model/index.js';
 
-export type BezierCurveParameters = [
-  start: IVec,
-  control1: IVec,
-  control2: IVec,
-  end: IVec,
-];
+export type BezierCurveParameters = [start: IVec, control1: IVec, control2: IVec, end: IVec];
 
 function evaluate(
   v: BezierCurveParameters,
   t: number,
   type: number,
-  normalized: boolean
+  normalized: boolean,
 ): IVec | null {
   if (t == null || t < 0 || t > 1) return null;
   const x0 = v[0][0],
@@ -99,10 +94,7 @@ export function getBezierCurvature(values: BezierCurveParameters, t: number) {
   return evaluate(values, t, 3, false)?.[0];
 }
 
-export function getBezierNearestTime(
-  values: BezierCurveParameters,
-  point: IVec
-) {
+export function getBezierNearestTime(values: BezierCurveParameters, point: IVec) {
   const count = 100;
   let minDist = Infinity,
     minT = 0;
@@ -130,18 +122,13 @@ export function getBezierNearestTime(
   return minT;
 }
 
-export function getBezierNearestPoint(
-  values: BezierCurveParameters,
-  point: IVec
-) {
+export function getBezierNearestPoint(values: BezierCurveParameters, point: IVec) {
   const t = getBezierNearestTime(values, point);
   const pointOnCurve = getBezierPoint(values, t);
   return pointOnCurve;
 }
 
-export function getBezierParameters(
-  points: PointLocation[]
-): BezierCurveParameters {
+export function getBezierParameters(points: PointLocation[]): BezierCurveParameters {
   // Fallback for degenerate Bezier curve (all points are at the same position)
   if (points.length === 1) {
     const point = points[0];
@@ -218,18 +205,10 @@ export function getBezierCurveBoundingBox(values: BezierCurveParameters) {
     t = tvalues[j];
     mt = 1 - t;
 
-    x =
-      mt * mt * mt * x0 +
-      3 * mt * mt * t * x1 +
-      3 * mt * t * t * x2 +
-      t * t * t * x3;
+    x = mt * mt * mt * x0 + 3 * mt * mt * t * x1 + 3 * mt * t * t * x2 + t * t * t * x3;
     bounds[0][j] = x;
 
-    y =
-      mt * mt * mt * y0 +
-      3 * mt * mt * t * y1 +
-      3 * mt * t * t * y2 +
-      t * t * t * y3;
+    y = mt * mt * mt * y0 + 3 * mt * mt * t * y1 + 3 * mt * t * t * y2 + t * t * t * y3;
 
     bounds[1][j] = y;
     points[j] = { X: x, Y: y };
@@ -282,17 +261,10 @@ function align(points: BezierCurveParameters, [start, end]: IVec[]) {
 }
 
 function between(v: number, min: number, max: number) {
-  return (
-    (min <= v && v <= max) || approximately(v, min) || approximately(v, max)
-  );
+  return (min <= v && v <= max) || approximately(v, min) || approximately(v, max);
 }
 
-function approximately(
-  a: number,
-  b: number,
-  precision?: number,
-  epsilon = 0.000001
-) {
+function approximately(a: number, b: number, precision?: number, epsilon = 0.000001) {
   return Math.abs(a - b) <= (precision || epsilon);
 }
 
@@ -391,12 +363,10 @@ export function curveIntersects(path: PointLocation[], line: [IVec, IVec]) {
   const { minX, maxX, minY, maxY } = Bound.fromPoints(line);
   const points = getBezierParameters(path);
   const intersectedPoints = roots(points, line)
-    .map(t => getBezierPoint(points, t))
-    .filter(point =>
-      point
-        ? between(point[0], minX, maxX) && between(point[1], minY, maxY)
-        : false
+    .map((t) => getBezierPoint(points, t))
+    .filter((point) =>
+      point ? between(point[0], minX, maxX) && between(point[1], minY, maxY) : false,
     )
-    .map(point => new PointLocation(point!));
+    .map((point) => new PointLocation(point!));
   return intersectedPoints.length > 0 ? intersectedPoints : null;
 }

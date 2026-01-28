@@ -1,9 +1,4 @@
-import type {
-  BlockSelection,
-  Command,
-  SurfaceSelection,
-  TextSelection,
-} from '@ink/stone-std';
+import type { BlockSelection, Command, SurfaceSelection, TextSelection } from '@ink/stone-std';
 
 import type { ImageSelection } from '../../selection/image';
 

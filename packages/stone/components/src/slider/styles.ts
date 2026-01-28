@@ -14,8 +14,7 @@ export const styles = css`
 
   .slider-container {
     --drag-handle-center-x: calc(
-      (var(--item-size) - var(--drag-handle-size)) / 2 +
-        (var(--cursor) / (var(--count) - 1)) *
+      (var(--item-size) - var(--drag-handle-size)) / 2 + (var(--cursor) / (var(--count) - 1)) *
         calc(var(--width) - var(--item-size))
     );
 

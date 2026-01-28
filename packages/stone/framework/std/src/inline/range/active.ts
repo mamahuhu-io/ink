@@ -11,8 +11,7 @@ export function isActiveInEditor(editorHost: HTMLElement) {
   const currentActiveElement = document.activeElement;
   if (!currentActiveElement) return false;
   // The input or textarea in the widget should be ignored.
-  if (currentActiveElement.closest(`[${RANGE_SYNC_EXCLUDE_ATTR}="true"]`))
-    return false;
+  if (currentActiveElement.closest(`[${RANGE_SYNC_EXCLUDE_ATTR}="true"]`)) return false;
   const currentEditorHost = currentActiveElement?.closest('editor-host');
   if (!currentEditorHost) return false;
   return currentEditorHost === editorHost;

@@ -6,11 +6,7 @@ import {
   ServiceNotFoundError,
 } from './error.js';
 import { parseIdentifier } from './identifier.js';
-import type {
-  GeneralServiceIdentifier,
-  ServiceIdentifierValue,
-  ServiceVariant,
-} from './types.js';
+import type { GeneralServiceIdentifier, ServiceIdentifierValue, ServiceVariant } from './types.js';
 
 export interface ResolveOptions {
   sameScope?: boolean;
@@ -29,7 +25,7 @@ export abstract class ServiceProvider {
 
   getAll<T>(
     identifier: GeneralServiceIdentifier<T>,
-    options?: ResolveOptions
+    options?: ResolveOptions,
   ): Map<ServiceVariant, T> {
     return this.getAllRaw(parseIdentifier(identifier), {
       ...options,
@@ -38,23 +34,17 @@ export abstract class ServiceProvider {
 
   abstract getAllRaw(
     identifier: ServiceIdentifierValue,
-    options?: ResolveOptions
+    options?: ResolveOptions,
   ): Map<ServiceVariant, any>;
 
-  getOptional<T>(
-    identifier: GeneralServiceIdentifier<T>,
-    options?: ResolveOptions
-  ): T | null {
+  getOptional<T>(identifier: GeneralServiceIdentifier<T>, options?: ResolveOptions): T | null {
     return this.getRaw(parseIdentifier(identifier), {
       ...options,
       optional: true,
     });
   }
 
-  abstract getRaw(
-    identifier: ServiceIdentifierValue,
-    options?: ResolveOptions
-  ): any;
+  abstract getRaw(identifier: ServiceIdentifierValue, options?: ResolveOptions): any;
 }
 
 export class ServiceCachePool {
@@ -77,19 +67,16 @@ export class ServiceResolver extends ServiceProvider {
   constructor(
     readonly provider: BasicServiceProvider,
     readonly depth = 0,
-    readonly stack: ServiceIdentifierValue[] = []
+    readonly stack: ServiceIdentifierValue[] = [],
   ) {
     super();
   }
 
   getAllRaw(
     identifier: ServiceIdentifierValue,
-    { sameScope = false }: ResolveOptions = {}
+    { sameScope = false }: ResolveOptions = {},
   ): Map<ServiceVariant, any> {
-    const vars = this.provider.container.getFactoryAll(
-      identifier,
-      this.provider.scope
-    );
+    const vars = this.provider.container.getFactoryAll(identifier, this.provider.scope);
 
     if (vars === undefined) {
       if (this.provider.parent && !sameScope) {
@@ -110,15 +97,11 @@ export class ServiceResolver extends ServiceProvider {
             return factory(nextResolver);
           } catch (err) {
             if (err instanceof ServiceNotFoundError) {
-              throw new MissingDependencyError(
-                identifier,
-                err.identifier,
-                this.stack
-              );
+              throw new MissingDependencyError(identifier, err.identifier, this.stack);
             }
             throw err;
           }
-        }
+        },
       );
       result.set(variant, service);
     }
@@ -128,12 +111,9 @@ export class ServiceResolver extends ServiceProvider {
 
   getRaw(
     identifier: ServiceIdentifierValue,
-    { sameScope = false, optional = false }: ResolveOptions = {}
+    { sameScope = false, optional = false }: ResolveOptions = {},
   ) {
-    const factory = this.provider.container.getFactory(
-      identifier,
-      this.provider.scope
-    );
+    const factory = this.provider.container.getFactory(identifier, this.provider.scope);
     if (!factory) {
       if (this.provider.parent && !sameScope) {
         return this.provider.parent.getRaw(identifier, {
@@ -154,11 +134,7 @@ export class ServiceResolver extends ServiceProvider {
         return factory(nextResolver);
       } catch (err) {
         if (err instanceof ServiceNotFoundError) {
-          throw new MissingDependencyError(
-            identifier,
-            err.identifier,
-            this.stack
-          );
+          throw new MissingDependencyError(identifier, err.identifier, this.stack);
         }
         throw err;
       }
@@ -171,18 +147,13 @@ export class ServiceResolver extends ServiceProvider {
       throw new RecursionLimitError();
     }
     const circular = this.stack.find(
-      i =>
-        i.identifierName === identifier.identifierName &&
-        i.variant === identifier.variant
+      (i) => i.identifierName === identifier.identifierName && i.variant === identifier.variant,
     );
     if (circular) {
       throw new CircularDependencyError([...this.stack, identifier]);
     }
 
-    return new ServiceResolver(this.provider, depth, [
-      ...this.stack,
-      identifier,
-    ]);
+    return new ServiceResolver(this.provider, depth, [...this.stack, identifier]);
   }
 }
 
@@ -194,7 +165,7 @@ export class BasicServiceProvider extends ServiceProvider {
   constructor(
     container: Container,
     readonly scope: string[],
-    readonly parent: ServiceProvider | null
+    readonly parent: ServiceProvider | null,
   ) {
     super();
     this.container = container.clone();
@@ -206,7 +177,7 @@ export class BasicServiceProvider extends ServiceProvider {
 
   getAllRaw(
     identifier: ServiceIdentifierValue,
-    options?: ResolveOptions
+    options?: ResolveOptions,
   ): Map<ServiceVariant, any> {
     const resolver = new ServiceResolver(this);
     return resolver.getAllRaw(identifier, options);

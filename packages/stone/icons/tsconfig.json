@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,18 +15,13 @@
     "incremental": true,
     "experimentalDecorators": true,
     "declaration": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist/cjs"
   },
-  "include": [
-    "icons/**/*.ts",
-    "icons/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "include": ["icons/**/*.ts", "icons/**/*.tsx"],
+  "exclude": ["node_modules", "dist"],
   "references": [
     {
       "path": "./tsconfig.node.json"

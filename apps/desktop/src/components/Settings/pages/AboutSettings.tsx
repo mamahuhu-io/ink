@@ -1,53 +1,46 @@
-import { ExternalLink } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { SettingHeader, SettingRow, SettingWrapper } from '../components'
-import { usePreferencesStore } from '../../../stores/preferences'
-import { checkForAppUpdates } from '../../../services/updater'
-import { open } from '@tauri-apps/plugin-shell'
-import './SettingPages.css'
+import './SettingPages.css';
+
+import { open } from '@tauri-apps/plugin-shell';
+import { ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+import pkg from '../../../../package.json';
+import { checkForAppUpdates } from '../../../services/updater';
+import { usePreferencesStore } from '../../../stores/preferences';
+import { SettingHeader, SettingRow, SettingWrapper } from '../components';
 
 export function AboutSettings() {
-  const { t } = useTranslation()
-  const { 
-    resetToDefaults,
-    autoCheckUpdates,
-    setAutoCheckUpdates
-  } = usePreferencesStore()
+  const { t } = useTranslation();
+  const { resetToDefaults, autoCheckUpdates, setAutoCheckUpdates } = usePreferencesStore();
 
   const handleOpenLink = async (url: string) => {
     try {
-      await open(url)
+      await open(url);
     } catch (e) {
-      console.error('Failed to open link:', e)
+      console.error('Failed to open link:', e);
     }
-  }
+  };
 
   const handleCheckUpdate = async () => {
-    await checkForAppUpdates(false)
-  }
+    await checkForAppUpdates(false);
+  };
 
   return (
     <div className="setting-page">
-      <SettingHeader
-        title={t('settings.about.title')}
-        subtitle={t('settings.about.subtitle')}
-      />
+      <SettingHeader title={t('settings.about.title')} subtitle={t('settings.about.subtitle')} />
 
       <SettingWrapper title={t('settings.about.version.title')}>
-        <SettingRow
-          name="Ink"
-          desc="Version 0.1.0"
-        >
+        <SettingRow name="Ink" desc={`Version ${pkg.version}`}>
           <img
             src="/icon.png"
             alt="Ink"
             className="about-app-icon"
             onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none'
+              (e.target as HTMLImageElement).style.display = 'none';
             }}
           />
         </SettingRow>
-        
+
         <SettingRow
           name={t('settings.about.version.autoCheck')}
           desc={t('settings.about.version.autoCheckDesc')}
@@ -55,6 +48,16 @@ export function AboutSettings() {
           <div
             className={`setting-switch ${autoCheckUpdates ? 'active' : ''}`}
             onClick={() => setAutoCheckUpdates(!autoCheckUpdates)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setAutoCheckUpdates(!autoCheckUpdates);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={autoCheckUpdates}
+            aria-label={t('settings.about.version.autoCheck')}
           />
         </SettingRow>
 
@@ -92,15 +95,12 @@ export function AboutSettings() {
       </SettingWrapper>
 
       <SettingWrapper title={t('settings.about.data.title')}>
-        <SettingRow
-          name={t('settings.about.data.reset')}
-          desc={t('settings.about.data.resetDesc')}
-        >
+        <SettingRow name={t('settings.about.data.reset')} desc={t('settings.about.data.resetDesc')}>
           <button className="setting-button setting-button-danger" onClick={resetToDefaults}>
             {t('settings.about.data.resetButton')}
           </button>
         </SettingRow>
       </SettingWrapper>
     </div>
-  )
+  );
 }

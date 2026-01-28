@@ -2,9 +2,7 @@ import { type Container, createIdentifier } from '@ink/stone-global/di';
 import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import { Extension, Slice, type SliceSnapshot } from '@ink/stone-store';
 
-export const DndApiExtensionIdentifier = createIdentifier<DNDAPIExtension>(
-  'InkDndApiIdentifier'
-);
+export const DndApiExtensionIdentifier = createIdentifier<DNDAPIExtension>('InkDndApiIdentifier');
 
 export class DNDAPIExtension extends Extension {
   mimeType = 'application/x-ink-dnd';
@@ -16,7 +14,7 @@ export class DNDAPIExtension extends Extension {
   static override setup(di: Container) {
     di.add(this, [StdIdentifier]);
 
-    di.addImpl(DndApiExtensionIdentifier, provider => provider.get(this));
+    di.addImpl(DndApiExtensionIdentifier, (provider) => provider.get(this));
   }
 
   decodeSnapshot(data: string): SliceSnapshot {

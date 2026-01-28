@@ -1,21 +1,11 @@
 import type { Disposable } from '@ink/stone-global/disposable';
 import type { BlobEngine, BlobState } from '@ink/stone-sync';
-import {
-  computed,
-  effect,
-  type ReadonlySignal,
-  signal,
-} from '@preact/signals-core';
+import { computed, effect, type ReadonlySignal, signal } from '@preact/signals-core';
 import type { TemplateResult } from 'lit-html';
 
 export type ResourceKind = 'Blob' | 'File' | 'Image';
 
-export type StateKind =
-  | 'loading'
-  | 'uploading'
-  | 'error'
-  | 'error:oversize'
-  | 'none';
+export type StateKind = 'loading' | 'uploading' | 'error' | 'error:oversize' | 'none';
 
 export type StateInfo = {
   icon: TemplateResult;
@@ -50,12 +40,7 @@ export class ResourceController implements Disposable {
     } = this.state$.value;
     const hasExceeded = overSize;
     const hasError = hasExceeded || Boolean(errorMessage);
-    const state = this.determineState(
-      hasExceeded,
-      hasError,
-      uploading,
-      downloading
-    );
+    const state = this.determineState(hasExceeded, hasError, uploading, downloading);
 
     const loading = state === 'uploading' || state === 'loading';
 
@@ -72,7 +57,7 @@ export class ResourceController implements Disposable {
 
   constructor(
     readonly blobId$: ReadonlySignal<string | undefined>,
-    readonly kind: ResourceKind = 'File'
+    readonly kind: ResourceKind = 'File',
   ) {}
 
   // This is a tradeoff, initializing `Blob Sync Engine`.
@@ -85,7 +70,7 @@ export class ResourceController implements Disposable {
     hasExceeded: boolean,
     hasError: boolean,
     uploading: boolean,
-    downloading: boolean
+    downloading: boolean,
   ): StateKind {
     if (hasExceeded) return 'error:oversize';
     if (hasError) return 'error';
@@ -98,10 +83,9 @@ export class ResourceController implements Disposable {
     info: {
       loadingIcon: TemplateResult;
       errorIcon?: TemplateResult;
-    } & StateInfo
+    } & StateInfo,
   ): ResolvedStateInfo {
-    const { error, loading, state, url, needUpload } =
-      this.resolvedState$.value;
+    const { error, loading, state, url, needUpload } = this.resolvedState$.value;
 
     const { icon, title, description, loadingIcon, errorIcon } = info;
 
@@ -138,7 +122,7 @@ export class ResourceController implements Disposable {
       const blobState$ = this.engine?.blobState$(blobId);
       if (!blobState$) return;
 
-      const subscription = blobState$.subscribe(state => {
+      const subscription = blobState$.subscribe((state) => {
         let { uploading, downloading, errorMessage } = state;
         if (state.overSize) {
           uploading = false;

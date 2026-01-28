@@ -1,10 +1,7 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { TableModelFlavour } from '@ink/stone-model';
-import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { BlockViewExtension, FlavourExtension } from '@ink/stone-std';
+import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { literal } from 'lit/static-html.js';
 
 import { tableSlashMenuConfig } from './configs/slash-menu';

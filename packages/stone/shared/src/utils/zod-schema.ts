@@ -28,14 +28,7 @@ import {
   TextAlignSchema,
   TextVerticalAlign,
 } from '@ink/stone-model';
-import {
-  z,
-  ZodDefault,
-  ZodIntersection,
-  ZodObject,
-  type ZodTypeAny,
-  ZodUnion,
-} from 'zod';
+import { z, ZodDefault, ZodIntersection, ZodObject, type ZodTypeAny, ZodUnion } from 'zod';
 
 const ConnectorEndpointSchema = z.nativeEnum(PointStyle);
 const LineWidthSchema = z.nativeEnum(LineWidth);
@@ -97,7 +90,7 @@ export const HighlighterSchema = z
     lineWidth: z
       .number()
       .int()
-      .refine(value => HIGHLIGHTER_LINE_WIDTHS.includes(value)),
+      .refine((value) => HIGHLIGHTER_LINE_WIDTHS.includes(value)),
   })
   .default({
     color: DefaultTheme.hightlighterColor,
@@ -142,9 +135,7 @@ const ShapeObject = {
 
 export const ShapeSchema = z.object(ShapeObject).default(DEFAULT_SHAPE);
 
-export const RoundedShapeSchema = z
-  .object(ShapeObject)
-  .default({ ...DEFAULT_SHAPE, radius: 0.1 });
+export const RoundedShapeSchema = z.object(ShapeObject).default({ ...DEFAULT_SHAPE, radius: 0.1 });
 
 export const TextSchema = z
   .object({
@@ -202,16 +193,13 @@ export function makeDeepOptional(schema: ZodTypeAny): ZodTypeAny {
     const deepOptionalShape = Object.fromEntries(
       Object.entries(shape).map(([key, value]) => {
         return [key, makeDeepOptional(value as ZodTypeAny)];
-      })
+      }),
     );
     return z.object(deepOptionalShape).optional();
   } else if (schema instanceof ZodUnion) {
     return schema.or(z.undefined());
   } else if (schema instanceof ZodIntersection) {
-    return z.intersection(
-      makeDeepOptional(schema._def.left),
-      makeDeepOptional(schema._def.right)
-    );
+    return z.intersection(makeDeepOptional(schema._def.left), makeDeepOptional(schema._def.right));
   } else {
     return schema.optional();
   }

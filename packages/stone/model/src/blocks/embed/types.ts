@@ -18,28 +18,20 @@ export const ExternalEmbedModels = [
   EmbedYoutubeModel,
 ] as const;
 
-export const InternalEmbedModels = [
-  EmbedLinkedDocModel,
-  EmbedSyncedDocModel,
-] as const;
+export const InternalEmbedModels = [EmbedLinkedDocModel, EmbedSyncedDocModel] as const;
 
 export type ExternalEmbedModel = (typeof ExternalEmbedModels)[number];
 
 export type InternalEmbedModel = (typeof InternalEmbedModels)[number];
 
-export type EmbedCardModel = InstanceType<
-  ExternalEmbedModel | InternalEmbedModel
->;
+export type EmbedCardModel = InstanceType<ExternalEmbedModel | InternalEmbedModel>;
 
-export type LinkableEmbedModel =
-  | EmbedCardModel
-  | EmbedIframeBlockModel
-  | BookmarkBlockModel;
+export type LinkableEmbedModel = EmbedCardModel | EmbedIframeBlockModel | BookmarkBlockModel;
 
 export type BuiltInEmbedModel = EmbedCardModel | EmbedHtmlModel;
 
 export function isExternalEmbedModel(
-  model: GfxModel | BlockModel
+  model: GfxModel | BlockModel,
 ): model is InstanceType<ExternalEmbedModel> {
   return (
     model instanceof EmbedFigmaModel ||
@@ -50,9 +42,7 @@ export function isExternalEmbedModel(
 }
 
 export function isInternalEmbedModel(
-  model: GfxModel | BlockModel
+  model: GfxModel | BlockModel,
 ): model is InstanceType<InternalEmbedModel> {
-  return (
-    model instanceof EmbedLinkedDocModel || model instanceof EmbedSyncedDocModel
-  );
+  return model instanceof EmbedLinkedDocModel || model instanceof EmbedSyncedDocModel;
 }

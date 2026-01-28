@@ -20,7 +20,7 @@ class WatchDirective extends AsyncDirective {
       // Whether the subscribe() callback is called because of this render
       // pass, or because of a separate signal update.
       let updateFromLit = true;
-      this.__dispose = signal.subscribe(value => {
+      this.__dispose = signal.subscribe((value) => {
         // The subscribe() callback is called synchronously during subscribe.
         // Ignore the first call since we return the value below in that case.
         if (updateFromLit === false) {
@@ -55,7 +55,7 @@ class WatchDirective extends AsyncDirective {
     // so the synchronous call here will go before a render call, and we'll get
     // two sets of the value (setValue() here and the return in render()), but
     // this is ok because the value will be dirty-checked by lit-html.
-    this.__dispose = this.__signal?.subscribe(value => {
+    this.__dispose = this.__signal?.subscribe((value) => {
       this.setValue(value);
     });
   }

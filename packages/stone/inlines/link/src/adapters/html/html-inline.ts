@@ -1,7 +1,4 @@
-import {
-  type HtmlAST,
-  HtmlASTToDeltaExtension,
-} from '@ink/stone-shared/adapters';
+import { type HtmlAST, HtmlASTToDeltaExtension } from '@ink/stone-shared/adapters';
 import type { Element } from 'hast';
 
 const isElement = (ast: HtmlAST): ast is Element => {
@@ -10,7 +7,7 @@ const isElement = (ast: HtmlAST): ast is Element => {
 
 export const htmlLinkElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'link-element',
-  match: ast => isElement(ast) && ast.tagName === 'a',
+  match: (ast) => isElement(ast) && ast.tagName === 'a',
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
@@ -54,8 +51,8 @@ export const htmlLinkElementToDeltaMatcher = HtmlASTToDeltaExtension({
         ];
       }
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         if (href.startsWith('http')) {
           delta.attributes = {
             ...delta.attributes,
@@ -64,7 +61,7 @@ export const htmlLinkElementToDeltaMatcher = HtmlASTToDeltaExtension({
           return delta;
         }
         return delta;
-      })
+      }),
     );
   },
 });

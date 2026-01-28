@@ -1,7 +1,7 @@
+import { flip, offset } from '@floating-ui/dom';
 import { createLitPortal } from '@ink/stone-components/portal';
 import { SignalWatcher } from '@ink/stone-global/lit';
 import { ArrowDownSmallIcon, FlipDirectionIcon } from '@ink/stone-icons/lit';
-import { flip, offset } from '@floating-ui/dom';
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -87,9 +87,7 @@ export class AdapterPanelHeader extends SignalWatcher(LitElement) {
     return html`
       <div class="adapter-panel-header">
         <div class="adapter-selector" @click="${this._toggleAdapterMenu}">
-          <span class="adapter-selector-label">
-            ${this.activeAdapter.label}
-          </span>
+          <span class="adapter-selector-label"> ${this.activeAdapter.label} </span>
           ${ArrowDownSmallIcon({ width: '16px', height: '16px' })}
         </div>
         <div class="update-button" @click="${this.updateActiveContent}">

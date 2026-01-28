@@ -31,7 +31,7 @@ describe('rehypeInlineToBlock', () => {
     const input = '<b class="test" id="demo"><p>Hello World</p></b>';
     const output = process(input);
     expect(output).toBe(
-      '<div class="test" id="demo" data-original-tag="b"><p>Hello World</p></div>'
+      '<div class="test" id="demo" data-original-tag="b"><p>Hello World</p></div>',
     );
   });
 
@@ -39,7 +39,7 @@ describe('rehypeInlineToBlock', () => {
     const input = '<b><p>First</p><div>Second</div><h1>Third</h1></b>';
     const output = process(input);
     expect(output).toBe(
-      '<div data-original-tag="b"><p>First</p><div>Second</div><h1>Third</h1></div>'
+      '<div data-original-tag="b"><p>First</p><div>Second</div><h1>Third</h1></div>',
     );
   });
 
@@ -47,7 +47,7 @@ describe('rehypeInlineToBlock', () => {
     const input = '<b>Text before<p>Block element</p>Text after</b>';
     const output = process(input);
     expect(output).toBe(
-      '<div data-original-tag="b">Text before<p>Block element</p>Text after</div>'
+      '<div data-original-tag="b">Text before<p>Block element</p>Text after</div>',
     );
   });
 
@@ -55,7 +55,7 @@ describe('rehypeInlineToBlock', () => {
     const input = '<b><div><p>Nested <b>inline</b> content</p></div></b>';
     const output = process(input);
     expect(output).toBe(
-      '<div data-original-tag="b"><div><p>Nested <b>inline</b> content</p></div></div>'
+      '<div data-original-tag="b"><div><p>Nested <b>inline</b> content</p></div></div>',
     );
   });
 });

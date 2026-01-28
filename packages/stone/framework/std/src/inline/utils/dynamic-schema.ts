@@ -2,10 +2,10 @@ import { z, type ZodTypeAny } from 'zod';
 
 export function dynamicSchema<Key extends string, Value extends ZodTypeAny>(
   keyValidator: (key: string) => key is Key,
-  valueType: Value
+  valueType: Value,
 ) {
   return z.preprocess(
-    record => {
+    (record) => {
       // check it is a record
       if (typeof record !== 'object' || record === null) {
         return {};
@@ -18,9 +18,9 @@ export function dynamicSchema<Key extends string, Value extends ZodTypeAny>(
             acc[key] = value;
             return acc;
           },
-          {} as Record<Key, unknown>
+          {} as Record<Key, unknown>,
         );
     },
-    z.record(z.custom<Key>(keyValidator), valueType)
+    z.record(z.custom<Key>(keyValidator), valueType),
   );
 }

@@ -1,14 +1,3 @@
-import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import { IS_MOBILE } from '@ink/stone-global/env';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  ArrowLeftBigIcon,
-  ArrowLeftSmallIcon,
-  CloseIcon,
-  SearchIcon,
-} from '@ink/stone-icons/lit';
-import { ShadowlessElement } from '@ink/stone-std';
-import { RANGE_SYNC_EXCLUDE_ATTR } from '@ink/stone-std/inline';
 import {
   autoPlacement,
   autoUpdate,
@@ -18,6 +7,12 @@ import {
   type ReferenceElement,
   shift,
 } from '@floating-ui/dom';
+import { IS_MOBILE } from '@ink/stone-global/env';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { ArrowLeftBigIcon, ArrowLeftSmallIcon, CloseIcon, SearchIcon } from '@ink/stone-icons/lit';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import { ShadowlessElement } from '@ink/stone-std';
+import { RANGE_SYNC_EXCLUDE_ATTR } from '@ink/stone-std/inline';
 import { css, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { createRef, ref } from 'lit/directives/ref.js';
@@ -100,7 +95,7 @@ export class MenuComponent
       });
       const length = input.value.length;
       input.setSelectionRange(length, length);
-      this.disposables.addFromEvent(input, 'keydown', e => {
+      this.disposables.addFromEvent(input, 'keydown', (e) => {
         e.stopPropagation();
         if (e.key === 'Escape') {
           this.menu.close();
@@ -128,10 +123,10 @@ export class MenuComponent
         }
       });
 
-      this.disposables.addFromEvent(input, 'copy', e => {
+      this.disposables.addFromEvent(input, 'copy', (e) => {
         e.stopPropagation();
       });
-      this.disposables.addFromEvent(input, 'cut', e => {
+      this.disposables.addFromEvent(input, 'cut', (e) => {
         e.stopPropagation();
       });
       this.disposables.addFromEvent(this, 'click', this._clickContainer);
@@ -439,7 +434,7 @@ export const createPopup = (
     onClose?: () => void;
     middleware?: Array<Middleware | null | undefined | false>;
     container?: HTMLElement;
-  }
+  },
 ) => {
   const close = () => {
     modal.remove();
@@ -460,19 +455,19 @@ export const createPopup = (
   });
   modal.append(content);
 
-  modal.onpointerdown = ev => {
+  modal.onpointerdown = (ev) => {
     if (ev.target === modal) {
       close();
     }
   };
 
-  modal.onmousedown = ev => {
+  modal.onmousedown = (ev) => {
     if (ev.target === modal) {
       close();
     }
   };
 
-  modal.oncontextmenu = ev => {
+  modal.oncontextmenu = (ev) => {
     ev.preventDefault();
     if (ev.target === modal) {
       close();
@@ -520,7 +515,7 @@ export const popMenu = (
     options: MenuOptions;
     middleware?: Array<Middleware | null | undefined | false>;
     container?: HTMLElement;
-  }
+  },
 ): MenuHandler => {
   if (IS_MOBILE) {
     return popMobileMenu(props.options);
@@ -541,12 +536,7 @@ export const popMenu = (
     },
     middleware: props.middleware ?? [
       autoPlacement({
-        allowedPlacements: [
-          'bottom-start',
-          'bottom-end',
-          'top-start',
-          'top-end',
-        ],
+        allowedPlacements: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
       }),
       offset(4),
     ],
@@ -563,7 +553,7 @@ export const popMenu = (
 export const popFilterableSimpleMenu = (
   target: PopupTarget,
   options: MenuConfig[],
-  onClose?: () => void
+  onClose?: () => void,
 ) => {
   popMenu(target, {
     options: {

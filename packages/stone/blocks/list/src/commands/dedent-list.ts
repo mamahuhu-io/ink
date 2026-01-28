@@ -99,14 +99,8 @@ export const dedentListCommand: Command<{
   const { indentContext: dedentContext, std } = ctx;
   const { store, selection, range, host } = std;
 
-  if (
-    !dedentContext ||
-    dedentContext.type !== 'dedent' ||
-    dedentContext.flavour !== 'ink:list'
-  ) {
-    console.warn(
-      'you need to use `canDedentList` command before running `dedentList` command'
-    );
+  if (!dedentContext || dedentContext.type !== 'dedent' || dedentContext.flavour !== 'ink:list') {
+    console.warn('you need to use `canDedentList` command before running `dedentList` command');
     return;
   }
 

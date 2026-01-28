@@ -9,7 +9,7 @@ import { HastUtils } from '../../utils/hast';
  * We need to wrap them in a p tag to avoid the inline elements being treated as a block element
  */
 export const rehypeWrapInlineElements: Plugin<[], Root> = () => {
-  return tree => {
+  return (tree) => {
     visit(tree, 'element', (node: Element) => {
       if (node.tagName === 'div') {
         // First check if we have a mix of inline and block elements

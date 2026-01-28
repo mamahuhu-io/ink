@@ -2,10 +2,7 @@ import type { StyleInfo } from 'lit/directives/style-map.js';
 
 import type { InkTextAttributes } from '../types';
 
-export function inkTextStyles(
-  props: InkTextAttributes,
-  override?: Readonly<StyleInfo>
-): StyleInfo {
+export function inkTextStyles(props: InkTextAttributes, override?: Readonly<StyleInfo>): StyleInfo {
   let textDecorations = '';
   if (props.underline) {
     textDecorations += 'underline';

@@ -2,12 +2,12 @@ import { KeymapExtension } from '@ink/stone-std';
 
 export const fallbackKeymap = KeymapExtension(() => {
   return {
-    Tab: ctx => {
+    Tab: (ctx) => {
       const event = ctx.get('defaultState').event;
       event.stopPropagation();
       event.preventDefault();
     },
-    'Shift-Tab': ctx => {
+    'Shift-Tab': (ctx) => {
       const event = ctx.get('defaultState').event;
       event.stopPropagation();
       event.preventDefault();

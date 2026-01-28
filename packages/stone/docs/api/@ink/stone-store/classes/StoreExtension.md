@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / StoreExtension
 
@@ -34,7 +34,7 @@ Lifecycle hook when the yjs document is disposed.
 
 `void`
 
-***
+---
 
 ### loaded()
 

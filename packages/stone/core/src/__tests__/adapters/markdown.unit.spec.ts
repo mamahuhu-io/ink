@@ -1,12 +1,5 @@
-import {
-  DefaultTheme,
-  NoteDisplayMode,
-  TableModelFlavour,
-} from '@ink/stone-model';
-import {
-  embedSyncedDocMiddleware,
-  MarkdownAdapter,
-} from '@ink/stone-shared/adapters';
+import { DefaultTheme, NoteDisplayMode, TableModelFlavour } from '@ink/stone-model';
+import { embedSyncedDocMiddleware, MarkdownAdapter } from '@ink/stone-shared/adapters';
 import type {
   BlockSnapshot,
   DocSnapshot,
@@ -1443,15 +1436,11 @@ hhh
       ],
     };
 
-    const markdown =
-      '![](assets/YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=.blob "aaa")\n\n';
+    const markdown = '![](assets/YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=.blob "aaa")\n\n';
 
     const mdAdapter = new MarkdownAdapter(createJob(), provider);
     const blobCRUD = new MemoryBlobCRUD();
-    await blobCRUD.set(
-      'YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=',
-      new Blob()
-    );
+    await blobCRUD.set('YXXTjRmLlNyiOUnHb8nAIvUP6V7PAXhwW9F5_tc2LGs=', new Blob());
     const assets = new AssetsManager({ blob: blobCRUD });
 
     const target = await mdAdapter.fromBlockSnapshot({
@@ -3791,8 +3780,7 @@ bbb
     });
 
     test('escapes dollar signs followed by a digit or space and digit', async () => {
-      const markdown =
-        'The price of the T-shirt is $9.15 and the price of the hat is $ 8\n';
+      const markdown = 'The price of the T-shirt is $9.15 and the price of the hat is $ 8\n';
       const blockSnapshot: BlockSnapshot = {
         type: 'block',
         id: 'matchesReplaceMap[0]',
@@ -3815,8 +3803,7 @@ bbb
                 '$stone:internal:text$': true,
                 delta: [
                   {
-                    insert:
-                      'The price of the T-shirt is $9.15 and the price of the hat is $ 8',
+                    insert: 'The price of the T-shirt is $9.15 and the price of the hat is $ 8',
                   },
                 ],
               },
@@ -4309,8 +4296,7 @@ hhh
                   '$stone:internal:text$': true,
                   delta: [
                     {
-                      insert:
-                        'prompt: How many people will live in the world in 2040?',
+                      insert: 'prompt: How many people will live in the world in 2040?',
                     },
                   ],
                 },

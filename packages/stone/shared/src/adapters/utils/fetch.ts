@@ -13,7 +13,7 @@ const fetchImage = async (url: string, init?: RequestInit, proxy?: string) => {
       return await fetch(url, init);
     }
     return await fetch(proxy + '?url=' + encodeURIComponent(url), init)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
         }
@@ -27,9 +27,7 @@ const fetchImage = async (url: string, init?: RequestInit, proxy?: string) => {
 };
 
 const fetchable = (url: string) =>
-  url.startsWith('http:') ||
-  url.startsWith('https:') ||
-  url.startsWith('data:');
+  url.startsWith('http:') || url.startsWith('https:') || url.startsWith('data:');
 
 export const FetchUtils = {
   fetchImage,

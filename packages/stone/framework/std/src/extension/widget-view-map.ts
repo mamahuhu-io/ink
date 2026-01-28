@@ -22,15 +22,13 @@ import type { WidgetViewType } from '../spec/type.js';
 export function WidgetViewExtension(
   flavour: string,
   id: string,
-  view: WidgetViewType
+  view: WidgetViewType,
 ): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       if (flavour.includes('|') || id.includes('|')) {
         console.error(`Register view failed:`);
-        console.error(
-          `flavour or id cannot include '|', flavour: ${flavour}, id: ${id}`
-        );
+        console.error(`flavour or id cannot include '|', flavour: ${flavour}, id: ${id}`);
         return;
       }
       const key = `${flavour}|${id}`;

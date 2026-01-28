@@ -1,25 +1,11 @@
+import { autoUpdate, computePosition, inline, offset, shift } from '@floating-ui/dom';
 import type { EditorIconButton } from '@ink/stone-components/toolbar';
-import type { InkInlineEditor } from '@ink/stone-shared/types';
-import {
-  isValidUrl,
-  normalizeUrl,
-  stopPropagation,
-} from '@ink/stone-shared/utils';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { DoneIcon } from '@ink/stone-icons/lit';
-import {
-  type BlockStdScope,
-  ShadowlessElement,
-  TextSelection,
-} from '@ink/stone-std';
+import type { InkInlineEditor } from '@ink/stone-shared/types';
+import { isValidUrl, normalizeUrl, stopPropagation } from '@ink/stone-shared/utils';
+import { type BlockStdScope, ShadowlessElement, TextSelection } from '@ink/stone-std';
 import type { InlineRange } from '@ink/stone-std/inline';
-import {
-  autoUpdate,
-  computePosition,
-  inline,
-  offset,
-  shift,
-} from '@floating-ui/dom';
 import { html } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
@@ -79,13 +65,7 @@ export class LinkPopup extends WithDisposable(ShadowlessElement) {
   private readonly _editTemplate = () => {
     this.updateComplete
       .then(() => {
-        if (
-          !this.textInput ||
-          !this.linkInput ||
-          !this.currentText ||
-          !this.currentLink
-        )
-          return;
+        if (!this.textInput || !this.linkInput || !this.currentText || !this.currentLink) return;
 
         this.textInput.value = this.currentText;
         this.linkInput.value = this.currentLink;
@@ -131,7 +111,7 @@ export class LinkPopup extends WithDisposable(ShadowlessElement) {
   get currentText() {
     return this.inlineEditor.yTextString.slice(
       this.targetInlineRange.index,
-      this.targetInlineRange.index + this.targetInlineRange.length
+      this.targetInlineRange.index + this.targetInlineRange.length,
     );
   }
 
@@ -215,13 +195,11 @@ export class LinkPopup extends WithDisposable(ShadowlessElement) {
       return;
     }
 
-    this.mockSelectionContainer
-      .querySelectorAll('div')
-      .forEach(e => e.remove());
+    this.mockSelectionContainer.querySelectorAll('div').forEach((e) => e.remove());
 
     const fragment = document.createDocumentFragment();
 
-    rects.forEach(domRect => {
+    rects.forEach((domRect) => {
       const mockSelection = document.createElement('div');
       mockSelection.classList.add('mock-selection');
 
@@ -264,7 +242,7 @@ export class LinkPopup extends WithDisposable(ShadowlessElement) {
     this.disposables.addFromEvent(this, 'cut', stopPropagation);
     this.disposables.addFromEvent(this, 'paste', stopPropagation);
 
-    this.disposables.addFromEvent(this.overlayMask, 'click', e => {
+    this.disposables.addFromEvent(this.overlayMask, 'click', (e) => {
       e.stopPropagation();
       this.std.host.selection.setGroup('note', []);
       this.abortController.abort();
@@ -296,12 +274,10 @@ export class LinkPopup extends WithDisposable(ShadowlessElement) {
             popover.style.left = `${x}px`;
             popover.style.top = `${y}px`;
 
-            this.updateMockSelection(
-              Array.from(visualElement.getClientRects())
-            );
+            this.updateMockSelection(Array.from(visualElement.getClientRects()));
           })
           .catch(console.error);
-      })
+      }),
     );
   }
 

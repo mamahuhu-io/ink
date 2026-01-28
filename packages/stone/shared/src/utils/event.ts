@@ -1,5 +1,5 @@
-import type { Palette } from '@ink/stone-model';
 import { IS_IOS, IS_MAC } from '@ink/stone-global/env';
+import type { Palette } from '@ink/stone-model';
 
 export function isTouchPadPinchEvent(e: WheelEvent) {
   // two finger pinches on touch pad, ctrlKey is always true.
@@ -45,97 +45,73 @@ export function isControlledKeyboardEvent(e: KeyboardEvent) {
 }
 
 export function isNewTabTrigger(event?: MouseEvent) {
-  return event
-    ? (event.ctrlKey || event.metaKey || event.button === 1) && !event.altKey
-    : false;
+  return event ? (event.ctrlKey || event.metaKey || event.button === 1) && !event.altKey : false;
 }
 
 export function isNewViewTrigger(event?: MouseEvent) {
   return event ? (event.ctrlKey || event.metaKey) && event.altKey : false;
 }
 
-export function on<
-  T extends HTMLElement,
-  K extends keyof M,
-  M = HTMLElementEventMap,
->(
+export function on<T extends HTMLElement, K extends keyof M, M = HTMLElementEventMap>(
   element: T,
   event: K,
   handler: (ev: M[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
 export function on<T extends HTMLElement>(
   element: T,
   event: string,
   handler: (ev: Event) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
 export function on<T extends Document, K extends keyof M, M = DocumentEventMap>(
   element: T,
   event: K,
   handler: (ev: M[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
-export function on<
-  T extends HTMLElement | Document,
-  K extends keyof HTMLElementEventMap,
->(
+export function on<T extends HTMLElement | Document, K extends keyof HTMLElementEventMap>(
   element: T,
   event: K,
   handler: (ev: HTMLElementEventMap[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ) {
   const dispose = () => {
     element.removeEventListener(
       event as string,
       handler as unknown as EventListenerObject,
-      options
+      options,
     );
   };
 
-  element.addEventListener(
-    event as string,
-    handler as unknown as EventListenerObject,
-    options
-  );
+  element.addEventListener(event as string, handler as unknown as EventListenerObject, options);
 
   return dispose;
 }
 
-export function once<
-  T extends HTMLElement,
-  K extends keyof M,
-  M = HTMLElementEventMap,
->(
+export function once<T extends HTMLElement, K extends keyof M, M = HTMLElementEventMap>(
   element: T,
   event: K,
   handler: (ev: M[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
 export function once<T extends HTMLElement>(
   element: T,
   event: string,
   handler: (ev: Event) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
-export function once<
-  T extends Document,
-  K extends keyof M,
-  M = DocumentEventMap,
->(
+export function once<T extends Document, K extends keyof M, M = DocumentEventMap>(
   element: T,
   event: K,
   handler: (ev: M[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ): () => void;
-export function once<
-  T extends HTMLElement,
-  K extends keyof HTMLElementEventMap,
->(
+export function once<T extends HTMLElement, K extends keyof HTMLElementEventMap>(
   element: T,
   event: K,
   handler: (ev: HTMLElementEventMap[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ) {
   const onceHandler = (e: HTMLElementEventMap[K]) => {
     dispose();
@@ -160,10 +136,7 @@ export function delayCallback(callback: () => void, delay: number = 0) {
  * A wrapper around `requestAnimationFrame` that only calls the callback if the
  * element is still connected to the DOM.
  */
-export function requestConnectedFrame(
-  callback: () => void,
-  element?: HTMLElement
-) {
+export function requestConnectedFrame(callback: () => void, element?: HTMLElement) {
   return requestAnimationFrame(() => {
     // If element is not provided, fallback to `requestAnimationFrame`
     if (element === undefined) {
@@ -179,9 +152,10 @@ export function requestConnectedFrame(
 /**
  * A wrapper around `requestConnectedFrame` that only calls at most once in one frame
  */
-export function requestThrottledConnectedFrame<
-  T extends (...args: any[]) => void,
->(func: T, element?: HTMLElement): T {
+export function requestThrottledConnectedFrame<T extends (...args: any[]) => void>(
+  func: T,
+  element?: HTMLElement,
+): T {
   let raqId: number | undefined = undefined;
   let latestArgs: unknown[] = [];
 
@@ -199,11 +173,7 @@ export function requestThrottledConnectedFrame<
 
 export const captureEventTarget = (target: EventTarget | null) => {
   const isElementOrNode = target instanceof Element || target instanceof Node;
-  return isElementOrNode
-    ? target instanceof Element
-      ? target
-      : target.parentElement
-    : null;
+  return isElementOrNode ? (target instanceof Element ? target : target.parentElement) : null;
 };
 
 interface ObserverParams {
@@ -349,7 +319,7 @@ export const createKeydownObserver = ({
       // Workaround: Use capture to prevent the event from triggering the keyboard bindings action
       capture: true,
       signal,
-    }
+    },
   );
 
   // Fix paste input

@@ -1,33 +1,33 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from 'react';
 
-export type SettingTabKey = 'editor' | 'general' | 'appearance' | 'shortcuts' | 'about'
+export type SettingTabKey = 'editor' | 'general' | 'appearance' | 'shortcuts' | 'about';
 
 export interface SettingTab {
-  key: SettingTabKey
-  title: string
-  icon: ReactNode
+  key: SettingTabKey;
+  title: string;
+  icon: ReactNode;
 }
 
 export interface SettingRowProps {
-  name: string
-  desc?: string
-  children?: ReactNode
-  onClick?: () => void
-  className?: string
+  name: string;
+  desc?: string;
+  children?: ReactNode;
+  onClick?: () => void;
+  className?: string;
 }
 
 export interface SettingWrapperProps {
-  title: string
-  children: ReactNode
+  title: string;
+  children: ReactNode;
 }
 
 export interface SettingHeaderProps {
-  title: string
-  subtitle?: string
+  title: string;
+  subtitle?: string;
 }
 
 export interface SettingsModalProps {
-  isOpen: boolean
-  onClose: () => void
-  initialTab?: SettingTabKey
+  isOpen: boolean;
+  onClose: () => void;
+  initialTab?: SettingTabKey;
 }

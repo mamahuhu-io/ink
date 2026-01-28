@@ -1,10 +1,6 @@
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import { isStrictUrl } from '@ink/stone-shared/utils';
-import type {
-  BeforeinputHookCtx,
-  CompositionEndHookCtx,
-  HookContext,
-} from '@ink/stone-std/inline';
+import type { BeforeinputHookCtx, CompositionEndHookCtx, HookContext } from '@ink/stone-std/inline';
 
 const EDGE_IGNORED_ATTRIBUTES = ['code', 'link'] as const;
 const GLOBAL_IGNORED_ATTRIBUTES = [] as const;
@@ -33,9 +29,7 @@ const autoIdentifyLink = (ctx: HookContext<InkTextAttributes>) => {
     return;
   }
 
-  const verifyData = line.vTextContent
-    .slice(0, rangeIndexRelatedToLine)
-    .split(' ');
+  const verifyData = line.vTextContent.slice(0, rangeIndexRelatedToLine).split(' ');
 
   const verifyStr = verifyData[verifyData.length - 1];
 
@@ -54,18 +48,16 @@ const autoIdentifyLink = (ctx: HookContext<InkTextAttributes>) => {
     },
     {
       link: verifyStr,
-    }
+    },
   );
 };
 
 function handleExtendedAttributes(
-  ctx:
-    | BeforeinputHookCtx<InkTextAttributes>
-    | CompositionEndHookCtx<InkTextAttributes>
+  ctx: BeforeinputHookCtx<InkTextAttributes> | CompositionEndHookCtx<InkTextAttributes>,
 ) {
   const { data, inlineEditor, inlineRange } = ctx;
   const deltas = inlineEditor.getDeltasByInlineRange(inlineRange);
-  // eslint-disable-next-line sonarjs/no-collapsible-if
+
   if (data && data.length > 0 && data !== '\n') {
     if (
       // cursor is in the between of two deltas
@@ -80,18 +72,15 @@ function handleExtendedAttributes(
       // 1. aaa**b|bb**ccc --input 'd'--> aaa**bdbb**ccc, d should extend the bold attribute
       // 2. aaa**bbb|**ccc --input 'd'--> aaa**bbbd**ccc, d should extend the bold attribute
       const { attributes } = deltas[0][0];
-      if (
-        deltas.length !== 1 ||
-        inlineRange.index === inlineEditor.yText.length
-      ) {
+      if (deltas.length !== 1 || inlineRange.index === inlineEditor.yText.length) {
         // `EDGE_IGNORED_ATTRIBUTES` is which attributes should be ignored in case 2
-        EDGE_IGNORED_ATTRIBUTES.forEach(attr => {
+        EDGE_IGNORED_ATTRIBUTES.forEach((attr) => {
           delete attributes?.[attr];
         });
       }
 
       // `GLOBAL_IGNORED_ATTRIBUTES` is which attributes should be ignored in case 1, 2
-      GLOBAL_IGNORED_ATTRIBUTES.forEach(attr => {
+      GLOBAL_IGNORED_ATTRIBUTES.forEach((attr) => {
         delete attributes?.[attr];
       });
 
@@ -102,15 +91,11 @@ function handleExtendedAttributes(
   return ctx;
 }
 
-export const onVBeforeinput = (
-  ctx: BeforeinputHookCtx<InkTextAttributes>
-) => {
+export const onVBeforeinput = (ctx: BeforeinputHookCtx<InkTextAttributes>) => {
   handleExtendedAttributes(ctx);
   autoIdentifyLink(ctx);
 };
 
-export const onVCompositionEnd = (
-  ctx: CompositionEndHookCtx<InkTextAttributes>
-) => {
+export const onVCompositionEnd = (ctx: CompositionEndHookCtx<InkTextAttributes>) => {
   handleExtendedAttributes(ctx);
 };

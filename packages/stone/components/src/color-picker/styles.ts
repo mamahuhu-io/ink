@@ -244,15 +244,8 @@ export const COLOR_PICKER_STYLE = css`
   .color-slider-wrapper.alpha::before {
     background:
       linear-gradient(to right, var(--s) 0%, var(--c) 100%),
-      conic-gradient(
-          #fff 25%,
-          #d9d9d9 0deg,
-          #d9d9d9 50%,
-          #fff 0deg,
-          #fff 75%,
-          #d9d9d9 0deg
-        )
-        0% 0% / 8px 8px;
+      conic-gradient(#fff 25%, #d9d9d9 0deg, #d9d9d9 50%, #fff 0deg, #fff 75%, #d9d9d9 0deg) 0% 0% /
+        8px 8px;
   }
   .color-slider-wrapper.alpha .color-circle::before {
     opacity: var(--o, 1);

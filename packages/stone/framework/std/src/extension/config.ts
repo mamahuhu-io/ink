@@ -29,11 +29,11 @@ export interface ConfigFactory<Config extends Record<string, any>> {
  * ```
  */
 export function ConfigExtensionFactory<Config extends Record<string, any>>(
-  configId: string
+  configId: string,
 ): ConfigFactory<Config> {
   const identifier = ConfigIdentifier(configId) as ServiceIdentifier<Config>;
   const extensionFactory = (config: Config): ExtensionType => ({
-    setup: di => {
+    setup: (di) => {
       di.override(ConfigIdentifier(configId), () => {
         return config;
       });

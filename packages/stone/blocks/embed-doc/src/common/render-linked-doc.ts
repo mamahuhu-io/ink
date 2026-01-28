@@ -1,10 +1,6 @@
 import { getNotesFromDoc } from '@ink/stone-block-embed';
 import { ViewExtensionManagerIdentifier } from '@ink/stone-ext-loader';
-import {
-  ImageBlockModel,
-  ListBlockModel,
-  ParagraphBlockModel,
-} from '@ink/stone-model';
+import { ImageBlockModel, ListBlockModel, ParagraphBlockModel } from '@ink/stone-model';
 import { EMBED_CARD_HEIGHT } from '@ink/stone-shared/consts';
 import { matchModels } from '@ink/stone-shared/utils';
 import { BlockStdScope } from '@ink/stone-std';
@@ -14,28 +10,25 @@ import { render, type TemplateResult } from 'lit';
 import type { EmbedLinkedDocBlockComponent } from '../embed-linked-doc-block';
 import type { EmbedSyncedDocCard } from '../embed-synced-doc-block/components/embed-synced-doc-card';
 
-export function renderLinkedDocInCard(
-  card: EmbedLinkedDocBlockComponent | EmbedSyncedDocCard
-) {
+export function renderLinkedDocInCard(card: EmbedLinkedDocBlockComponent | EmbedSyncedDocCard) {
   const linkedDoc = card.linkedDoc;
   if (!linkedDoc) {
     console.error(
-      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`
+      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`,
     );
     return;
   }
 
-  // eslint-disable-next-line sonarjs/no-collapsible-if
   if ('bannerContainer' in card) {
     if (card.editorMode === 'page') {
-      renderPageAsBanner(card).catch(e => {
+      renderPageAsBanner(card).catch((e) => {
         console.error(e);
         card.isError = true;
       });
     }
   }
 
-  renderNoteContent(card).catch(e => {
+  renderNoteContent(card).catch((e) => {
     console.error(e);
     card.isError = true;
   });
@@ -45,7 +38,7 @@ async function renderPageAsBanner(card: EmbedSyncedDocCard) {
   const linkedDoc = card.linkedDoc;
   if (!linkedDoc) {
     console.error(
-      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`
+      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`,
     );
     return;
   }
@@ -56,8 +49,8 @@ async function renderPageAsBanner(card: EmbedSyncedDocCard) {
     return;
   }
 
-  const target = notes.flatMap(note =>
-    note.children.filter(child => matchModels(child, [ImageBlockModel]))
+  const target = notes.flatMap((note) =>
+    note.children.filter((child) => matchModels(child, [ImageBlockModel])),
   )[0];
 
   if (target) {
@@ -68,10 +61,7 @@ async function renderPageAsBanner(card: EmbedSyncedDocCard) {
   card.isBannerEmpty = true;
 }
 
-async function renderImageAsBanner(
-  card: EmbedSyncedDocCard,
-  image: BlockModel
-) {
+async function renderImageAsBanner(card: EmbedSyncedDocCard, image: BlockModel) {
   const sourceId = (image as ImageBlockModel).props.sourceId;
   if (!sourceId) return;
 
@@ -89,10 +79,7 @@ async function renderImageAsBanner(
   card.isBannerEmpty = false;
 }
 
-async function addCover(
-  card: EmbedSyncedDocCard,
-  cover: HTMLElement | TemplateResult<1>
-) {
+async function addCover(card: EmbedSyncedDocCard, cover: HTMLElement | TemplateResult<1>) {
   const coverContainer = await card.bannerContainer;
   if (!coverContainer) return;
   while (coverContainer.firstChild) {
@@ -106,15 +93,13 @@ async function addCover(
   }
 }
 
-async function renderNoteContent(
-  card: EmbedLinkedDocBlockComponent | EmbedSyncedDocCard
-) {
+async function renderNoteContent(card: EmbedLinkedDocBlockComponent | EmbedSyncedDocCard) {
   card.isNoteContentEmpty = true;
 
   const doc = card.linkedDoc;
   if (!doc) {
     console.error(
-      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`
+      `Trying to load page ${card.model.props.pageId} in linked page block, but the page is not found.`,
     );
     return;
   }
@@ -128,13 +113,13 @@ async function renderNoteContent(
   const isHorizontal = cardStyle === 'horizontal';
   const allowFlavours = isHorizontal ? [] : [ImageBlockModel];
 
-  const noteChildren = notes.flatMap(note =>
-    note.children.filter(model => {
+  const noteChildren = notes.flatMap((note) =>
+    note.children.filter((model) => {
       if (matchModels(model, allowFlavours)) {
         return true;
       }
       return filterTextModel(model);
-    })
+    }),
   );
 
   if (!noteChildren.length) {
@@ -171,9 +156,9 @@ async function renderNoteContent(
       noteChildren.splice(maxBlockCount);
     }
   }
-  const childIds = noteChildren.map(child => child.id);
+  const childIds = noteChildren.map((child) => child.id);
   const ids: string[] = [];
-  childIds.forEach(block => {
+  childIds.forEach((block) => {
     let parent: string | null = block;
     while (parent && !ids.includes(parent)) {
       ids.push(parent);
@@ -182,13 +167,11 @@ async function renderNoteContent(
   });
   const query: Query = {
     mode: 'strict',
-    match: ids.map(id => ({ id, viewType: 'display' })),
+    match: ids.map((id) => ({ id, viewType: 'display' })),
   };
   const previewDoc = doc.doc.getStore({ query });
   const std = card.host.std;
-  const previewSpec = std
-    .get(ViewExtensionManagerIdentifier)
-    .get('preview-page');
+  const previewSpec = std.get(ViewExtensionManagerIdentifier).get('preview-page');
   const previewStd = new BlockStdScope({
     store: previewDoc,
     extensions: previewSpec,
@@ -197,10 +180,8 @@ async function renderNoteContent(
   const fragment = document.createDocumentFragment();
   render(previewTemplate, fragment);
   noteBlocksContainer.append(fragment);
-  const contentEditableElements = noteBlocksContainer.querySelectorAll(
-    '[contenteditable="true"]'
-  );
-  contentEditableElements.forEach(element => {
+  const contentEditableElements = noteBlocksContainer.querySelectorAll('[contenteditable="true"]');
+  contentEditableElements.forEach((element) => {
     (element as HTMLElement).contentEditable = 'false';
   });
 }

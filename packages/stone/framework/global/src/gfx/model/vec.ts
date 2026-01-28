@@ -114,7 +114,7 @@ export class Vec {
       maxX: number;
       maxY: number;
     },
-    P: number[]
+    P: number[],
   ): number => {
     return Vec.dist(P, Vec.nearestPointOnBounds(bounds, P));
   };
@@ -127,12 +127,7 @@ export class Vec {
    * @param clamp Whether to clamp the point between A and B.
    * @returns
    */
-  static distanceToLineSegment = (
-    A: IVec,
-    B: IVec,
-    P: IVec,
-    clamp = true
-  ): number => {
+  static distanceToLineSegment = (A: IVec, B: IVec, P: IVec, clamp = true): number => {
     return Vec.dist(P, Vec.nearestPointOnLineSegment(A, B, P, clamp));
   };
 
@@ -220,9 +215,7 @@ export class Vec {
     //  isLeft: >0 for counterclockwise
     //          =0 for none (degenerate)
     //          <0 for clockwise
-    return (
-      (pc[0] - p1[0]) * (p2[1] - p1[1]) - (p2[0] - p1[0]) * (pc[1] - p1[1])
-    );
+    return (pc[0] - p1[0]) * (p2[1] - p1[1]) - (p2[0] - p1[0]) * (pc[1] - p1[1]);
   };
 
   /**
@@ -255,7 +248,7 @@ export class Vec {
    * Get a vector comprised of the maximum of two or more vectors.
    */
   static max = (...v: number[][]) => {
-    return [Math.max(...v.map(a => a[0])), Math.max(...v.map(a => a[1]))];
+    return [Math.max(...v.map((a) => a[0])), Math.max(...v.map((a) => a[1]))];
   };
 
   /**
@@ -271,7 +264,7 @@ export class Vec {
    * Get a vector comprised of the minimum of two or more vectors.
    */
   static min = (...v: number[][]) => {
-    return [Math.min(...v.map(a => a[0])), Math.min(...v.map(a => a[1]))];
+    return [Math.min(...v.map((a) => a[0])), Math.min(...v.map((a) => a[1]))];
   };
 
   /**
@@ -305,12 +298,9 @@ export class Vec {
       maxX: number;
       maxY: number;
     },
-    P: number[]
+    P: number[],
   ): number[] => {
-    return [
-      Vec.clamp(P[0], bounds.minX, bounds.maxX),
-      Vec.clamp(P[1], bounds.minY, bounds.maxY),
-    ];
+    return [Vec.clamp(P[0], bounds.minX, bounds.maxX), Vec.clamp(P[1], bounds.minY, bounds.maxY)];
   };
 
   /**
@@ -321,12 +311,7 @@ export class Vec {
    * @param clamp Whether to clamp the point between A and B.
    * @returns
    */
-  static nearestPointOnLineSegment = (
-    A: IVec,
-    B: IVec,
-    P: IVec,
-    clamp = true
-  ): IVec => {
+  static nearestPointOnLineSegment = (A: IVec, B: IVec, P: IVec, clamp = true): IVec => {
     const u = Vec.uni(Vec.sub(B, A));
     const C = Vec.add(A, Vec.mul(u, Vec.pry(Vec.sub(P, A), u)));
 
@@ -437,10 +422,7 @@ export class Vec {
    * @param r rotation in radians
    */
   static rot = (A: number[], r = 0): IVec => {
-    return [
-      A[0] * Math.cos(r) - A[1] * Math.sin(r),
-      A[0] * Math.sin(r) + A[1] * Math.cos(r),
-    ];
+    return [A[0] * Math.cos(r) - A[1] * Math.sin(r), A[0] * Math.sin(r) + A[1] * Math.cos(r)];
   };
 
   /**
@@ -507,7 +489,7 @@ export class Vec {
    * @param a
    */
   static toFixed = (a: number[]): number[] => {
-    return a.map(v => Math.round(v * 100) / 100);
+    return a.map((v) => Math.round(v * 100) / 100);
   };
 
   static toPoint = (v: IVec) => {
@@ -553,7 +535,6 @@ export class Vec {
    */
   static clamp(n: number, min: number): number;
 
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
   static clamp(n: number, min: number, max: number): number;
 
   static clamp(n: number, min: number, max?: number): number {
@@ -569,13 +550,10 @@ export class Vec {
 
   static clampV(A: number[], min: number): number[];
 
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
   static clampV(A: number[], min: number, max: number): number[];
 
   static clampV(A: number[], min: number, max?: number): number[] {
-    return A.map(n =>
-      max !== undefined ? Vec.clamp(n, min, max) : Vec.clamp(n, min)
-    );
+    return A.map((n) => (max !== undefined ? Vec.clamp(n, min, max) : Vec.clamp(n, min)));
   }
 
   /**

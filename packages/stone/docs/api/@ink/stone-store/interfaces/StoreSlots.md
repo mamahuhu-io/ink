@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / StoreSlots
 
@@ -26,11 +26,12 @@ You can also use rxjs operators to handle the events.
 This fires when a block is updated via API call or has just been updated from existing ydoc.
 
 The payload can have three types:
+
 - add: When a new block is added
 - delete: When a block is removed
 - update: When a block's properties are modified
 
-***
+---
 
 ### ready
 
@@ -39,7 +40,7 @@ The payload can have three types:
 This fires after `doc.load` is called.
 The Y.Doc is fully loaded and ready to use.
 
-***
+---
 
 ### rootAdded
 
@@ -49,7 +50,7 @@ This fires when the root block is added via API call or has just been initialize
 useful for internal block UI components to start subscribing following up events.
 Note that at this moment, the whole block tree may not be fully initialized yet.
 
-***
+---
 
 ### rootDeleted
 

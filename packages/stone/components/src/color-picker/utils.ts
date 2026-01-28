@@ -4,15 +4,7 @@ import type { Color, ColorScheme } from '@ink/stone-model';
 import clamp from 'lodash-es/clamp';
 
 import { COLORS, FIRST_COLOR } from './consts.js';
-import type {
-  Hsv,
-  Hsva,
-  ModeType,
-  PickColorType,
-  Point,
-  Rgb,
-  Rgba,
-} from './types.js';
+import type { Hsv, Hsva, ModeType, PickColorType, Point, Rgb, Rgba } from './types.js';
 
 export const defaultPoint = (x = 0, y = 0): Point => ({ x, y });
 
@@ -42,11 +34,7 @@ export function linearGradientAt(t: number): Rgb {
   const [rgb1, s1] = COLORS[low];
   t = (t - s0) / (s1 - s0);
 
-  const [r, g, b] = [
-    lerp(rgb0.r, rgb1.r, t),
-    lerp(rgb0.g, rgb1.g, t),
-    lerp(rgb0.b, rgb1.b, t),
-  ];
+  const [r, g, b] = [lerp(rgb0.r, rgb1.r, t), lerp(rgb0.g, rgb1.g, t), lerp(rgb0.b, rgb1.b, t)];
 
   return { r, g, b };
 }
@@ -132,17 +120,17 @@ export const hsvaToRgba = (hsva: Hsva): Rgba => ({
 // Converts a RGB color to hex
 export const rgbToHex = ({ r, g, b }: Rgb) =>
   [r, g, b]
-    .map(n => n * 255)
+    .map((n) => n * 255)
     .map(Math.round)
-    .map(s => s.toString(16).padStart(2, '0'))
+    .map((s) => s.toString(16).padStart(2, '0'))
     .join('');
 
 // Converts an RGBA color to CSS's hex8 string
 export const rgbaToHex8 = ({ r, g, b, a }: Rgba) => {
   const hex = [r, g, b, a]
-    .map(n => n * 255)
+    .map((n) => n * 255)
     .map(Math.round)
-    .map(n => n.toString(16).padStart(2, '0'))
+    .map((n) => n.toString(16).padStart(2, '0'))
     .join('');
   return `#${hex}`;
 };
@@ -160,17 +148,15 @@ export const parseHexToRgba = (hex: string) => {
   let arr: string[] = [];
 
   if (len === 3 || len === 4) {
-    arr = hex.split('').map(s => s.repeat(2));
+    arr = hex.split('').map((s) => s.repeat(2));
   } else if (len === 6 || len === 8) {
     arr = Array.from<number>({ length: len / 2 })
       .fill(0)
       .map((n, i) => n + i * 2)
-      .map(n => hex.substring(n, n + 2));
+      .map((n) => hex.substring(n, n + 2));
   }
 
-  const [r, g, b, a = 1] = arr
-    .map(s => parseInt(s, 16))
-    .map(n => bound01(n, 255));
+  const [r, g, b, a = 1] = arr.map((s) => parseInt(s, 16)).map((n) => bound01(n, 255));
 
   return { r, g, b, a };
 };
@@ -179,8 +165,7 @@ export const parseHexToRgba = (hex: string) => {
 export const parseHexToHsva = (hex: string) => rgbaToHsva(parseHexToRgba(hex));
 
 // Compares two hsvs.
-export const eq = (lhs: Hsv, rhs: Hsv) =>
-  lhs.h === rhs.h && lhs.s === rhs.s && lhs.v === rhs.v;
+export const eq = (lhs: Hsv, rhs: Hsv) => lhs.h === rhs.h && lhs.s === rhs.s && lhs.v === rhs.v;
 
 export const renderCanvas = (canvas: HTMLCanvasElement, rgb: Rgb) => {
   const { width, height } = canvas;
@@ -208,9 +193,7 @@ export const renderCanvas = (canvas: HTMLCanvasElement, rgb: Rgb) => {
 
 // Drops alpha value
 export const keepColor = (color: string) =>
-  color.length > 7 && !color.endsWith('transparent')
-    ? color.substring(0, 7)
-    : color;
+  color.length > 7 && !color.endsWith('transparent') ? color.substring(0, 7) : color;
 
 export const parseStringToRgba = (value: string) => {
   value = value.trim();
@@ -229,7 +212,7 @@ export const parseStringToRgba = (value: string) => {
       .replace(/^rgba?/, '')
       .replace(/\(|\)/, '')
       .split(',')
-      .map(s => parseFloat(s.trim()))
+      .map((s) => parseFloat(s.trim()))
       // In CSS, the alpha is already in the range [0, 1]
       .map((n, i) => bound01(n, i === 3 ? 1 : 255));
 
@@ -244,9 +227,7 @@ export const preprocessColor = (style: CSSStyleDeclaration) => {
   return ({ type, value }: { type: ModeType; value: string }) => {
     if (value.startsWith('--')) {
       // Compatible old format: `--ink-palette-transparent`
-      value = value.endsWith('transparent')
-        ? 'transparent'
-        : style.getPropertyValue(value);
+      value = value.endsWith('transparent') ? 'transparent' : style.getPropertyValue(value);
     }
 
     const rgba = parseStringToRgba(value);
@@ -283,11 +264,7 @@ export const packColor = (key: string, color: Color) => {
  * @param oldColor - The old color
  * @returns A color array
  */
-export const packColorsWith = (
-  colorScheme: ColorScheme,
-  value: string,
-  oldColor: Color
-) => {
+export const packColorsWith = (colorScheme: ColorScheme, value: string, oldColor: Color) => {
   const colors: { type: ModeType; value: string }[] = [
     { type: 'normal', value },
     { type: 'light', value },
@@ -309,11 +286,7 @@ export const packColorsWith = (
   return { type, colors };
 };
 
-export const calcCustomButtonStyle = (
-  color: string,
-  isCustomColor: boolean,
-  ele: Element
-) => {
+export const calcCustomButtonStyle = (color: string, isCustomColor: boolean, ele: Element) => {
   let b = 'transparent';
   let c = 'transparent';
 
@@ -329,8 +302,8 @@ export const calcCustomButtonStyle = (
           preprocessColor(window.getComputedStyle(ele))({
             type: 'normal',
             value: color,
-          }).rgba
-        )
+          }).rgba,
+        ),
       );
     }
   } else {

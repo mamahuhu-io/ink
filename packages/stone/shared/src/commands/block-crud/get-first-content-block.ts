@@ -33,11 +33,7 @@ export const getFirstBlockCommand: Command<
 
   const defaultRoles = ['content', 'hub'];
 
-  const rolesToMatch = ctx.role
-    ? Array.isArray(ctx.role)
-      ? ctx.role
-      : [ctx.role]
-    : defaultRoles;
+  const rolesToMatch = ctx.role ? (Array.isArray(ctx.role) ? ctx.role : [ctx.role]) : defaultRoles;
 
   const flavoursToMatch = ctx.flavour
     ? Array.isArray(ctx.flavour)
@@ -48,8 +44,7 @@ export const getFirstBlockCommand: Command<
   for (const child of root.children) {
     const roleMatches = rolesToMatch.includes(child.role);
 
-    const flavourMatches =
-      !flavoursToMatch || flavoursToMatch.includes(child.flavour);
+    const flavourMatches = !flavoursToMatch || flavoursToMatch.includes(child.flavour);
 
     if (roleMatches && flavourMatches) {
       next({

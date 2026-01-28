@@ -11,9 +11,7 @@ import { keyed } from 'lit/directives/keyed.js';
 
 import type { InkSourceEditor } from './source-editor';
 
-export class InkEditorContainer extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class InkEditorContainer extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     .ink-editor-mode-container {
       position: relative;
@@ -122,7 +120,7 @@ export class InkEditorContainer extends SignalWatcher(
 
   // Current theme for source mode (tracked for reactivity)
   private readonly _currentTheme = signal<'light' | 'dark'>(
-    document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+    document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
   );
 
   // Theme observer for source mode
@@ -144,9 +142,7 @@ export class InkEditorContainer extends SignalWatcher(
     const mode = this._mode.value;
     // Don't return empty array for source mode to avoid recreating BlockStdScope
     // Source mode will simply hide the editor template, not destroy it
-    return mode === 'page' || mode === 'source'
-      ? this._pageSpecs.value
-      : this._edgelessSpecs.value;
+    return mode === 'page' || mode === 'source' ? this._pageSpecs.value : this._edgelessSpecs.value;
   });
 
   private readonly _std = computed(() => {
@@ -227,9 +223,7 @@ export class InkEditorContainer extends SignalWatcher(
   override connectedCallback() {
     super.connectedCallback();
 
-    this._disposables.add(
-      this.doc.slots.rootAdded.subscribe(() => this.requestUpdate())
-    );
+    this._disposables.add(this.doc.slots.rootAdded.subscribe(() => this.requestUpdate()));
 
     // If root already exists (content was loaded before editor was created),
     // trigger an update to render the content
@@ -241,7 +235,8 @@ export class InkEditorContainer extends SignalWatcher(
     this._themeObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-          const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+          const newTheme =
+            document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
           if (this._currentTheme.value !== newTheme) {
             this._currentTheme.value = newTheme;
             // Force re-render if in source mode
@@ -292,7 +287,7 @@ export class InkEditorContainer extends SignalWatcher(
         const themeService = this.std.get(ThemeProvider);
         appTheme = themeService.app$.value;
         edgelessTheme = themeService.edgeless$.value;
-      } catch (e) {
+      } catch {
         // ThemeProvider may not be available
       }
     }
@@ -313,32 +308,34 @@ export class InkEditorContainer extends SignalWatcher(
       html`
         <div class="ink-editor-mode-container">
           <!-- Source mode editor - render once created, then keep in DOM -->
-          ${shouldRenderSourceEditor ? html`
-            <div
-              class=${mode === 'source' ? 'ink-source-viewport' : 'ink-source-viewport hidden'}
-              data-theme=${theme}
-            >
-              <ink-source-editor
-                .content=${this._sourceContent.value}
-                .theme=${theme}
-                .onContentChange=${(content: string) => {
-                  this._sourceContent.value = content;
-                  this._onSourceChange?.(content);
-                }}
-                .onToggleMode=${() => {
-                  this._onToggleMode?.();
-                }}
-              ></ink-source-editor>
-            </div>
-          ` : ''}
+          ${shouldRenderSourceEditor
+            ? html`
+                <div
+                  class=${mode === 'source' ? 'ink-source-viewport' : 'ink-source-viewport hidden'}
+                  data-theme=${theme}
+                >
+                  <ink-source-editor
+                    .content=${this._sourceContent.value}
+                    .theme=${theme}
+                    .onContentChange=${(content: string) => {
+                      this._sourceContent.value = content;
+                      this._onSourceChange?.(content);
+                    }}
+                    .onToggleMode=${() => {
+                      this._onToggleMode?.();
+                    }}
+                  ></ink-source-editor>
+                </div>
+              `
+            : ''}
 
           <!-- Page/Edgeless mode editor -->
           <div
             class=${mode !== 'source' && mode === 'page'
               ? 'ink-page-viewport'
               : mode !== 'source'
-              ? 'ink-canvas-viewport'
-              : 'ink-page-viewport hidden'}
+                ? 'ink-canvas-viewport'
+                : 'ink-page-viewport hidden'}
             data-theme=${mode === 'page' ? appTheme : edgelessTheme}
           >
             <div
@@ -350,7 +347,7 @@ export class InkEditorContainer extends SignalWatcher(
             </div>
           </div>
         </div>
-      `
+      `,
     )}`;
   }
 

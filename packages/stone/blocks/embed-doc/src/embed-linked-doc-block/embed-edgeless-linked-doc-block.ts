@@ -1,27 +1,18 @@
-import {
-  createEmbedEdgelessBlockInteraction,
-  toEdgelessEmbedBlock,
-} from '@ink/stone-block-embed';
-import {
-  EdgelessCRUDIdentifier,
-  reassociateConnectorsCommand,
-} from '@ink/stone-block-surface';
+import { createEmbedEdgelessBlockInteraction, toEdgelessEmbedBlock } from '@ink/stone-block-embed';
+import { EdgelessCRUDIdentifier, reassociateConnectorsCommand } from '@ink/stone-block-surface';
+import { Bound } from '@ink/stone-global/gfx';
 import { EmbedLinkedDocBlockSchema } from '@ink/stone-model';
-import {
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-} from '@ink/stone-shared/consts';
+import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH } from '@ink/stone-shared/consts';
 import {
   cloneReferenceInfoWithoutAliases,
   isNewTabTrigger,
   isNewViewTrigger,
 } from '@ink/stone-shared/utils';
-import { Bound } from '@ink/stone-global/gfx';
 
 import { EmbedLinkedDocBlockComponent } from './embed-linked-doc-block.js';
 
 export class EmbedEdgelessLinkedDocBlockComponent extends toEdgelessEmbedBlock(
-  EmbedLinkedDocBlockComponent
+  EmbedLinkedDocBlockComponent,
 ) {
   override convertToEmbed = () => {
     const { caption, xywh } = this.model.props;
@@ -41,7 +32,7 @@ export class EmbedEdgelessLinkedDocBlockComponent extends toEdgelessEmbedBlock(
         caption,
         ...cloneReferenceInfoWithoutAliases(this.referenceInfo$.peek()),
       },
-      surface
+      surface,
     );
 
     this.std.command.exec(reassociateConnectorsCommand, {
@@ -67,5 +58,5 @@ export class EmbedEdgelessLinkedDocBlockComponent extends toEdgelessEmbedBlock(
 }
 
 export const EmbedLinkedDocInteraction = createEmbedEdgelessBlockInteraction(
-  EmbedLinkedDocBlockSchema.model.flavour
+  EmbedLinkedDocBlockSchema.model.flavour,
 );

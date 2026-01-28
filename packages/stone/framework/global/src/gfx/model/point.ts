@@ -66,10 +66,7 @@ export class Point {
   }
 
   lerp(point: IPoint, t: number): Point {
-    return new Point(
-      this.x + (point.x - this.x) * t,
-      this.y + (point.y - this.y) * t
-    );
+    return new Point(this.x + (point.x - this.x) * t, this.y + (point.y - this.y) * t);
   }
 
   scale(factor: number): Point {
@@ -185,10 +182,7 @@ export class Rect {
   }
 
   center() {
-    return new Point(
-      (this.left + this.right) / 2,
-      (this.top + this.bottom) / 2
-    );
+    return new Point((this.left + this.right) / 2, (this.top + this.bottom) / 2);
   }
 
   clamp(p: Point) {
@@ -224,19 +218,11 @@ export class Rect {
   }
 
   intersect(other: Rect) {
-    return Rect.fromPoints(
-      Point.max(this.min, other.min),
-      Point.min(this.max, other.max)
-    );
+    return Rect.fromPoints(Point.max(this.min, other.min), Point.min(this.max, other.max));
   }
 
   intersects({ left, top, right, bottom }: Rect) {
-    return (
-      this.left <= right &&
-      left <= this.right &&
-      this.top <= bottom &&
-      top <= this.bottom
-    );
+    return this.left <= right && left <= this.right && this.top <= bottom && top <= this.bottom;
   }
 
   isPointDown({ x, y }: Point) {
@@ -244,9 +230,7 @@ export class Rect {
   }
 
   isPointIn({ x, y }: Point) {
-    return (
-      this.left <= x && x <= this.right && this.top <= y && y <= this.bottom
-    );
+    return this.left <= x && x <= this.right && this.top <= y && y <= this.bottom;
   }
 
   isPointLeft({ x, y }: Point) {

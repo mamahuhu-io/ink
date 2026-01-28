@@ -1,5 +1,5 @@
 export async function sleep(ms: number, signal?: AbortSignal): Promise<void> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (signal?.aborted) {
       resolve();
       return;
@@ -29,8 +29,8 @@ export async function nextTick() {
     // @ts-expect-error check window.scheduler.yield
     return window.scheduler.yield();
   } else if (typeof requestIdleCallback !== 'undefined') {
-    return new Promise(resolve => requestIdleCallback(resolve));
+    return new Promise((resolve) => requestIdleCallback(resolve));
   } else {
-    return new Promise(resolve => setTimeout(resolve, 0));
+    return new Promise((resolve) => setTimeout(resolve, 0));
   }
 }

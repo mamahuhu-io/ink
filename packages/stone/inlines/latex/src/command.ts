@@ -1,7 +1,4 @@
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
 import type { Command, TextSelection } from '@ink/stone-std';
 
 export const insertInlineLatex: Command<{
@@ -25,7 +22,7 @@ export const insertInlineLatex: Command<{
       index: textSelection.from.index,
       length: 0,
     },
-    ' '
+    ' ',
   );
   inlineEditor.formatText(
     {
@@ -34,7 +31,7 @@ export const insertInlineLatex: Command<{
     },
     {
       latex: '',
-    }
+    },
   );
   inlineEditor.setInlineRange({
     index: textSelection.from.index,
@@ -44,12 +41,7 @@ export const insertInlineLatex: Command<{
   const mode = ctx.std.get(DocModeProvider).getEditorMode() ?? 'page';
   const ifEdgelessText = blockComponent.closest('ink-edgeless-text');
   ctx.std.getOptional(TelemetryProvider)?.track('Latex', {
-    from:
-      mode === 'page'
-        ? 'doc'
-        : ifEdgelessText
-          ? 'edgeless text'
-          : 'edgeless note',
+    from: mode === 'page' ? 'doc' : ifEdgelessText ? 'edgeless text' : 'edgeless note',
     page: mode === 'page' ? 'doc' : 'edgeless',
     segment: mode === 'page' ? 'doc' : 'whiteboard',
     module: 'inline equation',

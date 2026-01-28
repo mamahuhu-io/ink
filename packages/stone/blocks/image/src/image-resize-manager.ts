@@ -1,8 +1,5 @@
 import { DocModeProvider } from '@ink/stone-shared/services';
-import {
-  getClosestBlockComponentByElement,
-  getModelByElement,
-} from '@ink/stone-shared/utils';
+import { getClosestBlockComponentByElement, getModelByElement } from '@ink/stone-shared/utils';
 import type { BlockComponent, PointerEventState } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
 
@@ -61,8 +58,7 @@ export class ImageResizeManager {
     const height = width * (activeImg.naturalHeight / activeImg.naturalWidth);
 
     const containerRect = activeImgContainer.getBoundingClientRect();
-    if (containerRect.width === width && containerRect.height === height)
-      return;
+    if (containerRect.width === width && containerRect.height === height) return;
 
     requestAnimationFrame(() => {
       activeImgContainer.style.width = (width / this._zoom).toFixed(2) + 'px';
@@ -71,15 +67,10 @@ export class ImageResizeManager {
 
   onStart(e: PointerEventState) {
     const eventTarget = e.raw.target as HTMLElement;
-    this._activeComponent = getClosestBlockComponentByElement(
-      eventTarget
-    ) as BlockComponent;
+    this._activeComponent = getClosestBlockComponentByElement(eventTarget) as BlockComponent;
 
     const rootComponent = getClosestRootBlockComponent(this._activeComponent);
-    if (
-      rootComponent &&
-      rootComponent.std.get(DocModeProvider).getEditorMode() === 'edgeless'
-    ) {
+    if (rootComponent && rootComponent.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
       const viewport = rootComponent.std.get(GfxControllerIdentifier).viewport;
       this._zoom = viewport.zoom;
     } else {

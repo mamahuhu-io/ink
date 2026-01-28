@@ -4,7 +4,7 @@ import type { MenuConfig } from './menu.js';
 import type { MenuItemRender } from './types.js';
 
 export const menuDynamicItems = {
-  dynamic: (config: () => MenuConfig[]) => menu => {
+  dynamic: (config: () => MenuConfig[]) => (menu) => {
     const items = menu.renderItems(config());
     if (!items.length) {
       return;

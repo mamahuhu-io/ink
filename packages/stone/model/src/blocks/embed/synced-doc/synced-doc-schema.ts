@@ -34,6 +34,4 @@ export const EmbedSyncedDocBlockSchema = createEmbedBlockSchema({
   props: (): EmbedSyncedDocBlockProps => defaultEmbedSyncedDocBlockProps,
 });
 
-export const EmbedSyncedDocBlockSchemaExtension = BlockSchemaExtension(
-  EmbedSyncedDocBlockSchema
-);
+export const EmbedSyncedDocBlockSchemaExtension = BlockSchemaExtension(EmbedSyncedDocBlockSchema);

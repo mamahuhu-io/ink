@@ -10,6 +10,6 @@ export * from './image-spec';
 // [REMOVED] Turbo renderer - not needed for Page mode
 // export * from './turbo/image-layout-handler';
 // export * from './turbo/image-painter.worker';
+export { setImageI18nGetter } from './configs/i18n';
 export { addImages, addSiblingImageBlocks, downloadImageBlob } from './utils';
 export { ImageSelection } from '@ink/stone-shared/selection';
-export { setImageI18nGetter } from './configs/i18n';

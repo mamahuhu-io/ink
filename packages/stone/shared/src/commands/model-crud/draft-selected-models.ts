@@ -1,9 +1,5 @@
 import type { Command } from '@ink/stone-std';
-import {
-  type BlockModel,
-  type DraftModel,
-  toDraftModel,
-} from '@ink/stone-store';
+import { type BlockModel, type DraftModel, toDraftModel } from '@ink/stone-store';
 
 export const draftSelectedModelsCommand: Command<
   {
@@ -16,23 +12,23 @@ export const draftSelectedModelsCommand: Command<
   const models = ctx.selectedModels;
   if (!models) {
     console.error(
-      '`selectedModels` is required, you need to use `getSelectedModels` command before adding this command to the pipeline.'
+      '`selectedModels` is required, you need to use `getSelectedModels` command before adding this command to the pipeline.',
     );
     return;
   }
 
-  const draftedModelsPromise = new Promise<DraftModel[]>(resolve => {
+  const draftedModelsPromise = new Promise<DraftModel[]>((resolve) => {
     const draftedModels = models.map(toDraftModel);
 
-    const modelMap = new Map(draftedModels.map(model => [model.id, model]));
+    const modelMap = new Map(draftedModels.map((model) => [model.id, model]));
 
     const traverse = (model: DraftModel) => {
       const isDatabase = model.flavour === 'ink:database';
       const children = isDatabase
         ? model.children
-        : model.children.filter(child => modelMap.has(child.id));
+        : model.children.filter((child) => modelMap.has(child.id));
 
-      children.forEach(child => {
+      children.forEach((child) => {
         modelMap.delete(child.id);
         traverse(child);
       });

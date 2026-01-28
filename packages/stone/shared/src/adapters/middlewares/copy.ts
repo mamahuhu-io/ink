@@ -12,32 +12,31 @@ import type {
   TransformerSlots,
 } from '@ink/stone-store';
 
-const isRootDraftModel = (
-  model: DraftModel
-): model is DraftModel<RootBlockModel> => model.flavour === 'ink:root';
+const isRootDraftModel = (model: DraftModel): model is DraftModel<RootBlockModel> =>
+  model.flavour === 'ink:root';
 
-const handlePoint = (
-  point: TextRangePoint,
-  snapshot: BlockSnapshot,
-  model: DraftModel
-) => {
+const handlePoint = (point: TextRangePoint, snapshot: BlockSnapshot, model: DraftModel) => {
   const { index, length } = point;
   if (isRootDraftModel(model)) {
     if (length === 0) return;
-    (snapshot.props.title as Record<string, unknown>).delta =
-      model.props.title.sliceToDelta(index, length + index);
+    (snapshot.props.title as Record<string, unknown>).delta = model.props.title.sliceToDelta(
+      index,
+      length + index,
+    );
     return;
   }
 
   if (!snapshot.props.text || length === 0) {
     return;
   }
-  (snapshot.props.text as Record<string, unknown>).delta =
-    model.text?.sliceToDelta(index, length + index);
+  (snapshot.props.text as Record<string, unknown>).delta = model.text?.sliceToDelta(
+    index,
+    length + index,
+  );
 };
 
 const sliceText = (slots: TransformerSlots, std: EditorHost['std']) => {
-  const afterExportSubscription = slots.afterExport.subscribe(payload => {
+  const afterExportSubscription = slots.afterExport.subscribe((payload) => {
     if (payload.type === 'block') {
       const snapshot = payload.snapshot;
 

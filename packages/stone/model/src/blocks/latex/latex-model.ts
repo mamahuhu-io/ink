@@ -3,11 +3,7 @@ import {
   GfxCompatible,
   type GfxElementGeometry,
 } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 export type LatexProps = {
   latex: string;
@@ -28,12 +24,7 @@ export const LatexBlockSchema = defineBlockSchema({
   metadata: {
     version: 1,
     role: 'content',
-    parent: [
-      'ink:note',
-      'ink:edgeless-text',
-      'ink:paragraph',
-      'ink:list',
-    ],
+    parent: ['ink:note', 'ink:edgeless-text', 'ink:paragraph', 'ink:list'],
   },
   toModel: () => {
     return new LatexBlockModel();

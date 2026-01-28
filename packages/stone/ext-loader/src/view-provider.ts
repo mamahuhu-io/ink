@@ -1,8 +1,4 @@
-import {
-  BaseExtensionProvider,
-  type Context,
-  type Empty,
-} from './base-provider';
+import { BaseExtensionProvider, type Context, type Empty } from './base-provider';
 
 /**
  * Available view scopes for view-related extensions.
@@ -54,9 +50,10 @@ export type ViewScope =
  * }
  * ```
  */
-export class ViewExtensionProvider<
-  Options extends object = Empty,
-> extends BaseExtensionProvider<ViewScope, Options> {
+export class ViewExtensionProvider<Options extends object = Empty> extends BaseExtensionProvider<
+  ViewScope,
+  Options
+> {
   /** The name of the view extension provider */
   override name = 'ViewExtension';
 
@@ -87,11 +84,7 @@ export class ViewExtensionProvider<
    * @returns True if the scope is edgeless, false otherwise
    */
   isEdgeless = (scope: ViewScope) => {
-    return (
-      scope === 'edgeless' ||
-      scope === 'preview-edgeless' ||
-      scope === 'mobile-edgeless'
-    );
+    return scope === 'edgeless' || scope === 'preview-edgeless' || scope === 'mobile-edgeless';
   };
 
   /**

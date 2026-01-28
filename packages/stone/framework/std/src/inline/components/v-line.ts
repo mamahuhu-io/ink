@@ -1,29 +1,27 @@
-import { InkStoneError, ErrorCode } from "@ink/stone-global/exceptions";
-import type { DeltaInsert } from "@ink/stone-store";
-import { html, LitElement, type TemplateResult } from "lit";
-import { property } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
+import type { DeltaInsert } from '@ink/stone-store';
+import { html, LitElement, type TemplateResult } from 'lit';
+import { property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { INLINE_ROOT_ATTR, ZERO_WIDTH_FOR_EMPTY_LINE } from "../consts.js";
-import type { InlineRootElement } from "../inline-editor.js";
-import { EmbedGap } from "./embed-gap.js";
+import { INLINE_ROOT_ATTR, ZERO_WIDTH_FOR_EMPTY_LINE } from '../consts.js';
+import type { InlineRootElement } from '../inline-editor.js';
+import { EmbedGap } from './embed-gap.js';
 
 export class VLine extends LitElement {
   get inlineEditor() {
-    const rootElement = this.closest(
-      `[${INLINE_ROOT_ATTR}]`,
-    ) as InlineRootElement;
+    const rootElement = this.closest(`[${INLINE_ROOT_ATTR}]`) as InlineRootElement;
     if (!rootElement) {
       throw new InkStoneError(
         InkStoneError.ErrorCode.ValueNotExists,
-        "v-line must be inside a v-root",
+        'v-line must be inside a v-root',
       );
     }
     const inlineEditor = rootElement.inlineEditor;
     if (!inlineEditor) {
       throw new InkStoneError(
         InkStoneError.ErrorCode.ValueNotExists,
-        "v-line must be inside a v-root with inline-editor",
+        'v-line must be inside a v-root with inline-editor',
       );
     }
 
@@ -31,11 +29,11 @@ export class VLine extends LitElement {
   }
 
   get vElements() {
-    return Array.from(this.querySelectorAll("v-element"));
+    return Array.from(this.querySelectorAll('v-element'));
   }
 
   get vTextContent() {
-    return this.vElements.reduce((acc, el) => acc + el.delta.insert, "");
+    return this.vElements.reduce((acc, el) => acc + el.delta.insert, '');
   }
 
   get vTextLength() {
@@ -44,7 +42,7 @@ export class VLine extends LitElement {
 
   // you should use vElements.length or vTextLength because v-element corresponds to the actual delta
   get vTexts() {
-    return Array.from(this.querySelectorAll("v-text"));
+    return Array.from(this.querySelectorAll('v-text'));
   }
 
   override createRenderRoot() {
@@ -52,9 +50,9 @@ export class VLine extends LitElement {
   }
 
   protected override firstUpdated(): void {
-    this.style.display = "block";
+    this.style.display = 'block';
 
-    this.addEventListener("mousedown", (e) => {
+    this.addEventListener('mousedown', (e) => {
       if (e.detail >= 2 && this.startOffset === this.endOffset) {
         e.preventDefault();
         return;
@@ -89,9 +87,7 @@ export class VLine extends LitElement {
   renderVElements() {
     if (this.elements.length === 0) {
       // don't use v-element because it not correspond to the actual delta
-      return html`
-        <div><v-text .str=${ZERO_WIDTH_FOR_EMPTY_LINE}></v-text></div>
-      `;
+      return html` <div><v-text .str=${ZERO_WIDTH_FOR_EMPTY_LINE}></v-text></div> `;
     }
 
     const inlineEditor = this.inlineEditor;
@@ -151,6 +147,6 @@ export class VLine extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "v-line": VLine;
+    'v-line': VLine;
   }
 }

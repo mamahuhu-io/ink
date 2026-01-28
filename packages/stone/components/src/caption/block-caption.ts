@@ -1,6 +1,6 @@
+import { WithDisposable } from '@ink/stone-global/lit';
 import type { DocMode } from '@ink/stone-model';
 import { stopPropagation } from '@ink/stone-shared/utils';
-import { WithDisposable } from '@ink/stone-global/lit';
 import type { BlockStdScope } from '@ink/stone-std';
 import {
   modelContext,
@@ -72,9 +72,7 @@ export class BlockCaptionEditor<
   };
 
   get mode(): DocMode {
-    return this.doc.getParent(this.model)?.flavour === 'ink:surface'
-      ? 'edgeless'
-      : 'page';
+    return this.doc.getParent(this.model)?.flavour === 'ink:surface' ? 'edgeless' : 'page';
   }
 
   private _onCaptionKeydown(event: KeyboardEvent) {
@@ -109,7 +107,7 @@ export class BlockCaptionEditor<
         'ink:paragraph',
         { text: new Text(nextBlockText) },
         parent,
-        index + 1
+        index + 1,
       );
 
       const std = this.std;
@@ -154,7 +152,7 @@ export class BlockCaptionEditor<
             this.display = !!this.caption?.length;
           }
         }
-      })
+      }),
     );
   }
 

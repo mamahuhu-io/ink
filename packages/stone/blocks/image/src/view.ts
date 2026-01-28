@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { EdgelessClipboardImageConfig } from './edgeless-clipboard-config';

@@ -65,7 +65,7 @@ export class DocEngine {
     readonly rootDoc: Doc,
     readonly main: DocSource,
     readonly shadows: DocSource[],
-    readonly logger: Logger
+    readonly logger: Logger,
   ) {
     this._status = {
       step: DocEngineStep.Stopped,
@@ -106,7 +106,7 @@ export class DocEngine {
     }
     this._abort = new AbortController();
 
-    this.sync(this._abort.signal).catch(err => {
+    this.sync(this._abort.signal).catch((err) => {
       // should never reach here
       this.logger.error(`syne-engine:${this.rootDocId}`, err);
     });
@@ -125,16 +125,10 @@ export class DocEngine {
     const cleanUp: (() => void)[] = [];
     try {
       // Step 1: start main sync peer
-      state.mainPeer = new SyncPeer(
-        this.rootDoc,
-        this.main,
-        this.priorityTarget,
-        this.logger
-      );
+      state.mainPeer = new SyncPeer(this.rootDoc, this.main, this.priorityTarget, this.logger);
 
       const subscriber = state.mainPeer.onStatusChange.subscribe(() => {
-        if (!signal.aborted)
-          this.updateSyncingState(state.mainPeer, state.shadowPeers);
+        if (!signal.aborted) this.updateSyncingState(state.mainPeer, state.shadowPeers);
       });
       cleanUp.push(() => {
         subscriber.unsubscribe();
@@ -146,17 +140,11 @@ export class DocEngine {
       await state.mainPeer.waitForLoaded(signal);
 
       // Step 3: start shadow sync peer
-      state.shadowPeers = this.shadows.map(shadow => {
-        const peer = new SyncPeer(
-          this.rootDoc,
-          shadow,
-          this.priorityTarget,
-          this.logger
-        );
+      state.shadowPeers = this.shadows.map((shadow) => {
+        const peer = new SyncPeer(this.rootDoc, shadow, this.priorityTarget, this.logger);
 
         const subscriber = peer.onStatusChange.subscribe(() => {
-          if (!signal.aborted)
-            this.updateSyncingState(state.mainPeer, state.shadowPeers);
+          if (!signal.aborted) this.updateSyncingState(state.mainPeer, state.shadowPeers);
         });
         cleanUp.push(() => {
           subscriber.unsubscribe();
@@ -207,10 +195,8 @@ export class DocEngine {
     this.setStatus({
       step,
       main: local?.status ?? null,
-      shadows: shadows.map(peer => peer?.status ?? null),
-      retrying: allPeer.some(
-        peer => peer?.status.step === DocPeerStep.Retrying
-      ),
+      shadows: shadows.map((peer) => peer?.status ?? null),
+      retrying: allPeer.some((peer) => peer?.status.step === DocPeerStep.Retrying),
     });
   }
 
@@ -224,7 +210,7 @@ export class DocEngine {
           reject(abort.reason);
         });
       }),
-      new Promise<void>(resolve => {
+      new Promise<void>((resolve) => {
         this.onStatusChange.subscribe(() => {
           if (this.canGracefulStop()) {
             resolve();
@@ -239,15 +225,15 @@ export class DocEngine {
   async waitForLoadedRootDoc(abort?: AbortSignal) {
     function isLoadedRootDoc(status: DocEngineStatus) {
       return ![status.main, ...status.shadows].some(
-        peer => !peer || peer.step <= DocPeerStep.LoadingRootDoc
+        (peer) => !peer || peer.step <= DocPeerStep.LoadingRootDoc,
       );
     }
     if (isLoadedRootDoc(this.status)) {
       return;
     } else {
       return Promise.race([
-        new Promise<void>(resolve => {
-          this.onStatusChange.subscribe(status => {
+        new Promise<void>((resolve) => {
+          this.onStatusChange.subscribe((status) => {
             if (isLoadedRootDoc(status)) {
               resolve();
             }
@@ -270,8 +256,8 @@ export class DocEngine {
       return;
     } else {
       return Promise.race([
-        new Promise<void>(resolve => {
-          this.onStatusChange.subscribe(status => {
+        new Promise<void>((resolve) => {
+          this.onStatusChange.subscribe((status) => {
             if (status.step === DocEngineStep.Synced) {
               resolve();
             }

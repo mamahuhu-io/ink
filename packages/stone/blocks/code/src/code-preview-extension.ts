@@ -1,11 +1,9 @@
-import type { CodeBlockModel } from '@ink/stone-model';
 import { createIdentifier } from '@ink/stone-global/di';
+import type { CodeBlockModel } from '@ink/stone-model';
 import type { ExtensionType } from '@ink/stone-store';
 import type { HTMLTemplateResult } from 'lit';
 
-export type CodeBlockPreviewRenderer = (
-  model: CodeBlockModel
-) => HTMLTemplateResult | null;
+export type CodeBlockPreviewRenderer = (model: CodeBlockModel) => HTMLTemplateResult | null;
 
 export type CodeBlockPreviewContext = {
   renderer: CodeBlockPreviewRenderer;
@@ -17,10 +15,10 @@ export const CodeBlockPreviewIdentifier =
 
 export function CodeBlockPreviewExtension(
   lang: string,
-  renderer: CodeBlockPreviewRenderer
+  renderer: CodeBlockPreviewRenderer,
 ): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(CodeBlockPreviewIdentifier(lang), { renderer, lang });
     },
   };

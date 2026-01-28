@@ -121,13 +121,6 @@
         "themeDesc": "ドキュメントのエクスポート時に使用するテーマ",
         "auto": "自動（現在に合わせる）"
       },
-      "window": {
-        "title": "ウィンドウ",
-        "sidebarPosition": "サイドバーの位置",
-        "sidebarPositionDesc": "ファイルサイドバーの位置",
-        "left": "左",
-        "right": "右"
-      },
       "display": {
         "title": "表示",
         "showDocStats": "ドキュメント統計を表示",

@@ -1,8 +1,5 @@
 import { CodeBlockComponent } from './code-block';
-import {
-  INK_CODE_TOOLBAR_WIDGET,
-  InkCodeToolbarWidget,
-} from './code-toolbar';
+import { INK_CODE_TOOLBAR_WIDGET, InkCodeToolbarWidget } from './code-toolbar';
 import { InkCodeToolbar } from './code-toolbar/components/code-toolbar';
 import { LanguageListButton } from './code-toolbar/components/lang-button';
 import { PreviewButton } from './code-toolbar/components/preview-button';

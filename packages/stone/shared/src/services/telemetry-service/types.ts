@@ -29,11 +29,7 @@ export interface LinkedDocCreatedEvent extends TelemetryEvent {
 export interface DocCreatedEvent extends TelemetryEvent {
   page?: 'doc editor' | 'whiteboard editor';
   segment?: 'whiteboard' | 'note' | 'doc';
-  module?:
-    | 'slash commands'
-    | 'format toolbar'
-    | 'edgeless toolbar'
-    | 'inline @';
+  module?: 'slash commands' | 'format toolbar' | 'edgeless toolbar' | 'inline @';
   category?: 'page' | 'whiteboard';
 }
 

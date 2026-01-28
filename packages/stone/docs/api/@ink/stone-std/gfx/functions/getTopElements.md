@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / getTopElements
 
@@ -12,6 +12,7 @@ Get the top elements from the list of elements, which are in some tree structure
 
 For example: a list `[G1, E1, G2, E2, E3, E4, G4, E5, E6]`,
 and they are in the elements tree like:
+
 ```
     G1         G4      E6
    /  \        |
@@ -21,6 +22,7 @@ and they are in the elements tree like:
         / \
        E3 E4
 ```
+
 where the star symbol `*` denote it is not in the list.
 
 The result should be `[G1, G4, E6]`

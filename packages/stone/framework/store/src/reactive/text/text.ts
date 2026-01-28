@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { type Signal, signal } from '@preact/signals-core';
 import * as Y from 'yjs';
 
@@ -23,9 +23,7 @@ import type { DeltaInsert, DeltaOperation, OnTextChange } from './types';
  *
  * @category Reactive
  */
-export class Text<
-  TextAttributes extends BaseTextAttributes = BaseTextAttributes,
-> {
+export class Text<TextAttributes extends BaseTextAttributes = BaseTextAttributes> {
   private readonly _deltas$: Signal<DeltaOperation[]>;
 
   private readonly _length$: Signal<number>;
@@ -79,7 +77,7 @@ export class Text<
 
     this._length$ = signal(length);
     this._deltas$ = signal(this._yText.doc ? this._yText.toDelta() : []);
-    this._yText.observe(event => {
+    this._yText.observe((event) => {
       const isLocal =
         !event.transaction.origin ||
         !this._yText.doc ||
@@ -98,7 +96,7 @@ export class Text<
     if (!doc) {
       throw new InkStoneError(
         ErrorCode.ReactiveProxyError,
-        'Failed to transact text! yText is not attached to a doc'
+        'Failed to transact text! yText is not attached to a doc',
       );
     }
     doc.transact(() => {
@@ -171,7 +169,7 @@ export class Text<
           ', length: ' +
           length +
           ', text length: ' +
-          this._yText.length
+          this._yText.length,
       );
     }
     this._transact(() => {
@@ -204,7 +202,7 @@ export class Text<
           ', length: ' +
           length +
           ', text length: ' +
-          this._yText.length
+          this._yText.length,
       );
     }
     this._transact(() => {
@@ -236,7 +234,7 @@ export class Text<
           ', length: ' +
           content.length +
           ', text length: ' +
-          this._yText.length
+          this._yText.length,
       );
     }
     this._transact(() => {
@@ -282,12 +280,7 @@ export class Text<
    * text.replace(7, 1, ' stone');
    * ```
    */
-  replace(
-    index: number,
-    length: number,
-    content: string,
-    attributes?: Record<string, unknown>
-  ) {
+  replace(index: number, length: number, content: string, attributes?: Record<string, unknown>) {
     if (index < 0 || length < 0 || index + length > this._yText.length) {
       throw new InkStoneError(
         ErrorCode.ReactiveProxyError,
@@ -297,7 +290,7 @@ export class Text<
           index +
           'to' +
           index +
-          length
+          length,
       );
     }
     this._transact(() => {
@@ -331,7 +324,7 @@ export class Text<
 
     if (delta && delta instanceof Array) {
       let charNum = 0;
-      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+
       for (let i = 0; i < delta.length; i++) {
         const content = delta[i];
         let contentText: string = content.insert || '';
@@ -409,14 +402,14 @@ export class Text<
           ', length: ' +
           length +
           ', text length: ' +
-          this._yText.length
+          this._yText.length,
       );
     }
     const deltas = this._yText.toDelta();
     if (!(deltas instanceof Array)) {
       throw new InkStoneError(
         ErrorCode.ReactiveProxyError,
-        'This text cannot be split because we failed to get the deltas of it.'
+        'This text cannot be split because we failed to get the deltas of it.',
       );
     }
     let tmpIndex = 0;
@@ -437,7 +430,7 @@ export class Text<
       } else {
         throw new InkStoneError(
           ErrorCode.ReactiveProxyError,
-          'This text cannot be split because it contains non-string insert.'
+          'This text cannot be split because it contains non-string insert.',
         );
       }
     }

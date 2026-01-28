@@ -1,12 +1,5 @@
 import { baseTheme, cssVarV2 } from '@ink/stone-theme';
-import {
-  css,
-  html,
-  LitElement,
-  nothing,
-  type TemplateResult,
-  unsafeCSS,
-} from 'lit';
+import { css, html, LitElement, nothing, type TemplateResult, unsafeCSS } from 'lit';
 import { property, query } from 'lit/decorators.js';
 
 /**
@@ -123,7 +116,7 @@ export class IconButton extends LitElement {
   constructor() {
     super();
     // Allow activate button by pressing Enter key
-    this.addEventListener('keypress', event => {
+    this.addEventListener('keypress', (event) => {
       if (this.disabled) {
         return;
       }
@@ -135,13 +128,13 @@ export class IconButton extends LitElement {
     // Prevent click event when disabled
     this.addEventListener(
       'click',
-      event => {
+      (event) => {
         if (this.disabled === true) {
           event.preventDefault();
           event.stopPropagation();
         }
       },
-      { capture: true }
+      { capture: true },
     );
   }
 
@@ -162,14 +155,8 @@ export class IconButton extends LitElement {
       height = this.size;
     }
 
-    this.style.setProperty(
-      '--button-width',
-      typeof width === 'string' ? width : `${width}px`
-    );
-    this.style.setProperty(
-      '--button-height',
-      typeof height === 'string' ? height : `${height}px`
-    );
+    this.style.setProperty('--button-width', typeof width === 'string' ? width : `${width}px`);
+    this.style.setProperty('--button-height', typeof height === 'string' ? height : `${height}px`);
   }
 
   override render() {
@@ -180,9 +167,7 @@ export class IconButton extends LitElement {
       this.dataset.testDisabled = 'true';
     } else {
       this.dataset.testDisabled = 'false';
-      const iconColor = this.active
-        ? cssVarV2('icon/activated')
-        : cssVarV2('icon/primary');
+      const iconColor = this.active ? cssVarV2('icon/activated') : cssVarV2('icon/primary');
       this.style.setProperty('--svg-icon-color', iconColor);
     }
 
@@ -191,9 +176,7 @@ export class IconButton extends LitElement {
         html`<div class="text">${this.text}</div>`
       : nothing;
 
-    const subText = this.subText
-      ? html`<div class="sub-text">${this.subText}</div>`
-      : nothing;
+    const subText = this.subText ? html`<div class="sub-text">${this.subText}</div>` : nothing;
 
     const textContainer =
       this.text || this.subText

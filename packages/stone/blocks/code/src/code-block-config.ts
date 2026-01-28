@@ -21,5 +21,4 @@ export interface CodeBlockConfig {
   enableWordWrap?: boolean;
 }
 
-export const CodeBlockConfigExtension =
-  ConfigExtensionFactory<CodeBlockConfig>('ink:code');
+export const CodeBlockConfigExtension = ConfigExtensionFactory<CodeBlockConfig>('ink:code');

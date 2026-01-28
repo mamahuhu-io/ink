@@ -1,14 +1,7 @@
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { baseTheme } from '@ink/stone-theme';
-import {
-  css,
-  html,
-  LitElement,
-  nothing,
-  type TemplateResult,
-  unsafeCSS,
-} from 'lit';
+import { css, html, LitElement, nothing, type TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -127,14 +120,10 @@ export class CitationCard extends SignalWatcher(WithDisposable(LitElement)) {
       >
         <div class="citation-header">
           ${this.icon
-            ? html`<div class="citation-icon">
-                ${this._IconTemplate(this.icon)}
-              </div>`
+            ? html`<div class="citation-icon">${this._IconTemplate(this.icon)}</div>`
             : nothing}
           <div class="citation-title">${this.citationTitle}</div>
-          <div class=${citationIdentifierClasses}>
-            ${this.citationIdentifier}
-          </div>
+          <div class=${citationIdentifierClasses}>${this.citationIdentifier}</div>
         </div>
         ${this.citationContent
           ? html`<div class="citation-content">${this.citationContent}</div>`
@@ -159,8 +148,7 @@ export class CitationCard extends SignalWatcher(WithDisposable(LitElement)) {
   accessor onClickCallback: ((e: MouseEvent) => void) | undefined = undefined;
 
   @property({ attribute: false })
-  accessor onDoubleClickCallback: ((e: MouseEvent) => void) | undefined =
-    undefined;
+  accessor onDoubleClickCallback: ((e: MouseEvent) => void) | undefined = undefined;
 
   @property({ attribute: false })
   accessor active: boolean = false;

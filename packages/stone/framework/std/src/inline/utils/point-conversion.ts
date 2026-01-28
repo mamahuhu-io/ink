@@ -1,20 +1,12 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 
 import type { VElement, VLine } from '../components/index.js';
 import { INLINE_ROOT_ATTR, ZERO_WIDTH_FOR_EMPTY_LINE } from '../consts.js';
 import type { DomPoint, TextPoint } from '../types.js';
-import {
-  isInlineRoot,
-  isNativeTextInVText,
-  isVElement,
-  isVLine,
-} from './guard.js';
+import { isInlineRoot, isNativeTextInVText, isVElement, isVLine } from './guard.js';
 import { calculateTextLength, getTextNodesFromElement } from './text.js';
 
-export function nativePointToTextPoint(
-  node: unknown,
-  offset: number
-): TextPoint | null {
+export function nativePointToTextPoint(node: unknown, offset: number): TextPoint | null {
   if (isNativeTextInVText(node)) {
     return [node, offset];
   }
@@ -56,12 +48,12 @@ export function nativePointToTextPoint(
 export function textPointToDomPoint(
   text: Text,
   offset: number,
-  rootElement: HTMLElement
+  rootElement: HTMLElement,
 ): DomPoint | null {
   if (rootElement.dataset.vRoot !== 'true') {
     throw new InkStoneError(
       ErrorCode.InlineEditorError,
-      'textRangeToDomPoint should be called with editor root element'
+      'textRangeToDomPoint should be called with editor root element',
     );
   }
 
@@ -82,24 +74,16 @@ export function textPointToDomPoint(
 
   const textParentElement = text.parentElement;
   if (!textParentElement) {
-    throw new InkStoneError(
-      ErrorCode.InlineEditorError,
-      'text element parent not found'
-    );
+    throw new InkStoneError(ErrorCode.InlineEditorError, 'text element parent not found');
   }
 
   const lineElement = textParentElement.closest('v-line');
 
   if (!lineElement) {
-    throw new InkStoneError(
-      ErrorCode.InlineEditorError,
-      'line element not found'
-    );
+    throw new InkStoneError(ErrorCode.InlineEditorError, 'line element not found');
   }
 
-  const lineIndex = Array.from(rootElement.querySelectorAll('v-line')).indexOf(
-    lineElement
-  );
+  const lineIndex = Array.from(rootElement.querySelectorAll('v-line')).indexOf(lineElement);
 
   return { text, index: index + lineIndex };
 }
@@ -126,7 +110,7 @@ function getVNodesFromNode(node: Node): VElement[] | VLine[] | null {
 function getTextPointFromVNodes(
   vNodes: VLine[] | VElement[],
   node: Node,
-  offset: number
+  offset: number,
 ): TextPoint | null {
   const first = vNodes[0];
   for (let i = 0; i < vNodes.length; i++) {
@@ -144,11 +128,7 @@ function getTextPointFromVNodes(
       return getTextPointRoughlyFromElement(vNode);
     }
 
-    if (
-      i < vNodes.length - 1 &&
-      APrecededByB(node, vNode) &&
-      AFollowedByB(node, vNodes[i + 1])
-    ) {
+    if (i < vNodes.length - 1 && APrecededByB(node, vNode) && AFollowedByB(node, vNodes[i + 1])) {
       return getTextPointRoughlyFromElement(vNode);
     }
   }
@@ -166,7 +146,7 @@ function getTextPointRoughlyFromElement(element: Element): TextPoint | null {
 function getTextPointRoughlyFromElementByOffset(
   element: Element,
   offset: number,
-  fromStart: boolean
+  fromStart: boolean,
 ): TextPoint | null {
   const texts = getTextNodesFromElement(element);
   if (texts.length === 0) return null;

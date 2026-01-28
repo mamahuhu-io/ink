@@ -1,6 +1,6 @@
 import type { ServiceIdentifier } from '@ink/stone-global/di';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { IBound, IPoint } from '@ink/stone-global/gfx';
 import { computed, Signal } from '@preact/signals-core';
 import { Subject, type Subscription } from 'rxjs';
@@ -68,10 +68,8 @@ export interface ToolEventTarget {
   addHook<K extends SupportedHooks | SupportedEvents>(
     evtName: K,
     handler: (
-      evtState: K extends SupportedHooks
-        ? BuiltInEventMap[K]
-        : PointerEventState
-    ) => void | boolean
+      evtState: K extends SupportedHooks ? BuiltInEventMap[K] : PointerEventState,
+    ) => void | boolean,
   ): void;
 }
 
@@ -105,13 +103,10 @@ export class ToolController extends GfxExtension {
    */
   readonly draggingViewportArea$ = computed(() => {
     const compute = (modelArea: AreaBound) => {
-      const [viewStartX, viewStartY] = this.gfx.viewport.toViewCoord(
-        modelArea.x,
-        modelArea.y
-      );
+      const [viewStartX, viewStartY] = this.gfx.viewport.toViewCoord(modelArea.x, modelArea.y);
       const [viewEndX, viewEndY] = this.gfx.viewport.toViewCoord(
         modelArea.x + modelArea.w,
-        modelArea.y + modelArea.h
+        modelArea.y + modelArea.h,
       );
 
       return {
@@ -164,7 +159,7 @@ export class ToolController extends GfxExtension {
   readonly lastMousePos$ = computed(() => {
     const [x, y] = this.gfx.viewport.toModelCoord(
       this.lastMouseViewPos$.value.x,
-      this.lastMouseViewPos$.value.y
+      this.lastMouseViewPos$.value.y,
     );
 
     return {
@@ -174,7 +169,7 @@ export class ToolController extends GfxExtension {
   });
 
   get currentTool$() {
-    // oxlint-disable-next-line typescript/no-this-alias
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     return {
@@ -188,7 +183,7 @@ export class ToolController extends GfxExtension {
   }
 
   get currentToolOption$() {
-    // oxlint-disable-next-line typescript/no-this-alias
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
     return {
@@ -234,7 +229,7 @@ export class ToolController extends GfxExtension {
 
   private _createBuiltInHookCtx<K extends keyof BuiltInEventMap>(
     eventName: K,
-    data: BuiltInEventMap[K]['data']
+    data: BuiltInEventMap[K]['data'],
   ): {
     prevented: boolean;
     slotCtx: BuiltInSlotContext;
@@ -256,9 +251,7 @@ export class ToolController extends GfxExtension {
   private _initializeEvents() {
     const hooks: Record<
       string,
-      ((
-        evtState: PointerEventState | BuiltInSlotContext
-      ) => undefined | boolean)[]
+      ((evtState: PointerEventState | BuiltInSlotContext) => undefined | boolean)[]
     > = {};
     /**
      * Invoke the hook and the tool handler.
@@ -267,7 +260,7 @@ export class ToolController extends GfxExtension {
     const invokeToolHandler = (
       evtName: SupportedEvents,
       evt: PointerEventState,
-      tool?: BaseTool
+      tool?: BaseTool,
     ) => {
       const evtHooks = hooks[evtName];
       const stopHandler = evtHooks?.reduce((pre, hook) => {
@@ -289,7 +282,7 @@ export class ToolController extends GfxExtension {
           `Error occurred while executing ${evtName} handler of tool "${tool?.toolName}"`,
           {
             cause: e as Error,
-          }
+          },
         );
       }
     };
@@ -304,16 +297,12 @@ export class ToolController extends GfxExtension {
     const addHook: ToolEventTarget['addHook'] = (evtName, handler) => {
       hooks[evtName] = hooks[evtName] ?? [];
       hooks[evtName].push(
-        handler as (
-          evtState: PointerEventState | BuiltInSlotContext
-        ) => undefined | boolean
+        handler as (evtState: PointerEventState | BuiltInSlotContext) => undefined | boolean,
       );
 
       return () => {
         const idx = hooks[evtName].indexOf(
-          handler as (
-            evtState: PointerEventState | BuiltInSlotContext
-          ) => undefined | boolean
+          handler as (evtState: PointerEventState | BuiltInSlotContext) => undefined | boolean,
         );
         if (idx !== -1) {
           hooks[evtName].splice(idx, 1);
@@ -327,7 +316,7 @@ export class ToolController extends GfxExtension {
     let viewportSub: Subscription | null = null;
 
     this._disposableGroup.add(
-      this.std.event.add('dragStart', ctx => {
+      this.std.event.add('dragStart', (ctx) => {
         const evt = ctx.get('pointerState');
 
         if (
@@ -372,10 +361,7 @@ export class ToolController extends GfxExtension {
         viewportSub?.unsubscribe();
         viewportSub = this.gfx.viewport.viewportUpdated.subscribe(() => {
           const lastPost = this.lastMouseViewPos$.peek();
-          const [modelX, modelY] = this.gfx.viewport.toModelCoord(
-            lastPost.x,
-            lastPost.y
-          );
+          const [modelX, modelY] = this.gfx.viewport.toModelCoord(lastPost.x, lastPost.y);
 
           const original = this.draggingArea$.peek();
 
@@ -404,11 +390,11 @@ export class ToolController extends GfxExtension {
               }
             : null;
         }
-      })
+      }),
     );
 
     this._disposableGroup.add(
-      this.std.event.add('dragMove', ctx => {
+      this.std.event.add('dragMove', (ctx) => {
         if (!this.dragging$.peek()) {
           return;
         }
@@ -448,11 +434,11 @@ export class ToolController extends GfxExtension {
         };
 
         invokeToolHandler('dragMove', evt, dragContext?.tool);
-      })
+      }),
     );
 
     this._disposableGroup.add(
-      this.std.event.add('dragEnd', ctx => {
+      this.std.event.add('dragEnd', (ctx) => {
         if (!this.dragging$.peek()) {
           return;
         }
@@ -462,10 +448,7 @@ export class ToolController extends GfxExtension {
 
         // if the tool dragEnd is prevented by the hook, call the dragEnd method manually
         // this guarantee the dragStart and dragEnd events are always called together
-        if (
-          !invokeToolHandler('dragEnd', evt, dragContext?.tool) &&
-          dragContext?.tool
-        ) {
+        if (!invokeToolHandler('dragEnd', evt, dragContext?.tool) && dragContext?.tool) {
           dragContext.tool.dragEnd(evt);
         }
 
@@ -492,11 +475,11 @@ export class ToolController extends GfxExtension {
           w: 0,
           h: 0,
         };
-      })
+      }),
     );
 
     this._disposableGroup.add(
-      this.std.event.add('pointerMove', ctx => {
+      this.std.event.add('pointerMove', (ctx) => {
         const evt = ctx.get('pointerState');
 
         this.lastMouseViewPos$.value = {
@@ -505,32 +488,32 @@ export class ToolController extends GfxExtension {
         };
 
         invokeToolHandler('pointerMove', evt);
-      })
+      }),
     );
 
     this._disposableGroup.add(
-      this.std.event.add('contextMenu', ctx => {
+      this.std.event.add('contextMenu', (ctx) => {
         const evt = ctx.get('defaultState');
 
         // when in editing mode, allow context menu to pop up
         if (this.gfx.selection.editing) return;
 
         evt.event.preventDefault();
-      })
+      }),
     );
 
-    supportedEvents.slice(5).forEach(evtName => {
+    supportedEvents.slice(5).forEach((evtName) => {
       this._disposableGroup.add(
-        this.std.event.add(evtName, ctx => {
+        this.std.event.add(evtName, (ctx) => {
           const evt = ctx.get('pointerState');
 
           invokeToolHandler(evtName, evt);
-        })
+        }),
       );
     });
 
-    this._builtInHookSlot.subscribe(evt => {
-      hooks[evt.event]?.forEach(hook => hook(evt));
+    this._builtInHookSlot.subscribe((evt) => {
+      hooks[evt.event]?.forEach((hook) => hook(evt));
     });
 
     return {
@@ -552,7 +535,7 @@ export class ToolController extends GfxExtension {
     if (!instance) {
       throw new InkStoneError(
         InkStoneError.ErrorCode.ValueNotExists,
-        `Trying to get tool "${type.toolName}" is not registered`
+        `Trying to get tool "${type.toolName}" is not registered`,
       );
     }
     return instance;
@@ -565,17 +548,14 @@ export class ToolController extends GfxExtension {
       addHook,
     };
 
-    this.std.provider.getAll(ToolIdentifier).forEach(tool => {
+    this.std.provider.getAll(ToolIdentifier).forEach((tool) => {
       // @ts-expect-error ignore
       tool['eventTarget'] = eventTarget;
       this._register(tool);
     });
   }
 
-  setTool = <T extends BaseTool>(
-    toolType: ToolType<T>,
-    options?: ToolOptions<T>
-  ): void => {
+  setTool = <T extends BaseTool>(toolType: ToolType<T>, options?: ToolOptions<T>): void => {
     const toolNameStr = toolType.toolName;
 
     const beforeUpdateCtx = this._createBuiltInHookCtx('beforeToolUpdate', {
@@ -597,7 +577,7 @@ export class ToolController extends GfxExtension {
     if (!currentTool) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        `Tool "${this.currentToolName$.value}" is not defined`
+        `Tool "${this.currentToolName$.value}" is not defined`,
       );
     }
 
@@ -616,7 +596,7 @@ export class ToolController extends GfxExtension {
 
   override unmounted(): void {
     this.currentTool$.peek()?.deactivate();
-    this._tools.forEach(tool => {
+    this._tools.forEach((tool) => {
       tool.unmounted();
       tool['disposable'].dispose();
     });
@@ -625,7 +605,7 @@ export class ToolController extends GfxExtension {
 }
 
 export const ToolControllerIdentifier = GfxExtensionIdentifier(
-  'ToolController'
+  'ToolController',
 ) as ServiceIdentifier<ToolController>;
 
 declare module '../controller.js' {

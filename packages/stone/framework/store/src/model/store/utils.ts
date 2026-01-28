@@ -10,7 +10,7 @@ export function syncBlockProps(
   schema: z.infer<typeof BlockSchema>,
   model: BlockModel,
   yBlock: YBlock,
-  props: Partial<BlockProps>
+  props: Partial<BlockProps>,
 ) {
   const defaultProps = schema.model.props?.(internalPrimitives) ?? {};
 
@@ -24,8 +24,7 @@ export function syncBlockProps(
 
   // set default value
   Object.entries(defaultProps).forEach(([key, value]) => {
-    const notExists =
-      !yBlock.has(`prop:${key}`) || yBlock.get(`prop:${key}`) === undefined;
+    const notExists = !yBlock.has(`prop:${key}`) || yBlock.get(`prop:${key}`) === undefined;
     if (!notExists) {
       return;
     }

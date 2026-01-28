@@ -7,9 +7,7 @@ import { BlockStdScope } from '../scope/index.js';
 import { ShadowlessElement } from '../view/index.js';
 
 @customElement('test-editor-container')
-export class TestEditorContainer extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class TestEditorContainer extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   private _std!: BlockStdScope;
 
   get std() {
@@ -25,9 +23,7 @@ export class TestEditorContainer extends SignalWatcher(
   }
 
   protected override render() {
-    return html` <div class="test-editor-container">
-      ${this._std.render()}
-    </div>`;
+    return html` <div class="test-editor-container">${this._std.render()}</div>`;
   }
 
   @property({ attribute: false })

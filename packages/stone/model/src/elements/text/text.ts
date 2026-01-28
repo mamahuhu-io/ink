@@ -40,7 +40,7 @@ export class TextElementModel extends GfxPrimitiveElementModel<TextElementProps>
 
   override containsBound(bounds: Bound): boolean {
     const points = getPointsFromBoundWithRotation(this);
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   }
 
   override getLineIntersections(start: IVec, end: IVec) {
@@ -49,10 +49,7 @@ export class TextElementModel extends GfxPrimitiveElementModel<TextElementProps>
   }
 
   override getNearestPoint(point: IVec): IVec {
-    return polygonNearestPoint(
-      Bound.deserialize(this.xywh).points,
-      point
-    ) as IVec;
+    return polygonNearestPoint(Bound.deserialize(this.xywh).points, point) as IVec;
   }
 
   override includesPoint(x: number, y: number): boolean {

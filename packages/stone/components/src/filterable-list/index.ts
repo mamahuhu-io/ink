@@ -1,7 +1,7 @@
-import { PAGE_HEADER_HEIGHT } from '@ink/stone-shared/consts';
+import { autoPlacement, offset, type Placement, size } from '@floating-ui/dom';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { DoneIcon, SearchIcon } from '@ink/stone-icons/lit';
-import { autoPlacement, offset, type Placement, size } from '@floating-ui/dom';
+import { PAGE_HEADER_HEIGHT } from '@ink/stone-shared/consts';
 import { html, LitElement, nothing } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -12,9 +12,7 @@ import type { FilterableListItem, FilterableListOptions } from './types.js';
 
 export * from './types.js';
 
-export class FilterableListComponent<Props = unknown> extends WithDisposable(
-  LitElement
-) {
+export class FilterableListComponent<Props = unknown> extends WithDisposable(LitElement) {
   static override styles = filterableListStyles;
 
   private _buildContent(items: FilterableListItem<Props>[]) {
@@ -34,9 +32,7 @@ export class FilterableListComponent<Props = unknown> extends WithDisposable(
           height="32px"
         >
           ${item.icon ?? nothing} ${item.label ?? item.name}
-          <div slot="suffix">
-            ${this.options.active?.(item) ? DoneIcon() : nothing}
-          </div>
+          <div slot="suffix">${this.options.active?.(item) ? DoneIcon() : nothing}</div>
         </icon-button>
       `;
     });
@@ -46,11 +42,9 @@ export class FilterableListComponent<Props = unknown> extends WithDisposable(
     const searchFilter = !this._filterText
       ? this.options.items
       : this.options.items.filter(
-          item =>
+          (item) =>
             item.name.startsWith(this._filterText.toLowerCase()) ||
-            item.aliases?.some(alias =>
-              alias.startsWith(this._filterText.toLowerCase())
-            )
+            item.aliases?.some((alias) => alias.startsWith(this._filterText.toLowerCase())),
         );
     return searchFilter.sort((a, b) => {
       const isActiveA = this.options.active?.(a);
@@ -96,8 +90,7 @@ export class FilterableListComponent<Props = unknown> extends WithDisposable(
       switch (ev.key) {
         case 'ArrowUp': {
           ev.preventDefault();
-          this._curFocusIndex =
-            (this._curFocusIndex + content.length - 1) % content.length;
+          this._curFocusIndex = (this._curFocusIndex + content.length - 1) % content.length;
           this._scrollFocusedItemIntoView();
           break;
         }
@@ -124,9 +117,7 @@ export class FilterableListComponent<Props = unknown> extends WithDisposable(
     };
 
     return html`
-      <div
-        class=${classMap({ 'ink-filterable-list': true, flipped: isFlip })}
-      >
+      <div class=${classMap({ 'ink-filterable-list': true, flipped: isFlip })}>
         <div class="input-wrapper">
           ${SearchIcon()}
           <input
@@ -141,9 +132,7 @@ export class FilterableListComponent<Props = unknown> extends WithDisposable(
           />
         </div>
 
-        <editor-toolbar-separator
-          data-orientation="horizontal"
-        ></editor-toolbar-separator>
+        <editor-toolbar-separator data-orientation="horizontal"></editor-toolbar-separator>
         <div class="items-container">${content}</div>
       </div>
     `;

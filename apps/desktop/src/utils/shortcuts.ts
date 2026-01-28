@@ -6,21 +6,21 @@
  * - Windows/Linux: Uses text labels (Ctrl, Alt, Shift)
  */
 
-import { isMacOS } from '../services/platform'
+import { isMacOS } from '../services/platform';
 
 /**
  * Modifier key symbols for macOS
  */
 const MAC_SYMBOLS = {
-  'Cmd': '⌘',
-  'Command': '⌘',
-  'Ctrl': '⌃',
-  'Control': '⌃',
-  'Alt': '⌥',
-  'Option': '⌥',
-  'Shift': '⇧',
-  'Meta': '⌘',
-} as const
+  Cmd: '⌘',
+  Command: '⌘',
+  Ctrl: '⌃',
+  Control: '⌃',
+  Alt: '⌥',
+  Option: '⌥',
+  Shift: '⇧',
+  Meta: '⌘',
+} as const;
 
 /**
  * Format a keyboard shortcut for the current platform
@@ -40,20 +40,20 @@ const MAC_SYMBOLS = {
  */
 export function formatShortcut(shortcut: string): string {
   if (!isMacOS()) {
-    return shortcut
+    return shortcut;
   }
 
   // Replace modifier keys with macOS symbols
-  let formatted = shortcut
+  let formatted = shortcut;
 
   // Process each modifier key
   Object.entries(MAC_SYMBOLS).forEach(([key, symbol]) => {
     // Match the key followed by a plus sign
-    const regex = new RegExp(`\\b${key}\\+`, 'g')
-    formatted = formatted.replace(regex, symbol)
-  })
+    const regex = new RegExp(`\\b${key}\\+`, 'g');
+    formatted = formatted.replace(regex, symbol);
+  });
 
-  return formatted
+  return formatted;
 }
 
 /**
@@ -72,16 +72,16 @@ export function formatShortcut(shortcut: string): string {
  */
 export function formatShortcutHint(text: string): string {
   // Match text in parentheses
-  const match = text.match(/\(([^)]+)\)/)
+  const match = text.match(/\(([^)]+)\)/);
 
   if (!match) {
-    return text
+    return text;
   }
 
-  const shortcut = match[1]
-  const formattedShortcut = formatShortcut(shortcut)
+  const shortcut = match[1];
+  const formattedShortcut = formatShortcut(shortcut);
 
-  return text.replace(/\([^)]+\)/, `(${formattedShortcut})`)
+  return text.replace(/\([^)]+\)/, `(${formattedShortcut})`);
 }
 
 /**
@@ -101,7 +101,7 @@ export function formatShortcutHint(text: string): string {
  */
 export function getModifierDisplay(key: keyof typeof MAC_SYMBOLS): string {
   if (isMacOS() && key in MAC_SYMBOLS) {
-    return MAC_SYMBOLS[key]
+    return MAC_SYMBOLS[key];
   }
-  return key
+  return key;
 }

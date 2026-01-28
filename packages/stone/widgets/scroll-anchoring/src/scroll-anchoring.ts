@@ -1,10 +1,10 @@
+import { Bound, deserializeXYWH } from '@ink/stone-global/gfx';
 import type { DocMode } from '@ink/stone-model';
 import { HighlightSelection } from '@ink/stone-shared/selection';
-import { Bound, deserializeXYWH } from '@ink/stone-global/gfx';
 import { WidgetComponent } from '@ink/stone-std';
 import { GfxControllerIdentifier, type GfxModel } from '@ink/stone-std/gfx';
-import { computed, signal } from '@preact/signals-core';
 import { cssVarV2 } from '@ink/stone-theme';
+import { computed, signal } from '@preact/signals-core';
 import { css, html, nothing, unsafeCSS } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -35,9 +35,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
         &.edgeless {
           border-width: 1.39px;
           border-style: solid;
-          border-color: ${unsafeCSS(
-            cssVarV2('layer/insideBorder/primaryBorder')
-          )};
+          border-color: ${unsafeCSS(cssVarV2('layer/insideBorder/primaryBorder'))};
           box-shadow: var(--ink-active-shadow);
         }
 
@@ -53,9 +51,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
 
   readonly #requestUpdateFn = () => this.requestUpdate();
 
-  readonly #resizeObserver: ResizeObserver = new ResizeObserver(
-    this.#requestUpdateFn
-  );
+  readonly #resizeObserver: ResizeObserver = new ResizeObserver(this.#requestUpdateFn);
 
   anchor$ = signal<Anchor | null>(null);
 
@@ -98,15 +94,14 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
     if (!xywh) {
       if (!this.#listened) return;
 
-      const blockUpdatedSubscription =
-        this.std.store.slots.blockUpdated.subscribe(v => {
-          if (v.type === 'add' && v.id === id) {
-            blockUpdatedSubscription.unsubscribe();
-            this.#moveToAnchorInEdgeless(id);
-          }
-        });
+      const blockUpdatedSubscription = this.std.store.slots.blockUpdated.subscribe((v) => {
+        if (v.type === 'add' && v.id === id) {
+          blockUpdatedSubscription.unsubscribe();
+          this.#moveToAnchorInEdgeless(id);
+        }
+      });
 
-      const elementAddedSubscription = surface.elementAdded.subscribe(v => {
+      const elementAddedSubscription = surface.elementAdded.subscribe((v) => {
         if (v.id === id && v.local === false) {
           elementAddedSubscription.unsubscribe();
           this.#moveToAnchorInEdgeless(id);
@@ -128,18 +123,10 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
       const { left: x, width: w } = parentComponent.getBoundingClientRect();
       const { top: y, height: h } = blockComponent.getBoundingClientRect();
       const coord = viewport.toModelCoordFromClientCoord([x, y]);
-      bounds = new Bound(
-        coord[0],
-        coord[1],
-        w / viewport.zoom,
-        h / viewport.zoom
-      );
+      bounds = new Bound(coord[0], coord[1], w / viewport.zoom, h / viewport.zoom);
     }
 
-    const { zoom, centerX, centerY } = viewport.getFitToScreenData(
-      bounds,
-      [20, 20, 100, 20]
-    );
+    const { zoom, centerX, centerY } = viewport.getFitToScreenData(bounds, [20, 20, 100, 20]);
 
     viewport.setZoom(zoom);
     viewport.setCenter(centerX, centerY);
@@ -154,7 +141,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
       if (!this.#listened) return;
 
       // listen for document updates
-      const subscription = this.std.store.slots.blockUpdated.subscribe(v => {
+      const subscription = this.std.store.slots.blockUpdated.subscribe((v) => {
         if (v.type === 'add' && v.id === id) {
           subscription.unsubscribe();
           this.#moveToAnchorInPage(id);
@@ -174,9 +161,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
     });
 
     this.#listened = false;
-    this.anchorBounds$.value = Bound.fromDOMRect(
-      blockComponent.getBoundingClientRect()
-    );
+    this.anchorBounds$.value = Bound.fromDOMRect(blockComponent.getBoundingClientRect());
   }
 
   override connectedCallback() {
@@ -195,12 +180,10 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
 
     // In edgeless
     const controler = this.std.get(GfxControllerIdentifier);
-    this.disposables.add(
-      controler.viewport.viewportUpdated.subscribe(this.#requestUpdateFn)
-    );
+    this.disposables.add(controler.viewport.viewportUpdated.subscribe(this.#requestUpdateFn));
 
     this.disposables.add(
-      this.anchor$.subscribe(anchor => {
+      this.anchor$.subscribe((anchor) => {
         if (!anchor) return;
 
         const { mode, id } = anchor;
@@ -211,11 +194,11 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
         }
 
         this.#moveToAnchorInEdgeless(id);
-      })
+      }),
     );
 
     this.disposables.add(
-      this.highlighted$.subscribe(highlighted => {
+      this.highlighted$.subscribe((highlighted) => {
         if (!highlighted) return;
 
         const {
@@ -232,7 +215,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
 
         this.anchor$.value = { mode, id, highlight };
         this.#listened = true;
-      })
+      }),
     );
   }
 
@@ -247,8 +230,7 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
 
     const { mode, id } = anchor;
 
-    const bounds =
-      mode === 'page' ? this.#getBoundsInPage(id) : this.#getBoundsInEdgeless();
+    const bounds = mode === 'page' ? this.#getBoundsInPage(id) : this.#getBoundsInEdgeless();
     if (!bounds) return nothing;
 
     const classes = { highlight: true, [mode]: true };
@@ -259,9 +241,6 @@ export class InkScrollAnchoringWidget extends WidgetComponent {
       height: `${bounds.h}px`,
     };
 
-    return html`<div
-      class=${classMap(classes)}
-      style=${styleMap(style)}
-    ></div>`;
+    return html`<div class=${classMap(classes)} style=${styleMap(style)}></div>`;
   }
 }

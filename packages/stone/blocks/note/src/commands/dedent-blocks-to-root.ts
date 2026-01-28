@@ -17,11 +17,9 @@ export const dedentBlocksToRoot: Command<{
       // If the text selection is not at the beginning of the block, use default behavior
       if (text.from.index !== 0) return;
 
-      blockIds = [text.from.blockId, text.to?.blockId].filter(
-        (x): x is string => !!x
-      );
+      blockIds = [text.from.blockId, text.to?.blockId].filter((x): x is string => !!x);
     } else {
-      blockIds = std.selection.getGroup('note').map(sel => sel.blockId);
+      blockIds = std.selection.getGroup('note').map((sel) => sel.blockId);
     }
   }
 

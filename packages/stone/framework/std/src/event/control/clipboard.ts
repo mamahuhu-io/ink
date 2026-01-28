@@ -8,30 +8,21 @@ export class ClipboardControl {
     const clipboardEventState = new ClipboardEventState({
       event,
     });
-    this._dispatcher.run(
-      'copy',
-      this._createContext(event, clipboardEventState)
-    );
+    this._dispatcher.run('copy', this._createContext(event, clipboardEventState));
   };
 
   private readonly _cut = (event: ClipboardEvent) => {
     const clipboardEventState = new ClipboardEventState({
       event,
     });
-    this._dispatcher.run(
-      'cut',
-      this._createContext(event, clipboardEventState)
-    );
+    this._dispatcher.run('cut', this._createContext(event, clipboardEventState));
   };
 
   private readonly _paste = (event: ClipboardEvent) => {
     const clipboardEventState = new ClipboardEventState({
       event,
     });
-    this._dispatcher.run(
-      'paste',
-      this._createContext(event, clipboardEventState)
-    );
+    this._dispatcher.run('paste', this._createContext(event, clipboardEventState));
   };
 
   constructor(private readonly _dispatcher: UIEventDispatcher) {}
@@ -43,7 +34,7 @@ export class ClipboardControl {
         event,
         sourceType: EventScopeSourceType.Selection,
       }),
-      clipboardState
+      clipboardState,
     );
   }
 

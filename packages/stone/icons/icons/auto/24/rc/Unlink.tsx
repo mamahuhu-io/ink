@@ -1,7 +1,22 @@
-import * as React from "react";
-import type { SVGProps } from "react";
-const UnlinkIcon = (props: SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="none" style={{
-  userSelect: "none",
-  flexShrink: 0
-}} {...props}><path fill="currentColor" d="M14.522 5.35a2.919 2.919 0 1 1 4.128 4.128l-3.669 3.669a.75.75 0 1 0 1.06 1.06l3.67-3.669a4.419 4.419 0 1 0-6.25-6.249l-1.008 1.009a.75.75 0 1 0 1.06 1.06zM9.019 10.853a.75.75 0 0 0-1.061-1.06L4.289 13.46a4.419 4.419 0 1 0 6.25 6.25l1.01-1.01a.75.75 0 1 0-1.06-1.061l-1.011 1.01a2.919 2.919 0 0 1-4.128-4.128zM9.395 4.494a.75.75 0 1 0-1.461.337l.4 1.734a.75.75 0 1 0 1.462-.337zM4.83 7.934a.75.75 0 1 0-.336 1.461l1.734.4a.75.75 0 1 0 .337-1.46zM17.772 14.204a.75.75 0 0 0-.337 1.462l1.734.4a.75.75 0 1 0 .337-1.461zM15.666 17.435a.75.75 0 1 0-1.462.337l.4 1.734a.75.75 0 0 0 1.462-.337z" /></svg>;
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const UnlinkIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M14.522 5.35a2.919 2.919 0 1 1 4.128 4.128l-3.669 3.669a.75.75 0 1 0 1.06 1.06l3.67-3.669a4.419 4.419 0 1 0-6.25-6.249l-1.008 1.009a.75.75 0 1 0 1.06 1.06zM9.019 10.853a.75.75 0 0 0-1.061-1.06L4.289 13.46a4.419 4.419 0 1 0 6.25 6.25l1.01-1.01a.75.75 0 1 0-1.06-1.061l-1.011 1.01a2.919 2.919 0 0 1-4.128-4.128zM9.395 4.494a.75.75 0 1 0-1.461.337l.4 1.734a.75.75 0 1 0 1.462-.337zM4.83 7.934a.75.75 0 1 0-.336 1.461l1.734.4a.75.75 0 1 0 .337-1.46zM17.772 14.204a.75.75 0 0 0-.337 1.462l1.734.4a.75.75 0 1 0 .337-1.461zM15.666 17.435a.75.75 0 1 0-1.462.337l.4 1.734a.75.75 0 0 0 1.462-.337z"
+    />
+  </svg>
+);
 export default UnlinkIcon;

@@ -1,9 +1,6 @@
-import {
-  EmbedOptionProvider,
-  VirtualKeyboardProvider,
-} from '@ink/stone-shared/services';
-import { isValidUrl, stopPropagation } from '@ink/stone-shared/utils';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { EmbedOptionProvider, VirtualKeyboardProvider } from '@ink/stone-shared/services';
+import { isValidUrl, stopPropagation } from '@ink/stone-shared/utils';
 import type { EditorHost } from '@ink/stone-std';
 import { ShadowlessElement } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
@@ -16,9 +13,7 @@ import { styleMap } from 'lit-html/directives/style-map.js';
 import { toast } from '../toast';
 import { embedCardModalStyles } from './styles.js';
 
-export class EmbedCardCreateModal extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class EmbedCardCreateModal extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = embedCardModalStyles;
 
   private readonly _onCancel = () => {
@@ -33,9 +28,7 @@ export class EmbedCardCreateModal extends SignalWatcher(
       return;
     }
 
-    const embedOptions = this.host.std
-      .get(EmbedOptionProvider)
-      .getEmbedBlockOptions(url);
+    const embedOptions = this.host.std.get(EmbedOptionProvider).getEmbedBlockOptions(url);
 
     const { mode } = this.createOptions;
     if (mode === 'page') {
@@ -52,7 +45,7 @@ export class EmbedCardCreateModal extends SignalWatcher(
           url,
         },
         parentModel,
-        index
+        index,
       );
     } else if (mode === 'edgeless') {
       const gfx = this.host.std.get(GfxControllerIdentifier);
@@ -101,9 +94,7 @@ export class EmbedCardCreateModal extends SignalWatcher(
   override render() {
     const keyboard = this.host.std.getOptional(VirtualKeyboardProvider);
     const style = styleMap({
-      height: keyboard?.visible$.value
-        ? `calc(100% - ${keyboard.height$.value}px)`
-        : undefined,
+      height: keyboard?.visible$.value ? `calc(100% - ${keyboard.height$.value}px)` : undefined,
     });
 
     return html`<div class="embed-card-modal" style=${style}>
@@ -114,9 +105,7 @@ export class EmbedCardCreateModal extends SignalWatcher(
         </div>
 
         <div class="embed-card-modal-row">
-          <div class="embed-card-modal-description">
-            ${this.descriptionText}
-          </div>
+          <div class="embed-card-modal-description">${this.descriptionText}</div>
         </div>
 
         <div class="embed-card-modal-row">
@@ -191,7 +180,7 @@ export async function toggleEmbedCardCreateModal(
         mode: 'edgeless';
         onSave: (url: string) => void;
       },
-  onConfirm: (options: { mode: 'page' | 'edgeless' }) => void
+  onConfirm: (options: { mode: 'page' | 'edgeless' }) => void,
 ): Promise<void> {
   host.selection.clear();
 
@@ -203,8 +192,8 @@ export async function toggleEmbedCardCreateModal(
 
   document.body.append(embedCardCreateModal);
 
-  return new Promise(resolve => {
-    embedCardCreateModal.onConfirm = options => {
+  return new Promise((resolve) => {
+    embedCardCreateModal.onConfirm = (options) => {
       onConfirm(options);
       resolve();
     };

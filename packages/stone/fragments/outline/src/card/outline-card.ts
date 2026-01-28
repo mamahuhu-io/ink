@@ -1,12 +1,12 @@
-import { type NoteBlockModel, NoteDisplayMode } from '@ink/stone-model';
-import { createButtonPopper } from '@ink/stone-shared/utils';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { ArrowDownSmallIcon, InvisibleIcon } from '@ink/stone-icons/lit';
+import { type NoteBlockModel, NoteDisplayMode } from '@ink/stone-model';
+import { createButtonPopper } from '@ink/stone-shared/utils';
 import { ShadowlessElement } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
+import { cssVarV2 } from '@ink/stone-theme';
 import { consume, ContextProvider } from '@lit/context';
 import { signal } from '@preact/signals-core';
-import { cssVarV2 } from '@ink/stone-theme';
 import { html } from 'lit';
 import { property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -18,11 +18,8 @@ import * as styles from './outline-card.css';
 
 export const INK_OUTLINE_NOTE_CARD = 'ink-outline-note-card';
 
-export class OutlineNoteCard extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
-  private _displayModePopper: ReturnType<typeof createButtonPopper> | null =
-    null;
+export class OutlineNoteCard extends SignalWatcher(WithDisposable(ShadowlessElement)) {
+  private _displayModePopper: ReturnType<typeof createButtonPopper> | null = null;
 
   private readonly _showPopper$ = signal(false);
 
@@ -90,8 +87,7 @@ export class OutlineNoteCard extends SignalWatcher(
     this.disposables.add(
       std.dnd.draggable<NoteCardEntity>({
         element: this,
-        canDrag: () =>
-          this.note.props.displayMode !== NoteDisplayMode.EdgelessOnly,
+        canDrag: () => this.note.props.displayMode !== NoteDisplayMode.EdgelessOnly,
         onDragStart: () => {
           if (this.status !== 'selected') {
             this.dispatchEvent(
@@ -101,7 +97,7 @@ export class OutlineNoteCard extends SignalWatcher(
                   selected: true,
                   multiselect: false,
                 },
-              })
+              }),
             );
           }
         },
@@ -122,9 +118,7 @@ export class OutlineNoteCard extends SignalWatcher(
           container.style.width = `${this.parentElement?.clientWidth ?? 0}px`;
           container.style.maxHeight = '500px';
           container.style.overflow = 'hidden';
-          container.style.backgroundColor = cssVarV2(
-            'layer/background/primary'
-          );
+          container.style.backgroundColor = cssVarV2('layer/background/primary');
           container.append(preview);
           const provider = new ContextProvider(container, {
             context: tocContext,
@@ -132,7 +126,7 @@ export class OutlineNoteCard extends SignalWatcher(
           });
           provider.hostConnected();
         },
-      })
+      }),
     );
 
     this.disposables.add(
@@ -144,7 +138,7 @@ export class OutlineNoteCard extends SignalWatcher(
         canDrop: () => {
           return this.note.props.displayMode !== NoteDisplayMode.EdgelessOnly;
         },
-      })
+      }),
     );
   }
 
@@ -171,8 +165,7 @@ export class OutlineNoteCard extends SignalWatcher(
     const { displayMode } = this.note.props;
     const { children } = this.note;
     const currentMode = this._getCurrentModeLabel(displayMode);
-    const invisible =
-      this.note.props.displayMode$.value === NoteDisplayMode.EdgelessOnly;
+    const invisible = this.note.props.displayMode$.value === NoteDisplayMode.EdgelessOnly;
 
     const enableSorting = this._context.enableSorting$.value;
 
@@ -194,9 +187,7 @@ export class OutlineNoteCard extends SignalWatcher(
               ? html`<span class=${styles.headerIcon}
                   >${InvisibleIcon({ width: '20px', height: '20px' })}</span
                 >`
-              : html`<span class=${styles.headerNumber}
-                  >${this.index + 1}</span
-                >`
+              : html`<span class=${styles.headerNumber}>${this.index + 1}</span>`
           }
           <span class=${styles.divider}></span>
           <div class=${styles.displayModeButtonGroup}>
@@ -231,7 +222,7 @@ export class OutlineNoteCard extends SignalWatcher(
           </note-display-mode-panel>
         </div>`}
           <div class=${styles.cardContent}>
-            ${children.map(block => {
+            ${children.map((block) => {
               return html`<ink-outline-block-preview
                 class=${classMap({ active: this.activeHeadingId === block.id })}
                 .block=${block}

@@ -8,8 +8,8 @@ import { nanoid } from '@ink/stone-store';
 
 export const dividerBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: DividerBlockSchema.model.flavour,
-  toMatch: o => HastUtils.isElement(o.node) && o.node.tagName === 'hr',
-  fromMatch: o => o.node.flavour === DividerBlockSchema.model.flavour,
+  toMatch: (o) => HastUtils.isElement(o.node) && o.node.tagName === 'hr',
+  fromMatch: (o) => o.node.flavour === DividerBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -25,7 +25,7 @@ export const dividerBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             props: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -41,7 +41,7 @@ export const dividerBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -49,5 +49,5 @@ export const dividerBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const DividerBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  dividerBlockHtmlAdapterMatcher
+  dividerBlockHtmlAdapterMatcher,
 );

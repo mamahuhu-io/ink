@@ -6,8 +6,5 @@
     "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
   },
   "include": ["./src"],
-  "references": [
-    { "path": "../../framework/global" },
-    { "path": "../../framework/store" }
-  ]
+  "references": [{ "path": "../../framework/global" }, { "path": "../../framework/store" }]
 }

@@ -1,19 +1,9 @@
-import { HoverController } from '@ink/stone-components/hover';
-import type {
-  AdvancedMenuItem,
-  MenuItemGroup,
-} from '@ink/stone-components/toolbar';
-import {
-  cloneGroups,
-  getMoreMenuConfig,
-} from '@ink/stone-components/toolbar';
-import type { CodeBlockModel } from '@ink/stone-model';
-import {
-  BlockSelection,
-  TextSelection,
-  WidgetComponent,
-} from '@ink/stone-std';
 import { limitShift, shift, size } from '@floating-ui/dom';
+import { HoverController } from '@ink/stone-components/hover';
+import type { AdvancedMenuItem, MenuItemGroup } from '@ink/stone-components/toolbar';
+import { cloneGroups, getMoreMenuConfig } from '@ink/stone-components/toolbar';
+import type { CodeBlockModel } from '@ink/stone-model';
+import { BlockSelection, TextSelection, WidgetComponent } from '@ink/stone-std';
 import { html } from 'lit';
 
 import type { CodeBlockComponent } from '../code-block.js';
@@ -22,10 +12,7 @@ import { CodeBlockToolbarContext } from './context.js';
 export { setCodeI18nGetter as setCodeLangI18nGetter } from '../configs/i18n.js';
 
 export const INK_CODE_TOOLBAR_WIDGET = 'ink-code-toolbar-widget';
-export class InkCodeToolbarWidget extends WidgetComponent<
-  CodeBlockModel,
-  CodeBlockComponent
-> {
+export class InkCodeToolbarWidget extends WidgetComponent<CodeBlockModel, CodeBlockComponent> {
   private _hoverController: HoverController | null = null;
 
   private _isActivated = false;
@@ -43,18 +30,14 @@ export class InkCodeToolbarWidget extends WidgetComponent<
         const selection = this.host.selection;
 
         const textSelection = selection.find(TextSelection);
-        if (
-          !!textSelection &&
-          (!!textSelection.to || !!textSelection.from.length)
-        ) {
+        if (!!textSelection && (!!textSelection.to || !!textSelection.from.length)) {
           return null;
         }
 
         const blockSelections = selection.filter(BlockSelection);
         if (
           blockSelections.length > 1 ||
-          (blockSelections.length === 1 &&
-            blockSelections[0].blockId !== codeBlock.blockId)
+          (blockSelections.length === 1 && blockSelections[0].blockId !== codeBlock.blockId)
         ) {
           return null;
         }
@@ -68,15 +51,9 @@ export class InkCodeToolbarWidget extends WidgetComponent<
 
         // Refresh groups to ensure correct language and dynamic updates
         this.primaryGroups = cloneGroups(getPrimaryGroups());
-        this.moreGroups = getMoreMenuConfig(this.std).configure(
-          cloneGroups(getMoreGroups())
-        );
+        this.moreGroups = getMoreMenuConfig(this.std).configure(cloneGroups(getMoreGroups()));
 
-        const context = new CodeBlockToolbarContext(
-          codeBlock,
-          abortController,
-          setActive
-        );
+        const context = new CodeBlockToolbarContext(codeBlock, abortController, setActive);
 
         return {
           template: html`<ink-code-toolbar
@@ -112,7 +89,7 @@ export class InkCodeToolbarWidget extends WidgetComponent<
           },
         };
       },
-      { allowMultiple: true }
+      { allowMultiple: true },
     );
 
     const codeBlock = this.block;
@@ -131,11 +108,11 @@ export class InkCodeToolbarWidget extends WidgetComponent<
   addMoretems = (
     items: AdvancedMenuItem<CodeBlockToolbarContext>[],
     index?: number,
-    type?: string
+    type?: string,
   ) => {
     let group;
     if (type) {
-      group = this.moreGroups.find(g => g.type === type);
+      group = this.moreGroups.find((g) => g.type === type);
     }
     if (!group) {
       group = this.moreGroups[0];
@@ -150,10 +127,7 @@ export class InkCodeToolbarWidget extends WidgetComponent<
     return this;
   };
 
-  addPrimaryItems = (
-    items: AdvancedMenuItem<CodeBlockToolbarContext>[],
-    index?: number
-  ) => {
+  addPrimaryItems = (items: AdvancedMenuItem<CodeBlockToolbarContext>[], index?: number) => {
     if (index === undefined) {
       this.primaryGroups[0].items.push(...items);
       return this;
@@ -167,8 +141,7 @@ export class InkCodeToolbarWidget extends WidgetComponent<
    * Caches the more menu items.
    * Currently only supports configuring more menu.
    */
-  protected moreGroups: MenuItemGroup<CodeBlockToolbarContext>[] =
-    cloneGroups(getMoreGroups());
+  protected moreGroups: MenuItemGroup<CodeBlockToolbarContext>[] = cloneGroups(getMoreGroups());
 
   protected primaryGroups: MenuItemGroup<CodeBlockToolbarContext>[] =
     cloneGroups(getPrimaryGroups());

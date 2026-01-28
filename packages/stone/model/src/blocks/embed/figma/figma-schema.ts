@@ -1,11 +1,7 @@
 import { BlockSchemaExtension } from '@ink/stone-store';
 
 import { createEmbedBlockSchema } from '../../../utils/index.js';
-import {
-  type EmbedFigmaBlockProps,
-  EmbedFigmaModel,
-  EmbedFigmaStyles,
-} from './figma-model.js';
+import { type EmbedFigmaBlockProps, EmbedFigmaModel, EmbedFigmaStyles } from './figma-model.js';
 
 const defaultEmbedFigmaProps: EmbedFigmaBlockProps = {
   style: EmbedFigmaStyles[0],
@@ -23,6 +19,4 @@ export const EmbedFigmaBlockSchema = createEmbedBlockSchema({
   props: (): EmbedFigmaBlockProps => defaultEmbedFigmaProps,
 });
 
-export const EmbedFigmaBlockSchemaExtension = BlockSchemaExtension(
-  EmbedFigmaBlockSchema
-);
+export const EmbedFigmaBlockSchemaExtension = BlockSchemaExtension(EmbedFigmaBlockSchema);

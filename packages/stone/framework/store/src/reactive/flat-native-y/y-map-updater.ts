@@ -1,12 +1,7 @@
 import { isPureObject } from '../is-pure-object';
 import { native2Y } from '../native-y';
 import type { CreateProxyOptions } from './types';
-import {
-  bindOnChangeIfNeed,
-  getFirstKey,
-  keyWithoutPrefix,
-  keyWithPrefix,
-} from './utils';
+import { bindOnChangeIfNeed, getFirstKey, keyWithoutPrefix, keyWithPrefix } from './utils';
 
 type YMapOptions = Pick<
   CreateProxyOptions,
@@ -53,9 +48,9 @@ export function yMapUpdater({
   if (list.length && initialized()) {
     yMap.doc?.transact(
       () => {
-        list.forEach(fn => fn());
+        list.forEach((fn) => fn());
       },
-      { proxy: true }
+      { proxy: true },
     );
   }
 }

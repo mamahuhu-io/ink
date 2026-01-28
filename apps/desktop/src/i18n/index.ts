@@ -1,22 +1,22 @@
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
-import { resources } from './locales'
+import { resources } from './locales';
 
 // Get saved language from localStorage or use system language
 const getSavedLanguage = (): string | undefined => {
   try {
-    const saved = localStorage.getItem('language-storage')
+    const saved = localStorage.getItem('language-storage');
     if (saved) {
-      const parsed = JSON.parse(saved)
-      return parsed.state?.language
+      const parsed = JSON.parse(saved);
+      return parsed.state?.language;
     }
   } catch {
     // Ignore parse errors
   }
-  return undefined
-}
+  return undefined;
+};
 
 i18n
   .use(LanguageDetector)
@@ -34,10 +34,10 @@ i18n
       lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage'],
     },
-  })
+  });
 
-export default i18n
+export default i18n;
 
 // Re-export commonly used hooks and components
-export { useTranslation, Trans, I18nextProvider } from 'react-i18next'
-export { languages, type LanguageCode } from './locales'
+export { type LanguageCode, languages } from './locales';
+export { I18nextProvider, Trans, useTranslation } from 'react-i18next';

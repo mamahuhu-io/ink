@@ -1,7 +1,7 @@
-import { ColorSchema } from '@ink/stone-model';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { DeepPartial } from '@ink/stone-global/utils';
+import { ColorSchema } from '@ink/stone-model';
 import { type BlockStdScope, LifeCycleWatcher } from '@ink/stone-std';
 import { computed, type Signal, signal } from '@preact/signals-core';
 import clonedeep from 'lodash-es/cloneDeep';
@@ -33,9 +33,7 @@ const LocalPropsSchema = z.object({
     }),
     z.object({
       xywh: z.string(),
-      padding: z
-        .tuple([z.number(), z.number(), z.number(), z.number()])
-        .optional(),
+      padding: z.tuple([z.number(), z.number(), z.number(), z.number()]).optional(),
     }),
   ]),
   presentBlackBackground: z.boolean(),
@@ -95,18 +93,16 @@ export class EditPropsStore extends LifeCycleWatcher {
           ...value,
           [key]: schema.parse(undefined),
         };
-      }, {})
+      }, {}),
     );
 
     this.lastProps$ = computed(() => {
-      const editorSetting$ = this.std.getOptional(
-        EditorSettingProvider
-      )?.setting$;
+      const editorSetting$ = this.std.getOptional(EditorSettingProvider)?.setting$;
       const nextProps = mergeWith(
         clonedeep(initProps),
         editorSetting$?.value,
         this.innerProps$.value,
-        customizer
+        customizer,
       );
       return LastPropsSchema.parse(nextProps);
     });
@@ -142,15 +138,9 @@ export class EditPropsStore extends LifeCycleWatcher {
     }
   }
 
-  applyLastProps<K extends LastPropsKey>(
-    key: K,
-    props: Record<string, unknown>
-  ) {
+  applyLastProps<K extends LastPropsKey>(key: K, props: Record<string, unknown>) {
     if (['__proto__', 'constructor', 'prototype'].includes(key)) {
-      throw new InkStoneError(
-        ErrorCode.DefaultRuntimeError,
-        `Invalid key: ${key}`
-      );
+      throw new InkStoneError(ErrorCode.DefaultRuntimeError, `Invalid key: ${key}`);
     }
     const lastProps = this.lastProps$.value[key];
     return mergeWith(clonedeep(lastProps), props, customizer);
@@ -166,13 +156,9 @@ export class EditPropsStore extends LifeCycleWatcher {
       const value = storage.getItem(this._getStorageKey(key));
       if (!value) return null;
       if (isLocalProp(key)) {
-        return LocalPropsSchema.shape[key].parse(
-          JSON.parse(value)
-        ) as StorageProps[T];
+        return LocalPropsSchema.shape[key].parse(JSON.parse(value)) as StorageProps[T];
       } else if (isSessionProp(key)) {
-        return SessionPropsSchema.shape[key].parse(
-          JSON.parse(value)
-        ) as StorageProps[T];
+        return SessionPropsSchema.shape[key].parse(JSON.parse(value)) as StorageProps[T];
       } else {
         return null;
       }
@@ -189,20 +175,13 @@ export class EditPropsStore extends LifeCycleWatcher {
     if (Object.keys(overrideProps).length === 0) return;
 
     const innerProps = this.innerProps$.value;
-    const nextProps = mergeWith(
-      clonedeep(innerProps),
-      { [key]: overrideProps },
-      customizer
-    );
+    const nextProps = mergeWith(clonedeep(innerProps), { [key]: overrideProps }, customizer);
     this.innerProps$.value = OptionalPropsSchema.parse(nextProps);
   }
 
   setStorage<T extends StoragePropsKey>(key: T, value: StorageProps[T]) {
     const oldValue = this.getStorage(key);
-    this._getStorage(key).setItem(
-      this._getStorageKey(key),
-      JSON.stringify(value)
-    );
+    this._getStorage(key).setItem(this._getStorageKey(key), JSON.stringify(value));
     if (oldValue === value) return;
     this.slots.storageUpdated.next({ key, value });
   }

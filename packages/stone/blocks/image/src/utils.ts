@@ -1,16 +1,14 @@
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { autoResizeElementsCommand } from '@ink/stone-block-surface';
 import { toast } from '@ink/stone-components/toast';
+import { Bound, type IVec, Vec } from '@ink/stone-global/gfx';
 import {
   type AttachmentBlockProps,
   type ImageBlockModel,
   type ImageBlockProps,
   ImageBlockSchema,
 } from '@ink/stone-model';
-import {
-  FileSizeLimitProvider,
-  NativeClipboardProvider,
-} from '@ink/stone-shared/services';
+import { FileSizeLimitProvider, NativeClipboardProvider } from '@ink/stone-shared/services';
 import {
   convertToPng,
   formatSize,
@@ -20,7 +18,6 @@ import {
   transformModel,
   withTempBlobData,
 } from '@ink/stone-shared/utils';
-import { Bound, type IVec, Vec } from '@ink/stone-global/gfx';
 import { BlockSelection, type BlockStdScope } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
 import type { BlockModel } from '@ink/stone-store';
@@ -55,15 +52,11 @@ async function getImageBlob(model: ImageBlockModel) {
   return blob;
 }
 
-export async function refreshData(
-  block: ImageBlockComponent | ImageEdgelessBlockComponent
-) {
+export async function refreshData(block: ImageBlockComponent | ImageEdgelessBlockComponent) {
   await block.resourceController.refreshUrlWith();
 }
 
-export async function downloadImageBlob(
-  block: ImageBlockComponent | ImageEdgelessBlockComponent
-) {
+export async function downloadImageBlob(block: ImageBlockComponent | ImageEdgelessBlockComponent) {
   const { host, blobUrl, resourceController } = block;
 
   if (!blobUrl) {
@@ -90,9 +83,7 @@ export async function downloadImageBlob(
   resourceController.updateState({ downloading: false });
 }
 
-export async function resetImageSize(
-  block: ImageBlockComponent | ImageEdgelessBlockComponent
-) {
+export async function resetImageSize(block: ImageBlockComponent | ImageEdgelessBlockComponent) {
   const { model } = block;
 
   const blob = await getImageBlob(model);
@@ -113,9 +104,7 @@ export async function resetImageSize(
   block.store.updateBlock(model, props);
 }
 
-export async function copyImageBlob(
-  block: ImageBlockComponent | ImageEdgelessBlockComponent
-) {
+export async function copyImageBlob(block: ImageBlockComponent | ImageEdgelessBlockComponent) {
   const { host, model, std } = block;
   let blob = await getImageBlob(model);
   if (!blob) {
@@ -148,17 +137,11 @@ export async function copyImageBlob(
       }
 
       if (!globalThis.isSecureContext) {
-        console.error(
-          'Clipboard API is not available in insecure context',
-          blob.type,
-          blob
-        );
+        console.error('Clipboard API is not available in insecure context', blob.type, blob);
         return;
       }
 
-      await navigator.clipboard.write([
-        new ClipboardItem({ [blob.type]: blob }),
-      ]);
+      await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
     }
 
     toast(host, 'Copied image to clipboard');
@@ -171,7 +154,7 @@ export async function copyImageBlob(
  * Turn the image block into a attachment block.
  */
 export async function turnImageIntoCardView(
-  block: ImageBlockComponent | ImageEdgelessBlockComponent
+  block: ImageBlockComponent | ImageEdgelessBlockComponent,
 ) {
   const doc = block.store;
   if (!doc.schema.flavourSchemaMap.has('ink:attachment')) {
@@ -216,9 +199,9 @@ export function shouldResizeImage(node: Node, target: EventTarget | null) {
 function hasExceeded(
   std: BlockStdScope,
   files: File[],
-  maxFileSize = std.get(FileSizeLimitProvider).maxFileSize
+  maxFileSize = std.get(FileSizeLimitProvider).maxFileSize,
 ) {
-  const exceeded = files.some(file => file.size > maxFileSize);
+  const exceeded = files.some((file) => file.size > maxFileSize);
 
   if (exceeded) {
     const size = formatSize(maxFileSize);
@@ -247,23 +230,21 @@ export async function addSiblingImageBlocks(
   std: BlockStdScope,
   files: File[],
   targetModel: BlockModel,
-  placement: 'after' | 'before' = 'after'
+  placement: 'after' | 'before' = 'after',
 ) {
-  files = files.filter(file => file.type.startsWith('image/'));
+  files = files.filter((file) => file.type.startsWith('image/'));
   if (!files.length) return [];
 
   if (hasExceeded(std, files)) return [];
 
   const flavour = ImageBlockSchema.model.flavour;
 
-  const propsArray = await Promise.all(
-    files.map(file => buildPropsWith(std, file))
-  );
+  const propsArray = await Promise.all(files.map((file) => buildPropsWith(std, file)));
 
   const blockIds = std.store.addSiblingBlocks(
     targetModel,
-    propsArray.map(props => ({ ...props, flavour })),
-    placement
+    propsArray.map((props) => ({ ...props, flavour })),
+    placement,
   );
 
   return blockIds;
@@ -273,20 +254,18 @@ export async function addImageBlocks(
   std: BlockStdScope,
   files: File[],
   parent?: BlockModel | string | null,
-  parentIndex?: number
+  parentIndex?: number,
 ) {
-  files = files.filter(file => file.type.startsWith('image/'));
+  files = files.filter((file) => file.type.startsWith('image/'));
   if (!files.length) return [];
 
   if (hasExceeded(std, files)) return [];
 
   const flavour = ImageBlockSchema.model.flavour;
 
-  const propsArray = await Promise.all(
-    files.map(file => buildPropsWith(std, file))
-  );
+  const propsArray = await Promise.all(files.map((file) => buildPropsWith(std, file)));
 
-  const blocks = propsArray.map(blockProps => ({ flavour, blockProps }));
+  const blocks = propsArray.map((blockProps) => ({ flavour, blockProps }));
 
   const blockIds = std.store.addBlocks(blocks, parent, parentIndex);
 
@@ -300,18 +279,16 @@ export async function addImages(
     point?: IVec;
     maxWidth?: number;
     shouldTransformPoint?: boolean; // determines whether we should use `toModelCoord` to convert the point
-  }
+  },
 ): Promise<string[]> {
-  files = files.filter(file => file.type.startsWith('image/'));
+  files = files.filter((file) => file.type.startsWith('image/'));
   if (!files.length) return [];
 
   if (hasExceeded(std, files)) return [];
 
   const flavour = ImageBlockSchema.model.flavour;
 
-  const propsArray = await Promise.all(
-    files.map(file => buildPropsWith(std, file))
-  );
+  const propsArray = await Promise.all(files.map((file) => buildPropsWith(std, file)));
 
   const gfx = std.get(GfxControllerIdentifier);
   const isMultiple = propsArray.length > 1;
@@ -343,12 +320,7 @@ export async function addImages(
     const index = gfx.layer.generateIndex();
 
     const { width, height } = props;
-    const xywh = calcBoundByOrigin(
-      center,
-      inTopLeft,
-      width,
-      height
-    ).serialize();
+    const xywh = calcBoundByOrigin(center, inTopLeft, width, height).serialize();
 
     return {
       flavour,
@@ -381,7 +353,7 @@ export function calcBoundByOrigin(
   point: IVec,
   inTopLeft = false,
   width = SURFACE_IMAGE_CARD_WIDTH,
-  height = SURFACE_IMAGE_CARD_HEIGHT
+  height = SURFACE_IMAGE_CARD_HEIGHT,
 ) {
   return inTopLeft
     ? new Bound(point[0], point[1], width, height)
@@ -408,12 +380,7 @@ export function duplicate(block: ImageBlockComponent | ImageEdgelessBlockCompone
   }
 
   const index = parent?.children.indexOf(model);
-  const duplicateId = store.addBlock(
-    model.flavour,
-    duplicateProps,
-    parent,
-    index + 1
-  );
+  const duplicateId = store.addBlock(model.flavour, duplicateProps, parent, index + 1);
 
   const editorHost = block.host;
   editorHost.updateComplete

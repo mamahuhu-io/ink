@@ -71,15 +71,8 @@ export type DatabaseAllViewEvents = DatabaseViewEvents &
   DatabaseFilterEvents &
   DatabaseGroupEvents;
 
-export type DatabaseAllEvents = DatabaseEvents &
-  WithParams<DatabaseAllViewEvents, ViewParams>;
+export type DatabaseAllEvents = DatabaseEvents & WithParams<DatabaseAllViewEvents, ViewParams>;
 
-export type OutDatabaseAllEvents = WithParams<
-  DatabaseAllEvents,
-  DatabaseParams
->;
+export type OutDatabaseAllEvents = WithParams<DatabaseAllEvents, DatabaseParams>;
 
-export type EventTraceFn<Events> = <K extends keyof Events>(
-  key: K,
-  params: Events[K]
-) => void;
+export type EventTraceFn<Events> = <K extends keyof Events>(key: K, params: Events[K]) => void;

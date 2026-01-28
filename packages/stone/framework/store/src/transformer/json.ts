@@ -23,7 +23,7 @@ export function toJSON(value: unknown): unknown {
     return Object.fromEntries(
       Object.entries(value).map(([key, value]) => {
         return [key, toJSON(value)];
-      })
+      }),
     );
   }
   return value;
@@ -43,7 +43,7 @@ export function fromJSON(value: unknown): unknown {
     return Object.fromEntries(
       Object.entries(value).map(([key, value]) => {
         return [key, fromJSON(value)];
-      })
+      }),
     );
   }
 

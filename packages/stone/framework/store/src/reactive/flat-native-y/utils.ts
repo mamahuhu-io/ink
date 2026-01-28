@@ -5,8 +5,7 @@ import type { UnRecord } from '../types';
 
 export const keyWithoutPrefix = (key: string) => key.replace(/(prop|sys):/, '');
 
-export const keyWithPrefix = (key: string) =>
-  SYS_KEYS.has(key) ? `sys:${key}` : `prop:${key}`;
+export const keyWithPrefix = (key: string) => (SYS_KEYS.has(key) ? `sys:${key}` : `prop:${key}`);
 
 const proxySymbol = Symbol('proxy');
 
@@ -25,11 +24,7 @@ export function isEmptyObject(obj: UnRecord): boolean {
   return Object.keys(obj).length === 0;
 }
 
-export function deleteEmptyObject(
-  obj: UnRecord,
-  key: string,
-  parent: UnRecord
-): void {
+export function deleteEmptyObject(obj: UnRecord, key: string, parent: UnRecord): void {
   if (isEmptyObject(obj)) {
     delete parent[key];
   }

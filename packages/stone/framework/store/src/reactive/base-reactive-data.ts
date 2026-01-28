@@ -2,12 +2,9 @@ import * as Y from 'yjs';
 
 import type { ProxyOptions } from './types';
 
-export abstract class BaseReactiveYData<
-  T,
-  YSource extends Y.AbstractType<any>,
-> {
+export abstract class BaseReactiveYData<T, YSource extends Y.AbstractType<any>> {
   protected _getOrigin = (
-    doc: Y.Doc
+    doc: Y.Doc,
   ): {
     doc: Y.Doc;
     proxy: true;
@@ -25,8 +22,7 @@ export abstract class BaseReactiveYData<
     if (
       event.transaction.origin?.force === true ||
       (event.transaction.origin?.proxy !== true &&
-        (!event.transaction.local ||
-          event.transaction.origin instanceof Y.UndoManager))
+        (!event.transaction.local || event.transaction.origin instanceof Y.UndoManager))
     ) {
       handler();
     }

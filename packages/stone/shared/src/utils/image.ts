@@ -1,7 +1,7 @@
 import DOMPurify from 'dompurify';
 
 export function readImageSize(file: File | Blob) {
-  return new Promise<{ width: number; height: number }>(resolve => {
+  return new Promise<{ width: number; height: number }>((resolve) => {
     const size = { width: 0, height: 0 };
     if (!file.type.startsWith('image/')) {
       resolve(size);
@@ -28,10 +28,10 @@ export function readImageSize(file: File | Blob) {
 }
 
 export function convertToPng(blob: Blob): Promise<Blob | null> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const reader = new FileReader();
 
-    reader.addEventListener('load', _ => {
+    reader.addEventListener('load', (_) => {
       const img = new Image();
 
       img.onload = () => {

@@ -16,27 +16,26 @@ export class KeyboardController {
 
   private _init() {
     this._disposable.add(
-      this._listenKeyboard('keydown', evt => {
+      this._listenKeyboard('keydown', (evt) => {
         this.shiftKey$.value = evt.shiftKey && evt.key === 'Shift';
         this.spaceKey$.value = evt.code === 'Space';
-      })
+      }),
     );
 
     this._disposable.add(
-      this._listenKeyboard('keyup', evt => {
-        this.shiftKey$.value =
-          evt.shiftKey && evt.key === 'Shift' ? true : false;
+      this._listenKeyboard('keyup', (evt) => {
+        this.shiftKey$.value = evt.shiftKey && evt.key === 'Shift' ? true : false;
 
         if (evt.code === 'Space') {
           this.spaceKey$.value = false;
         }
-      })
+      }),
     );
   }
 
   private _listenKeyboard(
     event: 'keydown' | 'keyup',
-    callback: (keyboardEvt: KeyboardEvent) => void
+    callback: (keyboardEvt: KeyboardEvent) => void,
   ) {
     document.addEventListener(event, callback, false);
 

@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type { YArrayEvent, YMapEvent } from 'yjs';
 import { Array as YArray, Map as YMap } from 'yjs';
 
@@ -9,14 +9,11 @@ import { native2Y, y2Native } from './native-y.js';
 import { type OnTextChange, Text } from './text/index.js';
 import type { ProxyOptions, TransformOptions, UnRecord } from './types.js';
 
-export class ReactiveYArray extends BaseReactiveYData<
-  unknown[],
-  YArray<unknown>
-> {
+export class ReactiveYArray extends BaseReactiveYData<unknown[], YArray<unknown>> {
   private readonly _observer = (event: YArrayEvent<unknown>) => {
     this._onObserve(event, () => {
       let retain = 0;
-      event.changes.delta.forEach(change => {
+      event.changes.delta.forEach((change) => {
         if (change.retain) {
           retain += change.retain;
           return;
@@ -30,7 +27,7 @@ export class ReactiveYArray extends BaseReactiveYData<
         if (change.insert) {
           const _arr = [change.insert].flat();
 
-          const proxyList = _arr.map(value => createYProxy(value));
+          const proxyList = _arr.map((value) => createYProxy(value));
 
           this._updateWithSkip(() => {
             this._source.splice(retain, 0, ...proxyList);
@@ -49,10 +46,7 @@ export class ReactiveYArray extends BaseReactiveYData<
       },
       set: (target, p, value, receiver) => {
         if (typeof p !== 'string') {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'key cannot be a symbol'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'key cannot be a symbol');
         }
 
         const index = Number(p);
@@ -70,15 +64,12 @@ export class ReactiveYArray extends BaseReactiveYData<
         if (!reactive) {
           throw new InkStoneError(
             ErrorCode.ReactiveProxyError,
-            'YData is not subscribed before changes'
+            'YData is not subscribed before changes',
           );
         }
         const doc = this._ySource.doc;
         if (!doc) {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'YData is not bound to a Y.Doc'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'YData is not bound to a Y.Doc');
         }
 
         const yData = native2Y(value);
@@ -98,11 +89,11 @@ export class ReactiveYArray extends BaseReactiveYData<
             if (!doc) {
               throw new InkStoneError(
                 ErrorCode.ReactiveProxyError,
-                'YData is not bound to a Y.Doc'
+                'YData is not bound to a Y.Doc',
               );
             }
             const count = deleteCount ?? target.length - start;
-            const yItems = items.map(item => native2Y(item));
+            const yItems = items.map((item) => native2Y(item));
             this._transact(doc, () => {
               this._ySource.delete(start, count);
               this._ySource.insert(start, yItems);
@@ -111,7 +102,7 @@ export class ReactiveYArray extends BaseReactiveYData<
             const result = Array.prototype.splice.apply(target, [
               start,
               count,
-              ...yItems.map(yItem => createYProxy(yItem, this._options)),
+              ...yItems.map((yItem) => createYProxy(yItem, this._options)),
             ]);
 
             return result;
@@ -123,7 +114,7 @@ export class ReactiveYArray extends BaseReactiveYData<
             if (!doc) {
               throw new InkStoneError(
                 ErrorCode.ReactiveProxyError,
-                'YData is not bound to a Y.Doc'
+                'YData is not bound to a Y.Doc',
               );
             }
             if (target.length === 0) {
@@ -142,16 +133,16 @@ export class ReactiveYArray extends BaseReactiveYData<
             if (!doc) {
               throw new InkStoneError(
                 ErrorCode.ReactiveProxyError,
-                'YData is not bound to a Y.Doc'
+                'YData is not bound to a Y.Doc',
               );
             }
-            const yItems = items.map(item => native2Y(item));
+            const yItems = items.map((item) => native2Y(item));
             this._transact(doc, () => {
               this._ySource.insert(0, yItems);
             });
             return Array.prototype.unshift.apply(
               target,
-              yItems.map(yItem => createYProxy(yItem, this._options))
+              yItems.map((yItem) => createYProxy(yItem, this._options)),
             );
           };
         }
@@ -159,25 +150,19 @@ export class ReactiveYArray extends BaseReactiveYData<
       },
       deleteProperty: (target, p): boolean => {
         if (typeof p !== 'string') {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'key cannot be a symbol'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'key cannot be a symbol');
         }
 
         const proxied = proxies.get(this._ySource);
         if (!proxied) {
           throw new InkStoneError(
             ErrorCode.ReactiveProxyError,
-            'YData is not subscribed before changes'
+            'YData is not subscribed before changes',
           );
         }
         const doc = this._ySource.doc;
         if (!doc) {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'YData is not bound to a Y.Doc'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'YData is not bound to a Y.Doc');
         }
 
         const index = Number(p);
@@ -198,7 +183,7 @@ export class ReactiveYArray extends BaseReactiveYData<
   constructor(
     protected readonly _source: unknown[],
     protected readonly _ySource: YArray<unknown>,
-    protected readonly _options: ProxyOptions<unknown[]>
+    protected readonly _options: ProxyOptions<unknown[]>,
   ) {
     super();
     this._proxy = this._getProxy();
@@ -220,7 +205,7 @@ export class ReactiveYArray extends BaseReactiveYData<
 export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
   private readonly _observer = (event: YMapEvent<unknown>) => {
     this._onObserve(event, () => {
-      event.keysChanged.forEach(key => {
+      event.keysChanged.forEach((key) => {
         const type = event.changes.keys.get(key);
         if (!type) {
           return;
@@ -248,10 +233,7 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
       },
       set: (target, p, value, receiver) => {
         if (typeof p !== 'string') {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'key cannot be a symbol'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'key cannot be a symbol');
         }
         if (this._skipNext) {
           return Reflect.set(target, p, value, receiver);
@@ -267,15 +249,12 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
         if (!reactive) {
           throw new InkStoneError(
             ErrorCode.ReactiveProxyError,
-            'YData is not subscribed before changes'
+            'YData is not subscribed before changes',
           );
         }
         const doc = this._ySource.doc;
         if (!doc) {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'YData is not bound to a Y.Doc'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'YData is not bound to a Y.Doc');
         }
 
         const yData = native2Y(value);
@@ -290,10 +269,7 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
       },
       deleteProperty: (target, p) => {
         if (typeof p !== 'string') {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'key cannot be a symbol'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'key cannot be a symbol');
         }
         if (this._skipNext) {
           return Reflect.deleteProperty(target, p);
@@ -303,15 +279,12 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
         if (!proxied) {
           throw new InkStoneError(
             ErrorCode.ReactiveProxyError,
-            'YData is not subscribed before changes'
+            'YData is not subscribed before changes',
           );
         }
         const doc = this._ySource.doc;
         if (!doc) {
-          throw new InkStoneError(
-            ErrorCode.ReactiveProxyError,
-            'YData is not bound to a Y.Doc'
-          );
+          throw new InkStoneError(ErrorCode.ReactiveProxyError, 'YData is not bound to a Y.Doc');
         }
 
         this._transact(doc, () => {
@@ -325,11 +298,10 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
 
   protected readonly _proxy: UnRecord;
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   constructor(
     protected readonly _source: UnRecord,
     protected readonly _ySource: YMap<unknown>,
-    protected readonly _options: ProxyOptions<UnRecord>
+    protected readonly _options: ProxyOptions<UnRecord>,
   ) {
     super();
     this._proxy = this._getProxy();
@@ -337,7 +309,6 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
     _ySource.observe(this._observer);
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   pop(prop: string) {
     const value = this._source[prop];
     this._stashed.delete(prop);
@@ -349,10 +320,7 @@ export class ReactiveYMap extends BaseReactiveYData<UnRecord, YMap<unknown>> {
   }
 }
 
-export function createYProxy<Data>(
-  yAbstract: unknown,
-  options: ProxyOptions<Data> = {}
-): Data {
+export function createYProxy<Data>(yAbstract: unknown, options: ProxyOptions<Data> = {}): Data {
   if (proxies.has(yAbstract)) {
     return proxies.get(yAbstract)!.proxy as Data;
   }
@@ -370,16 +338,12 @@ export function createYProxy<Data>(
       const data = new ReactiveYArray(
         value as unknown[],
         origin,
-        options as ProxyOptions<unknown[]>
+        options as ProxyOptions<unknown[]>,
       );
       return data.proxy;
     }
     if (origin instanceof YMap) {
-      const data = new ReactiveYMap(
-        value as UnRecord,
-        origin,
-        options as ProxyOptions<UnRecord>
-      );
+      const data = new ReactiveYMap(value as UnRecord, origin, options as ProxyOptions<UnRecord>);
       return data.proxy;
     }
 

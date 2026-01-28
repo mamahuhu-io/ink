@@ -1,10 +1,6 @@
 import type { IVec, PointLocation } from '@ink/stone-global/gfx';
 import { Bound, linePolygonIntersects } from '@ink/stone-global/gfx';
-import type {
-  BaseElementProps,
-  GfxModel,
-  SerializedElement,
-} from '@ink/stone-std/gfx';
+import type { BaseElementProps, GfxModel, SerializedElement } from '@ink/stone-std/gfx';
 import {
   canSafeAddToContainer,
   field,
@@ -43,7 +39,7 @@ export class GroupElementModel extends GfxGroupLikeElementModel<GroupElementProp
     if (props.children && !(props.children instanceof Y.Map)) {
       const children = new Y.Map() as Y.Map<boolean>;
 
-      Object.keys(props.children).forEach(key => {
+      Object.keys(props.children).forEach((key) => {
         children.set(key as string, true);
       });
 
@@ -67,10 +63,7 @@ export class GroupElementModel extends GfxGroupLikeElementModel<GroupElementProp
     return bound.contains(Bound.deserialize(this.xywh));
   }
 
-  override getLineIntersections(
-    start: IVec,
-    end: IVec
-  ): PointLocation[] | null {
+  override getLineIntersections(start: IVec, end: IVec): PointLocation[] | null {
     const bound = Bound.deserialize(this.xywh);
     return linePolygonIntersects(start, end, bound.points);
   }
@@ -103,12 +96,9 @@ export class GroupElementModel extends GfxGroupLikeElementModel<GroupElementProp
     // use `GroupElementModel` type in decorator will cause playwright error
     (_, instance: GfxGroupLikeElementModel<GroupElementProps>, transaction) => {
       if (instance.children.doc) {
-        instance.setChildIds(
-          Array.from(instance.children.keys()),
-          transaction?.local ?? false
-        );
+        instance.setChildIds(Array.from(instance.children.keys()), transaction?.local ?? false);
       }
-    }
+    },
   )
   @field()
   accessor children: Y.Map<boolean> = new Y.Map<boolean>();

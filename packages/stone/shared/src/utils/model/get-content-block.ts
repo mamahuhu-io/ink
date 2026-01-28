@@ -23,10 +23,7 @@ import { DocModeProvider } from '../../services/doc-mode-service.js';
  *
  * NOTE: this method will just return blocks with `content` role
  */
-export function getPrevContentBlock(
-  editorHost: EditorHost,
-  model: BlockModel
-): BlockModel | null {
+export function getPrevContentBlock(editorHost: EditorHost, model: BlockModel): BlockModel | null {
   const getPrev = (model: BlockModel) => {
     const parent = model.store.getParent(model);
     if (!parent) return null;
@@ -63,13 +60,9 @@ export function getPrevContentBlock(
   };
 
   const map: Record<string, true> = {};
-  const iterate: (model: BlockModel) => BlockModel | null = (
-    model: BlockModel
-  ) => {
+  const iterate: (model: BlockModel) => BlockModel | null = (model: BlockModel) => {
     if (model.id in map) {
-      console.error(
-        "Can't get previous block! There's a loop in the block tree!"
-      );
+      console.error("Can't get previous block! There's a loop in the block tree!");
       return null;
     }
     map[model.id] = true;
@@ -109,7 +102,7 @@ export function getPrevContentBlock(
 export function getNextContentBlock(
   editorHost: EditorHost,
   model: BlockModel,
-  map: Record<string, true> = {}
+  map: Record<string, true> = {},
 ): BlockModel | null {
   if (model.id in map) {
     console.error("Can't get next block! There's a loop in the block tree!");
@@ -128,9 +121,7 @@ export function getNextContentBlock(
       // Assert nextSibling is not possible to be `ink:page`
       if (nextSibling.role === 'hub') {
         // in edgeless mode, limit search for the next block within the same note
-        if (
-          editorHost.std.get(DocModeProvider).getEditorMode() === 'edgeless'
-        ) {
+        if (editorHost.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
           return null;
         }
 

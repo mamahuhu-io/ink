@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { computed, signal } from '@preact/signals-core';
 import { Subject } from 'rxjs';
 
@@ -15,9 +15,7 @@ export class StoreSelectionExtension extends StoreExtension {
   private readonly _id = `${this.store.id}:${nanoid()}`;
   private _selectionConstructors: Record<string, SelectionConstructor> = {};
   private readonly _selections = signal<BaseSelection[]>([]);
-  private readonly _remoteSelections = signal<Map<number, BaseSelection[]>>(
-    new Map()
-  );
+  private readonly _remoteSelections = signal<Map<number, BaseSelection[]>>(new Map());
 
   private readonly _itemAdded = (event: { stackItem: StackItem }) => {
     event.stackItem.meta.set('selection-state', this._selections.value);
@@ -33,10 +31,7 @@ export class StoreSelectionExtension extends StoreExtension {
   private readonly _jsonToSelection = (json: Record<string, unknown>) => {
     const ctor = this._selectionConstructors[json.type as string];
     if (!ctor) {
-      throw new InkStoneError(
-        ErrorCode.SelectionError,
-        `Unknown selection type: ${json.type}`
-      );
+      throw new InkStoneError(ErrorCode.SelectionError, `Unknown selection type: ${json.type}`);
     }
     return ctor.fromJSON(json);
   };
@@ -47,8 +42,8 @@ export class StoreSelectionExtension extends StoreExtension {
   };
 
   override loaded() {
-    this.store.provider.getAll(SelectionIdentifier).forEach(ctor => {
-      [ctor].flat().forEach(ctor => {
+    this.store.provider.getAll(SelectionIdentifier).forEach((ctor) => {
+      [ctor].flat().forEach((ctor) => {
         this._selectionConstructors[ctor.type] = ctor;
       });
     });
@@ -58,7 +53,7 @@ export class StoreSelectionExtension extends StoreExtension {
       (change: { updated: number[]; added: number[]; removed: number[] }) => {
         const all = change.updated.concat(change.added).concat(change.removed);
         const localClientID = this.store.awarenessStore.awareness.clientID;
-        const exceptLocal = all.filter(id => id !== localClientID);
+        const exceptLocal = all.filter((id) => id !== localClientID);
 
         // Only consider remote selections from other clients
         if (exceptLocal.length > 0) {
@@ -71,16 +66,11 @@ export class StoreSelectionExtension extends StoreExtension {
               .flatMap(([_, selection]) => selection);
 
             const selections = selection
-              .map(json => {
+              .map((json) => {
                 try {
                   return this._jsonToSelection(json);
                 } catch (error) {
-                  console.error(
-                    'Parse remote selection failed:',
-                    id,
-                    json,
-                    error
-                  );
+                  console.error('Parse remote selection failed:', id, json, error);
                   return null;
                 }
               })
@@ -91,7 +81,7 @@ export class StoreSelectionExtension extends StoreExtension {
           this._remoteSelections.value = map;
           this.slots.remoteChanged.next(map);
         }
-      }
+      },
     );
 
     this.store.history.undoManager.on('stack-item-added', this._itemAdded);
@@ -114,9 +104,7 @@ export class StoreSelectionExtension extends StoreExtension {
 
   clear(types?: string[]) {
     if (types) {
-      const values = this.value.filter(
-        selection => !types.includes(selection.type)
-      );
+      const values = this.value.filter((selection) => !types.includes(selection.type));
       this.set(values);
     } else {
       this.set([]);
@@ -131,7 +119,7 @@ export class StoreSelectionExtension extends StoreExtension {
   }
 
   getGroup(group: string) {
-    return this.value.filter(s => s.group === group);
+    return this.value.filter((s) => s.group === group);
   }
 
   filter<T extends SelectionConstructor>(type: T) {
@@ -139,9 +127,7 @@ export class StoreSelectionExtension extends StoreExtension {
   }
 
   filter$<T extends SelectionConstructor>(type: T) {
-    return computed(() =>
-      this.value.filter((sel): sel is InstanceType<T> => sel.is(type))
-    );
+    return computed(() => this.value.filter((sel): sel is InstanceType<T> => sel.is(type)));
   }
 
   find<T extends SelectionConstructor>(type: T) {
@@ -149,22 +135,20 @@ export class StoreSelectionExtension extends StoreExtension {
   }
 
   find$<T extends SelectionConstructor>(type: T) {
-    return computed(() =>
-      this.value.find((sel): sel is InstanceType<T> => sel.is(type))
-    );
+    return computed(() => this.value.find((sel): sel is InstanceType<T> => sel.is(type)));
   }
 
   set(selections: BaseSelection[]) {
     this.store.awarenessStore.setLocalSelection(
       this._id,
-      selections.map(s => s.toJSON())
+      selections.map((s) => s.toJSON()),
     );
     this._selections.value = selections;
     this.slots.changed.next(selections);
   }
 
   setGroup(group: string, selections: BaseSelection[]) {
-    const current = this.value.filter(s => s.group !== group);
+    const current = this.value.filter((s) => s.group !== group);
     this.set([...current, ...selections]);
   }
 
@@ -181,7 +165,7 @@ export class StoreSelectionExtension extends StoreExtension {
   }
 
   fromJSON(json: Record<string, unknown>[]) {
-    const selections = json.map(json => {
+    const selections = json.map((json) => {
       return this._jsonToSelection(json);
     });
     return this.set(selections);

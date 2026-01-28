@@ -1,23 +1,12 @@
+import { IS_MOBILE } from '@ink/stone-global/env';
 import type { RootBlockModel } from '@ink/stone-model';
-import {
-  getRangeRects,
-  type SelectionRect,
-} from '@ink/stone-shared/commands';
+import { getRangeRects, type SelectionRect } from '@ink/stone-shared/commands';
 import { FeatureFlagService } from '@ink/stone-shared/services';
 import { getViewportElement } from '@ink/stone-shared/utils';
-import { IS_MOBILE } from '@ink/stone-global/env';
 import type { BlockComponent } from '@ink/stone-std';
-import {
-  BLOCK_ID_ATTR,
-  WidgetComponent,
-  WidgetViewExtension,
-} from '@ink/stone-std';
+import { BLOCK_ID_ATTR, WidgetComponent, WidgetViewExtension } from '@ink/stone-std';
 import { GfxControllerIdentifier } from '@ink/stone-std/gfx';
-import {
-  INLINE_ROOT_ATTR,
-  type InlineEditor,
-  type InlineRootElement,
-} from '@ink/stone-std/inline';
+import { INLINE_ROOT_ATTR, type InlineEditor, type InlineRootElement } from '@ink/stone-std/inline';
 import { signal } from '@preact/signals-core';
 import { html, nothing } from 'lit';
 import { choose } from 'lit/directives/choose.js';
@@ -26,8 +15,8 @@ import { styleMap } from 'lit/directives/style-map.js';
 import { literal, unsafeStatic } from 'lit/static-html.js';
 
 import {
-  INK_LINKED_DOC_WIDGET,
   getMenus,
+  INK_LINKED_DOC_WIDGET,
   type LinkedDocContext,
   type LinkedWidgetConfig,
   LinkedWidgetConfigExtension,
@@ -46,10 +35,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
   private _addTriggerKey(inlineEditor: InlineEditor, triggerKey: string) {
     const inlineRange = inlineEditor.getInlineRange();
     if (!inlineRange) return;
-    inlineEditor.insertText(
-      { index: inlineRange.index, length: 0 },
-      triggerKey
-    );
+    inlineEditor.insertText({ index: inlineRange.index, length: 0 }, triggerKey);
     inlineEditor.setInlineRange({
       index: inlineRange.index + triggerKey.length,
       length: 0,
@@ -70,10 +56,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
     });
     if (!range) return;
 
-    this._inputRects$.value = getRangeRects(
-      range,
-      getViewportElement(this.host)
-    );
+    this._inputRects$.value = getRangeRects(range, getViewportElement(this.host));
   }
 
   private get _isCursorAtEnd() {
@@ -94,34 +77,28 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
   };
 
   private readonly _renderLinkedDocPopover = () => {
-    return html`<ink-linked-doc-popover
-      .context=${this._context}
-    ></ink-linked-doc-popover>`;
+    return html`<ink-linked-doc-popover .context=${this._context}></ink-linked-doc-popover>`;
   };
 
   private _renderInputMask() {
-    return html`${repeat(
-      this._inputRects$.value,
-      ({ top, left, width, height }, index) => {
-        const last =
-          index === this._inputRects$.value.length - 1 && this._isCursorAtEnd;
+    return html`${repeat(this._inputRects$.value, ({ top, left, width, height }, index) => {
+      const last = index === this._inputRects$.value.length - 1 && this._isCursorAtEnd;
 
-        const padding = 2;
-        return html`<div
-          class="input-mask"
-          style=${styleMap({
-            top: `${top - padding}px`,
-            left: `${left}px`,
-            width: `${width + (last ? 10 : 0)}px`,
-            height: `${height + 2 * padding}px`,
-          })}
-        ></div>`;
-      }
-    )}`;
+      const padding = 2;
+      return html`<div
+        class="input-mask"
+        style=${styleMap({
+          top: `${top - padding}px`,
+          left: `${left}px`,
+          width: `${width + (last ? 10 : 0)}px`,
+          height: `${height + 2 * padding}px`,
+        })}
+      ></div>`;
+    })}`;
   }
 
   private _watchInput() {
-    this.handleEvent('beforeInput', ctx => {
+    this.handleEvent('beforeInput', (ctx) => {
       if (this._mode$.peek() !== 'none') return;
 
       const event = ctx.get('defaultState').event;
@@ -142,15 +119,10 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
 
       if (containerElement.closest(this.config.ignoreSelector)) return;
 
-      const block = containerElement.closest<BlockComponent>(
-        `[${BLOCK_ID_ATTR}]`
-      );
-      if (!block || this.config.ignoreBlockTypes.includes(block.flavour))
-        return;
+      const block = containerElement.closest<BlockComponent>(`[${BLOCK_ID_ATTR}]`);
+      if (!block || this.config.ignoreBlockTypes.includes(block.flavour)) return;
 
-      const inlineRoot = containerElement.closest<InlineRootElement>(
-        `[${INLINE_ROOT_ATTR}]`
-      );
+      const inlineRoot = containerElement.closest<InlineRootElement>(`[${INLINE_ROOT_ATTR}]`);
       if (!inlineRoot) return;
 
       const inlineEditor = inlineRoot.inlineEditor;
@@ -163,7 +135,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
       if (primaryTriggerKey.length > inlineRange.index) return;
       const matchedText = inlineEditor.yTextString.slice(
         inlineRange.index - primaryTriggerKey.length,
-        inlineRange.index
+        inlineRange.index,
       );
 
       let converted = false;
@@ -172,7 +144,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
           if (key.length > inlineRange.index) continue;
           const matchedText = inlineEditor.yTextString.slice(
             inlineRange.index - key.length,
-            inlineRange.index
+            inlineRange.index,
           );
           if (matchedText === key) {
             const startIdxBeforeMatchKey = inlineRange.index - key.length;
@@ -182,7 +154,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
             });
             inlineEditor.insertText(
               { index: startIdxBeforeMatchKey, length: 0 },
-              primaryTriggerKey
+              primaryTriggerKey,
             );
             inlineEditor.setInlineRange({
               index: startIdxBeforeMatchKey + primaryTriggerKey.length,
@@ -214,7 +186,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
     this.disposables.add(
       gfx.viewport.viewportUpdated.subscribe(() => {
         this._updateInputRects();
-      })
+      }),
     );
   }
 
@@ -248,11 +220,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
     addTriggerKey?: boolean;
   }) {
     const host = this.host;
-    const {
-      primaryTriggerKey = '@',
-      mode = 'desktop',
-      addTriggerKey = false,
-    } = props ?? {};
+    const { primaryTriggerKey = '@', mode = 'desktop', addTriggerKey = false } = props ?? {};
     let inlineEditor: InlineEditor;
     if (!props?.inlineEditor) {
       const range = host.range.value;
@@ -262,9 +230,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
           ? range.commonAncestorContainer
           : range.commonAncestorContainer.parentElement;
       if (!containerElement) return;
-      const inlineRoot = containerElement.closest<InlineRootElement>(
-        `[${INLINE_ROOT_ATTR}]`
-      );
+      const inlineRoot = containerElement.closest<InlineRootElement>(`[${INLINE_ROOT_ATTR}]`);
       if (!inlineRoot) return;
       inlineEditor = inlineRoot.inlineEditor;
     } else {
@@ -325,7 +291,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
             ['desktop', this._renderLinkedDocPopover],
             ['mobile', this._renderLinkedDocMenu],
           ],
-          () => html`${nothing}`
+          () => html`${nothing}`,
         )}
       ></ink-portal>`;
   }
@@ -334,7 +300,7 @@ export class InkLinkedDocWidget extends WidgetComponent<RootBlockModel> {
 export const linkedDocWidget = WidgetViewExtension(
   'ink:page',
   INK_LINKED_DOC_WIDGET,
-  literal`${unsafeStatic(INK_LINKED_DOC_WIDGET)}`
+  literal`${unsafeStatic(INK_LINKED_DOC_WIDGET)}`,
 );
 
 declare global {

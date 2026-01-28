@@ -8,7 +8,7 @@ export const clearAndSelectFirstModelCommand: Command<{
 
   if (!models) {
     console.error(
-      '`selectedModels` is required, you need to use `getSelectedModels` command before adding this command to the pipeline.'
+      '`selectedModels` is required, you need to use `getSelectedModels` command before adding this command to the pipeline.',
     );
     return;
   }

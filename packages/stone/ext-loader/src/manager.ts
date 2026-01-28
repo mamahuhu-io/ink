@@ -16,10 +16,7 @@ export class ExtensionManager<Scope extends string> {
   /** @internal */
   private readonly _providers: Set<typeof BaseExtensionProvider<Scope>>;
   /** @internal */
-  private readonly _providerOptions: Map<
-    typeof BaseExtensionProvider<Scope>,
-    object
-  > = new Map();
+  private readonly _providerOptions: Map<typeof BaseExtensionProvider<Scope>, object> = new Map();
   /** @internal */
   private readonly _providerInstances: Map<
     typeof BaseExtensionProvider<Scope>,
@@ -39,7 +36,7 @@ export class ExtensionManager<Scope extends string> {
   private readonly _build = (scope: Scope) => {
     const context = this._getContextByScope(scope);
 
-    this._providers.forEach(Provider => {
+    this._providers.forEach((Provider) => {
       let instance: BaseExtensionProvider<Scope>;
       if (this._providerInstances.has(Provider)) {
         instance = this._providerInstances.get(Provider)!;
@@ -54,7 +51,7 @@ export class ExtensionManager<Scope extends string> {
   /** @internal */
   private readonly _registerToScope = (
     scope: Scope,
-    extensions: ExtensionType[] | ExtensionType
+    extensions: ExtensionType[] | ExtensionType,
   ) => {
     let extSet: Set<ExtensionType>;
     if (!this._extensions.has(scope)) {
@@ -63,10 +60,8 @@ export class ExtensionManager<Scope extends string> {
       extSet = this._extensions.get(scope)!;
     }
 
-    const extensionsArray = Array.isArray(extensions)
-      ? extensions
-      : [extensions];
-    extensionsArray.forEach(extension => {
+    const extensionsArray = Array.isArray(extensions) ? extensions : [extensions];
+    extensionsArray.forEach((extension) => {
       extSet.add(extension);
     });
 
@@ -102,7 +97,7 @@ export class ExtensionManager<Scope extends string> {
     if (!extensionSet) {
       throw new InkStoneError(
         InkStoneError.ErrorCode.ValueNotExists,
-        `Extension scope ${scope} not found`
+        `Extension scope ${scope} not found`,
       );
     }
     return Array.from(extensionSet);
@@ -119,7 +114,7 @@ export class ExtensionManager<Scope extends string> {
    */
   configure<T extends Empty>(
     provider: typeof BaseExtensionProvider<Scope, T>,
-    options: ((prev: T | undefined) => T | undefined) | T | undefined
+    options: ((prev: T | undefined) => T | undefined) | T | undefined,
   ) {
     const prev = this._providerOptions.get(provider);
 

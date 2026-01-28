@@ -12,14 +12,10 @@ export type ExistedUserInfo = {
 
 export type InkUserInfo = RemovedUserInfo | ExistedUserInfo;
 
-export function isRemovedUserInfo(
-  userInfo: InkUserInfo
-): userInfo is RemovedUserInfo {
+export function isRemovedUserInfo(userInfo: InkUserInfo): userInfo is RemovedUserInfo {
   return Boolean('removed' in userInfo && userInfo.removed);
 }
 
-export function isExistedUserInfo(
-  userInfo: InkUserInfo
-): userInfo is ExistedUserInfo {
+export function isExistedUserInfo(userInfo: InkUserInfo): userInfo is ExistedUserInfo {
   return !isRemovedUserInfo(userInfo);
 }

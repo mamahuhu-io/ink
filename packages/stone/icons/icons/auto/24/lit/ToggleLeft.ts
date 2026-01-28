@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const ToggleLeft =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const ToggleLeft = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,10 @@ const ToggleLeft =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' d="M9.368 12.65a.757.757 0 0 1 0-1.3l5.527-3.248c.491-.29 1.105.072 1.105.65v6.497c0 .577-.614.938-1.105.65z"/>
+    <path
+      fill="currentColor"
+      d="M9.368 12.65a.757.757 0 0 1 0-1.3l5.527-3.248c.491-.29 1.105.072 1.105.65v6.497c0 .577-.614.938-1.105.65z"
+    />
   </svg>
 `;
 export default ToggleLeft;

@@ -11,7 +11,7 @@ export const testSpecs: ExtensionType[] = [
 
   BlockViewExtension('test:note', literal`test-note-block`),
 
-  BlockViewExtension('test:heading', model => {
+  BlockViewExtension('test:heading', (model) => {
     const h = (model as HeadingBlockModel).props.type$.value;
 
     if (h === 'h1') {

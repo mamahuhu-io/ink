@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const FlowerPanel =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const FlowerPanel = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const FlowerPanel =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M9.002 6.027a.48.48 0 0 1-.506.165l-2.541-.726a.464.464 0 0 0-.585.35C5.23 6.495 5 7.746 5 8.659c0 4.281 3.276 6.636 6.186 7.063l-.003.07V21.5a.951.951 0 1 0 1.902 0v-5.707l-.002-.071c2.91-.427 6.185-2.782 6.185-7.063 0-.913-.23-2.164-.37-2.843a.464.464 0 0 0-.584-.35l-2.542.726a.48.48 0 0 1-.506-.165L12.51 2.483a.476.476 0 0 0-.751 0zM5.396 17.102a.713.713 0 1 0-.792 1.187l4.28 2.853a.713.713 0 1 0 .792-1.187zm13.952 0a.713.713 0 1 1 .792 1.187l-4.28 2.853a.713.713 0 1 1-.792-1.187z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M9.002 6.027a.48.48 0 0 1-.506.165l-2.541-.726a.464.464 0 0 0-.585.35C5.23 6.495 5 7.746 5 8.659c0 4.281 3.276 6.636 6.186 7.063l-.003.07V21.5a.951.951 0 1 0 1.902 0v-5.707l-.002-.071c2.91-.427 6.185-2.782 6.185-7.063 0-.913-.23-2.164-.37-2.843a.464.464 0 0 0-.584-.35l-2.542.726a.48.48 0 0 1-.506-.165L12.51 2.483a.476.476 0 0 0-.751 0zM5.396 17.102a.713.713 0 1 0-.792 1.187l4.28 2.853a.713.713 0 1 0 .792-1.187zm13.952 0a.713.713 0 1 1 .792 1.187l-4.28 2.853a.713.713 0 1 1-.792-1.187z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default FlowerPanel;

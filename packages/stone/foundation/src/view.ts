@@ -1,12 +1,6 @@
 import { FileDropExtension } from '@ink/stone-components/drop-indicator';
-import {
-  PeekViewExtension,
-  type PeekViewService,
-} from '@ink/stone-components/peek';
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { PeekViewExtension, type PeekViewService } from '@ink/stone-components/peek';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import {
   AutoClearSelectionService,
   BlockElementCommentManager,
@@ -52,10 +46,7 @@ export class FoundationViewExtension extends ViewExtensionProvider<FoundationVie
     effects();
   }
 
-  override setup(
-    context: ViewExtensionContext,
-    options?: FoundationViewExtensionOptions
-  ) {
+  override setup(context: ViewExtensionContext, options?: FoundationViewExtensionOptions) {
     super.setup(context, options);
     context.register([
       DocDisplayMetaService,

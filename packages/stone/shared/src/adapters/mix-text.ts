@@ -1,5 +1,5 @@
-import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import type { ServiceProvider } from '@ink/stone-global/di';
+import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import {
   type AssetsManager,
   ASTWalker,
@@ -66,16 +66,13 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
     return result;
   }
 
-  private async _traverseSnapshot(
-    snapshot: BlockSnapshot
-  ): Promise<{ mixtext: string }> {
+  private async _traverseSnapshot(snapshot: BlockSnapshot): Promise<{ mixtext: string }> {
     let buffer = '';
     const walker = new ASTWalker<BlockSnapshot, never>();
     walker.setONodeTypeGuard(
-      (node): node is BlockSnapshot =>
-        BlockSnapshotSchema.safeParse(node).success
+      (node): node is BlockSnapshot => BlockSnapshotSchema.safeParse(node).success,
     );
-    walker.setEnter(o => {
+    walker.setEnter((o) => {
       const text = (o.node.props.text ?? { delta: [] }) as {
         delta: DeltaInsert[];
       };
@@ -84,15 +81,15 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
       }
       switch (o.node.flavour) {
         case 'ink:code': {
-          buffer += text.delta.map(delta => delta.insert).join('');
+          buffer += text.delta.map((delta) => delta.insert).join('');
           break;
         }
         case 'ink:paragraph': {
-          buffer += text.delta.map(delta => delta.insert).join('');
+          buffer += text.delta.map((delta) => delta.insert).join('');
           break;
         }
         case 'ink:list': {
-          buffer += text.delta.map(delta => delta.insert).join('');
+          buffer += text.delta.map((delta) => delta.insert).join('');
           break;
         }
         case 'ink:divider': {
@@ -145,8 +142,7 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
       const { mixtext } = await this._traverseSnapshot(contentSlice);
       buffer += mixtext;
     }
-    const mixtext =
-      buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
+    const mixtext = buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
     return {
       file: mixtext,
       assetsIds: sliceAssetsIds,
@@ -258,9 +254,7 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
     };
   }
 
-  async toSliceSnapshot(
-    payload: MixTextToSliceSnapshotPayload
-  ): Promise<SliceSnapshot | null> {
+  async toSliceSnapshot(payload: MixTextToSliceSnapshotPayload): Promise<SliceSnapshot | null> {
     if (payload.file.trim().length === 0) {
       return null;
     }
@@ -290,8 +284,7 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
       } as BlockSnapshot;
       const walker = new ASTWalker<BlockSnapshot, BlockSnapshot>();
       walker.setONodeTypeGuard(
-        (node): node is BlockSnapshot =>
-          BlockSnapshotSchema.safeParse(node).success
+        (node): node is BlockSnapshot => BlockSnapshotSchema.safeParse(node).success,
       );
       walker.setEnter((o, context) => {
         switch (o.node.flavour) {
@@ -348,12 +341,11 @@ export class MixTextAdapter extends BaseAdapter<MixText> {
   }
 }
 
-export const MixTextAdapterFactoryIdentifier =
-  AdapterFactoryIdentifier('MixText');
+export const MixTextAdapterFactoryIdentifier = AdapterFactoryIdentifier('MixText');
 
 export const MixTextAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(MixTextAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(MixTextAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new MixTextAdapter(job, provider),
     }));
   },

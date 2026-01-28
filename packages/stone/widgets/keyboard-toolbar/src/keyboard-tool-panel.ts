@@ -1,9 +1,5 @@
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import {
-  PropTypes,
-  requiredProperties,
-  ShadowlessElement,
-} from '@ink/stone-std';
+import { PropTypes, requiredProperties, ShadowlessElement } from '@ink/stone-std';
 import { html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -22,9 +18,7 @@ export const INK_KEYBOARD_TOOL_PANEL = 'ink-keyboard-tool-panel';
 @requiredProperties({
   context: PropTypes.object,
 })
-export class InkKeyboardToolPanel extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class InkKeyboardToolPanel extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = keyboardToolPanelStyles;
 
   private readonly _handleItemClick = (item: KeyboardToolbarActionItem) => {
@@ -35,17 +29,15 @@ export class InkKeyboardToolPanel extends SignalWatcher(
   };
 
   private _renderGroup(group: KeyboardToolPanelGroup) {
-    const items = group.items.filter(
-      item => item.showWhen?.(this.context) ?? true
-    );
+    const items = group.items.filter((item) => item.showWhen?.(this.context) ?? true);
 
     return html`<div class="keyboard-tool-panel-group">
       <div class="keyboard-tool-panel-group-header">${group.name}</div>
       <div class="keyboard-tool-panel-group-item-container">
         ${repeat(
           items,
-          item => item.name,
-          item => this._renderItem(item)
+          (item) => item.name,
+          (item) => this._renderItem(item),
         )}
       </div>
     </div>`;
@@ -57,9 +49,7 @@ export class InkKeyboardToolPanel extends SignalWatcher(
 
   private _renderItem(item: KeyboardToolbarActionItem) {
     return html`<div class="keyboard-tool-panel-item">
-      <button @click=${() => this._handleItemClick(item)}>
-        ${this._renderIcon(item.icon)}
-      </button>
+      <button @click=${() => this._handleItemClick(item)}>${this._renderIcon(item.icon)}</button>
       <span>${item.name}</span>
     </div>`;
   }
@@ -68,14 +58,14 @@ export class InkKeyboardToolPanel extends SignalWatcher(
     if (!this.config) return nothing;
 
     const groups = this.config.groups
-      .map(group => (typeof group === 'function' ? group(this.context) : group))
+      .map((group) => (typeof group === 'function' ? group(this.context) : group))
       .filter((group): group is KeyboardToolPanelGroup => group !== null);
 
     return html`<div class="ink-keyboard-tool-panel-container">
       ${repeat(
         groups,
-        group => group.name,
-        group => this._renderGroup(group)
+        (group) => group.name,
+        (group) => this._renderGroup(group),
       )}
     </div>`;
   }

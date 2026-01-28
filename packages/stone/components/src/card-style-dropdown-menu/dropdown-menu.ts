@@ -1,16 +1,9 @@
-import type { ColorScheme } from '@ink/stone-model';
-import {
-  type ToolbarAction,
-  ToolbarContext,
-} from '@ink/stone-shared/services';
 import { SignalWatcher } from '@ink/stone-global/lit';
 import { PaletteIcon } from '@ink/stone-icons/lit';
+import type { ColorScheme } from '@ink/stone-model';
+import { type ToolbarAction, ToolbarContext } from '@ink/stone-shared/services';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
-import {
-  computed,
-  type ReadonlySignal,
-  type Signal,
-} from '@preact/signals-core';
+import { computed, type ReadonlySignal, type Signal } from '@preact/signals-core';
 import { LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { html, type TemplateResult } from 'lit-html';
@@ -76,10 +69,7 @@ export class CardStyleDropdownMenu extends SignalWatcher(LitElement) {
       <editor-menu-button
         .contentPadding="${'8px'}"
         .button=${html`
-          <editor-icon-button
-            aria-label="Card style"
-            .tooltip="${'Card style'}"
-          >
+          <editor-icon-button aria-label="Card style" .tooltip="${'Card style'}">
             ${PaletteIcon()}
           </editor-icon-button>
         `}
@@ -87,7 +77,7 @@ export class CardStyleDropdownMenu extends SignalWatcher(LitElement) {
         <div>
           ${repeat(
             actions,
-            action => action.id,
+            (action) => action.id,
             ({ id, label, icon, disabled, run }) => html`
               <editor-icon-button
                 aria-label="${ifDefined(label)}"
@@ -103,7 +93,7 @@ export class CardStyleDropdownMenu extends SignalWatcher(LitElement) {
               >
                 ${icon || icons[id]}
               </editor-icon-button>
-            `
+            `,
           )}
         </div>
       </editor-menu-button>

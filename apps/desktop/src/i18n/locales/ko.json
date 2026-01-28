@@ -121,13 +121,6 @@
         "themeDesc": "문서 내보내기 시 사용할 테마",
         "auto": "자동 (현재와 일치)"
       },
-      "window": {
-        "title": "창",
-        "sidebarPosition": "사이드바 위치",
-        "sidebarPositionDesc": "파일 사이드바의 위치",
-        "left": "왼쪽",
-        "right": "오른쪽"
-      },
       "display": {
         "title": "표시",
         "showDocStats": "문서 통계 표시",

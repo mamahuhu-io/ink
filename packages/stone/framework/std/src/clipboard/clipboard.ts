@@ -1,26 +1,19 @@
-import { InkStoneError, ErrorCode } from "@ink/stone-global/exceptions";
-import type {
-  BlockSnapshot,
-  Slice,
-  Store,
-  TransformerMiddleware,
-} from "@ink/stone-store";
-import DOMPurify from "dompurify";
-import * as lz from "lz-string";
-import rehypeParse from "rehype-parse";
-import { unified } from "unified";
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
+import type { BlockSnapshot, Slice, Store, TransformerMiddleware } from '@ink/stone-store';
+import DOMPurify from 'dompurify';
+import * as lz from 'lz-string';
+import rehypeParse from 'rehype-parse';
+import { unified } from 'unified';
 
-import { LifeCycleWatcher } from "../extension/index.js";
-import { ClipboardAdapterConfigIdentifier } from "./clipboard-adapter.js";
-import { onlyContainImgElement } from "./utils.js";
+import { LifeCycleWatcher } from '../extension/index.js';
+import { ClipboardAdapterConfigIdentifier } from './clipboard-adapter.js';
+import { onlyContainImgElement } from './utils.js';
 
 export class Clipboard extends LifeCycleWatcher {
-  static override key = "clipboard";
+  static override key = 'clipboard';
 
   protected get _adapters() {
-    const adapterConfigs = this.std.provider.getAll(
-      ClipboardAdapterConfigIdentifier
-    );
+    const adapterConfigs = this.std.provider.getAll(ClipboardAdapterConfigIdentifier);
     return Array.from(adapterConfigs.values());
   }
 
@@ -28,30 +21,30 @@ export class Clipboard extends LifeCycleWatcher {
   private readonly _getDataByType = (clipboardData: DataTransfer) => {
     const data = new Map<string, string | File[]>();
     for (const type of clipboardData.types) {
-      if (type === "Files") {
+      if (type === 'Files') {
         data.set(type, Array.from(clipboardData.files));
       } else {
         data.set(type, clipboardData.getData(type));
       }
     }
-    if (data.get("Files") && data.get("text/html")) {
+    if (data.get('Files') && data.get('text/html')) {
       const htmlAst = unified()
         .use(rehypeParse)
-        .parse(data.get("text/html") as string);
+        .parse(data.get('text/html') as string);
 
       const isImgOnly =
         htmlAst.children.map(onlyContainImgElement).reduce((a, b) => {
-          if (a === "no" || b === "no") {
-            return "no";
+          if (a === 'no' || b === 'no') {
+            return 'no';
           }
-          if (a === "maybe" && b === "maybe") {
-            return "maybe";
+          if (a === 'maybe' && b === 'maybe') {
+            return 'maybe';
           }
-          return "yes";
-        }, "maybe") === "yes";
+          return 'yes';
+        }, 'maybe') === 'yes';
 
       if (isImgOnly) {
-        data.delete("text/html");
+        data.delete('text/html');
       }
     }
     return (type: string) => {
@@ -59,11 +52,11 @@ export class Clipboard extends LifeCycleWatcher {
       if (item) {
         return item;
       }
-      const files = (data.get("Files") ?? []) as File[];
+      const files = (data.get('Files') ?? []) as File[];
       if (files.length > 0) {
         return files;
       }
-      return "";
+      return '';
     };
   };
 
@@ -71,11 +64,9 @@ export class Clipboard extends LifeCycleWatcher {
     getItem: (type: string) => string | File[],
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ) => {
-    const byPriority = Array.from(this._adapters).sort(
-      (a, b) => b.priority - a.priority
-    );
+    const byPriority = Array.from(this._adapters).sort((a, b) => b.priority - a.priority);
 
     for (const { adapter, mimeType } of byPriority) {
       const item = getItem(mimeType);
@@ -85,9 +76,7 @@ export class Clipboard extends LifeCycleWatcher {
         }
         if (
           // if all files are not the same target type, fallback to */*
-          !item
-            .map((f) => f.type === mimeType || mimeType === "*/*")
-            .reduce((a, b) => a && b, true)
+          !item.map((f) => f.type === mimeType || mimeType === '*/*').reduce((a, b) => a && b, true)
         ) {
           continue;
         }
@@ -101,12 +90,7 @@ export class Clipboard extends LifeCycleWatcher {
           workspaceId: doc.workspace.id,
           pageId: doc.id,
         };
-        const result = await adapterInstance.toSlice(
-          payload,
-          doc,
-          parent,
-          index
-        );
+        const result = await adapterInstance.toSlice(payload, doc, parent, index);
         if (result) {
           return result;
         }
@@ -130,11 +114,11 @@ export class Clipboard extends LifeCycleWatcher {
         await Promise.all(
           adapterKeys.map(async (type) => {
             const item = await this._getClipboardItem(slice, type);
-            if (typeof item === "string") {
+            if (typeof item === 'string') {
               return [type, item];
             }
             return null;
-          })
+          }),
         )
       ).filter((adapter): adapter is string[] => Boolean(adapter));
 
@@ -150,26 +134,21 @@ export class Clipboard extends LifeCycleWatcher {
     doc: Store,
     parent?: string,
     index?: number,
-    type = "INK/SNAPSHOT"
+    type = 'INK/SNAPSHOT',
   ) => {
     const items = {
       [type]: await this._getClipboardItem(slice, type),
     };
 
     await this._getSnapshotByPriority(
-      (type) => (items[type] as string | File[]) ?? "",
+      (type) => (items[type] as string | File[]) ?? '',
       doc,
       parent,
-      index
+      index,
     );
   };
 
-  paste = async (
-    event: ClipboardEvent,
-    doc: Store,
-    parent?: string,
-    index?: number
-  ) => {
+  paste = async (event: ClipboardEvent, doc: Store, parent?: string, index?: number) => {
     const data = event.clipboardData;
     if (!data) {
       return;
@@ -177,26 +156,18 @@ export class Clipboard extends LifeCycleWatcher {
 
     try {
       const json = this.readFromClipboard(data);
-      const slice = await this._getSnapshotByPriority(
-        (type) => json[type],
-        doc,
-        parent,
-        index
-      );
+      const slice = await this._getSnapshotByPriority((type) => json[type], doc, parent, index);
       if (!slice) {
-        throw new InkStoneError(
-          ErrorCode.TransformerError,
-          "No snapshot found"
-        );
+        throw new InkStoneError(ErrorCode.TransformerError, 'No snapshot found');
       }
       return slice;
-    } catch (error) {
+    } catch {
       const getDataByType = this._getDataByType(data);
       const slice = await this._getSnapshotByPriority(
         (type) => getDataByType(type),
         doc,
         parent,
-        index
+        index,
       );
       return slice;
     }
@@ -206,7 +177,7 @@ export class Clipboard extends LifeCycleWatcher {
     snapshot: BlockSnapshot,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ) => {
     return this._getJob().snapshotToBlock(snapshot, doc, parent, index);
   };
@@ -225,9 +196,7 @@ export class Clipboard extends LifeCycleWatcher {
 
   private async _getClipboardItem(slice: Slice, type: string) {
     const job = this._getJob();
-    const adapterItem = this.std.getOptional(
-      ClipboardAdapterConfigIdentifier(type)
-    );
+    const adapterItem = this.std.getOptional(ClipboardAdapterConfigIdentifier(type));
     if (!adapterItem) {
       return;
     }
@@ -245,16 +214,16 @@ export class Clipboard extends LifeCycleWatcher {
   }
 
   readFromClipboard(clipboardData: DataTransfer) {
-    const items = clipboardData.getData("text/html");
+    const items = clipboardData.getData('text/html');
     const sanitizedItems = DOMPurify.sanitize(items);
     const domParser = new DOMParser();
-    const doc = domParser.parseFromString(sanitizedItems, "text/html");
-    const dom = doc.querySelector<HTMLDivElement>("[data-ink-snapshot]");
+    const doc = domParser.parseFromString(sanitizedItems, 'text/html');
+    const dom = doc.querySelector<HTMLDivElement>('[data-ink-snapshot]');
     if (!dom) {
-      throw new InkStoneError(ErrorCode.TransformerError, "No snapshot found");
+      throw new InkStoneError(ErrorCode.TransformerError, 'No snapshot found');
     }
     const json = JSON.parse(
-      lz.decompressFromEncodedURIComponent(dom.dataset.stoneSnapshot as string)
+      lz.decompressFromEncodedURIComponent(dom.dataset.stoneSnapshot as string),
     );
     return json;
   }
@@ -265,32 +234,32 @@ export class Clipboard extends LifeCycleWatcher {
   }
 
   async writeToClipboard(
-    updateItems: <T extends Record<string, unknown>>(items: T) => Promise<T> | T
+    updateItems: <T extends Record<string, unknown>>(items: T) => Promise<T> | T,
   ) {
     const items = await updateItems<
       Partial<{
-        "text/plain": string;
-        "text/html": string;
-        "image/png": string | Blob;
+        'text/plain': string;
+        'text/html': string;
+        'image/png': string | Blob;
       }>
     >({
-      "text/plain": "",
-      "text/html": "",
-      "image/png": "",
+      'text/plain': '',
+      'text/html': '',
+      'image/png': '',
     });
-    const text = items["text/plain"] ?? "";
-    const innerHTML = items["text/html"] ?? "";
-    const image = items["image/png"];
+    const text = items['text/plain'] ?? '';
+    const innerHTML = items['text/html'] ?? '';
+    const image = items['image/png'];
 
-    delete items["text/plain"];
-    delete items["text/html"];
+    delete items['text/plain'];
+    delete items['text/html'];
 
     const clipboardItems: Record<string, Blob> = {};
 
     if (image) {
-      const type = "image/png";
+      const type = 'image/png';
       delete items[type];
-      if (typeof image === "string") {
+      if (typeof image === 'string') {
         clipboardItems[type] = new Blob([image], { type });
       } else if (image instanceof Blob) {
         clipboardItems[type] = image;
@@ -298,7 +267,7 @@ export class Clipboard extends LifeCycleWatcher {
     }
 
     if (text.length > 0) {
-      const type = "text/plain";
+      const type = 'text/plain';
       clipboardItems[type] = new Blob([text], { type });
     }
 
@@ -307,7 +276,7 @@ export class Clipboard extends LifeCycleWatcher {
 
     // If there are no items, fall back to snapshot.
     if (hasInnerHTML || isEmpty) {
-      const type = "text/html";
+      const type = 'text/html';
       const snapshot = lz.compressToEncodedURIComponent(JSON.stringify(items));
       const html = `<div data-ink-snapshot="${snapshot}">${innerHTML}</div>`;
       clipboardItems[type] = new Blob([html], { type });

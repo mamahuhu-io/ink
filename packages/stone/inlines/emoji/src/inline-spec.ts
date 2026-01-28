@@ -6,24 +6,20 @@ import { z } from 'zod';
 
 export const EmojiInlineSpecExtension = InlineSpecExtension<InkTextAttributes>(
   'emoji',
-  provider => {
+  (provider) => {
     const std = provider.get(StdIdentifier);
     return {
       name: 'emoji',
       schema: z.object({
         emoji: z.string().optional().nullable().catch(undefined),
       }),
-      match: delta => {
+      match: (delta) => {
         return typeof delta.attributes?.emoji === 'string';
       },
       renderer: ({ delta, selected }) => {
-        return html`<ink-emoji
-          .delta=${delta}
-          .selected=${selected}
-          .std=${std}
-        ></ink-emoji>`;
+        return html`<ink-emoji .delta=${delta} .selected=${selected} .std=${std}></ink-emoji>`;
       },
       embed: true,
     };
-  }
+  },
 );

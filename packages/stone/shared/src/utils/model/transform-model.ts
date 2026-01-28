@@ -3,7 +3,7 @@ import type { BlockModel, Store, Text } from '@ink/stone-store';
 export function transformModel(
   model: BlockModel,
   flavour: string,
-  props?: Parameters<Store['addBlock']>[1]
+  props?: Parameters<Store['addBlock']>[1],
 ) {
   const doc = model.store;
   const parent = doc.getParent(model);

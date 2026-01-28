@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / GfxCompatibleInterface
 
@@ -24,7 +24,7 @@ All the model that can be rendered in graphics mode should implement this interf
 
 The bound of the element without considering the response extension.
 
-***
+---
 
 ### forceFullRender?
 
@@ -33,7 +33,7 @@ The bound of the element without considering the response extension.
 Whether to disable fallback rendering for this element, e.g., during zooming.
 Defaults to false (fallback to placeholder rendering is enabled).
 
-***
+---
 
 ### lockedBySelf?
 
@@ -43,7 +43,7 @@ Indicates whether the current block is explicitly locked by self.
 For checking the lock status of the element, use `isLocked` instead.
 For (un)locking the element, use `(un)lock` instead.
 
-***
+---
 
 ### responseBound
 
@@ -51,7 +51,7 @@ For (un)locking the element, use `(un)lock` instead.
 
 The bound of the element considering the response extension.
 
-***
+---
 
 ### responseExtension
 
@@ -67,6 +67,7 @@ The response area is computed as:
 `[x - horizontal, y - vertical, w + 2 * horizontal, h + 2 * vertical]`.
 
 Example:
+
 - xywh: `[0, 0, 100, 100]`, `responseExtension: [10, 20]`
   Resulting response area: `[-10, -20, 120, 140]`.
 - `responseExtension: [0, 0]` keeps the response area equal to the bounding box.

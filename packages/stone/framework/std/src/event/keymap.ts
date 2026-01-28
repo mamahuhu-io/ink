@@ -1,5 +1,5 @@
 import { IS_MAC } from '@ink/stone-global/env';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { base, keyName } from 'w3c-keyname';
 
 import type { UIEventHandler } from './base.js';
@@ -11,7 +11,7 @@ function normalizeKeyName(name: string) {
     result = ' ';
   }
   let alt, ctrl, shift, meta;
-  parts.slice(0, -1).forEach(mod => {
+  parts.slice(0, -1).forEach((mod) => {
     if (/^(cmd|meta|m)$/i.test(mod)) {
       meta = true;
       return;
@@ -37,10 +37,7 @@ function normalizeKeyName(name: string) {
       return;
     }
 
-    throw new InkStoneError(
-      ErrorCode.EventDispatcherError,
-      'Unrecognized modifier name: ' + mod
-    );
+    throw new InkStoneError(ErrorCode.EventDispatcherError, 'Unrecognized modifier name: ' + mod);
   });
   if (alt) result = 'Alt-' + result;
   if (ctrl) result = 'Ctrl-' + result;
@@ -63,11 +60,9 @@ function normalize(map: Record<string, UIEventHandler>) {
   return copy;
 }
 
-export function bindKeymap(
-  bindings: Record<string, UIEventHandler>
-): UIEventHandler {
+export function bindKeymap(bindings: Record<string, UIEventHandler>): UIEventHandler {
   const map = normalize(bindings);
-  return ctx => {
+  return (ctx) => {
     const state = ctx.get('keyboardState');
     const event = state.raw;
     const name = keyName(event);
@@ -87,11 +82,7 @@ export function bindKeymap(
     }
 
     // none standard keyboard, fallback to keyCode
-    const special =
-      event.shiftKey ||
-      event.altKey ||
-      event.metaKey ||
-      name.charCodeAt(0) > 127;
+    const special = event.shiftKey || event.altKey || event.metaKey || name.charCodeAt(0) > 127;
     const baseName = base[event.keyCode];
     if (special && baseName && baseName !== name) {
       const fromCode = map[modifiers(baseName, event)];
@@ -108,17 +99,12 @@ export function bindKeymap(
 // the information about what key is pressed. See
 // https://stackoverflow.com/a/68188679
 // https://stackoverflow.com/a/66724830
-export function androidBindKeymapPatch(
-  bindings: Record<string, UIEventHandler>
-): UIEventHandler {
-  return ctx => {
+export function androidBindKeymapPatch(bindings: Record<string, UIEventHandler>): UIEventHandler {
+  return (ctx) => {
     const event = ctx.get('defaultState').event;
     if (!(event instanceof InputEvent)) return;
 
-    if (
-      event.inputType === 'deleteContentBackward' &&
-      'Backspace' in bindings
-    ) {
+    if (event.inputType === 'deleteContentBackward' && 'Backspace' in bindings) {
       return bindings['Backspace'](ctx);
     }
 

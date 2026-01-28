@@ -39,9 +39,7 @@ export type TelemetryEventMap = OutDatabaseAllEvents &
     CanvasElementUpdated: ElementUpdatedEvent;
     EdgelessElementLocked: ElementLockEvent;
     ExpandedAndCollapsed: MindMapCollapseEvent;
-    AttachmentReloadedEvent:
-      | AttachmentReloadedEvent
-      | AttachmentReloadedEventInToolbar;
+    AttachmentReloadedEvent: AttachmentReloadedEvent | AttachmentReloadedEventInToolbar;
     AttachmentUpgradedEvent: AttachmentUpgradedEvent;
     AttachmentUploadedEvent: AttachmentUploadedEvent;
     BlockCreated: BlockCreationEvent;
@@ -51,21 +49,14 @@ export type TelemetryEventMap = OutDatabaseAllEvents &
   };
 
 export interface TelemetryService {
-  track<T extends keyof TelemetryEventMap>(
-    eventName: T,
-    props: TelemetryEventMap[T]
-  ): void;
+  track<T extends keyof TelemetryEventMap>(eventName: T, props: TelemetryEventMap[T]): void;
 }
 
-export const TelemetryProvider = createIdentifier<TelemetryService>(
-  'InkTelemetryService'
-);
+export const TelemetryProvider = createIdentifier<TelemetryService>('InkTelemetryService');
 
-export const TelemetryExtension = (
-  service: TelemetryService
-): ExtensionType => {
+export const TelemetryExtension = (service: TelemetryService): ExtensionType => {
   return {
-    setup: di => {
+    setup: (di) => {
       di.override(TelemetryProvider, () => service);
     },
   };

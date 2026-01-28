@@ -1,28 +1,29 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Type, AlignLeft, Hash } from 'lucide-react'
-import { useTabStore } from '../../stores/tabs'
-import { usePreferencesStore } from '../../stores/preferences'
-import { useDocStats } from '../../hooks/useDocStats'
+import { AlignLeft, Hash, Type } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useDocStats } from '../../hooks/useDocStats';
+import { usePreferencesStore } from '../../stores/preferences';
+import { useTabStore } from '../../stores/tabs';
 
 export function DocStats() {
-  const { t, i18n } = useTranslation()
-  const { activeTabId, tabs } = useTabStore()
-  const { showDocStats } = usePreferencesStore()
-  const [showDetail, setShowDetail] = useState(false)
+  const { t, i18n } = useTranslation();
+  const { activeTabId, tabs } = useTabStore();
+  const { showDocStats } = usePreferencesStore();
+  const [showDetail, setShowDetail] = useState(false);
 
-  const activeTab = tabs.find((t) => t.id === activeTabId)
-  const stats = useDocStats(activeTab?.docId ?? null)
+  const activeTab = tabs.find((t) => t.id === activeTabId);
+  const stats = useDocStats(activeTab?.docId ?? null);
 
   // 如果设置关闭或没有活动标签，不显示
   if (!showDocStats || !activeTab) {
-    return null
+    return null;
   }
 
   // 格式化数字（添加千位分隔符，使用当前语言环境）
   const formatNumber = (num: number): string => {
-    return num.toLocaleString(i18n.language)
-  }
+    return num.toLocaleString(i18n.language);
+  };
 
   return (
     <div
@@ -72,5 +73,5 @@ export function DocStats() {
         </div>
       )}
     </div>
-  )
+  );
 }

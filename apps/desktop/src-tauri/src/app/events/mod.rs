@@ -2,7 +2,7 @@
 
 use crate::app::state::OpenedFiles;
 use crate::app::state::QuitConfirmed;
-use tauri::{AppHandle, Emitter, Manager, RunEvent, Window};
+use tauri::{AppHandle, Emitter, Manager, RunEvent, WebviewWindow, Window};
 
 // macOS-specific imports for handle_reopen_event
 #[cfg(target_os = "macos")]
@@ -72,6 +72,88 @@ pub fn handle_window_destroyed(app_handle: &AppHandle) {
     });
 }
 
+/// Create a new main window with native macOS styling
+#[cfg(target_os = "macos")]
+fn create_main_window(app_handle: &AppHandle) {
+    let unique_label = format!(
+        "main-{}",
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_millis()
+    );
+    debug_log!("WindowCreation", "Creating new window with label: {}", unique_label);
+
+    // Determine background color based on current theme
+    let bg_color = if let Some(theme_manager) = app_handle.try_state::<Arc<ThemeManager>>() {
+        theme_manager.get_current_background_color()
+    } else {
+        DARK_BACKGROUND_COLOR
+    };
+
+    let mut builder = WebviewWindowBuilder::new(
+        app_handle,
+        &unique_label,
+        WebviewUrl::App("index.html".into()),
+    )
+    .title("Ink")
+    .inner_size(1200.0, 800.0)
+    .min_inner_size(800.0, 600.0)
+    .resizable(true)
+    .fullscreen(false)
+    .center()
+    .visible(false)  // Start hidden, frontend will show after theme loads
+    .background_color(bg_color)
+    .decorations(true);
+
+    // macOS-specific title bar configuration
+    #[cfg(target_os = "macos")]
+    {
+        builder = builder
+            .title_bar_style(tauri::TitleBarStyle::Overlay)
+            .hidden_title(true);
+    }
+
+    match builder.build() {
+        Ok(window) => {
+            debug_log!("WindowCreation", "Window created successfully");
+
+            // Setup macOS-specific window configuration
+            #[cfg(target_os = "macos")]
+            {
+                if let Some(theme_manager) = app_handle.try_state::<Arc<ThemeManager>>() {
+                    let current_theme = theme_manager.get_current_theme();
+                    let is_dark = theme_manager.is_dark_theme(&current_theme);
+                    crate::platform::macos::update_window_theme(&window, is_dark);
+                }
+            }
+
+            // Rebuild menu to include the new window
+            if let Err(e) = crate::domain::menu::rebuild_menu(app_handle) {
+                #[cfg(debug_assertions)]
+                eprintln!("[WindowCreation] Failed to rebuild menu: {}", e);
+                let _ = e;
+            }
+        }
+        Err(e) => {
+            #[cfg(debug_assertions)]
+            eprintln!("[WindowCreation] Failed to create window: {}", e);
+            let _ = e;
+        }
+    }
+}
+
+/// Helper to find an existing main window or any valid editor window
+fn find_main_window(app_handle: &AppHandle) -> Option<WebviewWindow> {
+    app_handle.get_webview_window("main")
+        .or_else(|| {
+            app_handle.webview_windows()
+                .values()
+                .find(|w| w.label().starts_with("main"))
+                .cloned()
+        })
+}
+
 /// Handle Reopen event (macOS dock icon click)
 #[cfg(target_os = "macos")]
 pub fn handle_reopen_event(app_handle: &AppHandle, has_visible_windows: bool) {
@@ -79,11 +161,15 @@ pub fn handle_reopen_event(app_handle: &AppHandle, has_visible_windows: bool) {
         debug_log!("Reopen", "No visible windows, attempting to show or create main window");
 
         // First, try to show existing window if it exists and is valid
-        if let Some(window) = app_handle.get_webview_window("main") {
+        if let Some(window) = find_main_window(app_handle) {
             // Check if window is actually valid by trying to get its visibility
             match window.is_visible() {
                 Ok(_visible) => {
                     debug_log!("Reopen", "Found valid existing window, visible: {}", _visible);
+                    
+                    // Unminimize if needed (unconditional call is safe)
+                    let _ = window.unminimize();
+                    
                     if let Err(_e) = window.show() {
                         debug_log!("Reopen", "Failed to show window: {}, will create new", _e);
                     } else {
@@ -97,73 +183,8 @@ pub fn handle_reopen_event(app_handle: &AppHandle, has_visible_windows: bool) {
             }
         }
 
-        // Window doesn't exist or is invalid, create a new one with unique label
-        let unique_label = format!(
-            "main-{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap_or_default()
-                .as_millis()
-        );
-        debug_log!("Reopen", "Creating new window with label: {}", unique_label);
-
-        // Determine background color based on current theme
-        let bg_color = if let Some(theme_manager) = app_handle.try_state::<Arc<ThemeManager>>() {
-            theme_manager.get_current_background_color()
-        } else {
-            DARK_BACKGROUND_COLOR
-        };
-
-        let mut builder = WebviewWindowBuilder::new(
-            app_handle,
-            &unique_label,
-            WebviewUrl::App("index.html".into()),
-        )
-        .title("Ink")
-        .inner_size(1200.0, 800.0)
-        .min_inner_size(800.0, 600.0)
-        .resizable(true)
-        .fullscreen(false)
-        .center()
-        .visible(false)  // Start hidden, frontend will show after theme loads
-        .background_color(bg_color)
-        .decorations(true);
-
-        // macOS-specific title bar configuration
-        #[cfg(target_os = "macos")]
-        {
-            builder = builder
-                .title_bar_style(tauri::TitleBarStyle::Overlay)
-                .hidden_title(true);
-        }
-
-        match builder.build() {
-            Ok(window) => {
-                debug_log!("Reopen", "Window created successfully");
-
-                // Setup macOS-specific window configuration
-                #[cfg(target_os = "macos")]
-                {
-                    if let Some(theme_manager) = app_handle.try_state::<Arc<ThemeManager>>() {
-                        let current_theme = theme_manager.get_current_theme();
-                        let is_dark = theme_manager.is_dark_theme(&current_theme);
-                        crate::platform::macos::update_window_theme(&window, is_dark);
-                    }
-                }
-
-                // Rebuild menu to include the new window
-                if let Err(e) = crate::domain::menu::rebuild_menu(app_handle) {
-                    #[cfg(debug_assertions)]
-                    eprintln!("[Reopen] Failed to rebuild menu: {}", e);
-                    let _ = e;
-                }
-            }
-            Err(e) => {
-                #[cfg(debug_assertions)]
-                eprintln!("[Reopen] Failed to create window: {}", e);
-                let _ = e;
-            }
-        }
+        // Window doesn't exist or is invalid, create a new one
+        create_main_window(app_handle);
     }
 }
 
@@ -176,29 +197,73 @@ pub fn handle_opened_paths(app_handle: &AppHandle, paths: Vec<String>) {
 
     debug_log!("FileOpen", "Received files: {:?}", paths);
 
-    // Try to emit to the main window first, or any available window
-    let target_window = app_handle.get_webview_window("main").or_else(|| {
-        app_handle
-            .webview_windows()
-            .into_iter()
-            .find(|(label, _)| label.starts_with("main"))
-            .map(|(_, window)| window)
-    });
+    let app_handle = app_handle.clone();
+    let paths = paths.clone();
 
-    if let Some(window) = target_window {
-        let label = window.label();
-        debug_log!("FileOpen", "Emitting to window: {}", label);
-        // Use emit_to to target specific window
-        let _ = app_handle.emit_to(label, "files-opened", &paths);
-    } else {
-        // Window not ready, store in state for later retrieval
-        debug_log!("FileOpen", "No window available, storing for later");
+    // Spawn async task to handle window finding with retry logic
+    // This avoids race conditions during app startup where the main window
+    // might be in the process of creation but not yet registered
+    tauri::async_runtime::spawn(async move {
+        // ALWAYS store files in state first.
+        // This ensures that:
+        // 1. If we are in "Cold Start", the frontend can pick them up via get_pending_files()
+        // 2. If we are in "Closed Window" case, the new window will see them.
+        // 3. If we are in "Already Running", the frontend calls get_pending_files() after event to clear them.
         if let Some(state) = app_handle.try_state::<OpenedFiles>() {
             if let Ok(mut files) = state.0.lock() {
-                files.extend(paths);
+                files.extend(paths.clone());
             }
         }
-    }
+
+        // 1. Try to find existing window immediately
+        let mut target_window = find_main_window(&app_handle);
+
+        // 2. If not found, wait a bit and try again (Startup Race Guard)
+        if target_window.is_none() {
+            debug_log!("FileOpen", "No window found, waiting for potential startup...");
+            tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
+            target_window = find_main_window(&app_handle);
+        }
+
+        // Check validity: Ensure the window is actually visible or capable of being shown
+        // If find_main_window returned a "zombie" window (about to be destroyed), this check helps.
+        // We use is_minimizable() as a proxy for validity since is_valid() isn't available
+        let is_valid = if let Some(ref w) = target_window {
+            w.is_minimizable().is_ok()
+        } else {
+            false
+        };
+
+        if is_valid {
+            let window = target_window.unwrap();
+            let label = window.label();
+            debug_log!("FileOpen", "Emitting to valid window: {}", label);
+            
+            // Emit event (Frontend will handle this if it's already running)
+            // Note: Frontend will also call get_pending_files() to clear the state we just wrote to.
+            let _ = app_handle.emit_to(label, "files-opened", &paths);
+
+            // Ensure window is visible and focused (critical for "Open With")
+            #[cfg(target_os = "macos")]
+            {
+                // Unminimize unconditionally to ensure it restores from Dock
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        } else {
+            // 3. Still no valid window found - we are likely in "Closed Window" state (running but no UI)
+            debug_log!("FileOpen", "No valid window available after retry, creating new one");
+            
+            // Files are already stored in state above.
+
+            // On macOS, if the window was closed (red button), we need to recreate it
+            #[cfg(target_os = "macos")]
+            {
+                create_main_window(&app_handle);
+            }
+        }
+    });
 }
 
 /// Handle files opened via "Open With" or double-click (macOS only)

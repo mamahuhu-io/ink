@@ -19,9 +19,7 @@ export class NoteBlockComponent extends BlockComponent<NoteBlockModel> {
   override renderBlock() {
     return html`
       <div class="ink-note-block-container">
-        <div class="ink-block-children-container">
-          ${this.renderChildren(this.model)}
-        </div>
+        <div class="ink-block-children-container">${this.renderChildren(this.model)}</div>
       </div>
     `;
   }

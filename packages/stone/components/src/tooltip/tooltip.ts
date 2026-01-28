@@ -1,4 +1,3 @@
-import { requestConnectedFrame } from "@ink/stone-shared/utils";
 import {
   arrow,
   type ComputePositionReturn,
@@ -7,13 +6,14 @@ import {
   offset,
   type Placement,
   shift,
-} from "@floating-ui/dom";
-import type { CSSResult } from "lit";
-import { css, html, LitElement, unsafeCSS } from "lit";
-import { property } from "lit/decorators.js";
-import { type StyleInfo, styleMap } from "lit/directives/style-map.js";
+} from '@floating-ui/dom';
+import { requestConnectedFrame } from '@ink/stone-shared/utils';
+import type { CSSResult } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+import { type StyleInfo, styleMap } from 'lit/directives/style-map.js';
 
-import { HoverController, type HoverOptions } from "../hover/index.js";
+import { HoverController, type HoverOptions } from '../hover/index.js';
 
 const styles = css`
   .ink-tooltip {
@@ -44,28 +44,28 @@ const styles = css`
 const TRIANGLE_HEIGHT = 6;
 const triangleMap = {
   top: {
-    bottom: "-6px",
-    borderStyle: "solid",
-    borderWidth: "6px 5px 0 5px",
-    borderColor: "var(--ink-tooltip) transparent transparent transparent",
+    bottom: '-6px',
+    borderStyle: 'solid',
+    borderWidth: '6px 5px 0 5px',
+    borderColor: 'var(--ink-tooltip) transparent transparent transparent',
   },
   right: {
-    left: "-6px",
-    borderStyle: "solid",
-    borderWidth: "5px 6px 5px 0",
-    borderColor: "transparent var(--ink-tooltip) transparent transparent",
+    left: '-6px',
+    borderStyle: 'solid',
+    borderWidth: '5px 6px 5px 0',
+    borderColor: 'transparent var(--ink-tooltip) transparent transparent',
   },
   bottom: {
-    top: "-6px",
-    borderStyle: "solid",
-    borderWidth: "0 5px 6px 5px",
-    borderColor: "transparent transparent var(--ink-tooltip) transparent",
+    top: '-6px',
+    borderStyle: 'solid',
+    borderWidth: '0 5px 6px 5px',
+    borderColor: 'transparent transparent var(--ink-tooltip) transparent',
   },
   left: {
-    right: "-6px",
-    borderStyle: "solid",
-    borderWidth: "5px 0 5px 6px",
-    borderColor: "transparent transparent transparent var(--ink-tooltip)",
+    right: '-6px',
+    borderStyle: 'solid',
+    borderWidth: '5px 0 5px 6px',
+    borderColor: 'transparent transparent transparent var(--ink-tooltip)',
   },
 };
 
@@ -75,19 +75,15 @@ const AUTO_SHIFT_PADDING = 12;
 const AUTO_FLIP_PADDING = 12;
 
 // Ported from https://floating-ui.com/docs/tutorial#arrow-middleware
-const updateArrowStyles = ({
-  placement,
-  middlewareData,
-}: ComputePositionReturn): StyleInfo => {
+const updateArrowStyles = ({ placement, middlewareData }: ComputePositionReturn): StyleInfo => {
   const arrowX = middlewareData.arrow?.x;
   const arrowY = middlewareData.arrow?.y;
 
-  const triangleStyles =
-    triangleMap[placement.split("-")[0] as keyof typeof triangleMap];
+  const triangleStyles = triangleMap[placement.split('-')[0] as keyof typeof triangleMap];
 
   return {
-    left: arrowX != null ? `${arrowX}px` : "",
-    top: arrowY != null ? `${arrowY}px` : "",
+    left: arrowX != null ? `${arrowX}px` : '',
+    top: arrowY != null ? `${arrowY}px` : '',
     ...triangleStyles,
   };
 };
@@ -143,7 +139,7 @@ export class Tooltip extends LitElement {
         //   return null;
         if (this.hidden) return null;
         let arrowStyles: StyleInfo = {};
-        let tooltipStyles: StyleInfo = {};
+        const tooltipStyles: StyleInfo = {};
         return {
           template: ({ positionSlot, updatePortal }) => {
             positionSlot.subscribe((data) => {
@@ -156,29 +152,22 @@ export class Tooltip extends LitElement {
               }
 
               if (this.autoHide) {
-                tooltipStyles.visibility = data.middlewareData.hide
-                  ?.referenceHidden
-                  ? "hidden"
-                  : "";
+                tooltipStyles.visibility = data.middlewareData.hide?.referenceHidden
+                  ? 'hidden'
+                  : '';
                 arrowStyles.visibility = tooltipStyles.visibility;
               }
 
               updatePortal();
             });
 
-            const children = Array.from(this.childNodes).map((node) =>
-              node.cloneNode(true)
-            );
+            const children = Array.from(this.childNodes).map((node) => node.cloneNode(true));
 
             return html`
               <style>
                 ${this._getStyles()}
               </style>
-              <div
-                class="ink-tooltip"
-                role="tooltip"
-                style=${styleMap(tooltipStyles)}
-              >
+              <div class="ink-tooltip" role="tooltip" style=${styleMap(tooltipStyles)}>
                 ${children}
               </div>
               <div class="arrow" style=${styleMap(arrowStyles)}></div>
@@ -195,9 +184,9 @@ export class Tooltip extends LitElement {
                 crossAxis: this.offsetX,
               }),
               arrow({
-                element: portalRoot.shadowRoot!.querySelector(".arrow")!,
+                element: portalRoot.shadowRoot!.querySelector('.arrow')!,
               }),
-              this.autoHide && hide({ strategy: "referenceHidden" }),
+              this.autoHide && hide({ strategy: 'referenceHidden' }),
             ],
             autoUpdate: true,
           }),
@@ -209,12 +198,12 @@ export class Tooltip extends LitElement {
         safeBridge: false,
         allowMultiple: true,
         ...this.hoverOptions,
-      }
+      },
     );
 
     const parent = this.parentElement;
     if (!parent) {
-      console.error("Tooltip must have a parent element");
+      console.error('Tooltip must have a parent element');
       return;
     }
 
@@ -311,18 +300,18 @@ export class Tooltip extends LitElement {
   @property({ attribute: false })
   accessor offsetX = 0;
 
-  @property({ attribute: "tip-position" })
-  accessor placement: Placement = "top";
+  @property({ attribute: 'tip-position' })
+  accessor placement: Placement = 'top';
 
   @property({ attribute: false })
   accessor tooltipStyle: CSSResult = css``;
 
   @property({ attribute: false })
-  accessor zIndex: number | string = "var(--ink-z-index-popover)";
+  accessor zIndex: number | string = 'var(--ink-z-index-popover)';
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "ink-tooltip": Tooltip;
+    'ink-tooltip': Tooltip;
   }
 }

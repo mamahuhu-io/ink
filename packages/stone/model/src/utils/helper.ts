@@ -21,7 +21,7 @@ export function defineEmbedModel<
   T extends Constructor<BlockModel<Props>> = Constructor<BlockModel<Props>>,
 >(BlockModelSuperClass: T) {
   return GfxCompatible<EmbedProps<Props>>(
-    BlockModelSuperClass as Constructor<BlockModel<EmbedProps<Props>>>
+    BlockModelSuperClass as Constructor<BlockModel<EmbedProps<Props>>>,
   );
 }
 
@@ -30,9 +30,9 @@ export type EmbedBlockModel<Props = object> = BlockModel<EmbedProps<Props>>;
 export function createEmbedBlockSchema<
   Props extends object,
   Model extends EmbedBlockModel<Props>,
-  Transformer extends BaseBlockTransformer<
+  Transformer extends BaseBlockTransformer<EmbedProps<Props>> = BaseBlockTransformer<
     EmbedProps<Props>
-  > = BaseBlockTransformer<EmbedProps<Props>>,
+  >,
 >({
   name,
   version,
@@ -48,7 +48,7 @@ export function createEmbedBlockSchema<
 }) {
   return defineBlockSchema({
     flavour: `ink:embed-${name}`,
-    props: internalPrimitives => {
+    props: (internalPrimitives) => {
       const userProps = props?.(internalPrimitives);
 
       return {

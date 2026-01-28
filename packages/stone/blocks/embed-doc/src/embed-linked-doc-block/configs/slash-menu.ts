@@ -1,13 +1,10 @@
+import { LinkedPageIcon, PlusIcon } from '@ink/stone-icons/lit';
 import { EmbedLinkedDocBlockSchema } from '@ink/stone-model';
 import { insertContent } from '@ink/stone-rich-text';
 import { REFERENCE_NODE } from '@ink/stone-shared/consts';
 import { createDefaultDoc } from '@ink/stone-shared/utils';
-import {
-  type SlashMenuConfig,
-  SlashMenuConfigIdentifier,
-} from '@ink/stone-widget-slash-menu';
-import { LinkedPageIcon, PlusIcon } from '@ink/stone-icons/lit';
 import { type ExtensionType } from '@ink/stone-store';
+import { type SlashMenuConfig, SlashMenuConfigIdentifier } from '@ink/stone-widget-slash-menu';
 
 import { LinkDocTooltip, NewDocTooltip } from './tooltips';
 
@@ -22,8 +19,7 @@ const linkedDocSlashMenuConfig: SlashMenuConfig = {
         caption: 'New Doc',
       },
       group: '3_Page@0',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:embed-linked-doc'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:embed-linked-doc'),
       action: ({ std, model }) => {
         const newDoc = createDefaultDoc(std.host.store.workspace);
         insertContent(std, model, REFERENCE_NODE, {
@@ -47,23 +43,15 @@ const linkedDocSlashMenuConfig: SlashMenuConfig = {
       when: ({ std, model }) => {
         const root = model.store.root;
         if (!root) return false;
-        const linkedDocWidget = std.view.getWidget(
-          'ink-linked-doc-widget',
-          root.id
-        );
+        const linkedDocWidget = std.view.getWidget('ink-linked-doc-widget', root.id);
         if (!linkedDocWidget) return false;
 
-        return model.store.schema.flavourSchemaMap.has(
-          'ink:embed-linked-doc'
-        );
+        return model.store.schema.flavourSchemaMap.has('ink:embed-linked-doc');
       },
       action: ({ model, std }) => {
         const root = model.store.root;
         if (!root) return;
-        const linkedDocWidget = std.view.getWidget(
-          'ink-linked-doc-widget',
-          root.id
-        );
+        const linkedDocWidget = std.view.getWidget('ink-linked-doc-widget', root.id);
         if (!linkedDocWidget) return;
         // TODO(@L-Sun): make linked-doc-widget as extension
         // @ts-expect-error same as above
@@ -74,11 +62,11 @@ const linkedDocSlashMenuConfig: SlashMenuConfig = {
 };
 
 export const LinkedDocSlashMenuConfigIdentifier = SlashMenuConfigIdentifier(
-  EmbedLinkedDocBlockSchema.model.flavour
+  EmbedLinkedDocBlockSchema.model.flavour,
 );
 
 export const LinkedDocSlashMenuConfigExtension: ExtensionType = {
-  setup: di => {
+  setup: (di) => {
     di.addImpl(LinkedDocSlashMenuConfigIdentifier, linkedDocSlashMenuConfig);
   },
 };

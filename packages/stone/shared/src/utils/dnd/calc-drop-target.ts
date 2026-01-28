@@ -1,13 +1,10 @@
-import { DatabaseBlockModel, ListBlockModel } from '@ink/stone-model';
 import { type Point, Rect } from '@ink/stone-global/gfx';
+import { DatabaseBlockModel, ListBlockModel } from '@ink/stone-model';
 import type { BlockComponent } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
 
 import { BLOCK_CHILDREN_CONTAINER_PADDING_LEFT } from '../../consts/index.js';
-import {
-  getClosestBlockComponentByElement,
-  getRectByBlockComponent,
-} from '../dom/index.js';
+import { getClosestBlockComponentByElement, getRectByBlockComponent } from '../dom/index.js';
 import { matchModels } from '../model/index.js';
 import { getDropRectByPoint } from './get-drop-rect-by-point.js';
 import { DropFlags, type DropPlacement, type DropTarget } from './types.js';
@@ -43,7 +40,7 @@ export function calcDropTarget(
   /**
    * Allow the dragging block to be dropped as sublist
    */
-  allowSublist: boolean = true
+  allowSublist: boolean = true,
 ): DropTarget | null {
   const schema = model.store.schema.get('ink:database');
   const children = schema?.model.children ?? [];
@@ -52,13 +49,12 @@ export function calcDropTarget(
 
   if (children.length && draggingElements.length) {
     shouldAppendToDatabase = draggingElements
-      .map(el => el.model)
-      .every(m => children.includes(m.flavour));
+      .map((el) => el.model)
+      .every((m) => children.includes(m.flavour));
   }
 
   if (!shouldAppendToDatabase && !matchModels(model, [DatabaseBlockModel])) {
-    const databaseBlockComponent =
-      element.closest<BlockComponent>('ink-database');
+    const databaseBlockComponent = element.closest<BlockComponent>('ink-database');
     if (databaseBlockComponent) {
       element = databaseBlockComponent;
       model = databaseBlockComponent.model;
@@ -100,7 +96,7 @@ export function calcDropTarget(
         domRect.left,
         domRect.width,
         (before ? domRect.top - 1 : domRect.bottom) - height / 2,
-        height
+        height,
       ),
       modelState: {
         model,
@@ -124,10 +120,7 @@ export function calcDropTarget(
 
     prev = getVisiblePreviousElementSibling(element);
     if (prev) {
-      if (
-        draggingElements.length &&
-        prev === draggingElements[draggingElements.length - 1]
-      ) {
+      if (draggingElements.length && prev === draggingElements[draggingElements.length - 1]) {
         placement = 'none';
       } else {
         prevRect = getRectByBlockComponent(prev);
@@ -162,18 +155,12 @@ export function calcDropTarget(
 
     next = getVisibleNextElementSibling(element);
     if (next) {
-      if (
-        placement === 'after' &&
-        draggingElements.length &&
-        next === draggingElements[0]
-      ) {
+      if (placement === 'after' && draggingElements.length && next === draggingElements[0]) {
         placement = 'none';
         next = null;
       }
     } else {
-      next = getVisibleNextElementSibling(
-        getClosestBlockComponentByElement(element.parentElement)
-      );
+      next = getVisibleNextElementSibling(getClosestBlockComponentByElement(element.parentElement));
     }
 
     if (next) {

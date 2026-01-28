@@ -1,9 +1,5 @@
-import type { AliasInfo, ReferenceParams } from '@ink/stone-model';
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import {
-  type DisposableMember,
-  disposeMember,
-} from '@ink/stone-global/disposable';
+import { type DisposableMember, disposeMember } from '@ink/stone-global/disposable';
 import {
   AliasIcon,
   BlockLinkIcon,
@@ -13,14 +9,10 @@ import {
   LinkedPageIcon,
   PageIcon,
 } from '@ink/stone-icons/lit';
+import type { AliasInfo, ReferenceParams } from '@ink/stone-model';
 import { LifeCycleWatcher, StdIdentifier } from '@ink/stone-std';
 import type { Store } from '@ink/stone-store';
-import {
-  computed,
-  type ReadonlySignal,
-  type Signal,
-  signal,
-} from '@preact/signals-core';
+import { computed, type ReadonlySignal, type Signal, signal } from '@preact/signals-core';
 import type { TemplateResult } from 'lit';
 
 import { referenceToNode } from '../utils/reference.js';
@@ -46,24 +38,14 @@ export type DocDisplayMetaParams = {
  *      `EmbedEdgelessSyncedDocBlockComponent`
  */
 export interface DocDisplayMetaExtension {
-  icon: (
-    docId: string,
-    referenceInfo?: DocDisplayMetaParams
-  ) => ReadonlySignal<TemplateResult>;
-  title: (
-    docId: string,
-    referenceInfo?: DocDisplayMetaParams
-  ) => ReadonlySignal<string>;
+  icon: (docId: string, referenceInfo?: DocDisplayMetaParams) => ReadonlySignal<TemplateResult>;
+  title: (docId: string, referenceInfo?: DocDisplayMetaParams) => ReadonlySignal<string>;
 }
 
-export const DocDisplayMetaProvider = createIdentifier<DocDisplayMetaExtension>(
-  'DocDisplayMetaService'
-);
+export const DocDisplayMetaProvider =
+  createIdentifier<DocDisplayMetaExtension>('DocDisplayMetaService');
 
-export class DocDisplayMetaService
-  extends LifeCycleWatcher
-  implements DocDisplayMetaExtension
-{
+export class DocDisplayMetaService extends LifeCycleWatcher implements DocDisplayMetaExtension {
   static icons = {
     deleted: iconBuilder(DeleteIcon),
     aliased: iconBuilder(AliasIcon),
@@ -97,7 +79,7 @@ export class DocDisplayMetaService
 
   icon(
     pageId: string,
-    { params, title, referenced }: DocDisplayMetaParams = {}
+    { params, title, referenced }: DocDisplayMetaParams = {},
   ): ReadonlySignal<TemplateResult> {
     const doc = this.std.workspace.getDoc(pageId);
 
@@ -113,17 +95,15 @@ export class DocDisplayMetaService
       icon$ = signal(
         this.std.get(DocModeProvider).getPrimaryMode(pageId) === 'edgeless'
           ? DocDisplayMetaService.icons.edgeless
-          : DocDisplayMetaService.icons.page
+          : DocDisplayMetaService.icons.page,
       );
 
-      const disposable = this.std
-        .get(DocModeProvider)
-        .onPrimaryModeChange(mode => {
-          icon$!.value =
-            mode === 'edgeless'
-              ? DocDisplayMetaService.icons.edgeless
-              : DocDisplayMetaService.icons.page;
-        }, pageId);
+      const disposable = this.std.get(DocModeProvider).onPrimaryModeChange((mode) => {
+        icon$!.value =
+          mode === 'edgeless'
+            ? DocDisplayMetaService.icons.edgeless
+            : DocDisplayMetaService.icons.page;
+      }, pageId);
 
       this.disposables.push(disposable);
       this.iconMap.set(store, icon$);
@@ -139,10 +119,7 @@ export class DocDisplayMetaService
       }
 
       if (referenced) {
-        const mode =
-          params?.mode ??
-          this.std.get(DocModeProvider).getPrimaryMode(pageId) ??
-          'page';
+        const mode = params?.mode ?? this.std.get(DocModeProvider).getPrimaryMode(pageId) ?? 'page';
         return mode === 'edgeless'
           ? DocDisplayMetaService.icons.linkedEdgeless
           : DocDisplayMetaService.icons.linkedPage;
@@ -152,10 +129,7 @@ export class DocDisplayMetaService
     });
   }
 
-  title(
-    pageId: string,
-    { title }: DocDisplayMetaParams = {}
-  ): ReadonlySignal<string> {
+  title(pageId: string, { title }: DocDisplayMetaParams = {}): ReadonlySignal<string> {
     const doc = this.std.workspace.getDoc(pageId);
 
     if (!doc) {
@@ -168,11 +142,9 @@ export class DocDisplayMetaService
     if (!title$) {
       title$ = signal(doc.meta?.title || 'Untitled');
 
-      const disposable = this.std.workspace.slots.docListUpdated.subscribe(
-        () => {
-          title$!.value = doc.meta?.title || 'Untitled';
-        }
-      );
+      const disposable = this.std.workspace.slots.docListUpdated.subscribe(() => {
+        title$!.value = doc.meta?.title || 'Untitled';
+      });
 
       this.disposables.push(disposable);
       this.titleMap.set(store, title$);
@@ -191,7 +163,7 @@ export class DocDisplayMetaService
 function iconBuilder(
   icon: typeof PageIcon,
   size = '1.25em',
-  style = 'user-select:none;flex-shrink:0;vertical-align:middle;font-size:inherit;'
+  style = 'user-select:none;flex-shrink:0;vertical-align:middle;font-size:inherit;',
 ) {
   return icon({ width: size, height: size, style });
 }

@@ -1,9 +1,6 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
-import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { BlockViewExtension } from '@ink/stone-std';
+import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { literal } from 'lit/static-html.js';
 
 import { latexSlashMenuConfig } from './configs/slash-menu';

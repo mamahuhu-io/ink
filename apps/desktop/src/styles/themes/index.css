@@ -9,12 +9,18 @@
 /* Default fallback (dark theme as default to prevent white flash) */
 :root {
   /* Font families - shared across all themes */
-  --ink-font-family: "Inter", "Source Sans 3", Poppins, apple-system, BlinkMacSystemFont, "Helvetica Neue", Tahoma, "PingFang SC", "Microsoft Yahei", Arial, sans-serif;
-  --ink-font-sans-family: "Inter", "Source Sans 3", Poppins, apple-system, BlinkMacSystemFont, "Helvetica Neue", Tahoma, Arial, sans-serif;
-  --ink-font-serif-family: "Source Serif 4", "Noto Serif", serif, "Cambria";
-  --ink-font-mono-family: "Source Code Pro", "IBM Plex Mono", "Roboto Mono", "Noto Sans Mono", monospace;
-  --ink-font-code-family: "Source Code Pro", "IBM Plex Mono", "Roboto Mono", "Noto Sans Mono", monospace;
-  --ink-font-number-family: "Roboto Mono", "Noto Sans Mono", sans-serif;
+  --ink-font-family:
+    'Inter', 'Source Sans 3', Poppins, apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma,
+    'PingFang SC', 'Microsoft Yahei', Arial, sans-serif;
+  --ink-font-sans-family:
+    'Inter', 'Source Sans 3', Poppins, apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma,
+    Arial, sans-serif;
+  --ink-font-serif-family: 'Source Serif 4', 'Noto Serif', serif, 'Cambria';
+  --ink-font-mono-family:
+    'Source Code Pro', 'IBM Plex Mono', 'Roboto Mono', 'Noto Sans Mono', monospace;
+  --ink-font-code-family:
+    'Source Code Pro', 'IBM Plex Mono', 'Roboto Mono', 'Noto Sans Mono', monospace;
+  --ink-font-number-family: 'Roboto Mono', 'Noto Sans Mono', sans-serif;
 
   /* Font sizes - shared across all themes */
   --ink-font-title: 36px;

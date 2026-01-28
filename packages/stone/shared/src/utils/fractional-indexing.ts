@@ -12,14 +12,10 @@ function hasSamePrefix(a: string, b: string) {
  *
  * @param customPostfix custom postfix for the key, only letters and numbers are allowed
  */
-export function generateFractionalIndexingKeyBetween(
-  a: string | null,
-  b: string | null
-) {
+export function generateFractionalIndexingKeyBetween(a: string | null, b: string | null) {
   const randomSize = 32;
   function postfix(length: number = randomSize) {
-    const chars =
-      '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const chars = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     const values = new Uint8Array(length);
     crypto.getRandomValues(values);
     let result = '';

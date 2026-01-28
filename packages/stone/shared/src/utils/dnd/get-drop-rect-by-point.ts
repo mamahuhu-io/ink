@@ -1,5 +1,5 @@
-import { DatabaseBlockModel } from '@ink/stone-model';
 import type { Point } from '@ink/stone-global/gfx';
+import { DatabaseBlockModel } from '@ink/stone-model';
 import { BLOCK_ID_ATTR } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
 
@@ -15,7 +15,7 @@ const ATTR_SELECTOR = `[${BLOCK_ID_ATTR}]`;
 export function getDropRectByPoint(
   point: Point,
   model: BlockModel,
-  element: Element
+  element: Element,
 ): null | {
   rect: DOMRect;
   flag: DropFlags;
@@ -45,12 +45,7 @@ export function getDropRectByPoint(
       }
 
       bounds = header.getBoundingClientRect();
-      result.rect = new DOMRect(
-        result.rect.left,
-        bounds.bottom,
-        result.rect.width,
-        1
-      );
+      result.rect = new DOMRect(result.rect.left, bounds.bottom, result.rect.width, 1);
 
       return result;
     }
@@ -151,10 +146,5 @@ function getCellRect(element: Element, bounds?: DOMRect) {
     return null;
   }
   const colRect = col.getBoundingClientRect();
-  return new DOMRect(
-    bounds.left,
-    colRect.top,
-    colRect.right - bounds.left,
-    colRect.height
-  );
+  return new DOMRect(bounds.left, colRect.top, colRect.right - bounds.left, colRect.height);
 }

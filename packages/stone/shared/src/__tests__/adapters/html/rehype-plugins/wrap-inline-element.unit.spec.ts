@@ -30,18 +30,13 @@ describe('rehypeWrapInlineElements', () => {
   it('should wrap inline elements containing block children in a p tag', () => {
     const input = '<div><p>Hello World</p><span>Hello World</span></div>';
     const output = process(input);
-    expect(output).toBe(
-      '<div><p>Hello World</p><p><span>Hello World</span></p></div>'
-    );
+    expect(output).toBe('<div><p>Hello World</p><p><span>Hello World</span></p></div>');
   });
 
   it('should wrap inline elements sequentially', () => {
-    const input =
-      '<div><p>Hello World</p><span>Hello</span><span>World</span></div>';
+    const input = '<div><p>Hello World</p><span>Hello</span><span>World</span></div>';
     const output = process(input);
-    expect(output).toBe(
-      '<div><p>Hello World</p><p><span>Hello</span><span>World</span></p></div>'
-    );
+    expect(output).toBe('<div><p>Hello World</p><p><span>Hello</span><span>World</span></p></div>');
   });
 
   it('should wrap inline elements sequentially mixed with block elements', () => {
@@ -49,7 +44,7 @@ describe('rehypeWrapInlineElements', () => {
       '<div><p>Hello World</p><span>Hello</span><span>World</span><h1>Title</h1><span>Hello</span><span>World</span></div>';
     const output = process(input);
     expect(output).toBe(
-      '<div><p>Hello World</p><p><span>Hello</span><span>World</span></p><h1>Title</h1><p><span>Hello</span><span>World</span></p></div>'
+      '<div><p>Hello World</p><p><span>Hello</span><span>World</span></p><h1>Title</h1><p><span>Hello</span><span>World</span></p></div>',
     );
   });
 });

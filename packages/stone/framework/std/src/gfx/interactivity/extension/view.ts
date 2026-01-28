@@ -36,9 +36,7 @@ type ExtendedViewContext<
   view: T;
 };
 
-type ViewInteractionHandleContext<
-  T extends GfxBlockComponent | GfxElementModelView,
-> = {
+type ViewInteractionHandleContext<T extends GfxBlockComponent | GfxElementModelView> = {
   std: BlockStdScope;
   gfx: GfxController;
   view: T;
@@ -58,9 +56,7 @@ type ViewInteractionHandleContext<
 };
 
 export type GfxViewInteractionConfig<
-  T extends GfxBlockComponent | GfxElementModelView =
-    | GfxBlockComponent
-    | GfxElementModelView,
+  T extends GfxBlockComponent | GfxElementModelView = GfxBlockComponent | GfxElementModelView,
 > = {
   readonly resizeConstraint?: ResizeConstraint;
 
@@ -79,40 +75,24 @@ export type GfxViewInteractionConfig<
      * @returns
      */
     beforeResize?: (context: BeforeResizeContext) => void;
-    onResizeStart?(
-      context: ResizeStartContext & ExtendedViewContext<T, ResizeStartContext>
-    ): void;
-    onResizeMove?(
-      context: ResizeMoveContext & ExtendedViewContext<T, ResizeMoveContext>
-    ): void;
-    onResizeEnd?(
-      context: ResizeEndContext & ExtendedViewContext<T, ResizeEndContext>
-    ): void;
+    onResizeStart?(context: ResizeStartContext & ExtendedViewContext<T, ResizeStartContext>): void;
+    onResizeMove?(context: ResizeMoveContext & ExtendedViewContext<T, ResizeMoveContext>): void;
+    onResizeEnd?(context: ResizeEndContext & ExtendedViewContext<T, ResizeEndContext>): void;
   };
 
   handleRotate?: (context: ViewInteractionHandleContext<T>) => {
     beforeRotate?: (context: BeforeRotateContext) => void;
-    onRotateStart?(
-      context: RotateStartContext & ExtendedViewContext<T, RotateStartContext>
-    ): void;
-    onRotateMove?(
-      context: RotateMoveContext & ExtendedViewContext<T, RotateMoveContext>
-    ): void;
-    onRotateEnd?(
-      context: RotateEndContext & ExtendedViewContext<T, RotateEndContext>
-    ): void;
+    onRotateStart?(context: RotateStartContext & ExtendedViewContext<T, RotateStartContext>): void;
+    onRotateMove?(context: RotateMoveContext & ExtendedViewContext<T, RotateMoveContext>): void;
+    onRotateEnd?(context: RotateEndContext & ExtendedViewContext<T, RotateEndContext>): void;
   };
 
-  handleSelection?: (
-    context: Omit<ViewInteractionHandleContext<T>, 'add' | 'delete'>
-  ) => {
+  handleSelection?: (context: Omit<ViewInteractionHandleContext<T>, 'add' | 'delete'>) => {
     selectable?: (
-      context: SelectableContext &
-        ExtendedViewContext<T, SelectableContext, boolean>
+      context: SelectableContext & ExtendedViewContext<T, SelectableContext, boolean>,
     ) => boolean;
     onSelect?: (
-      context: SelectContext &
-        ExtendedViewContext<T, SelectContext, boolean | void>
+      context: SelectContext & ExtendedViewContext<T, SelectContext, boolean | void>,
     ) => boolean | void;
   };
 };
@@ -120,15 +100,13 @@ export type GfxViewInteractionConfig<
 export const GfxViewInteractionIdentifier =
   createIdentifier<GfxViewInteractionConfig>('GfxViewInteraction');
 
-export function GfxViewInteractionExtension<
-  T extends GfxBlockComponent | GfxElementModelView,
->(viewType: string, config: GfxViewInteractionConfig<T>): ExtensionType {
+export function GfxViewInteractionExtension<T extends GfxBlockComponent | GfxElementModelView>(
+  viewType: string,
+  config: GfxViewInteractionConfig<T>,
+): ExtensionType {
   return {
     setup(di) {
-      di.addImpl(
-        GfxViewInteractionIdentifier(viewType),
-        () => config as GfxViewInteractionConfig
-      );
+      di.addImpl(GfxViewInteractionIdentifier(viewType), () => config as GfxViewInteractionConfig);
     },
   };
 }

@@ -1,9 +1,4 @@
 import { toast } from '@ink/stone-components/toast';
-import type {
-  ListBlockModel,
-  ParagraphBlockModel,
-} from '@ink/stone-model';
-import { insertContent, getInlineEditorByModel } from '@ink/stone-rich-text';
 import {
   ArrowDownBigIcon,
   ArrowUpBigIcon,
@@ -17,13 +12,15 @@ import {
   TomorrowIcon,
   YesterdayIcon,
 } from '@ink/stone-icons/lit';
+import type { ListBlockModel, ParagraphBlockModel } from '@ink/stone-model';
+import { getInlineEditorByModel, insertContent } from '@ink/stone-rich-text';
 import { type DeltaInsert, Slice, Text } from '@ink/stone-store';
 
+import { SlashMenuEmojiPicker } from './slash-menu-emoji-picker';
+import { SlashMenuLinkPopup } from './slash-menu-link-popup';
 import { slashMenuToolTips } from './tooltips';
 import type { SlashMenuConfig } from './types';
 import { formatDate, formatTime } from './utils';
-import { SlashMenuLinkPopup } from './slash-menu-link-popup';
-import { SlashMenuEmojiPicker } from './slash-menu-emoji-picker';
 
 // i18n translation getter - can be overridden by the application
 let i18nGetter: ((key: string, fallback: string) => string) | null = null;
@@ -158,7 +155,8 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
             });
           };
 
-          const root = inlineEditor.rootElement?.closest('editor-host')?.parentElement ?? document.body;
+          const root =
+            inlineEditor.rootElement?.closest('editor-host')?.parentElement ?? document.body;
           root.append(picker);
 
           abortController.signal.addEventListener('abort', () => picker.remove());
@@ -216,7 +214,10 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
             }
             // Insert the link text with link attribute at the position where '/' was
             const finalIndex = insertIndex > 0 ? insertIndex - 1 : 0;
-            textModel.insert(result.text, finalIndex, { link: result.link } as Record<string, unknown>);
+            textModel.insert(result.text, finalIndex, { link: result.link } as Record<
+              string,
+              unknown
+            >);
             // Update cursor position
             inlineEditor.setInlineRange({
               index: finalIndex + result.text.length,
@@ -224,7 +225,8 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
             });
           };
 
-          const root = inlineEditor.rootElement?.closest('editor-host')?.parentElement ?? document.body;
+          const root =
+            inlineEditor.rootElement?.closest('editor-host')?.parentElement ?? document.body;
           root.append(popup);
 
           abortController.signal.addEventListener('abort', () => popup.remove());
@@ -244,12 +246,7 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
           const parentModel = host.store.getParent(previousSiblingModel);
           if (!parentModel) return;
 
-          host.store.moveBlocks(
-            [model],
-            parentModel,
-            previousSiblingModel,
-            true
-          );
+          host.store.moveBlocks([model], parentModel, previousSiblingModel, true);
         },
       },
       {
@@ -283,7 +280,7 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
             .then(() => {
               toast(std.host, t('copiedToClipboard', 'Copied to clipboard'));
             })
-            .catch(e => {
+            .catch((e) => {
               console.error(e);
             });
         },
@@ -303,10 +300,7 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
           const parent = host.store.getParent(model);
           if (!parent) {
             console.error(
-              'Failed to duplicate block! Parent not found: ' +
-                model.id +
-                '|' +
-                model.flavour
+              'Failed to duplicate block! Parent not found: ' + model.id + '|' + model.flavour,
             );
             return;
           }
@@ -317,15 +311,11 @@ export const defaultSlashMenuConfig: SlashMenuConfig = {
             model.flavour,
             {
               type: (model as ParagraphBlockModel).props.type,
-              text: new Text(
-                (
-                  model as ParagraphBlockModel
-                ).props.text.toDelta() as DeltaInsert[]
-              ),
+              text: new Text((model as ParagraphBlockModel).props.text.toDelta() as DeltaInsert[]),
               checked: (model as ListBlockModel).props.checked,
             },
             host.store.getParent(model),
-            index
+            index,
           );
         },
       },

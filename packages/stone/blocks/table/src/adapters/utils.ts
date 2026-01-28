@@ -5,10 +5,7 @@ import type {
   TableRow,
   TextAlign,
 } from '@ink/stone-model';
-import {
-  type HtmlAST,
-  type MarkdownAST,
-} from '@ink/stone-shared/adapters';
+import { type HtmlAST, type MarkdownAST } from '@ink/stone-shared/adapters';
 import { HastUtils } from '@ink/stone-shared/adapters';
 import { generateFractionalIndexingKeyBetween } from '@ink/stone-shared/utils';
 import type { DeltaInsert } from '@ink/stone-store';
@@ -27,36 +24,25 @@ const createRichText = (text: RichTextType) => {
 };
 function calculateColumnWidths(rows: string[][]): number[] {
   return (
-    rows[0]?.map((_, colIndex) =>
-      Math.max(...rows.map(row => (row[colIndex] || '').length))
-    ) ?? []
+    rows[0]?.map((_, colIndex) => Math.max(...rows.map((row) => (row[colIndex] || '').length))) ??
+    []
   );
 }
 
-function formatRow(
-  row: string[],
-  columnWidths: number[],
-  isHeader: boolean
-): string {
-  const cells = row.map((cell, colIndex) =>
-    cell?.padEnd(columnWidths[colIndex] ?? 0, ' ')
-  );
+function formatRow(row: string[], columnWidths: number[], isHeader: boolean): string {
+  const cells = row.map((cell, colIndex) => cell?.padEnd(columnWidths[colIndex] ?? 0, ' '));
   const rowString = `| ${cells.join(' | ')} |`;
-  return isHeader
-    ? `${rowString}\n${formatSeparator(columnWidths)}`
-    : rowString;
+  return isHeader ? `${rowString}\n${formatSeparator(columnWidths)}` : rowString;
 }
 
 function formatSeparator(columnWidths: number[]): string {
-  const separator = columnWidths.map(width => '-'.repeat(width)).join(' | ');
+  const separator = columnWidths.map((width) => '-'.repeat(width)).join(' | ');
   return `| ${separator} |`;
 }
 
 export function formatTable(rows: string[][]): string {
   const columnWidths = calculateColumnWidths(rows);
-  const formattedRows = rows.map((row, index) =>
-    formatRow(row, columnWidths, index === 0)
-  );
+  const formattedRows = rows.map((row, index) => formatRow(row, columnWidths, index === 0));
   return formattedRows.join('\n');
 }
 type Table = {
@@ -71,22 +57,18 @@ type Cell = {
 export const processTable = (
   columns: Record<string, TableColumn>,
   rows: Record<string, TableRow>,
-  cells: Record<string, TableCellSerialized>
+  cells: Record<string, TableCellSerialized>,
 ): Table => {
-  const sortedColumns = Object.values(columns).sort((a, b) =>
-    a.order.localeCompare(b.order)
-  );
-  const sortedRows = Object.values(rows).sort((a, b) =>
-    a.order.localeCompare(b.order)
-  );
+  const sortedColumns = Object.values(columns).sort((a, b) => a.order.localeCompare(b.order));
+  const sortedRows = Object.values(rows).sort((a, b) => a.order.localeCompare(b.order));
   const table: Table = {
     rows: [],
   };
-  sortedRows.forEach(r => {
+  sortedRows.forEach((r) => {
     const row: Row = {
       cells: [],
     };
-    sortedColumns.forEach(col => {
+    sortedColumns.forEach((col) => {
       const cell = cells[`${r.rowId}:${col.columnId}`];
       if (!cell) {
         row.cells.push({
@@ -113,7 +95,7 @@ const getAllTag = (node: Element | undefined, tagName: string): Element[] => {
     if (node.tagName === tagName) {
       return [node];
     }
-    return node.children.flatMap(child => {
+    return node.children.flatMap((child) => {
       if (HastUtils.isElement(child)) {
         return getAllTag(child, tagName);
       }
@@ -123,25 +105,19 @@ const getAllTag = (node: Element | undefined, tagName: string): Element[] => {
   return [];
 };
 
-export const createTableProps = (
-  deltasLists: RichTextType[][],
-  columnAligns?: ColumnAlign[]
-) => {
+export const createTableProps = (deltasLists: RichTextType[][], columnAligns?: ColumnAlign[]) => {
   const createIdAndOrder = (count: number) => {
     const result: { id: string; order: string }[] = Array.from({
       length: count,
     });
     for (let i = 0; i < count; i++) {
       const id = nanoid();
-      const order = generateFractionalIndexingKeyBetween(
-        result[i - 1]?.order ?? null,
-        null
-      );
+      const order = generateFractionalIndexingKeyBetween(result[i - 1]?.order ?? null, null);
       result[i] = { id, order };
     }
     return result;
   };
-  const columnCount = Math.max(...deltasLists.map(row => row.length));
+  const columnCount = Math.max(...deltasLists.map((row) => row.length));
   const rowCount = deltasLists.length;
 
   const columns: TableColumn[] = createIdAndOrder(columnCount).map((v, i) => ({
@@ -149,7 +125,7 @@ export const createTableProps = (
     order: v.order,
     textAlign: columnAligns?.[i] as TextAlign | undefined,
   }));
-  const rows: TableRow[] = createIdAndOrder(rowCount).map(v => ({
+  const rows: TableRow[] = createIdAndOrder(rowCount).map((v) => ({
     rowId: v.id,
     order: v.order,
   }));
@@ -170,32 +146,30 @@ export const createTableProps = (
     }
   }
   return {
-    columns: Object.fromEntries(
-      columns.map(column => [column.columnId, column])
-    ),
-    rows: Object.fromEntries(rows.map(row => [row.rowId, row])),
+    columns: Object.fromEntries(columns.map((column) => [column.columnId, column])),
+    rows: Object.fromEntries(rows.map((row) => [row.rowId, row])),
     cells,
   };
 };
 
 export const parseTableFromHtml = (
   element: Element,
-  astToDelta: (ast: HtmlAST) => RichTextType
+  astToDelta: (ast: HtmlAST) => RichTextType,
 ): TableBlockPropsSerialized => {
-  const headerRows = getAllTag(element, 'thead').flatMap(node =>
-    getAllTag(node, 'tr').map(tr => getAllTag(tr, 'th'))
+  const headerRows = getAllTag(element, 'thead').flatMap((node) =>
+    getAllTag(node, 'tr').map((tr) => getAllTag(tr, 'th')),
   );
-  const bodyRows = getAllTag(element, 'tbody').flatMap(node =>
-    getAllTag(node, 'tr').map(tr => getAllTag(tr, 'td'))
+  const bodyRows = getAllTag(element, 'tbody').flatMap((node) =>
+    getAllTag(node, 'tr').map((tr) => getAllTag(tr, 'td')),
   );
-  const footerRows = getAllTag(element, 'tfoot').flatMap(node =>
-    getAllTag(node, 'tr').map(tr => getAllTag(tr, 'td'))
+  const footerRows = getAllTag(element, 'tfoot').flatMap((node) =>
+    getAllTag(node, 'tr').map((tr) => getAllTag(tr, 'td')),
   );
   const allRows = [...headerRows, ...bodyRows, ...footerRows];
   const rowTextLists: RichTextType[][] = [];
-  allRows.forEach(cells => {
+  allRows.forEach((cells) => {
     const row: RichTextType[] = [];
-    cells.forEach(cell => {
+    cells.forEach((cell) => {
       row.push(astToDelta(cell));
     });
     rowTextLists.push(row);
@@ -205,12 +179,12 @@ export const parseTableFromHtml = (
 
 export const parseTableFromMarkdown = (
   node: MarkdownTable,
-  astToDelta: (ast: MarkdownAST) => RichTextType
+  astToDelta: (ast: MarkdownAST) => RichTextType,
 ) => {
   const rowTextLists: RichTextType[][] = [];
-  node.children.forEach(row => {
+  node.children.forEach((row) => {
     const rowText: RichTextType[] = [];
-    row.children.forEach(cell => {
+    row.children.forEach((cell) => {
       rowText.push(astToDelta(cell));
     });
     rowTextLists.push(rowText);

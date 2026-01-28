@@ -2,8 +2,8 @@ import { MarkdownASTToDeltaExtension } from '@ink/stone-shared/adapters';
 
 export const markdownInlineMathToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'inlineMath',
-  match: ast => ast.type === 'inlineMath',
-  toDelta: ast => {
+  match: (ast) => ast.type === 'inlineMath',
+  toDelta: (ast) => {
     if (!('value' in ast)) {
       return [];
     }

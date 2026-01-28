@@ -1,6 +1,6 @@
+import { SignalWatcher } from '@ink/stone-global/lit';
 import { scrollbarStyle } from '@ink/stone-shared/styles';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import { SignalWatcher } from '@ink/stone-global/lit';
 import { consume } from '@lit/context';
 import { css, html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
@@ -169,9 +169,7 @@ export class AdapterPanelBody extends SignalWatcher(LitElement) {
       case 'plaintext':
         return this.plainTextContent;
       case 'snapshot':
-        return this.docSnapshot
-          ? JSON.stringify(this.docSnapshot, null, 4)
-          : '';
+        return this.docSnapshot ? JSON.stringify(this.docSnapshot, null, 4) : '';
       default:
         return '';
     }
@@ -200,7 +198,7 @@ export class AdapterPanelBody extends SignalWatcher(LitElement) {
   override render() {
     return html`
       <div class="adapter-panel-body">
-        ${ADAPTERS.map(adapter => this._renderAdapterContainer(adapter))}
+        ${ADAPTERS.map((adapter) => this._renderAdapterContainer(adapter))}
       </div>
     `;
   }

@@ -22,15 +22,15 @@ describe('async-queue', () => {
     let v = -1;
 
     // setup 2 pop tasks
-    void queue.next().then(next => {
+    void queue.next().then((next) => {
       v = next;
     });
-    void queue.next().then(next => {
+    void queue.next().then((next) => {
       v = next;
     });
 
     // Wait for 100ms
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     // v should not be changed
     expect(v).toBe(-1);
 

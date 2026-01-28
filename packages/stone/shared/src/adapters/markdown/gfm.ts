@@ -6,10 +6,7 @@ Copyright (c) 2020 Titus Wormer <tituswormer@gmail.com>
 mdast-util-gfm-autolink-literal is from markdown only.
 */
 import { gfmAutolinkLiteralFromMarkdown } from 'mdast-util-gfm-autolink-literal';
-import {
-  gfmFootnoteFromMarkdown,
-  gfmFootnoteToMarkdown,
-} from 'mdast-util-gfm-footnote';
+import { gfmFootnoteFromMarkdown, gfmFootnoteToMarkdown } from 'mdast-util-gfm-footnote';
 import {
   gfmStrikethroughFromMarkdown,
   gfmStrikethroughToMarkdown,
@@ -59,16 +56,13 @@ function gfmToMarkdown() {
 }
 
 export function remarkGfm(this: Processor) {
-  // oxlint-disable-next-line typescript/no-this-alias
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
   const data = self.data();
 
-  const micromarkExtensions =
-    data.micromarkExtensions || (data.micromarkExtensions = []);
-  const fromMarkdownExtensions =
-    data.fromMarkdownExtensions || (data.fromMarkdownExtensions = []);
-  const toMarkdownExtensions =
-    data.toMarkdownExtensions || (data.toMarkdownExtensions = []);
+  const micromarkExtensions = data.micromarkExtensions || (data.micromarkExtensions = []);
+  const fromMarkdownExtensions = data.fromMarkdownExtensions || (data.fromMarkdownExtensions = []);
+  const toMarkdownExtensions = data.toMarkdownExtensions || (data.toMarkdownExtensions = []);
 
   micromarkExtensions.push(gfm());
   fromMarkdownExtensions.push(gfmFromMarkdown());

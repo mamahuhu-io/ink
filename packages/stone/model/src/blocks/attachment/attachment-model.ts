@@ -1,13 +1,6 @@
-import type {
-  GfxCommonBlockProps,
-  GfxElementGeometry,
-} from '@ink/stone-std/gfx';
+import type { GfxCommonBlockProps, GfxElementGeometry } from '@ink/stone-std/gfx';
 import { GfxCompatible } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 import type { BlockMeta } from '../../utils/index.js';
 import { AttachmentBlockTransformer } from './attachment-transformer.js';
@@ -59,23 +52,14 @@ export const AttachmentBlockSchema = defineBlockSchema({
   metadata: {
     version: 1,
     role: 'content',
-    parent: [
-      'ink:note',
-      'ink:surface',
-      'ink:edgeless-text',
-      'ink:paragraph',
-      'ink:list',
-    ],
+    parent: ['ink:note', 'ink:surface', 'ink:edgeless-text', 'ink:paragraph', 'ink:list'],
     children: ['@attachment-viewer'],
   },
-  transformer: transformerConfigs =>
-    new AttachmentBlockTransformer(transformerConfigs),
+  transformer: (transformerConfigs) => new AttachmentBlockTransformer(transformerConfigs),
   toModel: () => new AttachmentBlockModel(),
 });
 
-export const AttachmentBlockSchemaExtension = BlockSchemaExtension(
-  AttachmentBlockSchema
-);
+export const AttachmentBlockSchemaExtension = BlockSchemaExtension(AttachmentBlockSchema);
 
 export class AttachmentBlockModel
   extends GfxCompatible<AttachmentBlockProps>(BlockModel)

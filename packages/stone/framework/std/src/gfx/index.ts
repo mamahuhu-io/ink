@@ -1,9 +1,5 @@
 export { generateKeyBetweenV2 } from '../utils/fractional-indexing.js';
-export {
-  compare as compareLayer,
-  renderableInEdgeless,
-  SortOrder,
-} from '../utils/layer.js';
+export { compare as compareLayer, renderableInEdgeless, SortOrder } from '../utils/layer.js';
 export {
   canSafeAddToContainer,
   descendantElementsImpl,
@@ -52,10 +48,7 @@ export type {
   GfxGroupCompatibleInterface,
   PointTestOptions,
 } from './model/base.js';
-export {
-  gfxGroupCompatibleSymbol,
-  isGfxGroupCompatibleModel,
-} from './model/base.js';
+export { gfxGroupCompatibleSymbol, isGfxGroupCompatibleModel } from './model/base.js';
 export {
   GfxBlockElementModel,
   type GfxCommonBlockProps,
@@ -83,10 +76,7 @@ export {
   GfxPrimitiveElementModel,
   type SerializedElement,
 } from './model/surface/element-model.js';
-export {
-  GfxLocalElementModel,
-  prop,
-} from './model/surface/local-element-model.js';
+export { GfxLocalElementModel, prop } from './model/surface/local-element-model.js';
 export {
   SURFACE_TEXT_UNIQ_IDENTIFIER,
   SURFACE_YMAP_UNIQ_IDENTIFIER,
@@ -95,22 +85,10 @@ export {
   type SurfaceMiddleware,
 } from './model/surface/surface-model.js';
 export { GfxSelectionManager } from './selection.js';
-export {
-  SurfaceMiddlewareBuilder,
-  SurfaceMiddlewareExtension,
-} from './surface-middleware.js';
-export {
-  BaseTool,
-  type ToolOptions,
-  type ToolOptionWithType,
-  type ToolType,
-} from './tool/tool.js';
+export { SurfaceMiddlewareBuilder, SurfaceMiddlewareExtension } from './surface-middleware.js';
+export { BaseTool, type ToolOptions, type ToolOptionWithType, type ToolType } from './tool/tool.js';
 export { MouseButton, ToolController } from './tool/tool-controller.js';
-export {
-  type EventsHandlerMap,
-  GfxElementModelView,
-  type SupportedEvent,
-} from './view/view.js';
+export { type EventsHandlerMap, GfxElementModelView, type SupportedEvent } from './view/view.js';
 export { ViewManager } from './view/view-manager.js';
 export * from './viewport.js';
 export { GfxViewportElement } from './viewport-element.js';

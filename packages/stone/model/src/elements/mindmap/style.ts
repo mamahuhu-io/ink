@@ -67,7 +67,7 @@ export abstract class MindmapStyleGetter {
 
   abstract getNodeStyle(
     node: MindmapNode,
-    path: number[]
+    path: number[],
   ): {
     connector: ConnectorStyle;
     collapseButton: CollapseButton;

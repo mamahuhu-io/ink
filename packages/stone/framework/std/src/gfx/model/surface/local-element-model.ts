@@ -19,7 +19,7 @@ import type { SurfaceBlockModel } from './surface-model.js';
 export function prop<V, T extends GfxLocalElementModel>() {
   return function propDecorator(
     _target: ClassAccessorDecoratorTarget<T, V>,
-    context: ClassAccessorDecoratorContext
+    context: ClassAccessorDecoratorContext,
   ) {
     const prop = context.name;
 
@@ -165,9 +165,7 @@ export abstract class GfxLocalElementModel implements GfxCompatibleInterface {
   }
 
   containsBound(bounds: Bound): boolean {
-    return getPointsFromBoundWithRotation(this).some(point =>
-      bounds.containsPoint(point)
-    );
+    return getPointsFromBoundWithRotation(this).some((point) => bounds.containsPoint(point));
   }
 
   getLineIntersections(start: IVec, end: IVec) {
@@ -189,12 +187,7 @@ export abstract class GfxLocalElementModel implements GfxCompatibleInterface {
     return new PointLocation(rotatePoint, tangent);
   }
 
-  includesPoint(
-    x: number,
-    y: number,
-    opt: PointTestOptions,
-    __: EditorHost
-  ): boolean {
+  includesPoint(x: number, y: number, opt: PointTestOptions, __: EditorHost): boolean {
     const bound = opt.useElementBound ? this.elementBound : this.responseBound;
     return bound.isPointInBound([x, y]);
   }
@@ -203,7 +196,7 @@ export abstract class GfxLocalElementModel implements GfxCompatibleInterface {
     return (
       this.containsBound(bound) ||
       bound.points.some((point, i, points) =>
-        this.getLineIntersections(point, points[(i + 1) % points.length])
+        this.getLineIntersections(point, points[(i + 1) % points.length]),
       )
     );
   }

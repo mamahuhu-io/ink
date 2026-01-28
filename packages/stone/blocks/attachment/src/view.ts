@@ -1,20 +1,14 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { AttachmentBlockSchema } from '@ink/stone-model';
-import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { BlockViewExtension, FlavourExtension } from '@ink/stone-std';
+import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { literal } from 'lit/static-html.js';
 
 import { AttachmentDropOption } from './attachment-service.js';
 import { attachmentSlashMenuConfig } from './configs/slash-menu.js';
 import { createBuiltinToolbarConfigExtension } from './configs/toolbar';
 import { effects } from './effects.js';
-import {
-  AttachmentEmbedConfigExtension,
-  AttachmentEmbedService,
-} from './embed';
+import { AttachmentEmbedConfigExtension, AttachmentEmbedService } from './embed';
 
 const flavour = AttachmentBlockSchema.model.flavour;
 

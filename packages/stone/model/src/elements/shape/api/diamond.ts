@@ -44,19 +44,14 @@ export const diamond = {
     ctx.restore();
   },
 
-  includesPoint(
-    this: ShapeElementModel,
-    x: number,
-    y: number,
-    options: PointTestOptions
-  ) {
+  includesPoint(this: ShapeElementModel, x: number, y: number, options: PointTestOptions) {
     const point: IVec = [x, y];
     const points = getPointsFromBoundWithRotation(this, diamond.points);
 
     let hit = pointOnPolygonStoke(
       point,
       points,
-      (options?.hitThreshold ?? 1) / (options.zoom ?? 1)
+      (options?.hitThreshold ?? 1) / (options.zoom ?? 1),
     );
 
     if (!hit) {
@@ -67,22 +62,13 @@ export const diamond = {
         const text = this.text;
         if (!text || !text.length) {
           // Check the center area of the shape
-          const centralBounds = getCenterAreaBounds(
-            this,
-            DEFAULT_CENTRAL_AREA_RATIO
-          );
-          const centralPoints = getPointsFromBoundWithRotation(
-            centralBounds,
-            diamond.points
-          );
+          const centralBounds = getCenterAreaBounds(this, DEFAULT_CENTRAL_AREA_RATIO);
+          const centralPoints = getPointsFromBoundWithRotation(centralBounds, diamond.points);
           hit = pointInPolygon(point, centralPoints);
         } else if (this.textBound) {
           hit = pointInPolygon(
             point,
-            getPointsFromBoundWithRotation(
-              this,
-              () => Bound.from(this.textBound!).points
-            )
+            getPointsFromBoundWithRotation(this, () => Bound.from(this.textBound!).points),
           );
         }
       }
@@ -93,7 +79,7 @@ export const diamond = {
 
   containsBound(bounds: Bound, element: ShapeElementModel) {
     const points = getPointsFromBoundWithRotation(element, diamond.points);
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   },
 
   getNearestPoint(point: IVec, element: ShapeElementModel) {

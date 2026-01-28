@@ -1,4 +1,4 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { sha } from '@ink/stone-global/utils';
 
 /**
@@ -25,16 +25,11 @@ export class MemoryBlobCRUD {
 
   async set(valueOrKey: string | Blob, _value?: Blob) {
     const key =
-      typeof valueOrKey === 'string'
-        ? valueOrKey
-        : await sha(await valueOrKey.arrayBuffer());
+      typeof valueOrKey === 'string' ? valueOrKey : await sha(await valueOrKey.arrayBuffer());
     const value = typeof valueOrKey === 'string' ? _value : valueOrKey;
 
     if (!value) {
-      throw new InkStoneError(
-        ErrorCode.TransformerError,
-        'value is required'
-      );
+      throw new InkStoneError(ErrorCode.TransformerError, 'value is required');
     }
 
     this._map.set(key, value);
@@ -62,15 +57,9 @@ export const mimeExtMap = new Map([
   ['application/vnd.oasis.opendocument.presentation', 'odp'],
   ['application/vnd.oasis.opendocument.spreadsheet', 'ods'],
   ['application/vnd.oasis.opendocument.text', 'odt'],
-  [
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'pptx',
-  ],
+  ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'pptx'],
   ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx'],
-  [
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'docx',
-  ],
+  ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx'],
   ['application/vnd.rar', 'rar'],
   ['application/vnd.visio', 'vsd'],
   ['application/x-7z-compressed', '7z'],
@@ -129,7 +118,7 @@ export const mimeExtMap = new Map([
 ]);
 
 export const extMimeMap = new Map(
-  Array.from(mimeExtMap.entries()).map(([mime, ext]) => [ext, mime])
+  Array.from(mimeExtMap.entries()).map(([mime, ext]) => [ext, mime]),
 );
 
 const getExt = (type: string) => {
@@ -143,14 +132,10 @@ const getExt = (type: string) => {
 export function getAssetName(assets: Map<string, Blob>, blobId: string) {
   const blob = assets.get(blobId);
   if (!blob) {
-    throw new InkStoneError(
-      ErrorCode.TransformerError,
-      `blob not found for blobId: ${blobId}`
-    );
+    throw new InkStoneError(ErrorCode.TransformerError, `blob not found for blobId: ${blobId}`);
   }
 
-  const name =
-    'name' in blob && typeof blob.name === 'string' ? blob.name : undefined;
+  const name = 'name' in blob && typeof blob.name === 'string' ? blob.name : undefined;
   if (name) {
     if (name.includes('.')) return name;
     return `${name}.${getExt(blob.type)}`;

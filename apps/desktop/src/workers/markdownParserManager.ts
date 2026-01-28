@@ -10,20 +10,20 @@ export type { BlockDef };
 
 let worker: Worker | null = null;
 let requestId = 0;
-const pendingRequests = new Map<string, {
-  resolve: (blockDefs: BlockDef[]) => void;
-  reject: (error: Error) => void;
-}>();
+const pendingRequests = new Map<
+  string,
+  {
+    resolve: (blockDefs: BlockDef[]) => void;
+    reject: (error: Error) => void;
+  }
+>();
 
 /**
  * Get or create the markdown parser worker
  */
 function getWorker(): Worker {
   if (!worker) {
-    worker = new Worker(
-      new URL('./markdownParser.worker.ts', import.meta.url),
-      { type: 'module' }
-    );
+    worker = new Worker(new URL('./markdownParser.worker.ts', import.meta.url), { type: 'module' });
 
     worker.onmessage = (event: MessageEvent<ParseMarkdownResult>) => {
       const { type, id, blockDefs } = event.data;

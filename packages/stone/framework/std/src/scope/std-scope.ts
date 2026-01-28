@@ -1,10 +1,6 @@
 import { Container, type ServiceProvider } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
-import {
-  type ExtensionType,
-  type Store,
-  StoreSelectionExtension,
-} from '@ink/stone-store';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
+import { type ExtensionType, type Store, StoreSelectionExtension } from '@ink/stone-store';
 
 import { Clipboard } from '../clipboard/index.js';
 import { CommandManager } from '../command/index.js';
@@ -17,11 +13,7 @@ import { GridManager, LayerManager } from '../gfx/index.js';
 import { GfxSelectionManager } from '../gfx/selection.js';
 import { SurfaceMiddlewareExtension } from '../gfx/surface-middleware.js';
 import { ViewManager } from '../gfx/view/view-manager.js';
-import {
-  BlockViewIdentifier,
-  LifeCycleWatcherIdentifier,
-  StdIdentifier,
-} from '../identifier.js';
+import { BlockViewIdentifier, LifeCycleWatcherIdentifier, StdIdentifier } from '../identifier.js';
 import { RangeManager } from '../inline/index.js';
 import { EditorHost } from '../view/element/index.js';
 import { ViewStore } from '../view/view-store.js';
@@ -97,7 +89,7 @@ export class BlockStdScope {
     if (!this._host) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'Host is not ready to use, the `render` method should be called first'
+        'Host is not ready to use, the `render` method should be called first',
       );
     }
 
@@ -122,19 +114,19 @@ export class BlockStdScope {
     this.container = new Container();
     this.container.addImpl(StdIdentifier, () => this);
 
-    internalExtensions.forEach(ext => {
+    internalExtensions.forEach((ext) => {
       const container = this.container;
       ext.setup(container);
     });
 
-    this.userExtensions.forEach(ext => {
+    this.userExtensions.forEach((ext) => {
       const container = this.container;
       ext.setup(container);
     });
 
     this.provider = this.container.provider(undefined, this.store.provider);
 
-    this._lifeCycleWatchers.forEach(watcher => {
+    this._lifeCycleWatchers.forEach((watcher) => {
       watcher.created();
     });
   }
@@ -144,7 +136,7 @@ export class BlockStdScope {
   }
 
   mount() {
-    this._lifeCycleWatchers.forEach(watcher => {
+    this._lifeCycleWatchers.forEach((watcher) => {
       watcher.mounted();
     });
   }
@@ -154,7 +146,7 @@ export class BlockStdScope {
     element.std = this;
     element.store = this.store;
     this._host = element;
-    this._lifeCycleWatchers.forEach(watcher => {
+    this._lifeCycleWatchers.forEach((watcher) => {
       watcher.rendered();
     });
 
@@ -162,7 +154,7 @@ export class BlockStdScope {
   }
 
   unmount() {
-    this._lifeCycleWatchers.forEach(watcher => {
+    this._lifeCycleWatchers.forEach((watcher) => {
       watcher.unmounted();
     });
   }

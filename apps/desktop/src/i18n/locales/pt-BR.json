@@ -121,13 +121,6 @@
         "themeDesc": "Tema a usar ao exportar documentos",
         "auto": "Automático (igual ao atual)"
       },
-      "window": {
-        "title": "Janela",
-        "sidebarPosition": "Posição da barra lateral",
-        "sidebarPositionDesc": "Posição da barra lateral de arquivos",
-        "left": "Esquerda",
-        "right": "Direita"
-      },
       "display": {
         "title": "Exibição",
         "showDocStats": "Estatísticas do documento",

@@ -3,10 +3,10 @@
  * This theme is applied when [data-theme="light"] is set on :root
  */
 
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   /* Primary colors */
-  --ink-brand-color: #1E96EB;
-  --ink-primary-color: #1E96EB;
+  --ink-brand-color: #1e96eb;
+  --ink-primary-color: #1e96eb;
   --ink-secondary-color: rgb(125, 145, 255);
   --ink-tertiary-color: rgba(239, 250, 255, 1);
 
@@ -27,9 +27,9 @@
   /* Text colors */
   --ink-text-primary-color: rgb(18, 18, 18);
   --ink-text-secondary-color: rgb(142, 141, 145);
-  --ink-text-emphasis-color: #1E96EB;
+  --ink-text-emphasis-color: #1e96eb;
   --ink-text-disable-color: rgb(169, 169, 173);
-  --ink-link-color: #1E96EB;
+  --ink-link-color: #1e96eb;
   --ink-placeholder-color: rgb(192, 191, 193);
   --ink-quote-color: rgb(100, 95, 85);
   --ink-icon-color: rgb(119, 117, 125);
@@ -56,7 +56,7 @@
   --ink-table-row-even-bg: rgba(0, 0, 0, 0.015);
   --ink-table-row-hover-bg: rgba(30, 150, 235, 0.06);
   --ink-table-cell-padding: 12px 15px;
-  
+
   /* Table Indicator */
   --ink-table-indicator-activated: #b3b3b3;
   --ink-table-indicator-border: #e6e6e6;

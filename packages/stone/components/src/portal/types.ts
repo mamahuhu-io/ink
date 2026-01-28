@@ -56,10 +56,7 @@ type ComputePositionOptions = {
   abortWhenRefRemoved?: boolean;
 } & Partial<ComputePositionConfig>;
 
-export type AdvancedPortalOptions = Omit<
-  PortalOptions,
-  'template' | 'signal'
-> & {
+export type AdvancedPortalOptions = Omit<PortalOptions, 'template' | 'signal'> & {
   abortController: AbortController;
   template:
     | Renderable
@@ -71,9 +68,7 @@ export type AdvancedPortalOptions = Omit<
   /**
    * See https://floating-ui.com/docs/computePosition
    */
-  computePosition?:
-    | ComputePositionOptions
-    | ((portalRoot: Element) => ComputePositionOptions);
+  computePosition?: ComputePositionOptions | ((portalRoot: Element) => ComputePositionOptions);
   /**
    * Whether to close the portal when click away(click outside).
    * @default false

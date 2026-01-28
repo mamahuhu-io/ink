@@ -1,5 +1,5 @@
-import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import type { ServiceProvider } from '@ink/stone-global/di';
+import { DefaultTheme, NoteDisplayMode } from '@ink/stone-model';
 import {
   type AssetsManager,
   ASTWalker,
@@ -51,53 +51,97 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
   private readonly _traverseMarkdown = (
     markdown: MarkdownAST,
     snapshot: BlockSnapshot,
-    assets?: AssetsManager
+    assets?: AssetsManager,
   ) => {
     const walker = new ASTWalker<MarkdownAST, BlockSnapshot>();
     walker.setONodeTypeGuard(
       (node): node is MarkdownAST =>
         !Array.isArray(node) &&
         'type' in (node as object) &&
-        (node as MarkdownAST).type !== undefined
+        (node as MarkdownAST).type !== undefined,
     );
+
+    // Track the end line of the last processed child for each parent
+    // Key: Parent Node, Value: End line of the last processed sibling
+    const lastChildEndLineMap = new Map<object, number>();
+
     walker.setEnter(async (o, context) => {
+      // Gap Detection Logic
+      // Detect vertical gaps between siblings and inject empty paragraphs
+      if (o.parent && o.node.position) {
+        const lastEndLine = lastChildEndLineMap.get(o.parent);
+
+        // Only check for gaps if we have processed a sibling before (lastEndLine is defined)
+        if (lastEndLine !== undefined) {
+          const currentStartLine = o.node.position.start.line;
+
+          // Calculate the gap in lines
+          // Standard Markdown separation is 1 empty line (Gap of 2 lines: End L1, Start L3)
+          // Each empty block in the editor adds 2 lines (\n\n) in serialization
+          // Formula: blocksToInsert = floor((currentStart - lastEnd) / 2) - 1
+          const blocksToInsert = Math.floor((currentStartLine - lastEndLine) / 2) - 1;
+
+          if (blocksToInsert > 0) {
+            for (let i = 0; i < blocksToInsert; i++) {
+              context
+                .openNode(
+                  {
+                    type: 'block',
+                    id: nanoid(),
+                    flavour: 'ink:paragraph',
+                    props: {
+                      type: 'text',
+                      text: {
+                        '$stone:internal:text$': true,
+                        delta: [],
+                      },
+                    },
+                    children: [],
+                  },
+                  'children',
+                )
+                .closeNode();
+            }
+          }
+        }
+      }
+
       for (const matcher of this.blockMatchers) {
         if (matcher.toMatch(o)) {
-          const adapterContext: AdapterContext<
-            MarkdownAST,
-            BlockSnapshot,
-            MarkdownDeltaConverter
-          > = {
-            walker,
-            walkerContext: context,
-            configs: this.configs,
-            job: this.job,
-            deltaConverter: this.deltaConverter,
-            provider: this.provider,
-            textBuffer: { content: '' },
-            assets,
-          };
+          const adapterContext: AdapterContext<MarkdownAST, BlockSnapshot, MarkdownDeltaConverter> =
+            {
+              walker,
+              walkerContext: context,
+              configs: this.configs,
+              job: this.job,
+              deltaConverter: this.deltaConverter,
+              provider: this.provider,
+              textBuffer: { content: '' },
+              assets,
+            };
           await matcher.toBlockSnapshot.enter?.(o, adapterContext);
         }
+      }
+
+      // Update the last end line for this parent
+      if (o.parent && o.node.position) {
+        lastChildEndLineMap.set(o.parent, o.node.position.end.line);
       }
     });
     walker.setLeave(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.toMatch(o)) {
-          const adapterContext: AdapterContext<
-            MarkdownAST,
-            BlockSnapshot,
-            MarkdownDeltaConverter
-          > = {
-            walker,
-            walkerContext: context,
-            configs: this.configs,
-            job: this.job,
-            deltaConverter: this.deltaConverter,
-            provider: this.provider,
-            textBuffer: { content: '' },
-            assets,
-          };
+          const adapterContext: AdapterContext<MarkdownAST, BlockSnapshot, MarkdownDeltaConverter> =
+            {
+              walker,
+              walkerContext: context,
+              configs: this.configs,
+              job: this.job,
+              deltaConverter: this.deltaConverter,
+              provider: this.provider,
+              textBuffer: { content: '' },
+              assets,
+            };
           await matcher.toBlockSnapshot.leave?.(o, adapterContext);
         }
       }
@@ -108,34 +152,30 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
   private readonly _traverseSnapshot = async (
     snapshot: BlockSnapshot,
     markdown: MarkdownAST,
-    assets?: AssetsManager
+    assets?: AssetsManager,
   ) => {
     const assetsIds: string[] = [];
     const walker = new ASTWalker<BlockSnapshot, MarkdownAST>();
     walker.setONodeTypeGuard(
-      (node): node is BlockSnapshot =>
-        BlockSnapshotSchema.safeParse(node).success
+      (node): node is BlockSnapshot => BlockSnapshotSchema.safeParse(node).success,
     );
     walker.setEnter(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.fromMatch(o)) {
-          const adapterContext: AdapterContext<
-            BlockSnapshot,
-            MarkdownAST,
-            MarkdownDeltaConverter
-          > = {
-            walker,
-            walkerContext: context,
-            configs: this.configs,
-            job: this.job,
-            deltaConverter: this.deltaConverter,
-            provider: this.provider,
-            textBuffer: { content: '' },
-            assets,
-            updateAssetIds: (assetsId: string) => {
-              assetsIds.push(assetsId);
-            },
-          };
+          const adapterContext: AdapterContext<BlockSnapshot, MarkdownAST, MarkdownDeltaConverter> =
+            {
+              walker,
+              walkerContext: context,
+              configs: this.configs,
+              job: this.job,
+              deltaConverter: this.deltaConverter,
+              provider: this.provider,
+              textBuffer: { content: '' },
+              assets,
+              updateAssetIds: (assetsId: string) => {
+                assetsIds.push(assetsId);
+              },
+            };
           await matcher.fromBlockSnapshot.enter?.(o, adapterContext);
         }
       }
@@ -143,20 +183,17 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
     walker.setLeave(async (o, context) => {
       for (const matcher of this.blockMatchers) {
         if (matcher.fromMatch(o)) {
-          const adapterContext: AdapterContext<
-            BlockSnapshot,
-            MarkdownAST,
-            MarkdownDeltaConverter
-          > = {
-            walker,
-            walkerContext: context,
-            configs: this.configs,
-            job: this.job,
-            deltaConverter: this.deltaConverter,
-            provider: this.provider,
-            textBuffer: { content: '' },
-            assets,
-          };
+          const adapterContext: AdapterContext<BlockSnapshot, MarkdownAST, MarkdownDeltaConverter> =
+            {
+              walker,
+              walkerContext: context,
+              configs: this.configs,
+              job: this.job,
+              deltaConverter: this.deltaConverter,
+              provider: this.provider,
+              textBuffer: { content: '' },
+              assets,
+            };
           await matcher.fromBlockSnapshot.leave?.(o, adapterContext);
         }
       }
@@ -175,19 +212,19 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
   constructor(job: Transformer, provider: ServiceProvider) {
     super(job, provider);
     const blockMatchers = Array.from(
-      provider.getAll(BlockMarkdownAdapterMatcherIdentifier).values()
+      provider.getAll(BlockMarkdownAdapterMatcherIdentifier).values(),
     );
     const inlineDeltaToMarkdownAdapterMatchers = Array.from(
-      provider.getAll(InlineDeltaToMarkdownAdapterMatcherIdentifier).values()
+      provider.getAll(InlineDeltaToMarkdownAdapterMatcherIdentifier).values(),
     );
     const markdownInlineToDeltaMatchers = Array.from(
-      provider.getAll(MarkdownASTToDeltaMatcherIdentifier).values()
+      provider.getAll(MarkdownASTToDeltaMatcherIdentifier).values(),
     );
     this.blockMatchers = blockMatchers;
     this.deltaConverter = new MarkdownDeltaConverter(
       job.adapterConfigs,
       inlineDeltaToMarkdownAdapterMatchers,
-      markdownInlineToDeltaMatchers
+      markdownInlineToDeltaMatchers,
     );
     this.preprocessorManager = new MarkdownPreprocessorManager(provider);
   }
@@ -197,6 +234,7 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
       .use(remarkGfm)
       .use(remarkStringify, {
         resourceLink: true,
+        bullet: '-',
       })
       .use(remarkMath)
       .stringify(ast)
@@ -223,14 +261,14 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
     // Only match spans where content doesn't contain nested span tags
     result = result.replace(
       /<span\s+style="([^"]*)">((?:(?!<span|<\/span>)[\s\S])*?)<\/span>/gi,
-      (_, style, content) => `[[SPAN:${style}]]${content}[[/SPAN]]`
+      (_, style, content) => `[[SPAN:${style}]]${content}[[/SPAN]]`,
     );
 
     // Handle <u>content</u>
     // Only match u tags where content doesn't contain nested u tags
     result = result.replace(
       /<u>((?:(?!<u>|<\/u>)[\s\S])*?)<\/u>/gi,
-      (_, content) => `[[U]]${content}[[/U]]`
+      (_, content) => `[[U]]${content}[[/U]]`,
     );
 
     return result;
@@ -240,10 +278,7 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
     // Preprocess HTML tags to special markers
     const preprocessed = this._preprocessHtmlTags(markdown);
 
-    const processor = unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkMath);
+    const processor = unified().use(remarkParse).use(remarkGfm).use(remarkMath);
     const ast = processor.parse(preprocessed);
     return processor.runSync(ast);
   }
@@ -256,11 +291,7 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
       type: 'root',
       children: [],
     };
-    const { ast, assetsIds } = await this._traverseSnapshot(
-      snapshot,
-      root,
-      assets
-    );
+    const { ast, assetsIds } = await this._traverseSnapshot(snapshot, root, assets);
     return {
       file: this._astToMarkdown(ast),
       assetsIds,
@@ -294,29 +325,19 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
         type: 'root',
         children: [],
       };
-      const { ast, assetsIds } = await this._traverseSnapshot(
-        contentSlice,
-        root,
-        assets
-      );
+      const { ast, assetsIds } = await this._traverseSnapshot(contentSlice, root, assets);
       sliceAssetsIds.push(...assetsIds);
       buffer += this._astToMarkdown(ast);
     }
-    const markdown =
-      buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
+    const markdown = buffer.match(/\n/g)?.length === 1 ? buffer.trimEnd() : buffer;
     return {
       file: markdown,
       assetsIds: sliceAssetsIds,
     };
   }
 
-  async toBlockSnapshot(
-    payload: ToBlockSnapshotPayload<Markdown>
-  ): Promise<BlockSnapshot> {
-    const markdownFile = this.preprocessorManager.process(
-      'block',
-      payload.file
-    );
+  async toBlockSnapshot(payload: ToBlockSnapshotPayload<Markdown>): Promise<BlockSnapshot> {
+    const markdownFile = this.preprocessorManager.process('block', payload.file);
     const markdownAst = this._markdownToAst(markdownFile);
     const blockSnapshotRoot = {
       type: 'block',
@@ -331,16 +352,10 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
       },
       children: [],
     };
-    return this._traverseMarkdown(
-      markdownAst,
-      blockSnapshotRoot as BlockSnapshot,
-      payload.assets
-    );
+    return this._traverseMarkdown(markdownAst, blockSnapshotRoot as BlockSnapshot, payload.assets);
   }
 
-  async toDocSnapshot(
-    payload: ToDocSnapshotPayload<Markdown>
-  ): Promise<DocSnapshot> {
+  async toDocSnapshot(payload: ToDocSnapshotPayload<Markdown>): Promise<DocSnapshot> {
     const markdownFile = this.preprocessorManager.process('doc', payload.file);
     const markdownAst = this._markdownToAst(markdownFile);
     const blockSnapshotRoot = {
@@ -391,20 +406,15 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
           await this._traverseMarkdown(
             markdownAst,
             blockSnapshotRoot as BlockSnapshot,
-            payload.assets
+            payload.assets,
           ),
         ],
       },
     };
   }
 
-  async toSliceSnapshot(
-    payload: MarkdownToSliceSnapshotPayload
-  ): Promise<SliceSnapshot | null> {
-    const markdownFile = this.preprocessorManager.process(
-      'slice',
-      payload.file
-    );
+  async toSliceSnapshot(payload: MarkdownToSliceSnapshotPayload): Promise<SliceSnapshot | null> {
+    const markdownFile = this.preprocessorManager.process('slice', payload.file);
     const markdownAst = this._markdownToAst(markdownFile);
     const blockSnapshotRoot = {
       type: 'block',
@@ -422,7 +432,7 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
     const contentSlice = (await this._traverseMarkdown(
       markdownAst,
       blockSnapshotRoot,
-      payload.assets
+      payload.assets,
     )) as BlockSnapshot;
     if (contentSlice.children.length === 0) {
       return null;
@@ -436,12 +446,11 @@ export class MarkdownAdapter extends BaseAdapter<Markdown> {
   }
 }
 
-export const MarkdownAdapterFactoryIdentifier =
-  AdapterFactoryIdentifier('Markdown');
+export const MarkdownAdapterFactoryIdentifier = AdapterFactoryIdentifier('Markdown');
 
 export const MarkdownAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(MarkdownAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(MarkdownAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new MarkdownAdapter(job, provider),
     }));
   },

@@ -17,9 +17,7 @@ export class ShadowlessElement extends LitElement {
 
   // styles registered in ShadowlessElement will be available globally
   // even if the element is not being rendered
-  protected static override finalizeStyles(
-    styles?: CSSResultGroup
-  ): CSSResultOrNative[] {
+  protected static override finalizeStyles(styles?: CSSResultGroup): CSSResultOrNative[] {
     const elementStyles = super.finalizeStyles(styles);
     // XXX: This breaks component encapsulation and applies styles to the document.
     // These styles should be manually scoped.
@@ -71,7 +69,7 @@ export class ShadowlessElement extends LitElement {
         SE.onDisconnectedMap.set(SE, new WeakMap());
       }
       SE.onDisconnectedMap.get(SE)?.set(parentRoot, () => {
-        injectedStyles.forEach(style => style.remove());
+        injectedStyles.forEach((style) => style.remove());
       });
     }
     this.setConnectedCount(styleInjectedCount + 1);

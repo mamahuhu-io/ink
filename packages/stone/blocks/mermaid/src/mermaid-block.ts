@@ -1,10 +1,10 @@
+import type { Placement } from '@floating-ui/dom';
 import { selectBlock } from '@ink/stone-block-note';
 import { CaptionedBlockComponent } from '@ink/stone-components/caption';
 import { createLitPortal } from '@ink/stone-components/portal';
 import type { MermaidBlockModel } from '@ink/stone-model';
-import { BlockSelection } from '@ink/stone-std';
 import { ThemeProvider } from '@ink/stone-shared/services';
-import type { Placement } from '@floating-ui/dom';
+import { BlockSelection } from '@ink/stone-std';
 import { effect } from '@preact/signals-core';
 import { html, render } from 'lit';
 import { query } from 'lit/decorators.js';
@@ -24,9 +24,7 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
 
   get isBlockSelected() {
     const blockSelection = this.selection.filter(BlockSelection);
-    return blockSelection.some(
-      selection => selection.blockId === this.model.id
-    );
+    return blockSelection.some((selection) => selection.blockId === this.model.id);
   }
 
   override connectedCallback() {
@@ -53,14 +51,14 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
     disposables.add(
       effect(() => {
         // Subscribe to signals
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         const _inkTheme = themeService.theme$.value; // Track global theme
         const code = this.model.props.code$.value;
         const theme = this.model.props.theme$.value;
         const scale = this.model.props.scale$.value;
 
         this._renderDiagram(mermaidContainer, code, theme, scale);
-      })
+      }),
     );
   }
 
@@ -68,17 +66,14 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
     container: HTMLDivElement,
     code: string,
     theme: 'auto' | 'light' | 'dark',
-    scale: number
+    scale: number,
   ) {
     container.replaceChildren();
     // @ts-expect-error lit hack won't fix
     delete container['_$litPart$'];
 
     if (code.length === 0) {
-      render(
-        html`<span class="mermaid-block-empty-placeholder">Mermaid Diagram</span>`,
-        container
-      );
+      render(html`<span class="mermaid-block-empty-placeholder">Mermaid Diagram</span>`, container);
       return;
     }
 
@@ -117,10 +112,8 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
 
       const errorMessage = error instanceof Error ? error.message : 'Invalid diagram syntax';
       render(
-        html`<span class="mermaid-block-error-placeholder"
-          >Error: ${errorMessage}</span
-        >`,
-        container
+        html`<span class="mermaid-block-error-placeholder">Error: ${errorMessage}</span>`,
+        container,
       );
     }
   }
@@ -144,11 +137,7 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
     const diagramType = this.model.props.diagramType;
 
     return html`
-      <div
-        contenteditable="false"
-        class="mermaid-block-container"
-        @click=${this._handleClick}
-      >
+      <div contenteditable="false" class="mermaid-block-container" @click=${this._handleClick}>
         ${showDiagramType && diagramType
           ? html`<div class="mermaid-diagram-type-badge">${diagramType}</div>`
           : null}
@@ -200,7 +189,7 @@ export class MermaidBlockComponent extends CaptionedBlockComponent<MermaidBlockM
       () => {
         this.removeEditor(portal);
       },
-      { once: true }
+      { once: true },
     );
   }
 

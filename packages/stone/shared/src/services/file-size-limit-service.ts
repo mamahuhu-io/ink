@@ -6,14 +6,10 @@ export interface IFileSizeLimitService {
   onOverFileSize?: () => void;
 }
 
-export const FileSizeLimitProvider = createIdentifier<IFileSizeLimitService>(
-  'FileSizeLimitService'
-);
+export const FileSizeLimitProvider =
+  createIdentifier<IFileSizeLimitService>('FileSizeLimitService');
 
-export class FileSizeLimitService
-  extends Extension
-  implements IFileSizeLimitService
-{
+export class FileSizeLimitService extends Extension implements IFileSizeLimitService {
   // 2GB
   maxFileSize = 2 * 1024 * 1024 * 1024;
 

@@ -1,19 +1,7 @@
-import {
-  panelBaseStyle,
-  scrollbarStyle,
-} from '@ink/stone-shared/styles';
-import {
-  type ButtonPopperOptions,
-  createButtonPopper,
-} from '@ink/stone-shared/utils';
 import { WithDisposable } from '@ink/stone-global/lit';
-import {
-  css,
-  html,
-  LitElement,
-  type PropertyValues,
-  type TemplateResult,
-} from 'lit';
+import { panelBaseStyle, scrollbarStyle } from '@ink/stone-shared/styles';
+import { type ButtonPopperOptions, createButtonPopper } from '@ink/stone-shared/utils';
+import { css, html, LitElement, type PropertyValues, type TemplateResult } from 'lit';
 import { property, query } from 'lit/decorators.js';
 
 import type { EditorIconButton } from './icon-button.js';
@@ -44,7 +32,7 @@ export class EditorMenuButton extends WithDisposable(LitElement) {
             bubbles: false,
             cancelable: false,
             composed: true,
-          })
+          }),
         );
 
         if (opened) {

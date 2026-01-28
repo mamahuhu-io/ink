@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-std](../README.md) / gfx
 
@@ -26,8 +26,8 @@
 ## Variables
 
 - [gfxGroupCompatibleSymbol](variables/gfxGroupCompatibleSymbol.md)
-- [SURFACE\_TEXT\_UNIQ\_IDENTIFIER](variables/SURFACE_TEXT_UNIQ_IDENTIFIER.md)
-- [SURFACE\_YMAP\_UNIQ\_IDENTIFIER](variables/SURFACE_YMAP_UNIQ_IDENTIFIER.md)
+- [SURFACE_TEXT_UNIQ_IDENTIFIER](variables/SURFACE_TEXT_UNIQ_IDENTIFIER.md)
+- [SURFACE_YMAP_UNIQ_IDENTIFIER](variables/SURFACE_YMAP_UNIQ_IDENTIFIER.md)
 
 ## Functions
 

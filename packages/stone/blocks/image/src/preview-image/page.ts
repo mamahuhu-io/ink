@@ -1,6 +1,6 @@
+import { ImageIcon } from '@ink/stone-icons/lit';
 import type { ImageBlockModel } from '@ink/stone-model';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import { ImageIcon } from '@ink/stone-icons/lit';
 import { BlockComponent } from '@ink/stone-std';
 import { css, html } from 'lit';
 
@@ -14,10 +14,7 @@ export class ImagePlaceholderBlockComponent extends BlockComponent<ImageBlockMod
       box-sizing: border-box;
 
       border-radius: 8px;
-      background-color: ${unsafeCSSVarV2(
-        'layer/background/overlayPanel',
-        '#FBFBFC'
-      )};
+      background-color: ${unsafeCSSVarV2('layer/background/overlayPanel', '#FBFBFC')};
     }
 
     .placeholder-preview-content {
@@ -39,10 +36,7 @@ export class ImagePlaceholderBlockComponent extends BlockComponent<ImageBlockMod
   `;
 
   override renderBlock() {
-    return html`<div
-      class="ink-placeholder-preview-container"
-      contenteditable="false"
-    >
+    return html`<div class="ink-placeholder-preview-container" contenteditable="false">
       <div class="placeholder-preview-content">
         ${ImageIcon({ width: '24px', height: '24px' })}
         <span class="text">Image Block</span>

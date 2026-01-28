@@ -15,9 +15,7 @@ type Rect = {
 };
 
 export const SelectionLayerComponentName = 'ink-table-selection-layer';
-export class SelectionLayer extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class SelectionLayer extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   @property({ attribute: false })
   accessor selectionController!: SelectionController;
   @property({ attribute: false })
@@ -29,7 +27,7 @@ export class SelectionLayer extends SignalWatcher(
     rowStartIndex: number,
     rowEndIndex: number,
     columnStartIndex: number,
-    columnEndIndex: number
+    columnEndIndex: number,
   ) => Rect;
 
   selection$ = computed(() => {
@@ -52,7 +50,7 @@ export class SelectionLayer extends SignalWatcher(
         selection.rowStartIndex,
         selection.rowEndIndex,
         selection.columnStartIndex,
-        selection.columnEndIndex
+        selection.columnEndIndex,
       );
       return rect;
     }
@@ -89,7 +87,7 @@ export class SelectionLayer extends SignalWatcher(
     this.disposables.add(
       effect(() => {
         this.rect$.value = this.computeRect();
-      })
+      }),
     );
     const table = this.selectionController.host.querySelector('table');
     if (table) {

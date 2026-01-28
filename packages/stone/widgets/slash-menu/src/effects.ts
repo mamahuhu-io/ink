@@ -1,6 +1,6 @@
 import { INK_SLASH_MENU_WIDGET } from './consts';
-import { InnerSlashMenu, SlashMenu } from './slash-menu-popover';
 import { SlashMenuLinkPopup } from './slash-menu-link-popup';
+import { InnerSlashMenu, SlashMenu } from './slash-menu-popover';
 import { InkSlashMenuWidget } from './widget';
 
 export function effects() {

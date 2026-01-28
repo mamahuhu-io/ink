@@ -36,10 +36,10 @@ let id = 1;
  */
 export function KeymapExtension(
   keymapFactory: (std: BlockStdScope) => Record<string, UIEventHandler>,
-  options?: EventOptions
+  options?: EventOptions,
 ): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(KeymapIdentifier(`Keymap-${id++}`), {
         getter: keymapFactory,
         options,

@@ -10,12 +10,9 @@ export function effects() {
   customElements.define('ink-edgeless-image', ImageEdgelessBlockComponent);
   customElements.define('ink-page-image', ImageBlockPageComponent);
   customElements.define('ink-image-fallback-card', ImageBlockFallbackCard);
-  customElements.define(
-    'ink-placeholder-preview-image',
-    ImagePlaceholderBlockComponent
-  );
+  customElements.define('ink-placeholder-preview-image', ImagePlaceholderBlockComponent);
   customElements.define(
     'ink-edgeless-placeholder-preview-image',
-    ImageEdgelessPlaceholderBlockComponent
+    ImageEdgelessPlaceholderBlockComponent,
   );
 }

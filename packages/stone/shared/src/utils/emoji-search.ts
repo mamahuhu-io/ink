@@ -730,7 +730,7 @@ export const EMOJI_KEYWORDS: Record<string, string[]> = {
   '📶': ['signal', 'bars', 'mobile', 'wifi'],
   '🈁': ['here', 'japanese', 'katakana'],
   '🔣': ['symbols', 'input'],
-  'ℹ️': ['information', 'info', 'source'],
+  ℹ️: ['information', 'info', 'source'],
   '🔤': ['abc', 'alphabet', 'letters'],
   '🔡': ['lowercase', 'abcd', 'letters'],
   '🔠': ['uppercase', 'abcd', 'letters'],
@@ -1107,10 +1107,7 @@ export const EMOJI_KEYWORDS: Record<string, string[]> = {
  * @param emojiList - List of emojis to search through
  * @returns Array of matching emojis
  */
-export function searchEmojisByKeyword(
-  query: string,
-  emojiList?: string[]
-): string[] {
+export function searchEmojisByKeyword(query: string, emojiList?: string[]): string[] {
   const lowerQuery = query.toLowerCase().trim();
   if (!lowerQuery) return [];
 
@@ -1124,7 +1121,7 @@ export function searchEmojisByKeyword(
     if (seen.has(emoji)) continue;
 
     const keywords = EMOJI_KEYWORDS[emoji];
-    if (keywords?.some(k => k.includes(lowerQuery))) {
+    if (keywords?.some((k) => k.includes(lowerQuery))) {
       results.push(emoji);
       seen.add(emoji);
     }

@@ -1,10 +1,3 @@
-import { TableBlockModel, TextAlign } from '@ink/stone-model';
-import {
-  ActionPlacement,
-  blockCommentToolbarButton,
-  type ToolbarModuleConfig,
-  ToolbarModuleExtension,
-} from '@ink/stone-shared/services';
 import { renderToolbarSeparator } from '@ink/stone-components/toolbar';
 import {
   DeleteIcon,
@@ -12,6 +5,12 @@ import {
   TextAlignLeftIcon,
   TextAlignRightIcon,
 } from '@ink/stone-icons/lit';
+import { TextAlign } from '@ink/stone-model';
+import {
+  blockCommentToolbarButton,
+  type ToolbarModuleConfig,
+  ToolbarModuleExtension,
+} from '@ink/stone-shared/services';
 import { BlockFlavourIdentifier } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 
@@ -23,10 +22,7 @@ const trackBaseProps = {
   type: 'block',
 };
 
-const setSelectedColumnsTextAlign = (
-  block: TableBlockComponent,
-  textAlign: TextAlign
-) => {
+const setSelectedColumnsTextAlign = (block: TableBlockComponent, textAlign: TextAlign) => {
   const selected = block.selectionController.selected$.value;
   if (!selected) return;
 
@@ -44,21 +40,19 @@ const setSelectedColumnsTextAlign = (
     }
   } else if (selected.type === 'row') {
     // 选中行时，修改所有列
-    columnIds = columns.map(c => c.columnId);
+    columnIds = columns.map((c) => c.columnId);
   }
 
   if (columnIds.length > 0) {
     block.model.store.transact(() => {
-      columnIds.forEach(columnId => {
+      columnIds.forEach((columnId) => {
         block.dataManager.setColumnTextAlign(columnId, textAlign);
       });
     });
   }
 };
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
   const builtinToolbarConfig = {
     actions: [
       {

@@ -1,13 +1,9 @@
 import { RENDER_CARD_THROTTLE_MS } from '@ink/stone-block-embed';
 import { LoadingIcon } from '@ink/stone-components/icons';
-import { ThemeProvider } from '@ink/stone-shared/services';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { ResetIcon } from '@ink/stone-icons/lit';
-import {
-  BlockSelection,
-  isGfxBlockComponent,
-  ShadowlessElement,
-} from '@ink/stone-std';
+import { ThemeProvider } from '@ink/stone-shared/services';
+import { BlockSelection, isGfxBlockComponent, ShadowlessElement } from '@ink/stone-std';
 import { html, nothing } from 'lit';
 import { property, queryAsync } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -60,10 +56,7 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
       return false;
     }
     return (
-      !!syncedDoc &&
-      !syncedDoc.meta?.title.length &&
-      this.isNoteContentEmpty &&
-      this.isBannerEmpty
+      !!syncedDoc && !syncedDoc.meta?.title.length && this.isNoteContentEmpty && this.isBannerEmpty
     );
   }
 
@@ -83,14 +76,14 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
       () => {
         this._dragging = true;
       },
-      { global: true }
+      { global: true },
     );
     this.block.handleEvent(
       'dragEnd',
       () => {
         this._dragging = false;
       },
-      { global: true }
+      { global: true },
     );
 
     const { isCycle } = this.block.blockState;
@@ -108,25 +101,22 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
       this.disposables.add(
         syncedDoc.workspace.slots.docListUpdated.subscribe(() => {
           renderLinkedDocInCard(this);
-        })
+        }),
       );
       // Should throttle the blockUpdated event to avoid too many re-renders
       // Because the blockUpdated event is triggered too frequently at some cases
       this.disposables.add(
         syncedDoc.slots.blockUpdated.subscribe(
-          throttle(payload => {
+          throttle((payload) => {
             if (this._dragging) {
               return;
             }
-            if (
-              payload.type === 'update' &&
-              ['', 'caption', 'xywh'].includes(payload.props.key)
-            ) {
+            if (payload.type === 'update' && ['', 'caption', 'xywh'].includes(payload.props.key)) {
               return;
             }
             renderLinkedDocInCard(this);
-          }, RENDER_CARD_THROTTLE_MS)
-        )
+          }, RENDER_CARD_THROTTLE_MS),
+        ),
       );
     }
   }
@@ -156,11 +146,7 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
       SyncedDocDeletedBanner,
     } = getSyncedDocIcons(theme, this.editorMode);
 
-    const icon = error
-      ? SyncedDocErrorIcon
-      : isLoading
-        ? LoadingIcon()
-        : this.block.icon$.value;
+    const icon = error ? SyncedDocErrorIcon : isLoading ? LoadingIcon() : this.block.icon$.value;
     const title = isLoading ? 'Loading...' : this.block.title$;
 
     const showDefaultNoteContent = isLoading || error || isDeleted || isEmpty;
@@ -187,19 +173,12 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
           : SyncedDocEmptyBanner;
 
     return html`
-      <div
-        class="ink-embed-synced-doc-card ${cardClassMap}"
-        @click=${this._handleClick}
-      >
+      <div class="ink-embed-synced-doc-card ${cardClassMap}" @click=${this._handleClick}>
         <div class="ink-embed-synced-doc-card-content">
           <div class="ink-embed-synced-doc-card-content-title">
-            <div class="ink-embed-synced-doc-card-content-title-icon">
-              ${icon}
-            </div>
+            <div class="ink-embed-synced-doc-card-content-title-icon">${icon}</div>
 
-            <div class="ink-embed-synced-doc-card-content-title-text">
-              ${title}
-            </div>
+            <div class="ink-embed-synced-doc-card-content-title-text">${title}</div>
           </div>
 
           ${showDefaultNoteContent
@@ -232,11 +211,7 @@ export class EmbedSyncedDocCard extends WithDisposable(ShadowlessElement) {
         <div class="ink-embed-synced-doc-card-banner render"></div>
 
         ${showDefaultBanner
-          ? html`
-              <div class="ink-embed-synced-doc-card-banner default">
-                ${defaultBanner}
-              </div>
-            `
+          ? html` <div class="ink-embed-synced-doc-card-banner default">${defaultBanner}</div> `
           : nothing}
       </div>
     `;

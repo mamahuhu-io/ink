@@ -3,7 +3,7 @@ import { InlineDeltaToHtmlAdapterExtension } from '@ink/stone-shared/adapters';
 
 export const linkDeltaToHtmlAdapterMatcher = InlineDeltaToHtmlAdapterExtension({
   name: 'link',
-  match: delta => !!delta.attributes?.link,
+  match: (delta) => !!delta.attributes?.link,
   toAST: (delta, _) => {
     const hast: InlineHtmlAST = {
       type: 'text',

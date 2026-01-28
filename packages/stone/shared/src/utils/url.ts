@@ -1,18 +1,10 @@
 // https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
-const ALLOWED_SCHEMES = new Set([
-  'http',
-  'https',
-  'ftp',
-  'sftp',
-  'mailto',
-  'tel',
-]);
+const ALLOWED_SCHEMES = new Set(['http', 'https', 'ftp', 'sftp', 'mailto', 'tel']);
 
 // https://publicsuffix.org/
 const TLD_REGEXP = /(?:\.[a-zA-Z]+)?(\.[a-zA-Z]{2,})$/;
 
-const IPV4_ADDR_REGEXP =
-  /^(25[0-5]|2[0-4]\d|[01]?\d\d?)(\.(25[0-5]|2[0-4]\d|[01]?\d\d?)){3}$/;
+const IPV4_ADDR_REGEXP = /^(25[0-5]|2[0-4]\d|[01]?\d\d?)(\.(25[0-5]|2[0-4]\d|[01]?\d\d?)){3}$/;
 
 const toURL = (str: string) => {
   try {

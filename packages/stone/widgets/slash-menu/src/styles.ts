@@ -42,10 +42,7 @@ export const styles = css`
     font-weight: 500;
     line-height: var(--ink-line-height);
     text-align: left;
-    color: var(
-      --light-textColor-textSecondaryColor,
-      var(--textColor-textSecondaryColor, #8e8d91)
-    );
+    color: var(--light-textColor-textSecondaryColor, var(--textColor-textSecondaryColor, #8e8d91));
   }
 
   .slash-menu-item {
@@ -98,10 +95,7 @@ export const slashItemToolTipStyle = css`
 
   .tooltip-caption {
     padding-left: 4px;
-    color: var(
-      --light-textColor-textSecondaryColor,
-      var(--textColor-textSecondaryColor, #8e8d91)
-    );
+    color: var(--light-textColor-textSecondaryColor, var(--textColor-textSecondaryColor, #8e8d91));
     font-family: var(--ink-font-family);
     font-size: var(--ink-font-xs);
     line-height: var(--ink-line-height);

@@ -7,8 +7,7 @@ import type { InkDragHandleWidget } from '../drag-handle.js';
 
 export class HandleEventWatcher {
   private readonly _onDragHandlePointerDown = () => {
-    if (!this.widget.isBlockDragHandleVisible || !this.widget.anchorBlockId)
-      return;
+    if (!this.widget.isBlockDragHandleVisible || !this.widget.anchorBlockId) return;
 
     this.widget.dragHoverRect = this.widget.draggingAreaRect.value;
   };
@@ -36,8 +35,7 @@ export class HandleEventWatcher {
 
       this.widget.isDragHandleHovered = true;
     } else if (this.widget.isGfxDragHandleVisible) {
-      this.widget.dragHoverRect =
-        this.widget.edgelessWatcher.hoveredElemAreaRect;
+      this.widget.dragHoverRect = this.widget.edgelessWatcher.hoveredElemAreaRect;
       this.widget.isDragHandleHovered = true;
     }
   };
@@ -65,29 +63,13 @@ export class HandleEventWatcher {
 
     // When pointer enter drag handle grabber
     // Extend drag handle grabber to the height of the hovered block
-    disposables.addFromEvent(
-      dragHandleContainer,
-      'pointerenter',
-      this._onDragHandlePointerEnter
-    );
+    disposables.addFromEvent(dragHandleContainer, 'pointerenter', this._onDragHandlePointerEnter);
 
-    disposables.addFromEvent(
-      dragHandleContainer,
-      'pointerdown',
-      this._onDragHandlePointerDown
-    );
+    disposables.addFromEvent(dragHandleContainer, 'pointerdown', this._onDragHandlePointerDown);
 
-    disposables.addFromEvent(
-      dragHandleContainer,
-      'pointerup',
-      this._onDragHandlePointerUp
-    );
+    disposables.addFromEvent(dragHandleContainer, 'pointerup', this._onDragHandlePointerUp);
 
     // When pointer leave drag handle grabber, should reset drag handle grabber style
-    disposables.addFromEvent(
-      dragHandleContainer,
-      'pointerleave',
-      this._onDragHandlePointerLeave
-    );
+    disposables.addFromEvent(dragHandleContainer, 'pointerleave', this._onDragHandlePointerLeave);
   }
 }

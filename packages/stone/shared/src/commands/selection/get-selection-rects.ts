@@ -39,7 +39,7 @@ export const getSelectionRectsCommand: Command<
     blockSelections = ctx.currentBlockSelections;
   } else {
     console.error(
-      'No selection provided, may forgot to call getTextSelection or getBlockSelections or provide the selection directly.'
+      'No selection provided, may forgot to call getTextSelection or getBlockSelections or provide the selection directly.',
     );
     return;
   }
@@ -59,7 +59,7 @@ export const getSelectionRectsCommand: Command<
     }
   } else if (blockSelections && blockSelections.length > 0) {
     const result = blockSelections
-      .map(blockSelection => {
+      .map((blockSelection) => {
         const block = std.view.getBlock(blockSelection.blockId);
         if (!block) return null;
 
@@ -68,16 +68,12 @@ export const getSelectionRectsCommand: Command<
         return {
           width: rect.width,
           height: rect.height,
-          top:
-            rect.top - (containerRect?.top ?? 0) + (container?.scrollTop ?? 0),
-          left:
-            rect.left -
-            (containerRect?.left ?? 0) +
-            (container?.scrollLeft ?? 0),
+          top: rect.top - (containerRect?.top ?? 0) + (container?.scrollTop ?? 0),
+          left: rect.left - (containerRect?.left ?? 0) + (container?.scrollLeft ?? 0),
           blockId: blockSelection.blockId,
         };
       })
-      .filter(rect => !!rect);
+      .filter((rect) => !!rect);
 
     return next({ selectionRects: result });
   }
@@ -164,21 +160,17 @@ export function filterCoveringRects(rects: SelectionRect[]): SelectionRect[] {
   return mergedRects;
 }
 
-export function getRangeRects(
-  range: Range,
-  container: HTMLElement | null
-): SelectionRect[] {
+export function getRangeRects(range: Range, container: HTMLElement | null): SelectionRect[] {
   const nativeRects = Array.from(range.getClientRects());
   const containerRect = container?.getBoundingClientRect();
   const rectsWithoutFiltered = nativeRects
-    .map(rect => ({
+    .map((rect) => ({
       width: rect.right - rect.left,
       height: rect.bottom - rect.top,
       top: rect.top - (containerRect?.top ?? 0) + (container?.scrollTop ?? 0),
-      left:
-        rect.left - (containerRect?.left ?? 0) + (container?.scrollLeft ?? 0),
+      left: rect.left - (containerRect?.left ?? 0) + (container?.scrollLeft ?? 0),
     }))
-    .filter(rect => rect.width > 0 && rect.height > 0);
+    .filter((rect) => rect.width > 0 && rect.height > 0);
 
   return filterCoveringRects(rectsWithoutFiltered);
 }

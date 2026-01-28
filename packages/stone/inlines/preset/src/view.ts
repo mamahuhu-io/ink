@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 
 import { DefaultInlineManagerExtension } from './default-inline-manager';
 import { effects } from './effects';

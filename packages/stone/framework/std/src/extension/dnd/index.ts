@@ -77,10 +77,8 @@ export type DraggableOption<
    * @see {@link ElementGetFeedbackArgs} for callback arguments
    */
   setExternalDragData?: (
-    args: ElementGetFeedbackArgs
-  ) => ReturnType<
-    Required<OriginalDraggableOption>['getInitialDataForExternal']
-  >;
+    args: ElementGetFeedbackArgs,
+  ) => ReturnType<Required<OriginalDraggableOption>['getInitialDataForExternal']>;
 
   /**
    * Set custom drag preview for the draggable element.
@@ -114,19 +112,15 @@ export type DraggableOption<
   setDragPreview?:
     | false
     | ((
-        options: ElementDragEventBaseArgs<
-          DragPayload<PayloadEntity, PayloadFrom>
-        > & {
+        options: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>> & {
           /**
            * Allows you to use the native `setDragImage` function if you want
            * Although, we recommend using alternative techniques (see element adapter docs)
            */
           nativeSetDragImage: DataTransfer['setDragImage'] | null;
           container: HTMLElement;
-          setOffset: (
-            offset: 'preserve' | 'center' | { x: number; y: number }
-          ) => void;
-        }
+          setOffset: (offset: 'preserve' | 'center' | { x: number; y: number }) => void;
+        },
       ) => void | (() => void));
 } & ElementDragEventMap<DragPayload<PayloadEntity, PayloadFrom>, DropPayload>;
 
@@ -149,28 +143,28 @@ export type DropTargetOption<
    * {@link OriginalDropTargetOption.getDropEffect}
    */
   getDropEffect?: (
-    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => DropTargetRecord['dropEffect'];
 
   /**
    * {@link OriginalDropTargetOption.canDrop}
    */
   canDrop?: (
-    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => boolean;
 
   /**
    * {@link OriginalDropTargetOption.getData}
    */
   setDropData?: (
-    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => DropPayload;
 
   /**
    * {@link OriginalDropTargetOption.getIsSticky}
    */
   getIsSticky?: (
-    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDropTargetFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => boolean;
 } & ElementDropEventMap<DragPayload<PayloadEntity, PayloadFrom>, DropPayload>;
 
@@ -183,28 +177,23 @@ export type MonitorOption<
    * {@link OriginalMonitorOption.canMonitor}
    */
   canMonitor?: (
-    args: ElementMonitorFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementMonitorFeedbackArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => boolean;
 } & ElementDragEventMap<DragPayload<PayloadEntity, PayloadFrom>, DropPayload>;
 
-export type AutoScroll<
-  PayloadEntity extends DragEntity,
-  PayloadFrom extends DragFrom,
-> = {
+export type AutoScroll<PayloadEntity extends DragEntity, PayloadFrom extends DragFrom> = {
   element: HTMLElement;
-  canScroll?: (
-    args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>
-  ) => void;
+  canScroll?: (args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>) => void;
   getAllowedAxis?: (
-    args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => ReturnType<Required<OriginalAutoScrollOption>['getAllowedAxis']>;
   getConfiguration?: (
-    args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>
+    args: ElementDragEventBaseArgs<DragPayload<PayloadEntity, PayloadFrom>>,
   ) => ReturnType<Required<OriginalAutoScrollOption>['getConfiguration']>;
 };
 
 export const DndExtensionIdentifier = LifeCycleWatcherIdentifier(
-  'DndController'
+  'DndController',
 ) as ServiceIdentifier<DndController>;
 
 export class DndController extends LifeCycleWatcher {
@@ -213,36 +202,20 @@ export class DndController extends LifeCycleWatcher {
   /**
    * Make an element draggable.
    */
-  draggable<
-    PayloadEntity extends DragEntity = DragEntity,
-    DropData extends {} = {},
-  >(
-    args: DraggableOption<
-      PayloadEntity,
-      DragFromInkStone,
-      DropPayload<DropData>
-    >
+  draggable<PayloadEntity extends DragEntity = DragEntity, DropData extends {} = {}>(
+    args: DraggableOption<PayloadEntity, DragFromInkStone, DropPayload<DropData>>,
   ) {
-    const {
-      setDragData,
-      setExternalDragData,
-      setDragPreview,
-      element,
-      dragHandle,
-      ...rest
-    } = args;
+    const { setDragData, setExternalDragData, setDragPreview, element, dragHandle, ...rest } = args;
 
     return draggable({
       ...(rest as Partial<OriginalDraggableOption>),
       element,
       dragHandle,
-      onGenerateDragPreview: options => {
+      onGenerateDragPreview: (options) => {
         if (setDragPreview) {
           let state: typeof centerUnderPointer | { x: number; y: number };
 
-          const setOffset = (
-            offset: 'preserve' | 'center' | { x: number; y: number }
-          ) => {
+          const setOffset = (offset: 'preserve' | 'center' | { x: number; y: number }) => {
             if (offset === 'center') {
               state = centerUnderPointer;
             } else if (offset === 'preserve') {
@@ -258,14 +231,8 @@ export class DndController extends LifeCycleWatcher {
                 typeof offset.y === 'string'
               ) {
                 state = pointerOutsideOfPreview({
-                  x:
-                    typeof offset.x === 'number'
-                      ? `${Math.abs(offset.x)}px`
-                      : offset.x,
-                  y:
-                    typeof offset.y === 'number'
-                      ? `${Math.abs(offset.y)}px`
-                      : offset.y,
+                  x: typeof offset.x === 'number' ? `${Math.abs(offset.x)}px` : offset.x,
+                  y: typeof offset.y === 'number' ? `${Math.abs(offset.y)}px` : offset.y,
                 });
               }
               state = offset;
@@ -284,7 +251,7 @@ export class DndController extends LifeCycleWatcher {
 
               return state;
             },
-            render: renderOption => {
+            render: (renderOption) => {
               setDragPreview({
                 setOffset,
                 ...options,
@@ -299,7 +266,7 @@ export class DndController extends LifeCycleWatcher {
           });
         }
       },
-      getInitialData: options => {
+      getInitialData: (options) => {
         const bsEntity = setDragData?.(options) ?? {};
 
         return {
@@ -311,7 +278,7 @@ export class DndController extends LifeCycleWatcher {
         };
       },
       getInitialDataForExternal: setExternalDragData
-        ? options => {
+        ? (options) => {
             return setExternalDragData?.(options);
           }
         : undefined,
@@ -335,14 +302,14 @@ export class DndController extends LifeCycleWatcher {
 
     return dropTargetForElements({
       element,
-      getData: options => {
+      getData: (options) => {
         const data = setDropData?.(options) ?? {};
         const edge = extractClosestEdge(
           attachClosestEdge(data, {
             element: options.element,
             input: options.input,
             allowedEdges: allowDropPosition,
-          })
+          }),
         );
 
         return edge

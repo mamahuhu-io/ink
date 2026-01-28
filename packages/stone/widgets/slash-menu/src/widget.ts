@@ -1,6 +1,6 @@
+import { DisposableGroup } from '@ink/stone-global/disposable';
 import { getInlineEditorByModel } from '@ink/stone-rich-text';
 import type { InkInlineEditor } from '@ink/stone-shared/types';
-import { DisposableGroup } from '@ink/stone-global/disposable';
 import type { UIEventStateContext } from '@ink/stone-std';
 import { TextSelection, WidgetComponent } from '@ink/stone-std';
 import { InlineEditor } from '@ink/stone-std/inline';
@@ -33,9 +33,7 @@ const showSlashMenu = debounce(
   }) => {
     globalAbortController = abortController;
     const disposables = new DisposableGroup();
-    abortController.signal.addEventListener('abort', () =>
-      disposables.dispose()
-    );
+    abortController.signal.addEventListener('abort', () => disposables.dispose());
 
     const inlineEditor = getInlineEditorByModel(context.std, context.model);
     if (!inlineEditor) return;
@@ -45,7 +43,7 @@ const showSlashMenu = debounce(
     slashMenu.items = buildSlashMenuItems(
       typeof config.items === 'function' ? config.items(context) : config.items,
       context,
-      configItemTransform
+      configItemTransform,
     );
 
     // FIXME(Flrande): It is not a best practice,
@@ -55,13 +53,11 @@ const showSlashMenu = debounce(
     return slashMenu;
   },
   100,
-  { leading: true }
+  { leading: true },
 );
 
 export class InkSlashMenuWidget extends WidgetComponent {
-  private readonly _getInlineEditor = (
-    evt: KeyboardEvent | CompositionEvent
-  ) => {
+  private readonly _getInlineEditor = (evt: KeyboardEvent | CompositionEvent) => {
     if (evt.target instanceof HTMLElement) {
       const editor = (
         evt.target.closest('.inline-editor') as {
@@ -82,21 +78,16 @@ export class InkSlashMenuWidget extends WidgetComponent {
     return getInlineEditorByModel(this.std, model);
   };
 
-  private readonly _handleInput = (
-    inlineEditor: InlineEditor,
-    isCompositionEnd: boolean
-  ) => {
+  private readonly _handleInput = (inlineEditor: InlineEditor, isCompositionEnd: boolean) => {
     const inlineRangeApplyCallback = (callback: () => void) => {
       // the inline ranged updated in compositionEnd event before this event callback
       if (isCompositionEnd) {
         callback();
       } else {
-        const subscription = inlineEditor.slots.inlineRangeSync.subscribe(
-          () => {
-            subscription.unsubscribe();
-            callback();
-          }
-        );
+        const subscription = inlineEditor.slots.inlineRangeSync.subscribe(() => {
+          subscription.unsubscribe();
+          callback();
+        });
       }
     };
 
@@ -123,9 +114,7 @@ export class InkSlashMenuWidget extends WidgetComponent {
 
       const [leafStart, offsetStart] = textPoint;
 
-      const text = leafStart.textContent
-        ? leafStart.textContent.slice(0, offsetStart)
-        : '';
+      const text = leafStart.textContent ? leafStart.textContent.slice(0, offsetStart) : '';
 
       if (!text.endsWith(INK_SLASH_MENU_TRIGGER_KEY)) return;
 
@@ -172,7 +161,7 @@ export class InkSlashMenuWidget extends WidgetComponent {
 
   // TODO(@L-Sun): Remove this when moving each config item to corresponding blocks
   // This is a temporary way for patching the slash menu config
-  configItemTransform: (item: SlashMenuItem) => SlashMenuItem = item => item;
+  configItemTransform: (item: SlashMenuItem) => SlashMenuItem = (item) => item;
 
   override connectedCallback() {
     super.connectedCallback();

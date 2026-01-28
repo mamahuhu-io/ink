@@ -1,36 +1,30 @@
-import { ColorScheme } from "@ink/stone-model";
-import type { RichText } from "@ink/stone-rich-text";
-import { ThemeProvider } from "@ink/stone-shared/services";
-import { unsafeCSSVar } from "@ink/stone-shared/theme";
-import type { InkTextAttributes } from "@ink/stone-shared/types";
-import { SignalWatcher, WithDisposable } from "@ink/stone-global/lit";
-import { noop } from "@ink/stone-global/utils";
-import { DoneIcon } from "@ink/stone-icons/lit";
-import { type BlockStdScope, ShadowlessElement } from "@ink/stone-std";
-import { InlineManagerExtension } from "@ink/stone-std/inline";
-import { effect, type Signal, signal } from "@preact/signals-core";
-import { css, html } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
-import { property } from "lit/decorators.js";
-import { codeToTokensBase, type ThemedToken } from "shiki";
-import * as Y from "yjs";
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { noop } from '@ink/stone-global/utils';
+import { DoneIcon } from '@ink/stone-icons/lit';
+import { ColorScheme } from '@ink/stone-model';
+import type { RichText } from '@ink/stone-rich-text';
+import { ThemeProvider } from '@ink/stone-shared/services';
+import { unsafeCSSVar } from '@ink/stone-shared/theme';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
+import { type BlockStdScope, ShadowlessElement } from '@ink/stone-std';
+import { InlineManagerExtension } from '@ink/stone-std/inline';
+import { effect, type Signal, signal } from '@preact/signals-core';
+import { css, html } from 'lit';
+import { property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { codeToTokensBase, type ThemedToken } from 'shiki';
+import * as Y from 'yjs';
 
-import { MermaidEditorUnitSpecExtension } from "./inline-spec.js";
-import {
-  MermaidBlockService,
-  MermaidBlockServiceIdentifier,
-} from "./mermaid-block-service.js";
+import { MermaidEditorUnitSpecExtension } from './inline-spec.js';
+import { MermaidBlockService, MermaidBlockServiceIdentifier } from './mermaid-block-service.js';
 
-export const MermaidEditorInlineManagerExtension =
-  InlineManagerExtension<InkTextAttributes>({
-    id: "mermaid-inline-editor",
-    enableMarkdown: false,
-    specs: [MermaidEditorUnitSpecExtension.identifier],
-  });
+export const MermaidEditorInlineManagerExtension = InlineManagerExtension<InkTextAttributes>({
+  id: 'mermaid-inline-editor',
+  enableMarkdown: false,
+  specs: [MermaidEditorUnitSpecExtension.identifier],
+});
 
-export class MermaidEditorMenu extends SignalWatcher(
-  WithDisposable(ShadowlessElement),
-) {
+export class MermaidEditorMenu extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     .mermaid-editor-container {
       display: grid;
@@ -43,8 +37,8 @@ export class MermaidEditorMenu extends SignalWatcher(
 
       padding: 8px;
       border-radius: 8px;
-      border: 0.5px solid ${unsafeCSSVar("borderColor")};
-      background: ${unsafeCSSVar("backgroundOverlayPanelColor")};
+      border: 0.5px solid ${unsafeCSSVar('borderColor')};
+      background: ${unsafeCSSVar('backgroundOverlayPanelColor')};
 
       box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.14);
     }
@@ -57,17 +51,17 @@ export class MermaidEditorMenu extends SignalWatcher(
       padding: 4px 10px;
 
       border-radius: 4px;
-      background: ${unsafeCSSVar("white10")};
+      background: ${unsafeCSSVar('white10')};
 
       box-shadow: 0px 0px 0px 2px rgba(30, 150, 235, 0.3);
 
-      font-family: ${unsafeCSSVar("fontCodeFamily")};
+      font-family: ${unsafeCSSVar('fontCodeFamily')};
       border: 1px solid transparent;
 
       overflow-y: auto;
     }
     .mermaid-editor:focus-within {
-      border: 1px solid ${unsafeCSSVar("blue700")};
+      border: 1px solid ${unsafeCSSVar('blue700')};
     }
 
     .mermaid-editor-confirm {
@@ -84,7 +78,7 @@ export class MermaidEditorMenu extends SignalWatcher(
       padding: 12px;
       margin-top: 8px;
       border-radius: 4px;
-      background: ${unsafeCSSVar("white10")};
+      background: ${unsafeCSSVar('white10')};
       display: none
       align-items: center;
       justify-content: center;
@@ -96,13 +90,13 @@ export class MermaidEditorMenu extends SignalWatcher(
     }
 
     .mermaid-editor-preview-error {
-      color: ${unsafeCSSVar("errorColor")};
+      color: ${unsafeCSSVar('errorColor')};
       font-size: 12px;
       padding: 12px;
     }
 
     .mermaid-editor-preview-empty {
-      color: ${unsafeCSSVar("placeholderColor")};
+      color: ${unsafeCSSVar('placeholderColor')};
       font-size: 12px;
     }
 
@@ -110,7 +104,7 @@ export class MermaidEditorMenu extends SignalWatcher(
       grid-area: hint-box;
       padding-top: 6px;
 
-      color: ${unsafeCSSVar("placeholderColor")};
+      color: ${unsafeCSSVar('placeholderColor')};
 
       font-family: "SF Pro Text";
       font-size: 12px;
@@ -133,19 +127,19 @@ export class MermaidEditorMenu extends SignalWatcher(
   }
 
   get richText() {
-    return this.querySelector<RichText>("rich-text");
+    return this.querySelector<RichText>('rich-text');
   }
 
   private readonly _getVerticalScrollContainer = () => {
-    return this.querySelector(".mermaid-editor");
+    return this.querySelector('.mermaid-editor');
   };
 
   private _updateHighlightTokens(text: string) {
     const editorTheme = this.std.get(ThemeProvider).theme;
-    const theme = editorTheme === ColorScheme.Dark ? "dark-plus" : "light-plus";
+    const theme = editorTheme === ColorScheme.Dark ? 'dark-plus' : 'light-plus';
 
     codeToTokensBase(text, {
-      lang: "mermaid",
+      lang: 'mermaid',
       theme,
     })
       .then((token) => {
@@ -162,7 +156,7 @@ export class MermaidEditorMenu extends SignalWatcher(
     }
 
     try {
-      const svg = await this._mermaidService.render(text, "auto");
+      const svg = await this._mermaidService.render(text, 'auto');
       this.previewSvg$.value = svg;
       this.previewError$.value = null;
 
@@ -173,8 +167,7 @@ export class MermaidEditorMenu extends SignalWatcher(
       }
     } catch (error) {
       this.previewSvg$.value = null;
-      this.previewError$.value =
-        error instanceof Error ? error.message : "Invalid diagram syntax";
+      this.previewError$.value = error instanceof Error ? error.message : 'Invalid diagram syntax';
     }
   }
 
@@ -184,7 +177,7 @@ export class MermaidEditorMenu extends SignalWatcher(
     this._mermaidService = this.std.get(MermaidBlockServiceIdentifier);
 
     const doc = new Y.Doc();
-    this.yText = doc.getText("mermaid");
+    this.yText = doc.getText('mermaid');
     this.yText.insert(0, this.codeSignal.value);
 
     const yTextObserver = () => {
@@ -213,18 +206,18 @@ export class MermaidEditorMenu extends SignalWatcher(
       }),
     );
 
-    this.disposables.addFromEvent(this, "keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
+    this.disposables.addFromEvent(this, 'keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
         this.abortController.abort();
       }
     });
 
-    this.disposables.addFromEvent(this, "pointerdown", (e) => {
+    this.disposables.addFromEvent(this, 'pointerdown', (e) => {
       e.stopPropagation();
     });
-    this.disposables.addFromEvent(this, "pointerup", (e) => {
+    this.disposables.addFromEvent(this, 'pointerup', (e) => {
       e.stopPropagation();
     });
 
@@ -260,25 +253,19 @@ export class MermaidEditorMenu extends SignalWatcher(
       <div class="mermaid-editor-confirm">
         <span @click=${() => this.abortController.abort()}
           >${DoneIcon({
-            width: "24",
-            height: "24",
+            width: '24',
+            height: '24',
           })}</span
         >
       </div>
       <div class="mermaid-editor-preview">
         ${previewError
-          ? html`<div class="mermaid-editor-preview-error">
-              ${previewError}
-            </div>`
+          ? html`<div class="mermaid-editor-preview-error">${previewError}</div>`
           : previewSvg
             ? html`<div>${unsafeHTML(previewSvg)}</div>`
-            : html`<div class="mermaid-editor-preview-empty">
-                Preview will appear here
-              </div>`}
+            : html`<div class="mermaid-editor-preview-empty">Preview will appear here</div>`}
       </div>
-      <div class="mermaid-editor-hint">
-        Shift Enter to line break, Enter to confirm
-      </div>
+      <div class="mermaid-editor-hint">Shift Enter to line break, Enter to confirm</div>
     </div>`;
   }
 

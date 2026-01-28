@@ -1,22 +1,13 @@
 import { whenHover } from '@ink/stone-components/hover';
 import { Peekable } from '@ink/stone-components/peek';
-import type { ReferenceInfo } from '@ink/stone-model';
-import {
-  DEFAULT_DOC_NAME,
-  REFERENCE_NODE,
-} from '@ink/stone-shared/consts';
-import {
-  DocDisplayMetaProvider,
-  ToolbarRegistryIdentifier,
-} from '@ink/stone-shared/services';
-import { inkTextStyles } from '@ink/stone-shared/styles';
-import type { InkTextAttributes } from '@ink/stone-shared/types';
-import {
-  cloneReferenceInfo,
-  referenceToNode,
-} from '@ink/stone-shared/utils';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { LinkedPageIcon } from '@ink/stone-icons/lit';
+import type { ReferenceInfo } from '@ink/stone-model';
+import { DEFAULT_DOC_NAME, REFERENCE_NODE } from '@ink/stone-shared/consts';
+import { DocDisplayMetaProvider, ToolbarRegistryIdentifier } from '@ink/stone-shared/services';
+import { inkTextStyles } from '@ink/stone-shared/styles';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
+import { cloneReferenceInfo, referenceToNode } from '@ink/stone-shared/utils';
 import type { BlockComponent, BlockStdScope } from '@ink/stone-std';
 import { BLOCK_ID_ATTR, ShadowlessElement } from '@ink/stone-std';
 import {
@@ -82,9 +73,7 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
       return;
     }
 
-    const refMeta = doc.workspace.meta.docMetas.find(
-      doc => doc.id === refAttribute.pageId
-    );
+    const refMeta = doc.workspace.meta.docMetas.find((doc) => doc.id === refAttribute.pageId);
     this.refMeta = refMeta
       ? {
           ...refMeta,
@@ -98,25 +87,21 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
 
   get _icon() {
     const { pageId, params, title } = this.referenceInfo;
-    return this.std
-      .get(DocDisplayMetaProvider)
-      .icon(pageId, { params, title, referenced: true }).value;
+    return this.std.get(DocDisplayMetaProvider).icon(pageId, { params, title, referenced: true })
+      .value;
   }
 
   get _title() {
     const { pageId, params, title } = this.referenceInfo;
     return (
-      this.std
-        .get(DocDisplayMetaProvider)
-        .title(pageId, { params, title, referenced: true }).value || title
+      this.std.get(DocDisplayMetaProvider).title(pageId, { params, title, referenced: true })
+        .value || title
     );
   }
 
   get block() {
     if (!this.inlineEditor?.rootElement) return null;
-    const block = this.inlineEditor.rootElement.closest<BlockComponent>(
-      `[${BLOCK_ID_ATTR}]`
-    );
+    const block = this.inlineEditor.rootElement.closest<BlockComponent>(`[${BLOCK_ID_ATTR}]`);
     return block;
   }
 
@@ -130,9 +115,7 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
   }
 
   get inlineEditor() {
-    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(
-      `[${INLINE_ROOT_ATTR}]`
-    );
+    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(`[${INLINE_ROOT_ATTR}]`);
     return inlineRoot?.inlineEditor;
   }
 
@@ -157,14 +140,13 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
     this.std.getOptional(RefNodeSlotsProvider)?.docLinkClicked.next({
       ...this.referenceInfo,
       ...event,
-      openMode:
-        event?.event?.button === 1 ? 'open-in-new-tab' : event?.openMode,
+      openMode: event?.event?.button === 1 ? 'open-in-new-tab' : event?.openMode,
       host: this.std.host,
     });
   };
 
   _whenHover = whenHover(
-    hovered => {
+    (hovered) => {
       if (!this.config.interactable) return;
 
       const message$ = this.std.get(ToolbarRegistryIdentifier).message$;
@@ -182,7 +164,7 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
       message$.value = null;
       this._whenHover.setFloating();
     },
-    { enterDelay: 500 }
+    { enterDelay: 500 },
   );
 
   override connectedCallback() {
@@ -206,16 +188,14 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
 
     if (this.delta.insert !== REFERENCE_NODE) {
       console.error(
-        `Reference node must be initialized with '${REFERENCE_NODE}', but got '${this.delta.insert}'`
+        `Reference node must be initialized with '${REFERENCE_NODE}', but got '${this.delta.insert}'`,
       );
     }
 
     const doc = this.doc;
     if (doc) {
       this._disposables.add(
-        doc.workspace.slots.docListUpdated.subscribe(() =>
-          this._updateRefMeta(doc)
-        )
+        doc.workspace.slots.docListUpdated.subscribe(() => this._updateRefMeta(doc)),
       );
     }
 
@@ -225,9 +205,7 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
 
         // observe yText update
         this.disposables.add(
-          this.inlineEditor.slots.textChange.subscribe(() =>
-            this._updateRefMeta(doc)
-          )
+          this.inlineEditor.slots.textChange.subscribe(() => this._updateRefMeta(doc)),
         );
       })
       .catch(console.error);
@@ -272,14 +250,12 @@ export class InkReference extends WithDisposable(ShadowlessElement) {
             textDecoration: 'line-through',
             fill: 'var(--ink-text-disable-color)',
           }
-        : {}
+        : {},
     );
 
     const content = this.customContent
       ? this.customContent(this)
-      : html`${icon}<span
-            data-title=${ifDefined(title)}
-            class="ink-reference-title"
+      : html`${icon}<span data-title=${ifDefined(title)} class="ink-reference-title"
             >${title}</span
           >`;
 

@@ -1,9 +1,5 @@
+import { TextAlignCenterIcon, TextAlignLeftIcon, TextAlignRightIcon } from '@ink/stone-icons/lit';
 import { TextAlign } from '@ink/stone-model';
-import {
-  TextAlignCenterIcon,
-  TextAlignLeftIcon,
-  TextAlignRightIcon,
-} from '@ink/stone-icons/lit';
 import type { TemplateResult } from 'lit';
 
 // i18n translation getter - can be overridden by the application

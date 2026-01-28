@@ -73,14 +73,14 @@ export class InkMermaidViewer extends LitElement {
       this.shadowRoot!.innerHTML = '<div class="loading">Loading mermaid...</div>';
 
       const { default: mermaid } = await import('mermaid');
-      
+
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       mermaid.initialize({
         startOnLoad: false,
         theme: isDark ? 'dark' : 'default',
         securityLevel: 'loose', // Allow styles
       });
-      
+
       const id = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
       // @ts-expect-error mermaid types might mismatch slightly depending on version
       const { svg } = await mermaid.render(id, code);
@@ -106,5 +106,5 @@ declare global {
 
 export const MermaidPreviewExtension = CodeBlockPreviewExtension(
   'mermaid',
-  model => html`<ink-mermaid-viewer .model=${model}></ink-mermaid-viewer>`
+  (model) => html`<ink-mermaid-viewer .model=${model}></ink-mermaid-viewer>`,
 );

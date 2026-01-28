@@ -1,8 +1,4 @@
-import {
-  focusTextModel,
-  getInlineEditorByModel,
-  selectTextModel,
-} from '@ink/stone-rich-text';
+import { focusTextModel, getInlineEditorByModel, selectTextModel } from '@ink/stone-rich-text';
 import {
   BlockSelection,
   type BlockStdScope,
@@ -10,9 +6,7 @@ import {
   type UIEventHandler,
 } from '@ink/stone-std';
 
-export const textCommonKeymap = (
-  std: BlockStdScope
-): Record<string, UIEventHandler> => {
+export const textCommonKeymap = (std: BlockStdScope): Record<string, UIEventHandler> => {
   return {
     ArrowUp: () => {
       const text = std.selection.find(TextSelection);
@@ -28,7 +22,7 @@ export const textCommonKeymap = (
       if (!inline) return;
       return !inline.isLastLine(inline.getInlineRange());
     },
-    Escape: ctx => {
+    Escape: (ctx) => {
       const text = std.selection.find(TextSelection);
       if (!text) return;
 
@@ -36,7 +30,7 @@ export const textCommonKeymap = (
       ctx.get('keyboardState').raw.stopPropagation();
       return true;
     },
-    'Mod-a': ctx => {
+    'Mod-a': (ctx) => {
       const text = std.selection.find(TextSelection);
       if (!text) return;
 
@@ -45,10 +39,7 @@ export const textCommonKeymap = (
 
       ctx.get('keyboardState').raw.preventDefault();
 
-      if (
-        text.from.index === 0 &&
-        text.from.length === model.text.yText.length
-      ) {
+      if (text.from.index === 0 && text.from.length === model.text.yText.length) {
         selectBlock(std, text.from.blockId);
         return true;
       }
@@ -56,7 +47,7 @@ export const textCommonKeymap = (
       selectTextModel(std, text.from.blockId, 0, model.text.yText.length);
       return true;
     },
-    Enter: ctx => {
+    Enter: (ctx) => {
       const blocks = std.selection.filter(BlockSelection);
       const blockId = blocks.at(-1)?.blockId;
 
@@ -72,7 +63,5 @@ export const textCommonKeymap = (
 };
 
 function selectBlock(std: BlockStdScope, blockId: string) {
-  std.selection.setGroup('note', [
-    std.selection.create(BlockSelection, { blockId }),
-  ]);
+  std.selection.setGroup('note', [std.selection.create(BlockSelection, { blockId })]);
 }

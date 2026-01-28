@@ -1,8 +1,5 @@
 import { ParagraphBlockModel } from '@ink/stone-model';
-import {
-  calculateCollapsedSiblings,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { calculateCollapsedSiblings, matchModels } from '@ink/stone-shared/utils';
 import type { Command } from '@ink/stone-std';
 
 /**

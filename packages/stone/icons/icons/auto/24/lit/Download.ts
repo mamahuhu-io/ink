@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const Download =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const Download = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const Download =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M12.75 4.75a.75.75 0 0 0-1.5 0v8.69l-2.22-2.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 1 0-1.06-1.06l-2.22 2.22zm-8 6A.25.25 0 0 1 5 10.5h1A.75.75 0 0 0 6 9H5a1.75 1.75 0 0 0-1.75 1.75v7A2.75 2.75 0 0 0 6 20.5h12a2.75 2.75 0 0 0 2.75-2.75v-7A1.75 1.75 0 0 0 19 9h-1a.75.75 0 0 0 0 1.5h1a.25.25 0 0 1 .25.25v7c0 .69-.56 1.25-1.25 1.25H6c-.69 0-1.25-.56-1.25-1.25z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M12.75 4.75a.75.75 0 0 0-1.5 0v8.69l-2.22-2.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 1 0-1.06-1.06l-2.22 2.22zm-8 6A.25.25 0 0 1 5 10.5h1A.75.75 0 0 0 6 9H5a1.75 1.75 0 0 0-1.75 1.75v7A2.75 2.75 0 0 0 6 20.5h12a2.75 2.75 0 0 0 2.75-2.75v-7A1.75 1.75 0 0 0 19 9h-1a.75.75 0 0 0 0 1.5h1a.25.25 0 0 1 .25.25v7c0 .69-.56 1.25-1.25 1.25H6c-.69 0-1.25-.56-1.25-1.25z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default Download;

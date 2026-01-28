@@ -20,28 +20,20 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
       match?: (delta: DeltaInsert, deltaInlineRange: InlineRange) => boolean;
       mode?: 'replace' | 'merge';
       withoutTransact?: boolean;
-    } = {}
+    } = {},
   ): void => {
     if (this.editor.isReadonly) return;
 
-    const {
-      match = () => true,
-      mode = 'merge',
-      withoutTransact = false,
-    } = options;
+    const { match = () => true, mode = 'merge', withoutTransact = false } = options;
     const deltas = this.editor.deltaService.getDeltasByInlineRange(inlineRange);
 
     deltas
       .filter(([delta, deltaInlineRange]) => match(delta, deltaInlineRange))
       .forEach(([_delta, deltaInlineRange]) => {
-        const normalizedAttributes =
-          this.editor.attributeService.normalizeAttributes(attributes);
+        const normalizedAttributes = this.editor.attributeService.normalizeAttributes(attributes);
         if (!normalizedAttributes) return;
 
-        const targetInlineRange = intersectInlineRange(
-          inlineRange,
-          deltaInlineRange
-        );
+        const targetInlineRange = intersectInlineRange(inlineRange, deltaInlineRange);
         if (!targetInlineRange) return;
 
         if (mode === 'replace') {
@@ -52,7 +44,7 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
           this.yText.format(
             targetInlineRange.index,
             targetInlineRange.length,
-            normalizedAttributes
+            normalizedAttributes,
           );
         }, withoutTransact);
       });
@@ -70,7 +62,7 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
   insertText = (
     inlineRange: InlineRange,
     text: string,
-    attributes: TextAttributes = {} as TextAttributes
+    attributes: TextAttributes = {} as TextAttributes,
   ): void => {
     if (this.editor.isReadonly) return;
 
@@ -79,8 +71,7 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
     if (this.editor.attributeService.marks) {
       attributes = { ...attributes, ...this.editor.attributeService.marks };
     }
-    const normalizedAttributes =
-      this.editor.attributeService.normalizeAttributes(attributes);
+    const normalizedAttributes = this.editor.attributeService.normalizeAttributes(attributes);
 
     this.transact(() => {
       this.yText.delete(inlineRange.index, inlineRange.length);
@@ -92,11 +83,7 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
     if (this.editor.isReadonly) return;
 
     const coverDeltas: DeltaInsert[] = [];
-    for (
-      let i = inlineRange.index;
-      i <= inlineRange.index + inlineRange.length;
-      i++
-    ) {
+    for (let i = inlineRange.index; i <= inlineRange.index + inlineRange.length; i++) {
       const delta = this.editor.getDeltaByRangeIndex(i);
       if (delta) {
         coverDeltas.push(delta);
@@ -104,11 +91,9 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
     }
 
     const unset = Object.fromEntries(
-      coverDeltas.flatMap(delta =>
-        delta.attributes
-          ? Object.keys(delta.attributes).map(key => [key, null])
-          : []
-      )
+      coverDeltas.flatMap((delta) =>
+        delta.attributes ? Object.keys(delta.attributes).map((key) => [key, null]) : [],
+      ),
     );
 
     this.transact(() => {
@@ -118,10 +103,7 @@ export class InlineTextService<TextAttributes extends BaseTextAttributes> {
     });
   };
 
-  setText = (
-    text: string,
-    attributes: TextAttributes = {} as TextAttributes
-  ): void => {
+  setText = (text: string, attributes: TextAttributes = {} as TextAttributes): void => {
     if (this.editor.isReadonly) return;
 
     this.transact(() => {

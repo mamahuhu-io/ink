@@ -12,11 +12,11 @@ import {
  * @returns The plain text adapter matcher.
  */
 const createNoteBlockPlainTextAdapterMatcher = (
-  displayModeToSkip: NoteDisplayMode
+  displayModeToSkip: NoteDisplayMode,
 ): BlockPlainTextAdapterMatcher => ({
   flavour: NoteBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === NoteBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === NoteBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
@@ -28,14 +28,18 @@ const createNoteBlockPlainTextAdapterMatcher = (
   },
 });
 
-export const docNoteBlockPlainTextAdapterMatcher =
-  createNoteBlockPlainTextAdapterMatcher(NoteDisplayMode.EdgelessOnly);
+export const docNoteBlockPlainTextAdapterMatcher = createNoteBlockPlainTextAdapterMatcher(
+  NoteDisplayMode.EdgelessOnly,
+);
 
-export const edgelessNoteBlockPlainTextAdapterMatcher =
-  createNoteBlockPlainTextAdapterMatcher(NoteDisplayMode.DocOnly);
+export const edgelessNoteBlockPlainTextAdapterMatcher = createNoteBlockPlainTextAdapterMatcher(
+  NoteDisplayMode.DocOnly,
+);
 
-export const DocNoteBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(docNoteBlockPlainTextAdapterMatcher);
+export const DocNoteBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  docNoteBlockPlainTextAdapterMatcher,
+);
 
-export const EdgelessNoteBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(edgelessNoteBlockPlainTextAdapterMatcher);
+export const EdgelessNoteBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  edgelessNoteBlockPlainTextAdapterMatcher,
+);

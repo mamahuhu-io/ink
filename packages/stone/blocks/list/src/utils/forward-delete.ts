@@ -1,8 +1,5 @@
 import { ListBlockModel } from '@ink/stone-model';
-import {
-  getNextContentBlock,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { getNextContentBlock, matchModels } from '@ink/stone-shared/utils';
 import { type BlockStdScope, TextSelection } from '@ink/stone-std';
 import type { Text } from '@ink/stone-store';
 

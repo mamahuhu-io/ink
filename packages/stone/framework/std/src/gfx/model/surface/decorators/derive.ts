@@ -1,9 +1,5 @@
 import type { GfxPrimitiveElementModel } from '../element-model.js';
-import {
-  getDecoratorState,
-  getObjectPropMeta,
-  setObjectPropMeta,
-} from './common.js';
+import { getDecoratorState, getObjectPropMeta, setObjectPropMeta } from './common.js';
 
 const deriveSymbol = Symbol('derive');
 
@@ -11,17 +7,15 @@ const keys = Object.keys;
 
 function getDerivedMeta(
   proto: unknown,
-  prop: string | symbol
-):
-  | null
-  | ((propValue: unknown, instance: unknown) => Record<string, unknown>)[] {
+  prop: string | symbol,
+): null | ((propValue: unknown, instance: unknown) => Record<string, unknown>)[] {
   return getObjectPropMeta(proto, deriveSymbol, prop);
 }
 
 export function getDerivedProps(
   prop: string | symbol,
   propValue: unknown,
-  receiver: GfxPrimitiveElementModel
+  receiver: GfxPrimitiveElementModel,
 ) {
   const prototype = Object.getPrototypeOf(receiver);
   const decoratorState = getDecoratorState(receiver.surface);
@@ -43,19 +37,19 @@ export function getDerivedProps(
 
           return derivedProps;
         },
-        {} as Record<string, unknown>
+        {} as Record<string, unknown>,
       )
     : null;
 }
 
 export function updateDerivedProps(
   derivedProps: Record<string, unknown> | null,
-  receiver: GfxPrimitiveElementModel
+  receiver: GfxPrimitiveElementModel,
 ) {
   if (derivedProps) {
     const decoratorState = getDecoratorState(receiver.surface);
     decoratorState.deriving = true;
-    keys(derivedProps).forEach(key => {
+    keys(derivedProps).forEach((key) => {
       // @ts-expect-error ignore
       receiver[key] = derivedProps[key];
     });
@@ -78,12 +72,9 @@ export function updateDerivedProps(
  * @returns
  */
 export function derive<V, T extends GfxPrimitiveElementModel>(
-  fn: (propValue: any, instance: T) => Record<string, unknown>
+  fn: (propValue: any, instance: T) => Record<string, unknown>,
 ) {
-  return function deriveDecorator(
-    _: unknown,
-    context: ClassAccessorDecoratorContext
-  ) {
+  return function deriveDecorator(_: unknown, context: ClassAccessorDecoratorContext) {
     const prop = String(context.name);
     return {
       init(this: GfxPrimitiveElementModel, v: V) {

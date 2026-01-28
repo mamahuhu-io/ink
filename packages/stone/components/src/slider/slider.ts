@@ -1,6 +1,6 @@
-import { on, once } from '@ink/stone-shared/utils';
 import { clamp } from '@ink/stone-global/gfx';
 import { WithDisposable } from '@ink/stone-global/lit';
+import { on, once } from '@ink/stone-shared/utils';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -51,7 +51,7 @@ export class Slider extends WithDisposable(LitElement) {
         detail: { value },
         bubbles: true,
         composed: true,
-      }) satisfies SliderSelectEvent
+      }) satisfies SliderSelectEvent,
     );
   }
 
@@ -108,7 +108,7 @@ export class Slider extends WithDisposable(LitElement) {
     super.connectedCallback();
 
     this._disposables.addFromEvent(this, 'pointerdown', this._onPointerDown);
-    this._disposables.addFromEvent(this, 'click', e => {
+    this._disposables.addFromEvent(this, 'click', (e) => {
       e.stopPropagation();
     });
   }
@@ -128,7 +128,7 @@ export class Slider extends WithDisposable(LitElement) {
       style.setProperty('--count', `${this.range.points.length}`);
     }
     if (changedProperties.has('value')) {
-      const index = this.range.points.findIndex(p => p === this.value);
+      const index = this.range.points.findIndex((p) => p === this.value);
       style.setProperty('--cursor', `${index}`);
     }
   }
@@ -137,7 +137,7 @@ export class Slider extends WithDisposable(LitElement) {
     return html`<div class="slider-container">
       ${repeat(
         this.range.points,
-        w => w,
+        (w) => w,
         (w, n) =>
           html`<div
             class="point-button"
@@ -146,14 +146,12 @@ export class Slider extends WithDisposable(LitElement) {
             ?data-selected=${w <= this.value}
           >
             <div class="point-circle"></div>
-          </div>`
+          </div>`,
       )}
       <div class="drag-handle"></div>
       <div class="bottom-line"></div>
       <div class="slider-selected-overlay"></div>
-      ${this.tooltip
-        ? html`<ink-tooltip .offset=${8}>${this.tooltip}</ink-tooltip>`
-        : nothing}
+      ${this.tooltip ? html`<ink-tooltip .offset=${8}>${this.tooltip}</ink-tooltip>` : nothing}
     </div>`;
   }
 }

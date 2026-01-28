@@ -4,9 +4,8 @@ import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import { Extension } from '@ink/stone-store';
 import mermaid from 'mermaid';
 
-export const MermaidBlockServiceIdentifier = createIdentifier<MermaidBlockService>(
-  'MermaidBlockService'
-);
+export const MermaidBlockServiceIdentifier =
+  createIdentifier<MermaidBlockService>('MermaidBlockService');
 
 export class MermaidBlockService extends Extension {
   private _initialized = false;
@@ -88,7 +87,8 @@ export class MermaidBlockService extends Extension {
         errorTextColor: '#ffffff',
       },
       securityLevel: 'strict',
-      fontFamily: 'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+      fontFamily:
+        'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
       fontSize: 14,
     });
 
@@ -132,28 +132,28 @@ export class MermaidBlockService extends Extension {
 
     // Map of diagram type keywords to display names
     const typeMap: Record<string, string> = {
-      'flowchart': 'Flowchart',
-      'graph': 'Flowchart',
-      'sequencediagram': 'Sequence',
-      'classdiagram': 'Class',
-      'statediagram': 'State',
+      flowchart: 'Flowchart',
+      graph: 'Flowchart',
+      sequencediagram: 'Sequence',
+      classdiagram: 'Class',
+      statediagram: 'State',
       'statediagram-v2': 'State',
-      'erdiagram': 'ER',
-      'journey': 'Journey',
-      'gantt': 'Gantt',
-      'pie': 'Pie',
-      'quadrantchart': 'Quadrant',
-      'requirementdiagram': 'Requirement',
-      'gitgraph': 'Git',
-      'mindmap': 'Mindmap',
-      'timeline': 'Timeline',
-      'c4context': 'C4',
-      'c4container': 'C4',
-      'c4component': 'C4',
-      'c4dynamic': 'C4',
-      'c4deployment': 'C4',
-      'sankey': 'Sankey',
-      'xychart': 'XY Chart',
+      erdiagram: 'ER',
+      journey: 'Journey',
+      gantt: 'Gantt',
+      pie: 'Pie',
+      quadrantchart: 'Quadrant',
+      requirementdiagram: 'Requirement',
+      gitgraph: 'Git',
+      mindmap: 'Mindmap',
+      timeline: 'Timeline',
+      c4context: 'C4',
+      c4container: 'C4',
+      c4component: 'C4',
+      c4dynamic: 'C4',
+      c4deployment: 'C4',
+      sankey: 'Sankey',
+      xychart: 'XY Chart',
       'block-beta': 'Block',
       'packet-beta': 'Packet',
       'architecture-beta': 'Architecture',
@@ -171,7 +171,10 @@ export class MermaidBlockService extends Extension {
   /**
    * Get Mermaid theme configuration from CSS variables
    */
-  private _getMermaidThemeFromCSS(): { theme: string; themeVariables: Record<string, string> } | null {
+  private _getMermaidThemeFromCSS(): {
+    theme: string;
+    themeVariables: Record<string, string>;
+  } | null {
     const root = document.documentElement;
     const computedStyle = getComputedStyle(root);
 
@@ -277,7 +280,8 @@ export class MermaidBlockService extends Extension {
       mermaid.initialize({
         ...customTheme,
         securityLevel: 'strict',
-        fontFamily: 'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+        fontFamily:
+          'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
         fontSize: 14,
       });
     } else {
@@ -344,7 +348,8 @@ export class MermaidBlockService extends Extension {
             errorTextColor: '#1e1e20',
           },
           securityLevel: 'strict',
-          fontFamily: 'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+          fontFamily:
+            'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
           fontSize: 14,
         });
       } else {
@@ -410,7 +415,8 @@ export class MermaidBlockService extends Extension {
             errorTextColor: '#ffffff',
           },
           securityLevel: 'strict',
-          fontFamily: 'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+          fontFamily:
+            'var(--ink-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
           fontSize: 14,
         });
       }

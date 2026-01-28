@@ -1,10 +1,10 @@
+import { DisposableGroup } from '@ink/stone-global/disposable';
 import { copyMiddleware, titleMiddleware } from '@ink/stone-shared/adapters';
 import {
   copySelectedModelsCommand,
   draftSelectedModelsCommand,
   getSelectedModelsCommand,
 } from '@ink/stone-shared/commands';
-import { DisposableGroup } from '@ink/stone-global/disposable';
 import { LifeCycleWatcher, type UIEventHandler } from '@ink/stone-std';
 
 /**
@@ -28,21 +28,17 @@ export class ReadOnlyClipboard extends LifeCycleWatcher {
   protected _initAdapters = () => {
     const copy = copyMiddleware(this.std);
     this.std.clipboard.use(copy);
-    this.std.clipboard.use(
-      titleMiddleware(this.std.store.workspace.meta.docMetas)
-    );
+    this.std.clipboard.use(titleMiddleware(this.std.store.workspace.meta.docMetas));
 
     this._disposables.add({
       dispose: () => {
         this.std.clipboard.unuse(copy);
-        this.std.clipboard.unuse(
-          titleMiddleware(this.std.store.workspace.meta.docMetas)
-        );
+        this.std.clipboard.unuse(titleMiddleware(this.std.store.workspace.meta.docMetas));
       },
     });
   };
 
-  onPageCopy: UIEventHandler = ctx => {
+  onPageCopy: UIEventHandler = (ctx) => {
     const e = ctx.get('clipboardState').raw;
     e.preventDefault();
 
@@ -51,9 +47,7 @@ export class ReadOnlyClipboard extends LifeCycleWatcher {
 
   override mounted(): void {
     if (!navigator.clipboard) {
-      console.error(
-        'navigator.clipboard is not supported in current environment.'
-      );
+      console.error('navigator.clipboard is not supported in current environment.');
       return;
     }
     if (this._disposables.disposed) {

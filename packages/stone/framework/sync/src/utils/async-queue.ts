@@ -23,14 +23,14 @@ export class AsyncQueue<T> {
 
   async next(
     abort?: AbortSignal,
-    dequeue: (arr: T[]) => T | undefined = a => a.shift()
+    dequeue: (arr: T[]) => T | undefined = (a) => a.shift(),
   ): Promise<T> {
     const update = dequeue(this._queue);
     if (update) {
       return update;
     } else {
       if (!this._waitForUpdate) {
-        this._waitForUpdate = new Promise(resolve => {
+        this._waitForUpdate = new Promise((resolve) => {
           this._resolveUpdate = resolve;
         });
       }
@@ -69,22 +69,18 @@ export class AsyncQueue<T> {
   }
 }
 
-export class PriorityAsyncQueue<
-  T extends { id: string },
-> extends AsyncQueue<T> {
+export class PriorityAsyncQueue<T extends { id: string }> extends AsyncQueue<T> {
   constructor(
     init: T[] = [],
-    readonly priorityTarget: SharedPriorityTarget = new SharedPriorityTarget()
+    readonly priorityTarget: SharedPriorityTarget = new SharedPriorityTarget(),
   ) {
     super(init);
   }
 
   override next(abort?: AbortSignal | undefined): Promise<T> {
-    return super.next(abort, arr => {
+    return super.next(abort, (arr) => {
       if (this.priorityTarget.priorityRule !== null) {
-        const index = arr.findIndex(update =>
-          this.priorityTarget.priorityRule?.(update.id)
-        );
+        const index = arr.findIndex((update) => this.priorityTarget.priorityRule?.(update.id));
         if (index !== -1) {
           return arr.splice(index, 1)[0];
         }

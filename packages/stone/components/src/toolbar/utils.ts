@@ -6,22 +6,14 @@ import { repeat } from 'lit/directives/repeat.js';
 
 import { ToolbarMoreMenuConfigExtension } from './config.js';
 import type { MenuContext } from './menu-context.js';
-import type {
-  FatMenuItems,
-  MenuItem,
-  MenuItemGroup,
-  ToolbarMoreMenuConfig,
-} from './types.js';
+import type { FatMenuItems, MenuItem, MenuItemGroup, ToolbarMoreMenuConfig } from './types.js';
 
-export function groupsToActions<T>(
-  groups: MenuItemGroup<T>[],
-  context: T
-): MenuItem[][] {
+export function groupsToActions<T>(groups: MenuItemGroup<T>[], context: T): MenuItem[][] {
   return groups
-    .filter(group => group.when?.(context) ?? true)
+    .filter((group) => group.when?.(context) ?? true)
     .map(({ items }) =>
       items
-        .filter(item => item.when?.(context) ?? true)
+        .filter((item) => item.when?.(context) ?? true)
         .map(({ type, label, tooltip, icon, action, disabled, generate }) => {
           if (action && typeof action === 'function') {
             return {
@@ -32,8 +24,7 @@ export function groupsToActions<T>(
               action: () => {
                 action(context)?.catch(console.error);
               },
-              disabled:
-                typeof disabled === 'function' ? disabled(context) : disabled,
+              disabled: typeof disabled === 'function' ? disabled(context) : disabled,
             };
           }
 
@@ -53,53 +44,47 @@ export function groupsToActions<T>(
 
           return null;
         })
-        .filter(item => !!item)
+        .filter((item) => !!item),
     );
 }
 
 export function renderActions(
   fatMenuItems: FatMenuItems,
   action?: (item: MenuItem) => Promise<void> | void,
-  selectedName?: string
+  selectedName?: string,
 ) {
   return join(
     fatMenuItems
-      .filter(g => g.length)
-      .map(g => g.filter(a => a !== nothing) as MenuItem[])
-      .filter(g => g.length)
-      .map(items =>
+      .filter((g) => g.length)
+      .map((g) => g.filter((a) => a !== nothing) as MenuItem[])
+      .filter((g) => g.length)
+      .map((items) =>
         repeat(
           items,
-          item => item.type,
-          item =>
+          (item) => item.type,
+          (item) =>
             item.render?.(item) ??
             html`
               <editor-menu-action
-                class=${ifDefined(
-                  item.type === 'delete' ? 'delete' : undefined
-                )}
+                class=${ifDefined(item.type === 'delete' ? 'delete' : undefined)}
                 aria-label=${ifDefined(item.label)}
                 ?data-selected=${selectedName === item.label}
                 ?disabled=${item.disabled}
                 @click=${item.action ? item.action : () => action?.(item)}
               >
-                ${item.icon}${item.label
-                  ? html`<span class="label">${item.label}</span>`
-                  : nothing}
+                ${item.icon}${item.label ? html`<span class="label">${item.label}</span>` : nothing}
               </editor-menu-action>
-            `
-        )
+            `,
+        ),
       ),
     () => html`
-      <editor-toolbar-separator
-        data-orientation="horizontal"
-      ></editor-toolbar-separator>
-    `
+      <editor-toolbar-separator data-orientation="horizontal"></editor-toolbar-separator>
+    `,
   );
 }
 
 export function cloneGroups<T>(groups: MenuItemGroup<T>[]) {
-  return groups.map(group => ({ ...group, items: [...group.items] }));
+  return groups.map((group) => ({ ...group, items: [...group.items] }));
 }
 
 export function renderGroups<T>(groups: MenuItemGroup<T>[], context: T) {

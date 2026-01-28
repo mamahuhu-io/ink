@@ -1,7 +1,4 @@
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type StoreExtensionContext, StoreExtensionProvider } from '@ink/stone-ext-loader';
 import {
   HtmlAdapterFactoryExtension,
   MarkdownAdapterFactoryExtension,
@@ -10,10 +7,7 @@ import {
   PlainTextAdapterFactoryExtension,
 } from '@ink/stone-shared/adapters';
 import { HighlightSelectionExtension } from '@ink/stone-shared/selection';
-import {
-  BlockMetaService,
-  FeatureFlagService,
-} from '@ink/stone-shared/services';
+import { BlockMetaService, FeatureFlagService } from '@ink/stone-shared/services';
 import {
   BlockSelectionExtension,
   CursorSelectionExtension,

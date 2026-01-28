@@ -2,30 +2,30 @@
  * Image service - handles image storage and retrieval
  */
 
-import { isTauri } from './platform'
+import { isTauri } from './platform';
 
 /**
  * Generate a unique filename for an image
  */
 function generateImageFilename(extension: string): string {
-  const timestamp = Date.now()
-  const random = Math.random().toString(36).substring(2, 8)
-  return `image-${timestamp}-${random}.${extension}`
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 8);
+  return `image-${timestamp}-${random}.${extension}`;
 }
 
 /**
  * Generate a unique filename for an asset (preserving original name structure)
  */
 function generateAssetFilename(originalFileName: string): string {
-  const timestamp = Date.now()
-  const random = Math.random().toString(36).substring(2, 6)
-  const lastDotIndex = originalFileName.lastIndexOf('.')
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 6);
+  const lastDotIndex = originalFileName.lastIndexOf('.');
   if (lastDotIndex > 0) {
-    const name = originalFileName.substring(0, lastDotIndex)
-    const ext = originalFileName.substring(lastDotIndex + 1)
-    return `${name}-${timestamp}-${random}.${ext}`
+    const name = originalFileName.substring(0, lastDotIndex);
+    const ext = originalFileName.substring(lastDotIndex + 1);
+    return `${name}-${timestamp}-${random}.${ext}`;
   }
-  return `${originalFileName}-${timestamp}-${random}`
+  return `${originalFileName}-${timestamp}-${random}`;
 }
 
 /**
@@ -40,16 +40,16 @@ function getExtensionFromMime(mimeType: string): string {
     'image/webp': 'webp',
     'image/svg+xml': 'svg',
     'image/bmp': 'bmp',
-  }
-  return mimeToExt[mimeType] || 'png'
+  };
+  return mimeToExt[mimeType] || 'png';
 }
 
 /**
  * Get the directory containing a file
  */
 function getDirectory(filePath: string): string {
-  const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'))
-  return lastSep > 0 ? filePath.substring(0, lastSep) : filePath
+  const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+  return lastSep > 0 ? filePath.substring(0, lastSep) : filePath;
 }
 
 /**
@@ -57,11 +57,11 @@ function getDirectory(filePath: string): string {
  */
 export async function ensureAssetsDirectory(markdownPath: string): Promise<string> {
   if (!isTauri()) {
-    throw new Error('Assets directory only available in Tauri environment')
+    throw new Error('Assets directory only available in Tauri environment');
   }
 
-  const { invoke } = await import('@tauri-apps/api/core')
-  return await invoke<string>('ensure_assets_directory', { markdownPath })
+  const { invoke } = await import('@tauri-apps/api/core');
+  return await invoke<string>('ensure_assets_directory', { markdownPath });
 }
 
 /**
@@ -71,35 +71,35 @@ export async function ensureAssetsDirectory(markdownPath: string): Promise<strin
 export async function saveImage(
   markdownPath: string,
   imageBlob: Blob,
-  originalFileName?: string
+  originalFileName?: string,
 ): Promise<string> {
   if (!isTauri()) {
-    throw new Error('Image saving only available in Tauri environment')
+    throw new Error('Image saving only available in Tauri environment');
   }
 
-  const { invoke } = await import('@tauri-apps/api/core')
+  const { invoke } = await import('@tauri-apps/api/core');
 
   // Ensure assets directory exists
-  const assetsDir = await ensureAssetsDirectory(markdownPath)
+  const assetsDir = await ensureAssetsDirectory(markdownPath);
 
   // Generate filename
   const extension = originalFileName
     ? originalFileName.split('.').pop() || getExtensionFromMime(imageBlob.type)
-    : getExtensionFromMime(imageBlob.type)
-  const fileName = generateImageFilename(extension)
+    : getExtensionFromMime(imageBlob.type);
+  const fileName = generateImageFilename(extension);
 
   // Convert blob to byte array
-  const arrayBuffer = await imageBlob.arrayBuffer()
-  const imageData = Array.from(new Uint8Array(arrayBuffer))
+  const arrayBuffer = await imageBlob.arrayBuffer();
+  const imageData = Array.from(new Uint8Array(arrayBuffer));
 
   // Full path for the image
-  const imagePath = `${assetsDir}/${fileName}`
+  const imagePath = `${assetsDir}/${fileName}`;
 
   // Save the image
-  await invoke<string>('save_image', { filePath: imagePath, imageData })
+  await invoke<string>('save_image', { filePath: imagePath, imageData });
 
   // Return relative path for markdown
-  return `./assets/${fileName}`
+  return `./assets/${fileName}`;
 }
 
 /**
@@ -109,32 +109,32 @@ export async function saveImage(
 export async function saveAsset(
   markdownPath: string,
   assetBlob: Blob,
-  originalFileName: string
+  originalFileName: string,
 ): Promise<string> {
   if (!isTauri()) {
-    throw new Error('Asset saving only available in Tauri environment')
+    throw new Error('Asset saving only available in Tauri environment');
   }
 
-  const { invoke } = await import('@tauri-apps/api/core')
+  const { invoke } = await import('@tauri-apps/api/core');
 
   // Ensure assets directory exists
-  const assetsDir = await ensureAssetsDirectory(markdownPath)
+  const assetsDir = await ensureAssetsDirectory(markdownPath);
 
   // Generate unique filename while preserving original name structure
-  const fileName = generateAssetFilename(originalFileName)
+  const fileName = generateAssetFilename(originalFileName);
 
   // Convert blob to byte array
-  const arrayBuffer = await assetBlob.arrayBuffer()
-  const assetData = Array.from(new Uint8Array(arrayBuffer))
+  const arrayBuffer = await assetBlob.arrayBuffer();
+  const assetData = Array.from(new Uint8Array(arrayBuffer));
 
   // Full path for the asset
-  const assetPath = `${assetsDir}/${fileName}`
+  const assetPath = `${assetsDir}/${fileName}`;
 
   // Save the asset (use save_image which handles binary data)
-  await invoke<string>('save_image', { filePath: assetPath, imageData: assetData })
+  await invoke<string>('save_image', { filePath: assetPath, imageData: assetData });
 
   // Return relative path for markdown
-  return `./assets/${fileName}`
+  return `./assets/${fileName}`;
 }
 
 /**
@@ -143,16 +143,16 @@ export async function saveAsset(
 export async function readImageAsUrl(absolutePath: string): Promise<string> {
   if (!isTauri()) {
     // In browser, assume it's a URL
-    return absolutePath
+    return absolutePath;
   }
 
-  const { invoke } = await import('@tauri-apps/api/core')
+  const { invoke } = await import('@tauri-apps/api/core');
 
-  const imageData = await invoke<number[]>('read_binary_file', { path: absolutePath })
-  const uint8Array = new Uint8Array(imageData)
+  const imageData = await invoke<number[]>('read_binary_file', { path: absolutePath });
+  const uint8Array = new Uint8Array(imageData);
 
   // Detect MIME type from extension
-  const ext = absolutePath.split('.').pop()?.toLowerCase() || 'png'
+  const ext = absolutePath.split('.').pop()?.toLowerCase() || 'png';
   const mimeTypes: Record<string, string> = {
     png: 'image/png',
     jpg: 'image/jpeg',
@@ -161,11 +161,11 @@ export async function readImageAsUrl(absolutePath: string): Promise<string> {
     webp: 'image/webp',
     svg: 'image/svg+xml',
     bmp: 'image/bmp',
-  }
-  const mimeType = mimeTypes[ext] || 'image/png'
+  };
+  const mimeType = mimeTypes[ext] || 'image/png';
 
-  const blob = new Blob([uint8Array], { type: mimeType })
-  return URL.createObjectURL(blob)
+  const blob = new Blob([uint8Array], { type: mimeType });
+  return URL.createObjectURL(blob);
 }
 
 /**
@@ -174,18 +174,18 @@ export async function readImageAsUrl(absolutePath: string): Promise<string> {
 export function resolveImagePath(markdownPath: string, relativePath: string): string {
   // Handle ./assets/... paths
   if (relativePath.startsWith('./')) {
-    const dir = getDirectory(markdownPath)
-    return `${dir}/${relativePath.substring(2)}`
+    const dir = getDirectory(markdownPath);
+    return `${dir}/${relativePath.substring(2)}`;
   }
 
   // Handle assets/... paths (without ./)
   if (relativePath.startsWith('assets/')) {
-    const dir = getDirectory(markdownPath)
-    return `${dir}/${relativePath}`
+    const dir = getDirectory(markdownPath);
+    return `${dir}/${relativePath}`;
   }
 
   // Already absolute or URL
-  return relativePath
+  return relativePath;
 }
 
 /**
@@ -197,5 +197,5 @@ export function isLocalPath(path: string): boolean {
     path.startsWith('../') ||
     path.startsWith('assets/') ||
     (!path.includes('://') && !path.startsWith('data:'))
-  )
+  );
 }

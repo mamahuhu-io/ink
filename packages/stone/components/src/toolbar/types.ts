@@ -33,7 +33,5 @@ export type MenuItemGroup<T> = {
 export type FatMenuItems = (MenuItem | typeof nothing)[][];
 
 export interface ToolbarMoreMenuConfig {
-  configure: <T extends MenuContext>(
-    groups: MenuItemGroup<T>[]
-  ) => MenuItemGroup<T>[];
+  configure: <T extends MenuContext>(groups: MenuItemGroup<T>[]) => MenuItemGroup<T>[];
 }

@@ -13,12 +13,9 @@ const convertSymbol = Symbol('convert');
  * @returns
  */
 export function convert<V, T extends GfxPrimitiveElementModel>(
-  fn: (propValue: V, instance: T) => unknown
+  fn: (propValue: V, instance: T) => unknown,
 ) {
-  return function convertDecorator(
-    _: unknown,
-    context: ClassAccessorDecoratorContext
-  ) {
+  return function convertDecorator(_: unknown, context: ClassAccessorDecoratorContext) {
     const prop = String(context.name);
     return {
       init(this: T, v: V) {
@@ -32,16 +29,12 @@ export function convert<V, T extends GfxPrimitiveElementModel>(
 
 function getConvertMeta(
   proto: unknown,
-  prop: string | symbol
+  prop: string | symbol,
 ): null | ((propValue: unknown, instance: unknown) => unknown) {
   return getObjectPropMeta(proto, convertSymbol, prop);
 }
 
-export function convertProps(
-  propName: string | symbol,
-  propValue: unknown,
-  receiver: unknown
-) {
+export function convertProps(propName: string | symbol, propValue: unknown, receiver: unknown) {
   const proto = Object.getPrototypeOf(receiver);
   const convertFn = getConvertMeta(proto, propName as string)!;
 

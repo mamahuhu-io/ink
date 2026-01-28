@@ -6,7 +6,7 @@ export interface DocSource {
 
   pull(
     docId: string,
-    state: Uint8Array
+    state: Uint8Array,
   ):
     | Promise<{ data: Uint8Array; state?: Uint8Array } | null>
     | { data: Uint8Array; state?: Uint8Array }
@@ -23,6 +23,6 @@ export interface DocSource {
    */
   subscribe(
     cb: (docId: string, data: Uint8Array) => void,
-    disconnect: (reason: string) => void
+    disconnect: (reason: string) => void,
   ): Promise<() => void> | (() => void);
 }

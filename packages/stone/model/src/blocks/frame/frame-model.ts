@@ -15,12 +15,7 @@ import {
   gfxGroupCompatibleSymbol,
   hasDescendantElementImpl,
 } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-  type Text,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema, type Text } from '@ink/stone-store';
 import { z } from 'zod';
 
 import { type Color, ColorSchema, DefaultTheme } from '../../themes/index.js';
@@ -89,9 +84,7 @@ export class FrameBlockModel
   }
 
   get childIds() {
-    return this.props.childElementIds
-      ? Object.keys(this.props.childElementIds)
-      : [];
+    return this.props.childElementIds ? Object.keys(this.props.childElementIds) : [];
   }
 
   get descendantElements(): GfxModel[] {
@@ -110,9 +103,7 @@ export class FrameBlockModel
   }
 
   addChildren(elements: GfxModel[]): void {
-    elements = [...new Set(elements)].filter(element =>
-      canSafeAddToContainer(this, element)
-    );
+    elements = [...new Set(elements)].filter((element) => canSafeAddToContainer(this, element));
 
     const newChildren: Record<string, boolean> = {};
     for (const element of elements) {
@@ -133,9 +124,7 @@ export class FrameBlockModel
   }
 
   hasChild(element: GfxModel): boolean {
-    return this.props.childElementIds
-      ? element.id in this.props.childElementIds
-      : false;
+    return this.props.childElementIds ? element.id in this.props.childElementIds : false;
   }
 
   hasDescendant(element: GfxModel): boolean {
@@ -149,15 +138,12 @@ export class FrameBlockModel
 
   override intersectsBound(selectedBound: Bound): boolean {
     const bound = Bound.deserialize(this.xywh);
-    return (
-      bound.isIntersectWithBound(selectedBound) || selectedBound.contains(bound)
-    );
+    return bound.isIntersectWithBound(selectedBound) || selectedBound.contains(bound);
   }
 
   removeChild(element: GfxModel): void {
     this.store.transact(() => {
-      this.props.childElementIds &&
-        delete this.props.childElementIds[element.id];
+      this.props.childElementIds && delete this.props.childElementIds[element.id];
     });
   }
 }

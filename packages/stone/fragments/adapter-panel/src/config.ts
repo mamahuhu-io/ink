@@ -23,6 +23,4 @@ export type AdapterPanelContext = {
   plainTextContent$: Signal<string>;
 };
 
-export const adapterPanelContext = createContext<AdapterPanelContext>(
-  'adapterPanelContext'
-);
+export const adapterPanelContext = createContext<AdapterPanelContext>('adapterPanelContext');

@@ -1,3 +1,6 @@
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { noop } from '@ink/stone-global/utils';
+import { LinkedPageIcon } from '@ink/stone-icons/lit';
 import type {
   AttachmentBlockModel,
   BookmarkBlockModel,
@@ -10,9 +13,6 @@ import type {
 } from '@ink/stone-model';
 import { DocDisplayMetaProvider } from '@ink/stone-shared/services';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { noop } from '@ink/stone-global/utils';
-import { LinkedPageIcon } from '@ink/stone-icons/lit';
 import { ShadowlessElement } from '@ink/stone-std';
 import type { BlockModel, DeltaInsert } from '@ink/stone-store';
 import { consume } from '@lit/context';
@@ -20,12 +20,7 @@ import { html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
-import {
-  placeholderMap,
-  previewIconMap,
-  type TocContext,
-  tocContext,
-} from '../config.js';
+import { placeholderMap, previewIconMap, type TocContext, tocContext } from '../config.js';
 import { isHeadingBlock, isRootBlock } from '../utils/query.js';
 import * as styles from './outline-preview.css';
 
@@ -35,25 +30,22 @@ function assertType<T>(value: unknown): asserts value is T {
 
 export const INK_OUTLINE_BLOCK_PREVIEW = 'ink-outline-block-preview';
 
-export class OutlineBlockPreview extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class OutlineBlockPreview extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   private get _docDisplayMetaService() {
     return this._context.editor$.value.std.get(DocDisplayMetaProvider);
   }
 
   private _TextBlockPreview(block: ParagraphBlockModel | ListBlockModel) {
-    const deltas: DeltaInsert<InkTextAttributes>[] =
-      block.props.text.yText.toDelta();
+    const deltas: DeltaInsert<InkTextAttributes>[] = block.props.text.yText.toDelta();
     if (!block.props.text.length) return nothing;
     const iconClass = this.disabledIcon ? styles.iconDisabled : styles.icon;
 
-    const previewText = deltas.map(delta => {
+    const previewText = deltas.map((delta) => {
       if (delta.attributes?.reference) {
         // If linked doc, render linked doc icon and the doc title.
         const refAttribute = delta.attributes.reference;
         const refMeta = block.store.workspace.meta.docMetas.find(
-          doc => doc.id === refAttribute.pageId
+          (doc) => doc.id === refAttribute.pageId,
         );
         const unavailable = !refMeta;
 
@@ -82,18 +74,14 @@ export class OutlineBlockPreview extends SignalWatcher(
       } else {
         // If not linked doc, render the text.
         return delta.insert.toString().trim().length > 0
-          ? html`<span class=${styles.textSpan}
-              >${delta.insert.toString()}</span
-            >`
+          ? html`<span class=${styles.textSpan}>${delta.insert.toString()}</span>`
           : nothing;
       }
     });
 
     const headingClass =
       block.props.type in styles.subtypeStyles
-        ? styles.subtypeStyles[
-            block.props.type as keyof typeof styles.subtypeStyles
-          ]
+        ? styles.subtypeStyles[block.props.type as keyof typeof styles.subtypeStyles]
         : '';
 
     return html`<span
@@ -102,27 +90,19 @@ export class OutlineBlockPreview extends SignalWatcher(
         >${previewText}</span
       >
       ${this._context.showIcons$.value
-        ? html`<span class=${iconClass}
-            >${previewIconMap[block.props.type]}</span
-          >`
+        ? html`<span class=${iconClass}>${previewIconMap[block.props.type]}</span>`
         : nothing}`;
   }
 
   override render() {
-    return html`<div class=${styles.outlineBlockPreview}>
-      ${this.renderBlockByFlavour()}
-    </div>`;
+    return html`<div class=${styles.outlineBlockPreview}>${this.renderBlockByFlavour()}</div>`;
   }
 
   renderBlockByFlavour() {
     const { block } = this;
     const iconClass = this.disabledIcon ? styles.iconDisabled : styles.icon;
 
-    if (
-      !this._context.enableSorting$.value &&
-      !isHeadingBlock(block) &&
-      !isRootBlock(block)
-    )
+    if (!this._context.enableSorting$.value && !isHeadingBlock(block) && !isRootBlock(block))
       return nothing;
 
     const showPreviewIcon = this._context.showIcons$.value;
@@ -148,14 +128,10 @@ export class OutlineBlockPreview extends SignalWatcher(
         assertType<BookmarkBlockModel>(block);
         return html`
           <span class="${styles.text} ${styles.textGeneral}"
-            >${block.props.title ||
-            block.props.url ||
-            placeholderMap['bookmark']}</span
+            >${block.props.title || block.props.url || placeholderMap['bookmark']}</span
           >
           ${showPreviewIcon
-            ? html`<span class=${iconClass}
-                >${previewIconMap['bookmark']}</span
-              >`
+            ? html`<span class=${iconClass}>${previewIconMap['bookmark']}</span>`
             : nothing}
         `;
       case 'ink:code':
@@ -184,9 +160,7 @@ export class OutlineBlockPreview extends SignalWatcher(
         assertType<ImageBlockModel>(block);
         return html`
           <span class="${styles.text} ${styles.textGeneral}"
-            >${block.props.caption?.length
-              ? block.props.caption
-              : placeholderMap['image']}</span
+            >${block.props.caption?.length ? block.props.caption : placeholderMap['image']}</span
           >
           ${showPreviewIcon
             ? html`<span class=${iconClass}>${previewIconMap['image']}</span>`
@@ -196,14 +170,10 @@ export class OutlineBlockPreview extends SignalWatcher(
         assertType<AttachmentBlockModel>(block);
         return html`
           <span class="${styles.text} ${styles.textGeneral}"
-            >${block.props.name?.length
-              ? block.props.name
-              : placeholderMap['attachment']}</span
+            >${block.props.name?.length ? block.props.name : placeholderMap['attachment']}</span
           >
           ${showPreviewIcon
-            ? html`<span class=${iconClass}
-                >${previewIconMap['attachment']}</span
-              >`
+            ? html`<span class=${iconClass}>${previewIconMap['attachment']}</span>`
             : nothing}
         `;
       default:

@@ -35,14 +35,7 @@ export class SVGPathBuilder {
   /**
    * Draw a cubic Bézier curve
    */
-  curveTo(
-    cp1x: number,
-    cp1y: number,
-    cp2x: number,
-    cp2y: number,
-    x: number,
-    y: number
-  ): this {
+  curveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): this {
     this.commands.push({
       command: 'C',
       coordinates: [cp1x, cp1y, cp2x, cp2y, x, y],
@@ -65,7 +58,7 @@ export class SVGPathBuilder {
    * Build the complete SVG path string
    */
   build(): string {
-    const pathSegments = this.commands.map(cmd => {
+    const pathSegments = this.commands.map((cmd) => {
       const coords = cmd.coordinates.join(' ');
       return coords ? `${cmd.command} ${coords}` : cmd.command;
     });
@@ -89,11 +82,7 @@ export class SVGShapeBuilder {
   /**
    * Generate diamond (rhombus) polygon points
    */
-  static diamond(
-    width: number,
-    height: number,
-    strokeWidth: number = 0
-  ): string {
+  static diamond(width: number, height: number, strokeWidth: number = 0): string {
     const halfStroke = strokeWidth / 2;
     return [
       `${width / 2},${halfStroke}`,
@@ -106,11 +95,7 @@ export class SVGShapeBuilder {
   /**
    * Generate triangle polygon points
    */
-  static triangle(
-    width: number,
-    height: number,
-    strokeWidth: number = 0
-  ): string {
+  static triangle(width: number, height: number, strokeWidth: number = 0): string {
     const halfStroke = strokeWidth / 2;
     return [
       `${width / 2},${halfStroke}`,
@@ -122,11 +107,7 @@ export class SVGShapeBuilder {
   /**
    * Generate diamond path using SVGPathBuilder
    */
-  static diamondPath(
-    width: number,
-    height: number,
-    strokeWidth: number = 0
-  ): string {
+  static diamondPath(width: number, height: number, strokeWidth: number = 0): string {
     const halfStroke = strokeWidth / 2;
     const pathBuilder = new SVGPathBuilder();
 
@@ -142,11 +123,7 @@ export class SVGShapeBuilder {
   /**
    * Generate triangle path using SVGPathBuilder
    */
-  static trianglePath(
-    width: number,
-    height: number,
-    strokeWidth: number = 0
-  ): string {
+  static trianglePath(width: number, height: number, strokeWidth: number = 0): string {
     const halfStroke = strokeWidth / 2;
     const pathBuilder = new SVGPathBuilder();
 

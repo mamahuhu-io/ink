@@ -14,9 +14,7 @@ export type DeltaOperation = {
 
 export type OnTextChange = (data: Y.Text, isLocal: boolean) => void;
 
-export type DeltaInsert<
-  TextAttributes extends BaseTextAttributes = BaseTextAttributes,
-> = {
+export type DeltaInsert<TextAttributes extends BaseTextAttributes = BaseTextAttributes> = {
   insert: string;
   attributes?: TextAttributes;
 };

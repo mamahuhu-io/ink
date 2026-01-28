@@ -1,14 +1,10 @@
 import type { Container } from '@ink/stone-global/di';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import type { EventName, UIEventHandler } from '../event/index.js';
-import {
-  BlockFlavourIdentifier,
-  BlockServiceIdentifier,
-  StdIdentifier,
-} from '../identifier.js';
+import { BlockFlavourIdentifier, BlockServiceIdentifier, StdIdentifier } from '../identifier.js';
 import type { BlockStdScope } from '../scope/index.js';
 
 /**
@@ -48,7 +44,7 @@ export abstract class BlockService extends Extension {
 
   constructor(
     readonly std: BlockStdScope,
-    readonly flavourProvider: { flavour: string }
+    readonly flavourProvider: { flavour: string },
   ) {
     super();
     this.flavour = flavourProvider.flavour;
@@ -58,31 +54,23 @@ export abstract class BlockService extends Extension {
     if (!this.flavour) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'Flavour is not defined in the BlockService'
+        'Flavour is not defined in the BlockService',
       );
     }
     di.add(
       this as unknown as {
-        new (
-          std: BlockStdScope,
-          flavourProvider: { flavour: string }
-        ): BlockService;
+        new (std: BlockStdScope, flavourProvider: { flavour: string }): BlockService;
       },
-      [StdIdentifier, BlockFlavourIdentifier(this.flavour)]
+      [StdIdentifier, BlockFlavourIdentifier(this.flavour)],
     );
-    di.addImpl(BlockServiceIdentifier(this.flavour), provider =>
-      provider.get(this)
-    );
+    di.addImpl(BlockServiceIdentifier(this.flavour), (provider) => provider.get(this));
   }
 
-  bindHotKey(
-    keymap: Record<string, UIEventHandler>,
-    options?: { global: boolean }
-  ) {
+  bindHotKey(keymap: Record<string, UIEventHandler>, options?: { global: boolean }) {
     this.disposables.add(
       this.uiEventDispatcher.bindHotkey(keymap, {
         flavour: options?.global ? undefined : this.flavour,
-      })
+      }),
     );
   }
 
@@ -92,15 +80,11 @@ export abstract class BlockService extends Extension {
   }
 
   // event handlers start
-  handleEvent(
-    name: EventName,
-    fn: UIEventHandler,
-    options?: { global: boolean }
-  ) {
+  handleEvent(name: EventName, fn: UIEventHandler, options?: { global: boolean }) {
     this.disposables.add(
       this.uiEventDispatcher.add(name, fn, {
         flavour: options?.global ? undefined : this.flavour,
-      })
+      }),
     );
   }
   // life cycle end

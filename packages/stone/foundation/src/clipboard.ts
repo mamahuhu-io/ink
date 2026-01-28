@@ -35,7 +35,7 @@ const imageClipboardConfigs = [
   'image/png',
   'image/svg+xml',
   'image/webp',
-].map(mimeType => {
+].map((mimeType) => {
   return ClipboardAdapterConfigExtension({
     mimeType,
     adapter: ImageAdapter,

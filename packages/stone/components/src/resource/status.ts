@@ -1,14 +1,8 @@
-import {
-  fontBaseStyle,
-  panelBaseColorsStyle,
-} from '@ink/stone-shared/styles';
-import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import {
-  createButtonPopper,
-  stopPropagation,
-} from '@ink/stone-shared/utils';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { InformationIcon } from '@ink/stone-icons/lit';
+import { fontBaseStyle, panelBaseColorsStyle } from '@ink/stone-shared/styles';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import { createButtonPopper, stopPropagation } from '@ink/stone-shared/utils';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import { css, html, LitElement } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -110,14 +104,10 @@ export class ResourceStatus extends WithDisposable(LitElement) {
     this.disposables.addFromEvent(this._trigger, 'click', (_: MouseEvent) => {
       this._popper?.toggle();
     });
-    this.disposables.addFromEvent(
-      this._actionButton,
-      'click',
-      (_: MouseEvent) => {
-        this._popper?.hide();
-        this.action();
-      }
-    );
+    this.disposables.addFromEvent(this._actionButton, 'click', (_: MouseEvent) => {
+      this._popper?.hide();
+      this.action();
+    });
     this.disposables.add(() => this._popper?.dispose());
   }
 

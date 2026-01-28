@@ -10,11 +10,7 @@ import {
   type GfxElementModelView,
   type GfxModel,
 } from '@ink/stone-std/gfx';
-import type {
-  BaseSelection,
-  BlockModel,
-  SelectionConstructor,
-} from '@ink/stone-store';
+import type { BaseSelection, BlockModel, SelectionConstructor } from '@ink/stone-store';
 
 import { DocModeProvider } from '../doc-mode-service';
 import { EditPropsStore } from '../edit-props-store';
@@ -136,21 +132,16 @@ abstract class ToolbarContextBase {
   }
 
   get hasSelectedSurfaceModels() {
-    return (
-      this.flavour$.peek().includes('surface') &&
-      this.elementsMap$.peek().size > 0
-    );
+    return this.flavour$.peek().includes('surface') && this.elementsMap$.peek().size > 0;
   }
 
   getSurfaceModels() {
     if (this.hasSelectedSurfaceModels) {
       const flavour = this.flavour$.peek();
       const elementsMap = this.elementsMap$.peek();
-      const elements = [
-        'ink:surface',
-        'ink:surface:locked',
-        'ink:surface:alignment',
-      ].includes(flavour)
+      const elements = ['ink:surface', 'ink:surface:locked', 'ink:surface:alignment'].includes(
+        flavour,
+      )
         ? Array.from(elementsMap.values()).flat()
         : elementsMap.get(flavour);
       return elements ?? [];
@@ -158,21 +149,17 @@ abstract class ToolbarContextBase {
     return [];
   }
 
-  getSurfaceModelsByType<T extends abstract new (...args: any) => any>(
-    klass: T
-  ) {
-    return this.getSurfaceModels().filter(e => this.matchModel(e, klass));
+  getSurfaceModelsByType<T extends abstract new (...args: any) => any>(klass: T) {
+    return this.getSurfaceModels().filter((e) => this.matchModel(e, klass));
   }
 
-  getSurfaceBlocksByType<T extends abstract new (...args: any) => any>(
-    klass: T
-  ) {
+  getSurfaceBlocksByType<T extends abstract new (...args: any) => any>(klass: T) {
     if (this.hasSelectedSurfaceModels) {
       const elements = this.elementsMap$.peek().get(this.flavour$.peek());
       if (elements?.length) {
         return elements
-          .map(model => this.gfx.view.get(model.id))
-          .filter(block => block && this.matchBlock(block, klass));
+          .map((model) => this.gfx.view.get(model.id))
+          .filter((block) => block && this.matchBlock(block, klass));
       }
     }
     return [];
@@ -207,16 +194,14 @@ abstract class ToolbarContextBase {
       : this.getCurrentBlockBy(BlockSelection);
   }
 
-  getCurrentBlockByType<T extends abstract new (...args: any) => any>(
-    klass: T
-  ) {
+  getCurrentBlockByType<T extends abstract new (...args: any) => any>(klass: T) {
     const block = this.getCurrentBlock();
     return this.matchBlock(block, klass) ? block : null;
   }
 
   matchBlock<T extends abstract new (...args: any) => any>(
     component: GfxElementModelView | BlockComponent | null,
-    klass: T
+    klass: T,
   ): component is InstanceType<T> {
     return component instanceof klass;
   }
@@ -246,16 +231,14 @@ abstract class ToolbarContextBase {
       : this.getCurrentModelBy(BlockSelection);
   }
 
-  getCurrentModelByType<T extends abstract new (...args: any) => any>(
-    klass: T
-  ) {
+  getCurrentModelByType<T extends abstract new (...args: any) => any>(klass: T) {
     const model = this.getCurrentModel();
     return this.matchModel(model, klass) ? model : null;
   }
 
   matchModel<T extends abstract new (...args: any) => any>(
     model: GfxModel | BlockModel | null,
-    klass: T
+    klass: T,
   ): model is InstanceType<T> {
     return model instanceof klass;
   }

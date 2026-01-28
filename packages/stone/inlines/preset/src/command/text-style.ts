@@ -1,11 +1,5 @@
-import {
-  getBlockSelectionsCommand,
-  getTextSelectionCommand,
-} from '@ink/stone-shared/commands';
-import type {
-  InkTextAttributes,
-  InkTextStyleAttributes,
-} from '@ink/stone-shared/types';
+import { getBlockSelectionsCommand, getTextSelectionCommand } from '@ink/stone-shared/commands';
+import type { InkTextAttributes, InkTextStyleAttributes } from '@ink/stone-shared/types';
 import type { Command } from '@ink/stone-std';
 
 import { formatBlockCommand } from './format-block.js';
@@ -14,16 +8,10 @@ import { formatTextCommand } from './format-text.js';
 import { getCombinedTextAttributes } from './utils.js';
 
 export const toggleTextStyleCommand: Command<{
-  key: Extract<
-    keyof InkTextStyleAttributes,
-    'bold' | 'italic' | 'underline' | 'strike' | 'code'
-  >;
+  key: Extract<keyof InkTextStyleAttributes, 'bold' | 'italic' | 'underline' | 'strike' | 'code'>;
 }> = (ctx, next) => {
   const { std, key } = ctx;
-  const [active] = std.command
-    .chain()
-    .pipe(isTextAttributeActive, { key })
-    .run();
+  const [active] = std.command.chain().pipe(isTextAttributeActive, { key }).run();
 
   const payload: {
     styles: InkTextStyleAttributes;
@@ -36,7 +24,7 @@ export const toggleTextStyleCommand: Command<{
 
   const [result] = std.command
     .chain()
-    .try(chain => [
+    .try((chain) => [
       chain.pipe(getTextSelectionCommand).pipe(formatTextCommand, payload),
       chain.pipe(getBlockSelectionsCommand).pipe(formatBlockCommand, payload),
       chain.pipe(formatNativeCommand, payload),
@@ -51,16 +39,10 @@ export const toggleTextStyleCommand: Command<{
 };
 
 const toggleTextStyleCommandWrapper = (
-  key: Extract<
-    keyof InkTextStyleAttributes,
-    'bold' | 'italic' | 'underline' | 'strike' | 'code'
-  >
+  key: Extract<keyof InkTextStyleAttributes, 'bold' | 'italic' | 'underline' | 'strike' | 'code'>,
 ): Command => {
   return (ctx, next) => {
-    const [success] = ctx.std.command
-      .chain()
-      .pipe(toggleTextStyleCommand, { key })
-      .run();
+    const [success] = ctx.std.command.chain().pipe(toggleTextStyleCommand, { key }).run();
     if (success) next();
     return false;
   };
@@ -72,13 +54,11 @@ export const toggleUnderline = toggleTextStyleCommandWrapper('underline');
 export const toggleStrike = toggleTextStyleCommandWrapper('strike');
 export const toggleCode = toggleTextStyleCommandWrapper('code');
 
-export const getTextAttributes: Command<
-  {},
-  { textAttributes: InkTextAttributes }
-> = (ctx, next) => {
-  const [result, innerCtx] = getCombinedTextAttributes(
-    ctx.std.command.chain()
-  ).run();
+export const getTextAttributes: Command<{}, { textAttributes: InkTextAttributes }> = (
+  ctx,
+  next,
+) => {
+  const [result, innerCtx] = getCombinedTextAttributes(ctx.std.command.chain()).run();
   if (!result) {
     return false;
   }

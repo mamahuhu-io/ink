@@ -1,7 +1,4 @@
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type StoreExtensionContext, StoreExtensionProvider } from '@ink/stone-ext-loader';
 import { AttachmentBlockSchemaExtension } from '@ink/stone-model';
 
 import { AttachmentBlockAdapterExtensions } from './adapters/extension';

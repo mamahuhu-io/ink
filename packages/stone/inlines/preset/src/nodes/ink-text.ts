@@ -9,9 +9,7 @@ import { styleMap } from 'lit/directives/style-map.js';
 
 export class InkText extends ShadowlessElement {
   override render() {
-    const style = this.delta.attributes
-      ? inkTextStyles(this.delta.attributes)
-      : {};
+    const style = this.delta.attributes ? inkTextStyles(this.delta.attributes) : {};
 
     // we need to avoid \n appearing before and after the span element, which will
     // cause the unexpected space
@@ -23,9 +21,7 @@ export class InkText extends ShadowlessElement {
 
     // we need to avoid \n appearing before and after the span element, which will
     // cause the unexpected space
-    return html`<span style=${styleMap(style)}
-      ><v-text .str=${this.delta.insert}></v-text
-    ></span>`;
+    return html`<span style=${styleMap(style)}><v-text .str=${this.delta.insert}></v-text></span>`;
   }
 
   @property({ type: Object })

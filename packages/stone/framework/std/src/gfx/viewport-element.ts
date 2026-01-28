@@ -3,11 +3,7 @@ import { batch } from '@preact/signals-core';
 import { css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import {
-  type EditorHost,
-  isGfxBlockComponent,
-  ShadowlessElement,
-} from '../view';
+import { type EditorHost, isGfxBlockComponent, ShadowlessElement } from '../view';
 import { PropTypes, requiredProperties } from '../view/decorators/required';
 import { GfxControllerIdentifier } from './identifiers';
 import { GfxBlockElementModel } from './model/gfx-block-model';
@@ -16,9 +12,10 @@ import { Viewport } from './viewport';
 /**
  * A wrapper around `requestConnectedFrame` that only calls at most once in one frame
  */
-export function requestThrottledConnectedFrame<
-  T extends (...args: unknown[]) => void,
->(func: T, element?: HTMLElement): T {
+export function requestThrottledConnectedFrame<T extends (...args: unknown[]) => void>(
+  func: T,
+  element?: HTMLElement,
+): T {
   let raqId: number | undefined = undefined;
   let latestArgs: unknown[] = [];
 
@@ -72,10 +69,7 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
     const gfx = this.host.std.get(GfxControllerIdentifier);
     const currentViewportModels = this.getModelsInViewport();
     const currentSelectedModels = this._getSelectedModels();
-    const shouldBeVisible = new Set([
-      ...currentViewportModels,
-      ...currentSelectedModels,
-    ]);
+    const shouldBeVisible = new Set([...currentViewportModels, ...currentSelectedModels]);
 
     const previousVisible = this._lastVisibleModels
       ? new Set(this._lastVisibleModels)
@@ -83,14 +77,14 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
 
     batch(() => {
       // Step 1: Activate all the blocks that should be visible
-      shouldBeVisible.forEach(model => {
+      shouldBeVisible.forEach((model) => {
         const view = gfx.view.get(model);
         if (!isGfxBlockComponent(view)) return;
         view.transformState$.value = 'active';
       });
 
       // Step 2: Hide all the blocks that should not be visible
-      previousVisible.forEach(model => {
+      previousVisible.forEach((model) => {
         if (shouldBeVisible.has(model)) return;
 
         const view = gfx.view.get(model);
@@ -127,12 +121,8 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
     }
 
     this._hideOutsideAndNoSelectedBlock();
-    this.disposables.add(
-      this.viewport.viewportUpdated.subscribe(() => viewportUpdateCallback())
-    );
-    this.disposables.add(
-      this.viewport.sizeUpdated.subscribe(() => viewportUpdateCallback())
-    );
+    this.disposables.add(this.viewport.viewportUpdated.subscribe(() => viewportUpdateCallback()));
+    this.disposables.add(this.viewport.sizeUpdated.subscribe(() => viewportUpdateCallback()));
   }
 
   override render() {
@@ -148,10 +138,7 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
       this._updatingChildrenFlag = true;
       const schedule = () => {
         if (this._pendingChildrenUpdates.length) {
-          const childToUpdates = this._pendingChildrenUpdates.splice(
-            0,
-            this.maxConcurrentRenders
-          );
+          const childToUpdates = this._pendingChildrenUpdates.splice(0, this.maxConcurrentRenders);
 
           childToUpdates.forEach(({ resolve }) => resolve());
 
@@ -179,14 +166,13 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
     return new Set(
       gfx.selection.surfaceSelections
         .flatMap(({ elements }) => elements)
-        .map(id => gfx.getElementById(id))
-        .filter(e => e instanceof GfxBlockElementModel)
+        .map((id) => gfx.getElementById(id))
+        .filter((e) => e instanceof GfxBlockElementModel),
     );
   }
 
   @property({ attribute: false })
-  accessor getModelsInViewport: () => Set<GfxBlockElementModel> = () =>
-    new Set();
+  accessor getModelsInViewport: () => Set<GfxBlockElementModel> = () => new Set();
 
   @property({ attribute: false })
   accessor host: undefined | EditorHost;
@@ -205,7 +191,7 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
     const gfx = this.host.std.get(GfxControllerIdentifier);
 
     batch(() => {
-      blockIds.forEach(id => {
+      blockIds.forEach((id) => {
         const view = gfx.view.get(id);
         if (isGfxBlockComponent(view)) {
           view.transformState$.value = 'active';
@@ -219,7 +205,7 @@ export class GfxViewportElement extends WithDisposable(ShadowlessElement) {
     const gfx = this.host.std.get(GfxControllerIdentifier);
 
     batch(() => {
-      blockIds.forEach(id => {
+      blockIds.forEach((id) => {
         const view = gfx.view.get(id);
         if (isGfxBlockComponent(view)) {
           view.transformState$.value = 'idle';

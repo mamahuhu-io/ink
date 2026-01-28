@@ -1,9 +1,5 @@
 import type { Text } from '@ink/stone-store';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 export type RootBlockProps = {
   title: Text;
@@ -14,16 +10,11 @@ export class RootBlockModel extends BlockModel<RootBlockProps> {
     super();
     const createdSubscription = this.created.subscribe(() => {
       createdSubscription.unsubscribe();
-      this.store.slots.rootAdded.subscribe(id => {
+      this.store.slots.rootAdded.subscribe((id) => {
         const model = this.store.getModelById(id);
         if (model instanceof RootBlockModel) {
-          const newDocMeta = this.store.workspace.meta.getDocMeta(
-            model.store.id
-          );
-          if (
-            !newDocMeta ||
-            newDocMeta.title !== model.props.title.toString()
-          ) {
+          const newDocMeta = this.store.workspace.meta.getDocMeta(model.store.id);
+          if (!newDocMeta || newDocMeta.title !== model.props.title.toString()) {
             this.store.workspace.meta.setDocMeta(model.store.id, {
               title: model.props.title.toString(),
             });

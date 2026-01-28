@@ -1,5 +1,6 @@
-import type { SettingWrapperProps } from '../types'
-import './SettingComponents.css'
+import './SettingComponents.css';
+
+import type { SettingWrapperProps } from '../types';
 
 export function SettingWrapper({ title, children }: SettingWrapperProps) {
   return (
@@ -7,5 +8,5 @@ export function SettingWrapper({ title, children }: SettingWrapperProps) {
       <div className="setting-wrapper-title">{title}</div>
       <div className="setting-wrapper-content">{children}</div>
     </div>
-  )
+  );
 }

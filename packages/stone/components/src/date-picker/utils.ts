@@ -46,13 +46,9 @@ export function getMonthMatrix(maybeDate: MaybeDate) {
   const firstDayOfMonth = getFirstDayOfMonth(date);
   const lastDayOfMonth = getLastDayOfMonth(date);
   const firstDayOfFirstWeek = new Date(firstDayOfMonth);
-  firstDayOfFirstWeek.setDate(
-    firstDayOfMonth.getDate() - firstDayOfMonth.getDay()
-  );
+  firstDayOfFirstWeek.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
   const lastDayOfLastWeek = new Date(lastDayOfMonth);
-  lastDayOfLastWeek.setDate(
-    lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay())
-  );
+  lastDayOfLastWeek.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()));
   const matrix = [];
   let week = [];
   const day = new Date(firstDayOfFirstWeek);

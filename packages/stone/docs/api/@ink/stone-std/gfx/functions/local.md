@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / local
 
@@ -21,7 +21,7 @@ Updating local property will also trigger the `elementUpdated` slot of the surfa
 
 ### T
 
-`T` *extends* `GfxPrimitiveElementModel`\<`BaseElementProps`\>
+`T` _extends_ `GfxPrimitiveElementModel`\<`BaseElementProps`\>
 
 ## Returns
 

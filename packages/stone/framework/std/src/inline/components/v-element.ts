@@ -1,19 +1,19 @@
-import { DisposableGroup } from "@ink/stone-global/disposable";
-import { InkStoneError, ErrorCode } from "@ink/stone-global/exceptions";
-import { SignalWatcher } from "@ink/stone-global/lit";
-import type { BaseTextAttributes, DeltaInsert } from "@ink/stone-store";
-import { effect, signal } from "@preact/signals-core";
-import { html, LitElement } from "lit";
-import { property } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+import { DisposableGroup } from '@ink/stone-global/disposable';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
+import { SignalWatcher } from '@ink/stone-global/lit';
+import type { BaseTextAttributes, DeltaInsert } from '@ink/stone-store';
+import { effect, signal } from '@preact/signals-core';
+import { html, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { ZERO_WIDTH_FOR_EMPTY_LINE } from "../consts.js";
-import type { InlineEditor } from "../inline-editor.js";
-import { isInlineRangeIntersect } from "../utils/inline-range.js";
+import { ZERO_WIDTH_FOR_EMPTY_LINE } from '../consts.js';
+import type { InlineEditor } from '../inline-editor.js';
+import { isInlineRangeIntersect } from '../utils/inline-range.js';
 
-export class VElement<
-  T extends BaseTextAttributes = BaseTextAttributes,
-> extends SignalWatcher(LitElement) {
+export class VElement<T extends BaseTextAttributes = BaseTextAttributes> extends SignalWatcher(
+  LitElement,
+) {
   readonly disposables = new DisposableGroup();
 
   readonly selected = signal(false);
@@ -43,7 +43,7 @@ export class VElement<
     const span = this.querySelector('[data-v-element="true"]') as HTMLElement;
     const el = span.firstElementChild as LitElement;
     await el.updateComplete;
-    const vTexts = Array.from(this.querySelectorAll("v-text"));
+    const vTexts = Array.from(this.querySelectorAll('v-text'));
     await Promise.all(vTexts.map((vText) => vText.updateComplete));
     return result;
   }
@@ -76,16 +76,14 @@ export class VElement<
         data-v-embed="true"
         data-v-element="true"
         contenteditable="false"
-        style=${styleMap({ userSelect: "none" })}
+        style=${styleMap({ userSelect: 'none' })}
         >${attributeRenderer(renderProps)}</span
       >`;
     }
 
     // we need to avoid \n appearing before and after the span element, which will
     // cause the unexpected space
-    return html`<span data-v-element="true"
-      >${attributeRenderer(renderProps)}</span
-    >`;
+    return html`<span data-v-element="true">${attributeRenderer(renderProps)}</span>`;
   }
 
   @property({ type: Object })
@@ -108,6 +106,6 @@ export class VElement<
 
 declare global {
   interface HTMLElementTagNameMap {
-    "v-element": VElement;
+    'v-element': VElement;
   }
 }

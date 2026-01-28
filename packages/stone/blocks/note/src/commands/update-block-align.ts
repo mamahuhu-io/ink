@@ -5,27 +5,21 @@ import {
   getSelectedBlocksCommand,
   getTextSelectionCommand,
 } from '@ink/stone-shared/commands';
-import {
-  type BlockComponent,
-  type Command,
-  TextSelection,
-} from '@ink/stone-std';
+import { type BlockComponent, type Command, TextSelection } from '@ink/stone-std';
 
 type UpdateBlockAlignConfig = {
   textAlign: TextAlign;
   selectedBlocks?: BlockComponent[];
 };
 
-export const updateBlockAlign: Command<UpdateBlockAlignConfig> = (
-  ctx,
-  next
-) => {
-  let { std, textAlign, selectedBlocks } = ctx;
+export const updateBlockAlign: Command<UpdateBlockAlignConfig> = (ctx, next) => {
+  const { std, textAlign } = ctx;
+  let { selectedBlocks } = ctx;
 
   if (!selectedBlocks) {
     const [result, ctx] = std.command
       .chain()
-      .tryAll(chain => [
+      .tryAll((chain) => [
         chain.pipe(getTextSelectionCommand),
         chain.pipe(getBlockSelectionsCommand),
         chain.pipe(getImageSelectionsCommand),
@@ -39,7 +33,7 @@ export const updateBlockAlign: Command<UpdateBlockAlignConfig> = (
 
   if (!selectedBlocks || selectedBlocks.length === 0) return false;
 
-  selectedBlocks.forEach(block => {
+  selectedBlocks.forEach((block) => {
     std.store.updateBlock(block.model, { textAlign });
   });
 

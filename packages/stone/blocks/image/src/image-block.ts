@@ -3,30 +3,22 @@ import { whenHover } from '@ink/stone-components/hover';
 import { LoadingIcon } from '@ink/stone-components/icons';
 import { Peekable } from '@ink/stone-components/peek';
 import { ResourceController } from '@ink/stone-components/resource';
-import type { ImageBlockModel } from '@ink/stone-model';
-import { ImageSelection } from '@ink/stone-shared/selection';
-import {
-  BlockElementCommentManager,
-  ToolbarRegistryIdentifier,
-} from '@ink/stone-shared/services';
-import { formatSize } from '@ink/stone-shared/utils';
 import { IS_MOBILE } from '@ink/stone-global/env';
 import { BrokenImageIcon, ImageIcon } from '@ink/stone-icons/lit';
+import type { ImageBlockModel } from '@ink/stone-model';
+import { ImageSelection } from '@ink/stone-shared/selection';
+import { BlockElementCommentManager, ToolbarRegistryIdentifier } from '@ink/stone-shared/services';
+import { formatSize } from '@ink/stone-shared/utils';
 import { BlockSelection } from '@ink/stone-std';
-import { computed } from '@preact/signals-core';
 import { cssVarV2 } from '@ink/stone-theme';
+import { computed } from '@preact/signals-core';
 import { html } from 'lit';
 import { query } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
 
 import type { ImageBlockPageComponent } from './components/page-image-block';
-import {
-  copyImageBlob,
-  downloadImageBlob,
-  refreshData,
-  turnImageIntoCardView,
-} from './utils';
+import { copyImageBlob, downloadImageBlob, refreshData, turnImageIntoCardView } from './utils';
 
 @Peekable({
   enableOn: () => !IS_MOBILE,
@@ -34,14 +26,13 @@ import {
 export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel> {
   resizeable$ = computed(() =>
     this.std.selection.value.some(
-      selection =>
-        selection.is(ImageSelection) && selection.blockId === this.blockId
-    )
+      (selection) => selection.is(ImageSelection) && selection.blockId === this.blockId,
+    ),
   );
 
   resourceController = new ResourceController(
     computed(() => this.model.props.sourceId$.value),
-    'Image'
+    'Image',
   );
 
   get blobUrl() {
@@ -70,9 +61,8 @@ export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel
 
   get isCommentHighlighted() {
     return (
-      this.std
-        .getOptional(BlockElementCommentManager)
-        ?.isBlockCommentHighlighted(this.model) ?? false
+      this.std.getOptional(BlockElementCommentManager)?.isBlockCommentHighlighted(this.model) ??
+      false
     );
   }
 
@@ -90,7 +80,7 @@ export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel
 
   private _initHover() {
     const { setReference, setFloating, dispose } = whenHover(
-      hovered => {
+      (hovered) => {
         const message$ = this.std.get(ToolbarRegistryIdentifier).message$;
         if (hovered) {
           message$.value = {
@@ -105,7 +95,7 @@ export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel
         message$.value = null;
         setFloating();
       },
-      { enterDelay: 500 }
+      { enterDelay: 500 },
     );
     setReference(this.hoverableContainer);
     this._disposables.add(dispose);
@@ -124,7 +114,7 @@ export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel
     this.disposables.add(
       this.model.props.sourceId$.subscribe(() => {
         this.refreshData();
-      })
+      }),
     );
   }
 
@@ -173,10 +163,7 @@ export class ImageBlockComponent extends CaptionedBlockComponent<ImageBlockModel
               .state=${resovledState}
               style="${alignItemsStyleMap}"
             ></ink-page-image>`,
-          () =>
-            html`<ink-image-fallback-card
-              .state=${resovledState}
-            ></ink-image-fallback-card>`
+          () => html`<ink-image-fallback-card .state=${resovledState}></ink-image-fallback-card>`,
         )}
       </div>
 

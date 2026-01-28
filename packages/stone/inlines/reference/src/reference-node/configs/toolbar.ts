@@ -1,4 +1,5 @@
 import { notifyLinkedDocSwitchedToEmbed } from '@ink/stone-components/notification';
+import { DeleteIcon } from '@ink/stone-icons/lit';
 import {
   ActionPlacement,
   DocDisplayMetaProvider,
@@ -6,11 +7,7 @@ import {
   type ToolbarActionGroup,
   type ToolbarModuleConfig,
 } from '@ink/stone-shared/services';
-import {
-  cloneReferenceInfoWithoutAliases,
-  isInsideBlockByFlavour,
-} from '@ink/stone-shared/utils';
-import { DeleteIcon } from '@ink/stone-icons/lit';
+import { cloneReferenceInfoWithoutAliases, isInsideBlockByFlavour } from '@ink/stone-shared/utils';
 import { BlockSelection } from '@ink/stone-std';
 import { signal } from '@preact/signals-core';
 import { html } from 'lit-html';
@@ -36,8 +33,8 @@ export const builtinInlineReferenceToolbarConfig = {
         if (!target.referenceInfo.title) return null;
 
         const originalTitle =
-          ctx.std.get(DocDisplayMetaProvider).title(target.referenceInfo.pageId)
-            .value || 'Untitled';
+          ctx.std.get(DocDisplayMetaProvider).title(target.referenceInfo.pageId).value ||
+          'Untitled';
         const open = (event: MouseEvent) => target.open({ event });
 
         return html`<ink-linked-doc-title
@@ -81,7 +78,7 @@ export const builtinInlineReferenceToolbarConfig = {
               'ink:embed-linked-doc',
               referenceInfo,
               parent,
-              index + 1
+              index + 1,
             );
 
             const totalTextLength = inlineEditor.yTextLength;
@@ -92,9 +89,7 @@ export const builtinInlineReferenceToolbarConfig = {
               inlineEditor.insertText(selfInlineRange, target.docTitle);
             }
 
-            ctx.select('note', [
-              ctx.selection.create(BlockSelection, { blockId }),
-            ]);
+            ctx.select('note', [ctx.selection.create(BlockSelection, { blockId })]);
 
             ctx.track('SelectedView', {
               ...trackBaseProps,
@@ -111,13 +106,7 @@ export const builtinInlineReferenceToolbarConfig = {
             if (!(target instanceof InkReference)) return true;
             if (!target.block) return true;
 
-            if (
-              isInsideBlockByFlavour(
-                ctx.store,
-                target.block.model,
-                'ink:edgeless-text'
-              )
-            )
+            if (isInsideBlockByFlavour(ctx.store, target.block.model, 'ink:edgeless-text'))
               return true;
 
             // nesting is not supported
@@ -155,7 +144,7 @@ export const builtinInlineReferenceToolbarConfig = {
               'ink:embed-synced-doc',
               cloneReferenceInfoWithoutAliases(referenceInfo),
               parent,
-              index + 1
+              index + 1,
             );
 
             const totalTextLength = inlineEditor.yTextLength;
@@ -172,9 +161,7 @@ export const builtinInlineReferenceToolbarConfig = {
               notifyLinkedDocSwitchedToEmbed(ctx.std);
             }
 
-            ctx.select('note', [
-              ctx.selection.create(BlockSelection, { blockId }),
-            ]);
+            ctx.select('note', [ctx.selection.create(BlockSelection, { blockId })]);
 
             ctx.track('SelectedView', {
               ...trackBaseProps,
@@ -188,7 +175,7 @@ export const builtinInlineReferenceToolbarConfig = {
         const target = ctx.message$.peek()?.element;
         if (!(target instanceof InkReference)) return null;
 
-        const actions = this.actions.map(action => ({ ...action }));
+        const actions = this.actions.map((action) => ({ ...action }));
         const viewType$ = signal(actions[0].label);
         const onToggle = (e: CustomEvent<boolean>) => {
           const opened = e.detail;
@@ -207,7 +194,7 @@ export const builtinInlineReferenceToolbarConfig = {
             .context=${ctx}
             .onToggle=${onToggle}
             .viewType$=${viewType$}
-          ></ink-view-dropdown-menu>`
+          ></ink-view-dropdown-menu>`,
         )}`;
       },
       when(ctx) {
@@ -216,11 +203,7 @@ export const builtinInlineReferenceToolbarConfig = {
         if (!target.block) return false;
 
         if (ctx.flags.isNative()) return false;
-        if (
-          target.block.closest('ink-database') ||
-          target.block.closest('ink-table')
-        )
-          return false;
+        if (target.block.closest('ink-database') || target.block.closest('ink-table')) return false;
 
         return true;
       },

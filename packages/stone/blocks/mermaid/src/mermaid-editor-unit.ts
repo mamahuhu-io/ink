@@ -16,9 +16,7 @@ export class MermaidEditorUnit extends ShadowlessElement {
   }
 
   override render() {
-    const plainContent = html`<span
-      ><v-text .str=${this.delta.insert}></v-text
-    ></span>`;
+    const plainContent = html`<span><v-text .str=${this.delta.insert}></v-text></span>`;
 
     const mermaidMenu = this.mermaidMenu;
     const vElement = this.vElement;
@@ -30,14 +28,13 @@ export class MermaidEditorUnit extends ShadowlessElement {
     const tokens = mermaidMenu.highlightTokens$.value[lineIndex] ?? [];
     if (
       tokens.length === 0 ||
-      tokens.reduce((acc, token) => acc + token.content, '') !==
-        this.delta.insert
+      tokens.reduce((acc, token) => acc + token.content, '') !== this.delta.insert
     ) {
       return plainContent;
     }
 
     return html`<span
-      >${tokens.map(token => {
+      >${tokens.map((token) => {
         return html`<v-text
           .str=${token.content}
           style=${styleMap({

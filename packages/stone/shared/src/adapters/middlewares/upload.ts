@@ -1,21 +1,14 @@
 import { sha } from '@ink/stone-global/utils';
 import type { BlockStdScope } from '@ink/stone-std';
-import type {
-  BlockModel,
-  BlockProps,
-  TransformerMiddleware,
-} from '@ink/stone-store';
+import type { BlockModel, BlockProps, TransformerMiddleware } from '@ink/stone-store';
 import { filter, from, map, mergeMap } from 'rxjs';
 
 const ALLOWED_FLAVOURS = new Set(['ink:attachment', 'ink:image']);
 
-export const uploadMiddleware = (
-  std: BlockStdScope,
-  concurrent = 5
-): TransformerMiddleware => {
+export const uploadMiddleware = (std: BlockStdScope, concurrent = 5): TransformerMiddleware => {
   const blockView$ = std.view.viewUpdated.pipe(
-    filter(payload => payload.type === 'block'),
-    filter(payload => ALLOWED_FLAVOURS.has(payload.view.model.flavour))
+    filter((payload) => payload.type === 'block'),
+    filter((payload) => ALLOWED_FLAVOURS.has(payload.view.model.flavour)),
   );
 
   return ({ assetsManager }) => {
@@ -29,7 +22,7 @@ export const uploadMiddleware = (
         blob: Blob;
         mapInto: (blobId: string) => Partial<BlockProps>;
         abortController?: AbortController;
-      }
+      },
     ) {
       if (!abortController) return null;
 
@@ -50,7 +43,7 @@ export const uploadMiddleware = (
 
             await assetsManager.writeToBlob(blobId);
 
-            return await new Promise<string | null>(resolve => {
+            return await new Promise<string | null>((resolve) => {
               model.store.withoutTransact(() => {
                 if (signal.aborted) return resolve(null);
 
@@ -61,7 +54,7 @@ export const uploadMiddleware = (
             });
           })(),
           // If the signal is not aborted, it will be in the pending state.
-          new Promise<null>(resolve => {
+          new Promise<null>((resolve) => {
             signal.addEventListener('abort', () => resolve(null), {
               once: true,
             });
@@ -81,7 +74,7 @@ export const uploadMiddleware = (
 
     const blockViewSubscription = blockView$
       .pipe(
-        map(payload => {
+        map((payload) => {
           if (assetsManager.uploadingAssetsMap.size === 0) return null;
 
           const model = payload.view.model;
@@ -104,10 +97,10 @@ export const uploadMiddleware = (
             from(
               upload(model, state).then(() => {
                 assetsManager.uploadingAssetsMap.delete(model.id);
-              })
+              }),
             ),
-          concurrent
-        )
+          concurrent,
+        ),
       )
       .subscribe();
 

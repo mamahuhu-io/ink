@@ -1,9 +1,5 @@
+import { autoUpdate, computePosition, type ComputePositionReturn } from '@floating-ui/dom';
 import { InkStoneError } from '@ink/stone-global/exceptions';
-import {
-  autoUpdate,
-  computePosition,
-  type ComputePositionReturn,
-} from '@floating-ui/dom';
 import { cssVar } from '@ink/stone-theme';
 import { render } from 'lit';
 import { Subject } from 'rxjs';
@@ -41,17 +37,14 @@ export function createSimplePortal({
 
   const root = shadowDom ? portalRoot.shadowRoot : portalRoot;
   if (!root) {
-    throw new InkStoneError(
-      InkStoneError.ErrorCode.ValueNotExists,
-      'Failed to create portal root'
-    );
+    throw new InkStoneError(InkStoneError.ErrorCode.ValueNotExists, 'Failed to create portal root');
   }
 
   let updateId = 0;
-  const updatePortal: (id: number) => void = id => {
+  const updatePortal: (id: number) => void = (id) => {
     if (id !== updateId) {
       console.warn(
-        'Potentially infinite recursion! Please clean up the old event listeners before `updatePortal`'
+        'Potentially infinite recursion! Please clean up the old event listeners before `updatePortal`',
       );
       return;
     }
@@ -149,14 +142,14 @@ export function createLitPortal({
     setTimeout(() =>
       document.addEventListener(
         'click',
-        e => {
+        (e) => {
           if (portalRoot.contains(e.target as Node)) return;
           abortController.abort();
         },
         {
           signal: abortController.signal,
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -174,9 +167,7 @@ export function createLitPortal({
   Object.assign(portalRoot.style, portalOptions.portalStyles);
 
   const computePositionOptions =
-    positionConfigOrFn instanceof Function
-      ? positionConfigOrFn(portalRoot)
-      : positionConfigOrFn;
+    positionConfigOrFn instanceof Function ? positionConfigOrFn(portalRoot) : positionConfigOrFn;
   const { referenceElement, ...options } = computePositionOptions;
   const update = () => {
     if (
@@ -190,7 +181,7 @@ export function createLitPortal({
       strategy: positionStrategy,
       ...options,
     })
-      .then(positionReturn => {
+      .then((positionReturn) => {
         const { x, y } = positionReturn;
         // Use transform maybe cause overlay-mask offset issue
         // portalRoot.style.transform = `translate(${x}px, ${y}px)`;
@@ -207,15 +198,8 @@ export function createLitPortal({
     update();
   } else {
     const autoUpdateOptions =
-      computePositionOptions.autoUpdate === true
-        ? {}
-        : computePositionOptions.autoUpdate;
-    const cleanup = autoUpdate(
-      referenceElement,
-      portalRoot,
-      update,
-      autoUpdateOptions
-    );
+      computePositionOptions.autoUpdate === true ? {} : computePositionOptions.autoUpdate;
+    const cleanup = autoUpdate(referenceElement, portalRoot, update, autoUpdateOptions);
     abortController.signal.addEventListener('abort', () => {
       cleanup();
     });

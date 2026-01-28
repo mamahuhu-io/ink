@@ -1,8 +1,4 @@
-import {
-  type BlockComponent,
-  type Command,
-  TextSelection,
-} from '@ink/stone-std';
+import { type BlockComponent, type Command, TextSelection } from '@ink/stone-std';
 
 /**
  * Focus the end of the block

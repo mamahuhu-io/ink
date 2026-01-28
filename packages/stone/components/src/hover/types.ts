@@ -1,9 +1,6 @@
-import type { StyleInfo } from "lit/directives/style-map.js";
+import type { StyleInfo } from 'lit/directives/style-map.js';
 
-import type {
-  SafeBridgeOptions,
-  SafeTriangleOptions,
-} from "./middlewares/safe-area.js";
+import type { SafeBridgeOptions, SafeTriangleOptions } from './middlewares/safe-area.js';
 
 export type WhenHoverOptions = {
   enterDelay?: number;

@@ -1,24 +1,25 @@
-import { useEffect, useCallback } from "react";
-import { useTabStore } from "../stores/tabs";
-import { docToMarkdown, markdownToDoc, getStore, setDocLoading } from "../stores/editor";
-import { useEditorModeStore } from "../stores/editorMode";
-import { useFindReplaceStore } from "../stores/findReplace";
+import { useCallback, useEffect } from 'react';
+
+import type { SettingTabKey } from '../components/Settings/types';
+import i18n from '../i18n';
 import {
-  isTauri,
-  isWindows,
-  openFile,
-  saveFile,
-  saveFileAs,
-  readFile,
-  subscribeToMenuEvents,
-  unsubscribeFromMenuEvents,
-  setupBrowserShortcuts,
   addRecentFile,
   addRecentFolder,
+  isTauri,
+  isWindows,
   type MenuAction,
-} from "../services";
-import i18n from "../i18n";
-import type { SettingTabKey } from "../components/Settings/types";
+  openFile,
+  readFile,
+  saveFile,
+  saveFileAs,
+  setupBrowserShortcuts,
+  subscribeToMenuEvents,
+  unsubscribeFromMenuEvents,
+} from '../services';
+import { docToMarkdown, getStore, markdownToDoc, setDocLoading } from '../stores/editor';
+import { useEditorModeStore } from '../stores/editorMode';
+import { useFindReplaceStore } from '../stores/findReplace';
+import { useTabStore } from '../stores/tabs';
 
 // ============================================
 // Types
@@ -31,15 +32,14 @@ interface UnsavedTab {
   title: string;
 }
 
-type CloseAction = "close-window" | "quit-app";
+type CloseAction = 'close-window' | 'quit-app';
 
 // ============================================
 // Utility Functions
 // ============================================
 
 /** Sleep for specified milliseconds */
-const sleep = (ms: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 /** Invoke a Tauri command with error handling */
 async function invokeTauriCommand(command: string): Promise<void> {
@@ -47,68 +47,66 @@ async function invokeTauriCommand(command: string): Promise<void> {
     window.close();
     return;
   }
-  const { invoke } = await import("@tauri-apps/api/core");
+  const { invoke } = await import('@tauri-apps/api/core');
   await invoke(command);
 }
 
 /** Force close the current window */
-const forceCloseWindow = () => invokeTauriCommand("force_close_window");
+const forceCloseWindow = () => invokeTauriCommand('force_close_window');
 
 /** Force quit the entire application */
-const forceQuitApp = () => invokeTauriCommand("force_quit_app");
+const forceQuitApp = () => invokeTauriCommand('force_quit_app');
 
 // Global callbacks for app-level handlers
 // Using a Map for cleaner management instead of individual variables
 type CallbackType =
-  | "preferences"
-  | "import"
-  | "exportHtml"
-  | "exportPdf"
-  | "exportDocx"
-  | "exportImage"
-  | "globalSearch"
-  | "toggleSidebar"
-  | "toggleSourceMode";
+  | 'preferences'
+  | 'import'
+  | 'exportHtml'
+  | 'exportPdf'
+  | 'exportDocx'
+  | 'exportImage'
+  | 'globalSearch'
+  | 'toggleSidebar'
+  | 'toggleSourceMode';
 
 const callbacks = new Map<CallbackType, (arg?: any) => void>();
 
 // Setter functions for backward compatibility
-export function setPreferencesCallback(
-  callback: (tab?: SettingTabKey) => void,
-): void {
-  callbacks.set("preferences", callback);
+export function setPreferencesCallback(callback: (tab?: SettingTabKey) => void): void {
+  callbacks.set('preferences', callback);
 }
 
 export function setImportCallback(callback: () => void): void {
-  callbacks.set("import", callback);
+  callbacks.set('import', callback);
 }
 
 export function setExportHtmlCallback(callback: () => void): void {
-  callbacks.set("exportHtml", callback);
+  callbacks.set('exportHtml', callback);
 }
 
 export function setExportPdfCallback(callback: () => void): void {
-  callbacks.set("exportPdf", callback);
+  callbacks.set('exportPdf', callback);
 }
 
 export function setExportDocxCallback(callback: () => void): void {
-  callbacks.set("exportDocx", callback);
+  callbacks.set('exportDocx', callback);
 }
 
 export function setExportImageCallback(callback: () => void): void {
-  callbacks.set("exportImage", callback);
+  callbacks.set('exportImage', callback);
 }
 
 export function setGlobalSearchCallback(callback: () => void): void {
-  callbacks.set("globalSearch", callback);
+  callbacks.set('globalSearch', callback);
 }
 
 export function setToggleSidebarCallback(callback: () => void): void {
-  callbacks.set("toggleSidebar", callback);
+  callbacks.set('toggleSidebar', callback);
 }
 
 export function setToggleSourceModeCallback(callback: () => void): void {
-  callbacks.set("toggleSourceMode", callback);
+  callbacks.set('toggleSourceMode', callback);
 }
 
 // Helper to execute a callback if it exists
@@ -125,11 +123,11 @@ function executeCallback(type: CallbackType, arg?: any): void {
 
 // Trigger functions - can be called from anywhere
 export function triggerGlobalSearch(): void {
-  executeCallback("globalSearch");
+  executeCallback('globalSearch');
 }
 
 export function triggerPreferences(tab?: SettingTabKey): void {
-  executeCallback("preferences", "general");
+  executeCallback('preferences', tab || 'general');
 }
 
 // Global flag to prevent duplicate close handling
@@ -144,7 +142,7 @@ async function saveAllUnsavedTabs(unsavedTabs: UnsavedTab[]): Promise<void> {
 
   for (const tab of unsavedTabs) {
     // Check if in source mode
-    const isSourceMode = editorModeState.getMode(tab.docId) === "source";
+    const isSourceMode = editorModeState.getMode(tab.docId) === 'source';
     const sourceContent = editorModeState.getSourceContent(tab.docId);
 
     if (tab.filePath) {
@@ -165,7 +163,7 @@ async function saveAllUnsavedTabs(unsavedTabs: UnsavedTab[]): Promise<void> {
       updateTab(tab.id, { isModified: false });
     } else {
       // No path - need to prompt for save location
-      const path = await saveFileAs("");
+      const path = await saveFileAs('');
       if (path) {
         let content: string;
         if (isSourceMode && sourceContent) {
@@ -189,7 +187,7 @@ async function saveAllUnsavedTabs(unsavedTabs: UnsavedTab[]): Promise<void> {
         await addRecentFile(path);
       } else {
         // User cancelled save dialog - abort the close operation
-        throw new Error("Save cancelled by user");
+        throw new Error('Save cancelled by user');
       }
     }
   }
@@ -201,9 +199,7 @@ type DialogResult = boolean | null;
 /**
  * Show unsaved changes dialog and return user choice
  */
-async function showUnsavedChangesDialog(
-  unsavedTabs: UnsavedTab[],
-): Promise<DialogResult> {
+async function showUnsavedChangesDialog(unsavedTabs: UnsavedTab[]): Promise<DialogResult> {
   if (!isTauri()) {
     // Browser environment - use simple confirm
     const confirmed = window.confirm(
@@ -212,29 +208,29 @@ async function showUnsavedChangesDialog(
     return confirmed;
   }
 
-  const { ask } = await import("@tauri-apps/plugin-dialog");
+  const { ask } = await import('@tauri-apps/plugin-dialog');
   const t = i18n.t.bind(i18n);
 
   let message: string;
   if (unsavedTabs.length === 1) {
-    message = t("messages.unsavedChanges.singleFile", {
+    message = t('messages.unsavedChanges.singleFile', {
       filename: unsavedTabs[0].title,
     });
   } else {
-    message = t("messages.unsavedChanges.multipleFiles", {
+    message = t('messages.unsavedChanges.multipleFiles', {
       count: unsavedTabs.length,
     });
   }
-  message += "\n\n" + t("messages.unsavedChanges.warning");
+  message += '\n\n' + t('messages.unsavedChanges.warning');
 
   const result = await ask(message, {
-    title: t("messages.unsavedChanges.title"),
-    kind: "warning",
+    title: t('messages.unsavedChanges.title'),
+    kind: 'warning',
     okLabel:
       unsavedTabs.length === 1
-        ? t("messages.unsavedChanges.save")
-        : t("messages.unsavedChanges.saveAll"),
-    cancelLabel: t("messages.unsavedChanges.dontSave"),
+        ? t('messages.unsavedChanges.save')
+        : t('messages.unsavedChanges.saveAll'),
+    cancelLabel: t('messages.unsavedChanges.dontSave'),
   });
 
   return result;
@@ -243,18 +239,14 @@ async function showUnsavedChangesDialog(
 /**
  * Handle close/quit with unsaved changes check
  */
-async function handleCloseWithUnsavedCheck(
-  action: CloseAction,
-  logPrefix: string,
-): Promise<void> {
+async function handleCloseWithUnsavedCheck(action: CloseAction, logPrefix: string): Promise<void> {
   const { tabs } = useTabStore.getState();
   const unsavedTabs = tabs.filter((t) => t.isModified);
 
   console.log(`[${logPrefix}] Total tabs:`, tabs.length);
   console.log(`[${logPrefix}] Unsaved tabs:`, unsavedTabs.length);
 
-  const executeAction =
-    action === "close-window" ? forceCloseWindow : forceQuitApp;
+  const executeAction = action === 'close-window' ? forceCloseWindow : forceQuitApp;
 
   if (unsavedTabs.length === 0) {
     console.log(`[${logPrefix}] No unsaved changes, executing action`);
@@ -300,9 +292,9 @@ export async function closeTabWithCheck(
   onClose: () => void,
 ): Promise<boolean> {
   console.log(
-    "[CloseTab] closeTabWithCheck called for tab:",
+    '[CloseTab] closeTabWithCheck called for tab:',
     tab.title,
-    "isModified:",
+    'isModified:',
     tab.isModified,
   );
 
@@ -314,19 +306,19 @@ export async function closeTabWithCheck(
 
   // Has unsaved changes - show dialog
   if (isTauri()) {
-    const { ask } = await import("@tauri-apps/plugin-dialog");
+    const { ask } = await import('@tauri-apps/plugin-dialog');
 
     const t = i18n.t.bind(i18n);
     const message =
-      t("messages.unsavedChanges.singleFile", { filename: tab.title }) +
-      "\n\n" +
-      t("messages.unsavedChanges.warning");
+      t('messages.unsavedChanges.singleFile', { filename: tab.title }) +
+      '\n\n' +
+      t('messages.unsavedChanges.warning');
 
     const result = await ask(message, {
-      title: t("messages.unsavedChanges.title"),
-      kind: "warning",
-      okLabel: t("messages.unsavedChanges.save"),
-      cancelLabel: t("messages.unsavedChanges.dontSave"),
+      title: t('messages.unsavedChanges.title'),
+      kind: 'warning',
+      okLabel: t('messages.unsavedChanges.save'),
+      cancelLabel: t('messages.unsavedChanges.dontSave'),
     });
 
     if (result) {
@@ -334,7 +326,7 @@ export async function closeTabWithCheck(
       try {
         const { updateTab } = useTabStore.getState();
         const editorModeState = useEditorModeStore.getState();
-        const isSourceMode = editorModeState.getMode(tab.docId) === "source";
+        const isSourceMode = editorModeState.getMode(tab.docId) === 'source';
         const sourceContent = editorModeState.getSourceContent(tab.docId);
 
         if (tab.filePath) {
@@ -354,7 +346,7 @@ export async function closeTabWithCheck(
           updateTab(tab.id, { isModified: false });
         } else {
           // No path - need to prompt for save location
-          const path = await saveFileAs("");
+          const path = await saveFileAs('');
           if (path) {
             let content: string;
             if (isSourceMode && sourceContent) {
@@ -378,7 +370,7 @@ export async function closeTabWithCheck(
         onClose();
         return true;
       } catch (error) {
-        console.error("Failed to save file:", error);
+        console.error('Failed to save file:', error);
         return false;
       }
     } else {
@@ -410,27 +402,27 @@ export function useAppCommands() {
 
   // Handle new tab - creates a new tab in current window
   const handleNewTab = useCallback(() => {
-    addTab("Untitled");
+    addTab('Untitled');
   }, [addTab]);
 
   // Handle new window - creates a new window
   const handleNewWindow = useCallback(async () => {
     if (isTauri()) {
       try {
-        const { WebviewWindow } = await import("@tauri-apps/api/webviewWindow");
-        const { invoke } = await import("@tauri-apps/api/core");
-        const { useThemeStore } = await import("../stores/theme");
+        const { WebviewWindow } = await import('@tauri-apps/api/webviewWindow');
+        const { invoke } = await import('@tauri-apps/api/core');
+        const { useThemeStore } = await import('../stores/theme');
 
         // Get current theme to set correct background color
         const resolvedTheme = useThemeStore.getState().resolvedTheme;
-        const isDark = resolvedTheme === "dark";
+        const isDark = resolvedTheme === 'dark';
         // Color format: [r, g, b, a] array
         const backgroundColor: [number, number, number, number] = isDark
           ? [20, 20, 20, 255] // #141414
           : [255, 255, 255, 255]; // #ffffff
 
         const uniqueLabel = `main-${Date.now()}`;
-        console.log("Creating new window with label:", uniqueLabel);
+        console.log('Creating new window with label:', uniqueLabel);
 
         // Platform-specific window options
         // Windows: no decorations (uses custom web title bar), no titleBarStyle/hiddenTitle
@@ -438,8 +430,8 @@ export function useAppCommands() {
         // Linux: standard decorations
         const isWin = isWindows();
         const windowOptions: Parameters<typeof WebviewWindow>[1] = {
-          url: "/",
-          title: "Ink",
+          url: '/',
+          title: 'Ink',
           width: 1200,
           height: 800,
           minWidth: 800,
@@ -454,34 +446,34 @@ export function useAppCommands() {
           ...(isWin
             ? {}
             : {
-                titleBarStyle: "overlay" as const,
+                titleBarStyle: 'overlay' as const,
                 hiddenTitle: true,
               }),
         };
 
         const webview = new WebviewWindow(uniqueLabel, windowOptions);
         // Listen for window creation events
-        webview.once("tauri://created", async () => {
-          console.log("New window created successfully");
+        webview.once('tauri://created', async () => {
+          console.log('New window created successfully');
           // Rebuild menu to update window list (not needed on Windows where we use web menu)
           if (!isWin) {
             try {
-              await invoke("rebuild_menu");
-              console.log("Menu rebuilt with new window");
+              await invoke('rebuild_menu');
+              console.log('Menu rebuilt with new window');
             } catch (error) {
-              console.error("Failed to rebuild menu:", error);
+              console.error('Failed to rebuild menu:', error);
             }
           }
         });
-        webview.once("tauri://error", (e) => {
-          console.error("Failed to create window:", e);
+        webview.once('tauri://error', (e) => {
+          console.error('Failed to create window:', e);
         });
       } catch (error) {
-        console.error("Failed to create new window:", error);
+        console.error('Failed to create new window:', error);
       }
     } else {
       // In browser, open a new browser window
-      window.open(window.location.href, "_blank");
+      window.open(window.location.href, '_blank');
     }
   }, []);
 
@@ -499,7 +491,7 @@ export function useAppCommands() {
 
         // Read the file content
         const content = await readFile(filePath);
-        const fileName = filePath.split(/[/\\]/).pop() || "Untitled";
+        const fileName = filePath.split(/[/\\]/).pop() || 'Untitled';
 
         // Add new tab with file info
         const docId = addTab(fileName, filePath);
@@ -511,15 +503,15 @@ export function useAppCommands() {
         setTimeout(async () => {
           try {
             await markdownToDoc(docId, content, filePath);
-            console.log("Loaded file content into doc:", filePath);
+            console.log('Loaded file content into doc:', filePath);
             // Add to recent files
             await addRecentFile(filePath);
           } catch (error) {
-            console.error("Failed to load file content:", error);
+            console.error('Failed to load file content:', error);
           }
         }, 100);
       } catch (error) {
-        console.error("Failed to open file:", error);
+        console.error('Failed to open file:', error);
       }
     },
     [tabs, addTab],
@@ -541,16 +533,16 @@ export function useAppCommands() {
         setTimeout(async () => {
           try {
             await markdownToDoc(docId, fileInfo.content, fileInfo.path);
-            console.log("Loaded file content into doc:", fileInfo.path);
+            console.log('Loaded file content into doc:', fileInfo.path);
             // Add to recent files
             await addRecentFile(fileInfo.path);
           } catch (error) {
-            console.error("Failed to load file content:", error);
+            console.error('Failed to load file content:', error);
           }
         }, 100);
       }
     } catch (error) {
-      console.error("Failed to open file:", error);
+      console.error('Failed to open file:', error);
     }
   }, [addTab]);
 
@@ -560,7 +552,7 @@ export function useAppCommands() {
 
     // Get editor mode store state
     const editorModeState = useEditorModeStore.getState();
-    const isSourceMode = editorModeState.getMode(activeTab.docId) === "source";
+    const isSourceMode = editorModeState.getMode(activeTab.docId) === 'source';
     const sourceContent = editorModeState.getSourceContent(activeTab.docId);
 
     try {
@@ -570,10 +562,7 @@ export function useAppCommands() {
         if (isSourceMode && sourceContent) {
           // In source mode - use the source editor content directly
           content = sourceContent.current;
-          console.log(
-            "[handleSave] Saving source mode content, length:",
-            content.length,
-          );
+          console.log('[handleSave] Saving source mode content, length:', content.length);
         } else {
           // In preview mode - export from store
           content = await docToMarkdown(activeTab.docId, activeTab.filePath);
@@ -589,14 +578,14 @@ export function useAppCommands() {
         updateTab(activeTab.id, { isModified: false });
       } else {
         // No path - need to get one first via dialog
-        const path = await saveFile("", undefined);
+        const path = await saveFile('', undefined);
         if (path) {
           let content: string;
           if (isSourceMode && sourceContent) {
             // In source mode - use the source editor content directly
             content = sourceContent.current;
             console.log(
-              "[handleSave] Saving source mode content (new file), length:",
+              '[handleSave] Saving source mode content (new file), length:',
               content.length,
             );
           } else {
@@ -622,7 +611,7 @@ export function useAppCommands() {
         }
       }
     } catch (error) {
-      console.error("Failed to save file:", error);
+      console.error('Failed to save file:', error);
     }
   }, [activeTab, updateTab]);
 
@@ -632,21 +621,18 @@ export function useAppCommands() {
 
     // Get editor mode store state
     const editorModeState = useEditorModeStore.getState();
-    const isSourceMode = editorModeState.getMode(activeTab.docId) === "source";
+    const isSourceMode = editorModeState.getMode(activeTab.docId) === 'source';
     const sourceContent = editorModeState.getSourceContent(activeTab.docId);
 
     try {
       // Get new path first
-      const path = await saveFileAs("");
+      const path = await saveFileAs('');
       if (path) {
         let content: string;
         if (isSourceMode && sourceContent) {
           // In source mode - use the source editor content directly
           content = sourceContent.current;
-          console.log(
-            "[handleSaveAs] Saving source mode content, length:",
-            content.length,
-          );
+          console.log('[handleSaveAs] Saving source mode content, length:', content.length);
         } else {
           // In preview mode - export from store (now with path for image saving)
           content = await docToMarkdown(activeTab.docId, path);
@@ -669,7 +655,7 @@ export function useAppCommands() {
         await addRecentFile(path);
       }
     } catch (error) {
-      console.error("Failed to save file:", error);
+      console.error('Failed to save file:', error);
     }
   }, [activeTab, updateTab]);
 
@@ -678,7 +664,7 @@ export function useAppCommands() {
     if (!activeTab) return;
 
     // Use the shared close tab with check function
-    const { removeDoc } = await import("../stores/editor");
+    const { removeDoc } = await import('../stores/editor');
     await closeTabWithCheck(activeTab, () => {
       removeDoc(activeTab.docId);
       closeTab(activeTab.id);
@@ -687,34 +673,32 @@ export function useAppCommands() {
 
   // Handle toggle sidebar
   const handleToggleSidebar = useCallback(() => {
-    executeCallback("toggleSidebar");
+    executeCallback('toggleSidebar');
   }, []);
 
   // Handle toggle source mode
   const handleToggleSourceMode = useCallback(() => {
-    console.log("[useAppCommands] handleToggleSourceMode called");
-    executeCallback("toggleSourceMode");
+    console.log('[useAppCommands] handleToggleSourceMode called');
+    executeCallback('toggleSourceMode');
   }, []);
 
   // Handle zoom - applies to the entire document
-  const handleZoom = useCallback((action: "in" | "out" | "reset") => {
+  const handleZoom = useCallback((action: 'in' | 'out' | 'reset') => {
     const root = document.documentElement;
     // Get current zoom level from CSS variable or default to 1
-    const currentZoom = parseFloat(
-      root.style.getPropertyValue("--app-zoom") || "1",
-    );
+    const currentZoom = parseFloat(root.style.getPropertyValue('--app-zoom') || '1');
 
     let newZoom = currentZoom;
-    if (action === "in") {
+    if (action === 'in') {
       newZoom = Math.min(currentZoom + 0.1, 2);
-    } else if (action === "out") {
+    } else if (action === 'out') {
       newZoom = Math.max(currentZoom - 0.1, 0.5);
     } else {
       newZoom = 1;
     }
 
     // Store zoom level in CSS variable
-    root.style.setProperty("--app-zoom", String(newZoom));
+    root.style.setProperty('--app-zoom', String(newZoom));
 
     // Apply zoom to the body using CSS zoom property (better cross-browser support)
     document.body.style.zoom = String(newZoom);
@@ -724,45 +708,45 @@ export function useAppCommands() {
 
   // Handle about
   const handleAbout = useCallback(() => {
-    executeCallback("preferences", "about");
+    executeCallback('preferences', 'about');
   }, []);
 
   // Handle preferences
   const handlePreferences = useCallback(() => {
-    executeCallback("preferences", "general");
+    executeCallback('preferences', 'general');
   }, []);
 
   // Handle export HTML
   const handleExportHtml = useCallback(() => {
-    executeCallback("exportHtml");
+    executeCallback('exportHtml');
   }, []);
 
   // Handle export PDF
   const handleExportPdf = useCallback(() => {
-    console.log("handleExportPdf called");
-    executeCallback("exportPdf");
+    console.log('handleExportPdf called');
+    executeCallback('exportPdf');
   }, []);
 
   // Handle export DOCX
   const handleExportDocx = useCallback(() => {
-    console.log("handleExportDocx called");
-    executeCallback("exportDocx");
+    console.log('handleExportDocx called');
+    executeCallback('exportDocx');
   }, []);
 
   // Handle export Image
   const handleExportImage = useCallback(() => {
-    console.log("handleExportImage called");
-    executeCallback("exportImage");
+    console.log('handleExportImage called');
+    executeCallback('exportImage');
   }, []);
 
   // Handle import
   const handleImport = useCallback(() => {
-    executeCallback("import");
+    executeCallback('import');
   }, []);
 
   // Handle global search
   const handleGlobalSearch = useCallback(() => {
-    executeCallback("globalSearch");
+    executeCallback('globalSearch');
   }, []);
 
   // Handle find in current document
@@ -802,111 +786,106 @@ export function useAppCommands() {
   // Menu action handler
   const handleMenuAction = useCallback(
     (action: MenuAction) => {
-      console.log(
-        "handleMenuAction received:",
-        action,
-        "focused:",
-        document.hasFocus(),
-      );
+      console.log('handleMenuAction received:', action, 'focused:', document.hasFocus());
 
       // Events that should only be handled by the focused window
       const windowSpecificActions: MenuAction[] = [
-        "new_tab",
-        "open",
-        "save",
-        "save_as",
-        "close_tab",
-        "toggle_sidebar",
-        "toggle_source_mode",
-        "zoom_in",
-        "zoom_out",
-        "zoom_reset",
-        "import",
-        "export_html",
-        "export_pdf",
-        "export_docx",
-        "export_image",
-        "global_search",
-        "find",
-        "find_replace",
-        "undo",
-        "redo",
+        'new_tab',
+        'open',
+        'save',
+        'save_as',
+        'close_tab',
+        'toggle_sidebar',
+        'toggle_source_mode',
+        'zoom_in',
+        'zoom_out',
+        'zoom_reset',
+        'import',
+        'export_html',
+        'export_pdf',
+        'export_docx',
+        'export_image',
+        'global_search',
+        'find',
+        'find_replace',
+        'undo',
+        'redo',
       ];
 
       // Skip window-specific actions if this window is not focused
       if (windowSpecificActions.includes(action) && !document.hasFocus()) {
-        console.log("Skipping action - window not focused");
+        console.log('Skipping action - window not focused');
         return;
       }
 
       switch (action) {
-        case "new_window":
+        case 'new_window':
           handleNewWindow();
           break;
-        case "new_tab":
+        case 'new_tab':
           handleNewTab();
           break;
-        case "open":
+        case 'open':
           handleOpen();
           break;
-        case "save":
+        case 'save':
           handleSave();
           break;
-        case "save_as":
+        case 'save_as':
           handleSaveAs();
           break;
-        case "close_tab":
+        case 'close_tab':
           handleCloseTab();
           break;
-        case "toggle_sidebar":
+        case 'toggle_sidebar':
           handleToggleSidebar();
           break;
-        case "toggle_source_mode":
+        case 'toggle_source_mode':
           handleToggleSourceMode();
           break;
-        case "zoom_in":
-          handleZoom("in");
+        case 'zoom_in':
+          handleZoom('in');
           break;
-        case "zoom_out":
-          handleZoom("out");
+        case 'zoom_out':
+          handleZoom('out');
           break;
-        case "zoom_reset":
-          handleZoom("reset");
+        case 'zoom_reset':
+          handleZoom('reset');
           break;
-        case "about":
+        case 'about':
           handleAbout();
           break;
-        case "preferences":
+        case 'preferences':
           handlePreferences();
           break;
-        case "import":
+        case 'import':
           handleImport();
           break;
-        case "export_html":
+        case 'export_html':
           handleExportHtml();
           break;
-        case "export_pdf":
+        case 'export_pdf':
           handleExportPdf();
           break;
-        case "export_docx":
+        case 'export_docx':
           handleExportDocx();
           break;
-        case "export_image":
+        case 'export_image':
           handleExportImage();
           break;
-        case "global_search":
+        case 'global_search':
           handleGlobalSearch();
           break;
-        case "find":
+        case 'find':
           handleFind();
           break;
-        case "find_replace":
+        case 'find_replace':
           handleFindReplace();
           break;
-        case "undo":
+        case 'undo':
           handleUndo();
           break;
-        case "redo":
+        case 'redo':
           handleRedo();
           break;
       }
@@ -951,37 +930,31 @@ export function useAppCommands() {
 
       const setupListeners = async () => {
         try {
-          console.log("[Setup] Starting listener setup...");
+          console.log('[Setup] Starting listener setup...');
 
           // Reset the handling flag when a new window is set up
           // This ensures the flag doesn't persist from a previous closed window
           isHandlingClose = false;
-          console.log("[Setup] Reset isHandlingClose flag to false");
+          console.log('[Setup] Reset isHandlingClose flag to false');
 
-          const { listen } = await import("@tauri-apps/api/event");
-          const { getCurrentWindow } = await import("@tauri-apps/api/window");
+          const { listen } = await import('@tauri-apps/api/event');
+          const { getCurrentWindow } = await import('@tauri-apps/api/window');
 
-          unlistenRecentFile = await listen<string>(
-            "open-recent-file",
-            (event) => {
-              console.log("Opening recent file:", event.payload);
-              openFileByPath(event.payload);
-            },
-          );
+          unlistenRecentFile = await listen<string>('open-recent-file', (event) => {
+            console.log('Opening recent file:', event.payload);
+            openFileByPath(event.payload);
+          });
 
-          unlistenRecentFolder = await listen<string>(
-            "open-recent-folder",
-            (event) => {
-              console.log("Opening recent folder:", event.payload);
-              // TODO: Implement folder opening (set as workspace root)
-              addRecentFolder(event.payload);
-            },
-          );
+          unlistenRecentFolder = await listen<string>('open-recent-folder', (event) => {
+            console.log('Opening recent folder:', event.payload);
+            // TODO: Implement folder opening (set as workspace root)
+            addRecentFolder(event.payload);
+          });
 
           // Use Tauri's built-in onCloseRequested API for window close handling
           // Note: All window close is now handled via window-close-requested event from Rust
           const currentWindow = getCurrentWindow();
-          console.log("[Setup] Current window label:", currentWindow.label);
+          console.log('[Setup] Current window label:', currentWindow.label);
 
           // Listen for window-close-requested (emitted by Rust for THIS specific window)
           // IMPORTANT: Use currentWindow.listen() instead of listen() to ensure
@@ -989,27 +962,20 @@ export function useAppCommands() {
           unlistenMainWindowClose = await currentWindow.listen<{
             label: string;
             timestamp: number;
-          }>("window-close-requested", (event) => {
-            console.log(
-              "[WindowClose] Event received for window:",
-              event.payload.label,
-            );
-            console.log("[WindowClose] Current window:", currentWindow.label);
-            console.log("[WindowClose] isHandlingClose:", isHandlingClose);
+          }>('window-close-requested', (event) => {
+            console.log('[WindowClose] Event received for window:', event.payload.label);
+            console.log('[WindowClose] Current window:', currentWindow.label);
+            console.log('[WindowClose] isHandlingClose:', isHandlingClose);
 
             // Double-check this event is for THIS window
             if (event.payload.label !== currentWindow.label) {
-              console.log(
-                "[WindowClose] Event is for different window, ignoring",
-              );
+              console.log('[WindowClose] Event is for different window, ignoring');
               return;
             }
 
             // Prevent duplicate handling
             if (isHandlingClose) {
-              console.log(
-                "[WindowClose] Already handling close, ignoring duplicate event",
-              );
+              console.log('[WindowClose] Already handling close, ignoring duplicate event');
               return;
             }
             isHandlingClose = true;
@@ -1018,48 +984,40 @@ export function useAppCommands() {
             queueMicrotask(async () => {
               await sleep(50); // Let UI update
               try {
-                await handleCloseWithUnsavedCheck(
-                  "close-window",
-                  "WindowClose",
-                );
+                await handleCloseWithUnsavedCheck('close-window', 'WindowClose');
               } catch (error) {
-                console.error("[WindowClose] Error:", error);
+                console.error('[WindowClose] Error:', error);
                 isHandlingClose = false;
               }
             });
           });
           console.log(
-            "[Setup] window-close-requested listener registered for:",
+            '[Setup] window-close-requested listener registered for:',
             currentWindow.label,
           );
 
           // Listen for app quit request (Cmd+Q) - use global listen
-          unlistenAppQuit = await listen("app-quit-requested", async () => {
-            console.log(
-              "[AppQuit] Event received, isHandlingClose:",
-              isHandlingClose,
-            );
+          unlistenAppQuit = await listen('app-quit-requested', async () => {
+            console.log('[AppQuit] Event received, isHandlingClose:', isHandlingClose);
 
             // Prevent duplicate handling
             if (isHandlingClose) {
-              console.log(
-                "[AppQuit] Already handling close, ignoring duplicate event",
-              );
+              console.log('[AppQuit] Already handling close, ignoring duplicate event');
               return;
             }
             isHandlingClose = true;
 
             try {
-              await handleCloseWithUnsavedCheck("quit-app", "AppQuit");
+              await handleCloseWithUnsavedCheck('quit-app', 'AppQuit');
             } catch (error) {
-              console.error("[AppQuit] Error:", error);
+              console.error('[AppQuit] Error:', error);
               isHandlingClose = false;
             }
           });
-          console.log("[Setup] app-quit-requested listener registered");
-          console.log("[Setup] All listeners set up successfully!");
+          console.log('[Setup] app-quit-requested listener registered');
+          console.log('[Setup] All listeners set up successfully!');
         } catch (error) {
-          console.error("[Setup] Failed to setup listeners:", error);
+          console.error('[Setup] Failed to setup listeners:', error);
         }
       };
 

@@ -17,18 +17,12 @@ export abstract class DeltaASTConverter<
   /**
    * Convert AST format to delta format
    */
-  abstract astToDelta(
-    ast: AST,
-    options?: unknown
-  ): DeltaInsert<TextAttributes>[];
+  abstract astToDelta(ast: AST, options?: unknown): DeltaInsert<TextAttributes>[];
 
   /**
    * Convert delta format to AST format
    */
-  abstract deltaToAST(
-    deltas: DeltaInsert<TextAttributes>[],
-    options?: unknown
-  ): AST[];
+  abstract deltaToAST(deltas: DeltaInsert<TextAttributes>[], options?: unknown): AST[];
 }
 
 export type InlineDeltaMatcher<TNode extends object = never> = {
@@ -40,7 +34,7 @@ export type InlineDeltaMatcher<TNode extends object = never> = {
       configs: Map<string, string>;
       current: TNode;
     },
-    provider?: ServiceProvider
+    provider?: ServiceProvider,
   ) => TNode;
 };
 
@@ -52,10 +46,7 @@ export type ASTToDeltaMatcher<AST> = {
     context: {
       configs: Map<string, string>;
       options: DeltaASTConverterOptions;
-      toDelta: (
-        ast: AST,
-        options?: DeltaASTConverterOptions
-      ) => DeltaInsert<InkTextAttributes>[];
-    }
+      toDelta: (ast: AST, options?: DeltaASTConverterOptions) => DeltaInsert<InkTextAttributes>[];
+    },
   ) => DeltaInsert<InkTextAttributes>[];
 };

@@ -7,18 +7,14 @@
 import { effect } from '@preact/signals-core';
 import type { ReactiveElement } from 'lit';
 
-type ReactiveElementConstructor = abstract new (
-  ...args: any[]
-) => ReactiveElement;
+type ReactiveElementConstructor = abstract new (...args: any[]) => ReactiveElement;
 
 /**
  * Adds the ability for a LitElement or other ReactiveElement class to
  * watch for access to Preact signals during the update lifecycle and
  * trigger a new update when signals values change.
  */
-export function SignalWatcher<T extends ReactiveElementConstructor>(
-  Base: T
-): T {
+export function SignalWatcher<T extends ReactiveElementConstructor>(Base: T): T {
   abstract class SignalWatcher extends Base {
     private __dispose?: () => void;
 

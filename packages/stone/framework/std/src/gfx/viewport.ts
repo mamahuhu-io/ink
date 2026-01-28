@@ -1,10 +1,4 @@
-import {
-  Bound,
-  clamp,
-  type IPoint,
-  type IVec,
-  Vec,
-} from '@ink/stone-global/gfx';
+import { Bound, clamp, type IPoint, type IVec, Vec } from '@ink/stone-global/gfx';
 import debounce from 'lodash-es/debounce';
 import { BehaviorSubject, debounceTime, Subject } from 'rxjs';
 
@@ -32,10 +26,7 @@ export interface ViewportRecord {
   viewScale: number;
 }
 
-export function clientToModelCoord(
-  viewport: ViewportRecord,
-  clientCoord: [number, number]
-): IVec {
+export function clientToModelCoord(viewport: ViewportRecord, clientCoord: [number, number]): IVec {
   const { left, top, viewportX, viewportY, zoom, viewScale } = viewport;
 
   const [clientX, clientY] = clientCoord;
@@ -115,7 +106,7 @@ export class Viewport {
   }, 200);
 
   constructor() {
-    const subscription = this.elementReady.subscribe(el => {
+    const subscription = this.elementReady.subscribe((el) => {
       this._element = el;
       subscription.unsubscribe();
     });
@@ -124,20 +115,13 @@ export class Viewport {
   }
 
   private _setupResizeObserver() {
-    this._resizeSubject
-      .pipe(debounceTime(200))
-      .subscribe(({ width, height, left, top }) => {
-        if (!this._shell || !this._initialTopLeft) return;
-        this._completeResize(width, height, left, top);
-      });
+    this._resizeSubject.pipe(debounceTime(200)).subscribe(({ width, height, left, top }) => {
+      if (!this._shell || !this._initialTopLeft) return;
+      this._completeResize(width, height, left, top);
+    });
   }
 
-  private _completeResize(
-    width: number,
-    height: number,
-    left: number,
-    top: number
-  ) {
+  private _completeResize(width: number, height: number, left: number, top: number) {
     if (!this._initialTopLeft) return;
 
     const [initialTopLeftX, initialTopLeftY] = this._initialTopLeft;
@@ -214,12 +198,7 @@ export class Viewport {
    * This property is used to calculate the scale of the editor.
    */
   get viewScale() {
-    if (
-      !this._shell ||
-      this._cachedOffsetWidth === null ||
-      this._cachedOffsetWidth === 0
-    )
-      return 1;
+    if (!this._shell || this._cachedOffsetWidth === null || this._cachedOffsetWidth === 0) return 1;
     return this.boundingClientRect.width / this._cachedOffsetWidth;
   }
 
@@ -308,7 +287,7 @@ export class Viewport {
     bounds?: Bound | null,
     padding: [number, number, number, number] = [0, 0, 0, 0],
     maxZoom = ZOOM_MAX,
-    fitToScreenPadding = 100
+    fitToScreenPadding = 100,
   ) {
     let { centerX, centerY, zoom } = this;
 
@@ -322,7 +301,7 @@ export class Viewport {
 
     zoom = Math.min(
       (width - fitToScreenPadding - (pr + pl)) / w,
-      (height - fitToScreenPadding - (pt + pb)) / h
+      (height - fitToScreenPadding - (pt + pb)) / h,
     );
     zoom = clamp(zoom, ZOOM_MIN, clamp(maxZoom, ZOOM_MIN, ZOOM_MAX));
 
@@ -334,10 +313,7 @@ export class Viewport {
 
   isInViewport(bound: Bound) {
     const viewportBounds = Bound.from(this.viewportBounds);
-    return (
-      viewportBounds.contains(bound) ||
-      viewportBounds.isIntersectWithBound(bound)
-    );
+    return viewportBounds.contains(bound) || viewportBounds.isIntersectWithBound(bound);
   }
 
   onResize() {
@@ -410,7 +386,7 @@ export class Viewport {
     newZoom: number,
     newCenter = Vec.toVec(this.center),
     smooth = false,
-    forceUpdate = true
+    forceUpdate = true,
   ) {
     // Force complete any pending resize operations if forceUpdate is true
     if (forceUpdate && this._isResizing) {
@@ -426,7 +402,7 @@ export class Viewport {
         const center = [this.centerX, this.centerY] as IVec;
         const focusPoint = Vec.mul(
           Vec.sub(newCenter, Vec.mul(center, cofficient)),
-          1 / (1 - cofficient)
+          1 / (1 - cofficient),
         );
         this.smoothZoom(newZoom, Vec.toPoint(focusPoint));
       }
@@ -450,7 +426,7 @@ export class Viewport {
     bound: Bound,
     padding: [number, number, number, number] = [0, 0, 0, 0],
     smooth = false,
-    forceUpdate = true
+    forceUpdate = true,
   ) {
     let [pt, pr, pb, pl] = padding;
 
@@ -461,10 +437,7 @@ export class Viewport {
     if (pl > 0 && pl < 1) pl *= this.width;
 
     // Calculate zoom
-    let zoom = Math.min(
-      (this.width - (pr + pl)) / bound.w,
-      (this.height - (pt + pb)) / bound.h
-    );
+    let zoom = Math.min((this.width - (pr + pl)) / bound.w, (this.height - (pt + pb)) / bound.h);
 
     // Adjust padding if space is not enough
     if (zoom < this.ZOOM_MIN) {
@@ -512,12 +485,7 @@ export class Viewport {
    * @param wheel Whether the zoom is caused by wheel event.
    * @param forceUpdate Whether to force complete any pending resize operations before setting the viewport.
    */
-  setZoom(
-    zoom: number,
-    focusPoint?: IPoint,
-    wheel = false,
-    forceUpdate = true
-  ) {
+  setZoom(zoom: number, focusPoint?: IPoint, wheel = false, forceUpdate = true) {
     if (forceUpdate && this._isResizing) {
       this._forceCompleteResize();
     }
@@ -528,10 +496,7 @@ export class Viewport {
     const newZoom = this.zoom;
 
     const offset = Vec.sub(Vec.toVec(this.center), Vec.toVec(focusPoint));
-    const newCenter = Vec.add(
-      Vec.toVec(focusPoint),
-      Vec.mul(offset, prevZoom / newZoom)
-    );
+    const newCenter = Vec.add(Vec.toVec(focusPoint), Vec.mul(offset, prevZoom / newZoom));
     if (wheel) {
       this.zooming$.next(true);
     }
@@ -591,24 +556,12 @@ export class Viewport {
     return new Bound(x, y, w / this.zoom, h / this.zoom);
   }
 
-  toModelCoord(
-    viewX: number,
-    viewY: number,
-    zoom = this.zoom,
-    center?: IPoint
-  ): IVec {
+  toModelCoord(viewX: number, viewY: number, zoom = this.zoom, center?: IPoint): IVec {
     const { viewScale } = this;
-    const viewportX = center
-      ? center.x - this.width / 2 / zoom
-      : this.viewportX;
-    const viewportY = center
-      ? center.y - this.height / 2 / zoom
-      : this.viewportY;
+    const viewportX = center ? center.x - this.width / 2 / zoom : this.viewportX;
+    const viewportY = center ? center.y - this.height / 2 / zoom : this.viewportY;
 
-    return [
-      viewportX + viewX / zoom / viewScale,
-      viewportY + viewY / zoom / viewScale,
-    ];
+    return [viewportX + viewX / zoom / viewScale, viewportY + viewY / zoom / viewScale];
   }
 
   toModelCoordFromClientCoord([x, y]: IVec): IVec {
@@ -624,10 +577,7 @@ export class Viewport {
 
   toViewCoord(modelX: number, modelY: number): IVec {
     const { viewportX, viewportY, zoom, viewScale } = this;
-    return [
-      (modelX - viewportX) * zoom * viewScale,
-      (modelY - viewportY) * zoom * viewScale,
-    ];
+    return [(modelX - viewportX) * zoom * viewScale, (modelY - viewportY) * zoom * viewScale];
   }
 
   toViewCoordFromClientCoord([x, y]: IVec): IVec {

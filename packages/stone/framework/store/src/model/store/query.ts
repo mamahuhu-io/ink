@@ -42,23 +42,15 @@ function getBlockViewType(query: Query, block: Block): BlockViewType {
         [key]: block.model.props[key as keyof BlockModel['props']],
       };
     },
-    {} as Record<string, unknown>
+    {} as Record<string, unknown>,
   );
-  let blockViewType: BlockViewType =
-    queryMode === 'loose' ? 'display' : 'hidden';
+  let blockViewType: BlockViewType = queryMode === 'loose' ? 'display' : 'hidden';
 
-  query.match.some(queryObject => {
-    const {
-      id: queryId,
-      flavour: queryFlavour,
-      props: queryProps,
-      viewType,
-    } = queryObject;
+  query.match.some((queryObject) => {
+    const { id: queryId, flavour: queryFlavour, props: queryProps, viewType } = queryObject;
     const matchQueryId = queryId == null ? true : queryId === id;
-    const matchQueryFlavour =
-      queryFlavour == null ? true : queryFlavour === flavour;
-    const matchQueryProps =
-      queryProps == null ? true : isMatch(props, queryProps);
+    const matchQueryFlavour = queryFlavour == null ? true : queryFlavour === flavour;
+    const matchQueryProps = queryProps == null ? true : isMatch(props, queryProps);
     if (matchQueryId && matchQueryFlavour && matchQueryProps) {
       blockViewType = viewType;
       return true;

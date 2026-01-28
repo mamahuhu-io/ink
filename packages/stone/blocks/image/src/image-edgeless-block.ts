@@ -2,13 +2,10 @@ import type { BlockCaptionEditor } from '@ink/stone-components/caption';
 import { LoadingIcon } from '@ink/stone-components/icons';
 import { Peekable } from '@ink/stone-components/peek';
 import { ResourceController } from '@ink/stone-components/resource';
-import {
-  type ImageBlockModel,
-  ImageBlockSchema,
-} from '@ink/stone-model';
+import { BrokenImageIcon, ImageIcon } from '@ink/stone-icons/lit';
+import { type ImageBlockModel, ImageBlockSchema } from '@ink/stone-model';
 import { cssVarV2, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { formatSize } from '@ink/stone-shared/utils';
-import { BrokenImageIcon, ImageIcon } from '@ink/stone-icons/lit';
 import { GfxBlockComponent } from '@ink/stone-std';
 import { GfxViewInteractionExtension } from '@ink/stone-std/gfx';
 import { computed } from '@preact/signals-core';
@@ -17,12 +14,7 @@ import { query } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
 
-import {
-  copyImageBlob,
-  downloadImageBlob,
-  refreshData,
-  turnImageIntoCardView,
-} from './utils';
+import { copyImageBlob, downloadImageBlob, refreshData, turnImageIntoCardView } from './utils';
 
 @Peekable()
 export class ImageEdgelessBlockComponent extends GfxBlockComponent<ImageBlockModel> {
@@ -42,10 +34,7 @@ export class ImageEdgelessBlockComponent extends GfxBlockComponent<ImageBlockMod
       height: 36px;
       padding: 5px;
       border-radius: 8px;
-      background: ${unsafeCSSVarV2(
-        'loading/imageLoadingBackground',
-        '#92929238'
-      )};
+      background: ${unsafeCSSVarV2('loading/imageLoadingBackground', '#92929238')};
 
       & > svg {
         font-size: 25.71px;
@@ -67,7 +56,7 @@ export class ImageEdgelessBlockComponent extends GfxBlockComponent<ImageBlockMod
 
   resourceController = new ResourceController(
     computed(() => this.model.props.sourceId$.value),
-    'Image'
+    'Image',
   );
 
   get blobUrl() {
@@ -109,7 +98,7 @@ export class ImageEdgelessBlockComponent extends GfxBlockComponent<ImageBlockMod
     this.disposables.add(
       this.model.props.sourceId$.subscribe(() => {
         this.refreshData();
-      })
+      }),
     );
   }
 
@@ -163,16 +152,11 @@ export class ImageEdgelessBlockComponent extends GfxBlockComponent<ImageBlockMod
                   .message=${description}
                   .needUpload=${needUpload}
                   .action=${() =>
-                    needUpload
-                      ? this.resourceController.upload()
-                      : this.refreshData()}
-                ></ink-resource-status>`
+                    needUpload ? this.resourceController.upload() : this.refreshData()}
+                ></ink-resource-status>`,
             )}
           `,
-          () =>
-            html`<ink-image-fallback-card
-              .state=${resovledState}
-            ></ink-image-fallback-card>`
+          () => html`<ink-image-fallback-card .state=${resovledState}></ink-image-fallback-card>`,
         )}
         <ink-block-selection .block=${this}></ink-block-selection>
       </div>
@@ -195,7 +179,7 @@ export const ImageEdgelessBlockInteraction = GfxViewInteractionExtension(
     resizeConstraint: {
       lockRatio: true,
     },
-  }
+  },
 );
 
 declare global {

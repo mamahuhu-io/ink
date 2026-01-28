@@ -1,10 +1,10 @@
-import { FileTree } from '../FileTree'
-import { Outline } from '../Outline'
-import { useSidebarStore } from '../../stores/sidebar'
-import { SidebarToggle } from './SidebarToggle'
+import { useSidebarStore } from '../../stores/sidebar';
+import { FileTree } from '../FileTree';
+import { Outline } from '../Outline';
+import { SidebarToggle } from './SidebarToggle';
 
 export function Sidebar() {
-  const { view, isVisible, toggleVisible } = useSidebarStore()
+  const { view, isVisible, toggleVisible } = useSidebarStore();
 
   return (
     <aside className="sidebar">
@@ -14,9 +14,7 @@ export function Sidebar() {
         <SidebarToggle isOpen={isVisible} onToggle={toggleVisible} />
       </div>
       {/* Content area - view is controlled by ActivityBar */}
-      <div className="sidebar-content">
-        {view === 'files' ? <FileTree /> : <Outline />}
-      </div>
+      <div className="sidebar-content">{view === 'files' ? <FileTree /> : <Outline />}</div>
     </aside>
-  )
+  );
 }

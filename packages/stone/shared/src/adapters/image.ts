@@ -1,5 +1,5 @@
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { ImageBlockSchema } from '@ink/stone-model';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
 import {
   type AssetsManager,
   BaseAdapter,
@@ -32,25 +32,25 @@ type ImageToSliceSnapshotPayload = {
 
 export class ImageAdapter extends BaseAdapter<Image> {
   override fromBlockSnapshot(
-    _payload: FromBlockSnapshotPayload
+    _payload: FromBlockSnapshotPayload,
   ): Promise<FromBlockSnapshotResult<Image>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'ImageAdapter.fromBlockSnapshot is not implemented.'
+      'ImageAdapter.fromBlockSnapshot is not implemented.',
     );
   }
 
   override fromDocSnapshot(
-    _payload: FromDocSnapshotPayload
+    _payload: FromDocSnapshotPayload,
   ): Promise<FromDocSnapshotResult<Image>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'ImageAdapter.fromDocSnapshot is not implemented.'
+      'ImageAdapter.fromDocSnapshot is not implemented.',
     );
   }
 
   override fromSliceSnapshot(
-    payload: FromSliceSnapshotPayload
+    payload: FromSliceSnapshotPayload,
   ): Promise<FromSliceSnapshotResult<Image>> {
     const images: Image = [];
     for (const contentSlice of payload.snapshot.content) {
@@ -58,9 +58,7 @@ export class ImageAdapter extends BaseAdapter<Image> {
         const { flavour, props } = contentSlice;
         if (flavour === 'ink:image') {
           const { sourceId } = props;
-          const file = payload.assets?.getAssets().get(sourceId as string) as
-            | File
-            | undefined;
+          const file = payload.assets?.getAssets().get(sourceId as string) as File | undefined;
           if (file) {
             images.push(file);
           }
@@ -70,21 +68,17 @@ export class ImageAdapter extends BaseAdapter<Image> {
     return Promise.resolve({ file: images, assetsIds: [] });
   }
 
-  override toBlockSnapshot(
-    _payload: ToBlockSnapshotPayload<Image>
-  ): Promise<BlockSnapshot> {
+  override toBlockSnapshot(_payload: ToBlockSnapshotPayload<Image>): Promise<BlockSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'ImageAdapter.toBlockSnapshot is not implemented.'
+      'ImageAdapter.toBlockSnapshot is not implemented.',
     );
   }
 
-  override toDocSnapshot(
-    _payload: ToDocSnapshotPayload<Image>
-  ): Promise<DocSnapshot> {
+  override toDocSnapshot(_payload: ToDocSnapshotPayload<Image>): Promise<DocSnapshot> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'ImageAdapter.toDocSnapshot is not implemented'
+      'ImageAdapter.toDocSnapshot is not implemented',
     );
   }
 
@@ -105,7 +99,7 @@ export class ImageAdapter extends BaseAdapter<Image> {
 
       assets?.uploadingAssetsMap.set(id, {
         blob,
-        mapInto: sourceId => ({ sourceId }),
+        mapInto: (sourceId) => ({ sourceId }),
       });
 
       content.push({
@@ -129,8 +123,8 @@ export class ImageAdapter extends BaseAdapter<Image> {
 export const ImageAdapterFactoryIdentifier = AdapterFactoryIdentifier('Image');
 
 export const ImageAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(ImageAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(ImageAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new ImageAdapter(job, provider),
     }));
   },

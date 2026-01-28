@@ -93,7 +93,7 @@ export function getInternalViewExtensions() {
     AttachmentViewExtension,
     // [REMOVED] Embed modules
     // BookmarkViewExtension,
-    MermaidBlockViewExtension,  // Must be before CodeBlockViewExtension to match mermaid code blocks first
+    MermaidBlockViewExtension, // Must be before CodeBlockViewExtension to match mermaid code blocks first
     CodeBlockViewExtension,
     // [REMOVED] Database modules
     // DataViewViewExtension,

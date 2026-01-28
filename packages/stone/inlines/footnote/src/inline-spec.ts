@@ -7,17 +7,17 @@ import z from 'zod';
 
 import { FootNoteNodeConfigIdentifier } from './footnote-node/footnote-config';
 
-export const FootNoteInlineSpecExtension =
-  InlineSpecExtension<InkTextAttributes>('footnote', provider => {
+export const FootNoteInlineSpecExtension = InlineSpecExtension<InkTextAttributes>(
+  'footnote',
+  (provider) => {
     const std = provider.get(StdIdentifier);
-    const config =
-      provider.getOptional(FootNoteNodeConfigIdentifier) ?? undefined;
+    const config = provider.getOptional(FootNoteNodeConfigIdentifier) ?? undefined;
     return {
       name: 'footnote',
       schema: z.object({
         footnote: FootNoteSchema.optional().nullable().catch(undefined),
       }),
-      match: delta => {
+      match: (delta) => {
         return !!delta.attributes?.footnote;
       },
       renderer: ({ delta }) => {
@@ -29,4 +29,5 @@ export const FootNoteInlineSpecExtension =
       },
       embed: true,
     };
-  });
+  },
+);

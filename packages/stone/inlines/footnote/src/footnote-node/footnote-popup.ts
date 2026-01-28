@@ -1,14 +1,11 @@
-import {
-  getAttachmentFileIcon,
-  WebIcon16,
-} from '@ink/stone-components/icons';
+import { getAttachmentFileIcon, WebIcon16 } from '@ink/stone-components/icons';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import type { FootNote } from '@ink/stone-model';
 import { DocDisplayMetaProvider } from '@ink/stone-shared/services';
 import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import type { BlockStdScope } from '@ink/stone-std';
-import { computed, signal } from '@preact/signals-core';
 import { baseTheme } from '@ink/stone-theme';
+import { computed, signal } from '@preact/signals-core';
 import { css, html, LitElement, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 
@@ -70,9 +67,7 @@ export class FootNotePopup extends SignalWatcher(WithDisposable(LitElement)) {
     } else if (referenceType === 'url') {
       const favicon = this._linkPreview$.value?.favicon;
       // Directly use favicon URL since Tauri app doesn't have CORS restrictions
-      return favicon
-        ? html`<img src=${favicon} alt="favicon" />`
-        : WebIcon16;
+      return favicon ? html`<img src=${favicon} alt="favicon" />` : WebIcon16;
     }
     return undefined;
   });

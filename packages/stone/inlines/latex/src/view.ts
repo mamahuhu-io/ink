@@ -1,13 +1,7 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 
 import { effects } from './effects';
-import {
-  LatexEditorUnitSpecExtension,
-  LatexInlineSpecExtension,
-} from './inline-spec';
+import { LatexEditorUnitSpecExtension, LatexInlineSpecExtension } from './inline-spec';
 import { LatexEditorInlineManagerExtension } from './latex-node/latex-editor-menu';
 
 export class LatexViewExtension extends ViewExtensionProvider {

@@ -3,7 +3,7 @@ import type { TransformerMiddleware } from '@ink/stone-store';
 export const fileNameMiddleware =
   (fileName?: string): TransformerMiddleware =>
   ({ slots }) => {
-    const beforeImportSubscription = slots.beforeImport.subscribe(payload => {
+    const beforeImportSubscription = slots.beforeImport.subscribe((payload) => {
       if (payload.type !== 'page') {
         return;
       }

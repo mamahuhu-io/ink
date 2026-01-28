@@ -1,12 +1,12 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / GfxCompatible
 
 # Function: GfxCompatible()
 
-> **GfxCompatible**\<`Props`, `T`\>(`BlockModelSuperClass`): *typeof* [`GfxBlockElementModel`](../classes/GfxBlockElementModel.md)
+> **GfxCompatible**\<`Props`, `T`\>(`BlockModelSuperClass`): _typeof_ [`GfxBlockElementModel`](../classes/GfxBlockElementModel.md)
 
 Convert a BlockModel to a GfxBlockElementModel.
 
@@ -14,11 +14,11 @@ Convert a BlockModel to a GfxBlockElementModel.
 
 ### Props
 
-`Props` *extends* [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md)
+`Props` _extends_ [`GfxCompatibleProps`](../type-aliases/GfxCompatibleProps.md)
 
 ### T
 
-`T` *extends* `Constructor`\<`BlockModel`\<`Props`\>\> = `Constructor`\<`BlockModel`\<`Props`\>\>
+`T` _extends_ `Constructor`\<`BlockModel`\<`Props`\>\> = `Constructor`\<`BlockModel`\<`Props`\>\>
 
 ## Parameters
 
@@ -30,6 +30,6 @@ The BlockModel class to be converted.
 
 ## Returns
 
-*typeof* [`GfxBlockElementModel`](../classes/GfxBlockElementModel.md)
+_typeof_ [`GfxBlockElementModel`](../classes/GfxBlockElementModel.md)
 
 The returned class is a subclass of the GfxBlockElementModel class and the given BlockModelSuperClass.

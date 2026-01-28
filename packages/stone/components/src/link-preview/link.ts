@@ -46,12 +46,7 @@ export class LinkPreview extends LitElement {
     const { url } = this;
 
     return html`
-      <a
-        class="ink-link-preview"
-        rel="noopener noreferrer"
-        target="_blank"
-        href=${url}
-      >
+      <a class="ink-link-preview" rel="noopener noreferrer" target="_blank" href=${url}>
         <span>${getHostName(url)}</span>
       </a>
     `;

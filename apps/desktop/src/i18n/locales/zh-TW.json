@@ -121,13 +121,6 @@
         "themeDesc": "匯出文件時使用的主題",
         "auto": "自動（與目前相符）"
       },
-      "window": {
-        "title": "視窗",
-        "sidebarPosition": "側邊欄位置",
-        "sidebarPositionDesc": "檔案側邊欄的位置",
-        "left": "左",
-        "right": "右"
-      },
       "display": {
         "title": "顯示",
         "showDocStats": "顯示文件統計資訊",

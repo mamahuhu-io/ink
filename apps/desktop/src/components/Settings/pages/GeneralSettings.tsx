@@ -1,14 +1,16 @@
-import { useTranslation } from 'react-i18next'
-import { SettingHeader, SettingRow, SettingWrapper } from '../components'
-import { useLanguageStore } from '../../../stores/language'
-import { usePreferencesStore } from '../../../stores/preferences'
-import { pickFolder } from '../../../services/fileSystem'
-import { languages } from '../../../i18n'
-import './SettingPages.css'
+import './SettingPages.css';
+
+import { useTranslation } from 'react-i18next';
+
+import { languages } from '../../../i18n';
+import { pickFolder } from '../../../services/fileSystem';
+import { useLanguageStore } from '../../../stores/language';
+import { usePreferencesStore } from '../../../stores/preferences';
+import { SettingHeader, SettingRow, SettingWrapper } from '../components';
 
 export function GeneralSettings() {
-  const { t } = useTranslation()
-  const { language, setLanguage } = useLanguageStore()
+  const { t } = useTranslation();
+  const { language, setLanguage } = useLanguageStore();
   const {
     defaultSaveLocation,
     setDefaultSaveLocation,
@@ -17,15 +19,15 @@ export function GeneralSettings() {
     confirmDelete,
     setConfirmDelete,
     openLastFile,
-    setOpenLastFile
-  } = usePreferencesStore()
+    setOpenLastFile,
+  } = usePreferencesStore();
 
   const handleChooseLocation = async () => {
-    const path = await pickFolder()
+    const path = await pickFolder();
     if (path) {
-      setDefaultSaveLocation(path)
+      setDefaultSaveLocation(path);
     }
-  }
+  };
 
   return (
     <div className="setting-page">
@@ -59,7 +61,9 @@ export function GeneralSettings() {
           desc={defaultSaveLocation || t('settings.general.files.defaultLocationDesc')}
         >
           <button className="setting-button" onClick={handleChooseLocation}>
-            {defaultSaveLocation ? t('settings.general.files.chooseButton').replace('...', 'Change') : t('settings.general.files.chooseButton')}
+            {defaultSaveLocation
+              ? t('settings.general.files.chooseButton').replace('...', 'Change')
+              : t('settings.general.files.chooseButton')}
           </button>
         </SettingRow>
         <SettingRow
@@ -85,6 +89,16 @@ export function GeneralSettings() {
           <div
             className={`setting-switch ${confirmDelete ? 'active' : ''}`}
             onClick={() => setConfirmDelete(!confirmDelete)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setConfirmDelete(!confirmDelete);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={confirmDelete}
+            aria-label={t('settings.general.behavior.confirmDelete')}
           />
         </SettingRow>
         <SettingRow
@@ -94,9 +108,19 @@ export function GeneralSettings() {
           <div
             className={`setting-switch ${openLastFile ? 'active' : ''}`}
             onClick={() => setOpenLastFile(!openLastFile)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setOpenLastFile(!openLastFile);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={openLastFile}
+            aria-label={t('settings.general.behavior.openLastFile')}
           />
         </SettingRow>
       </SettingWrapper>
     </div>
-  )
+  );
 }

@@ -5,7 +5,7 @@ import type { TextSelection } from '@ink/stone-std';
 import { describe, expect, it } from 'vitest';
 
 import { replaceSelectedTextWithBlocksCommand } from '../../../commands/model-crud/replace-selected-text-with-blocks';
-import { ink, block } from '../../../test-utils';
+import { block, ink } from '../../../test-utils';
 
 describe('commands/model-crud', () => {
   describe('replaceSelectedTextWithBlocksCommand', () => {
@@ -25,7 +25,7 @@ describe('commands/model-crud', () => {
         block`<ink-paragraph id="222">222</ink-paragraph>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -62,7 +62,7 @@ describe('commands/model-crud', () => {
         block`<ink-paragraph id="222">222</ink-paragraph>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -96,7 +96,7 @@ describe('commands/model-crud', () => {
 
       const blocks = [block`<ink-paragraph id="111">111</ink-paragraph>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -127,7 +127,7 @@ describe('commands/model-crud', () => {
 
       const blocks = [block`<ink-paragraph id="111">111</ink-paragraph>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -163,7 +163,7 @@ describe('commands/model-crud', () => {
         block`<ink-code></ink-code>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -201,7 +201,7 @@ describe('commands/model-crud', () => {
         block`<ink-code></ink-code>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -240,7 +240,7 @@ describe('commands/model-crud', () => {
         block`<ink-paragraph>111</ink-paragraph>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -277,7 +277,7 @@ describe('commands/model-crud', () => {
         block`<ink-paragraph>111</ink-paragraph>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -309,12 +309,9 @@ describe('commands/model-crud', () => {
         </ink-page>
       `;
 
-      const blocks = [
-        block`<ink-code></ink-code>`,
-        block`<ink-code></ink-code>`,
-      ]
+      const blocks = [block`<ink-code></ink-code>`, block`<ink-code></ink-code>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -345,12 +342,9 @@ describe('commands/model-crud', () => {
         </ink-page>
       `;
 
-      const blocks = [
-        block`<ink-code></ink-code>`,
-        block`<ink-code></ink-code>`,
-      ]
+      const blocks = [block`<ink-code></ink-code>`, block`<ink-code></ink-code>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -382,12 +376,9 @@ describe('commands/model-crud', () => {
         </ink-page>
       `;
 
-      const blocks = [
-        block`<ink-list>1.</ink-list>`,
-        block`<ink-list>2.</ink-list>`,
-      ]
+      const blocks = [block`<ink-list>1.</ink-list>`, block`<ink-list>2.</ink-list>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -424,7 +415,7 @@ describe('commands/model-crud', () => {
         block`<ink-paragraph>222</ink-paragraph>`,
       ]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -454,12 +445,9 @@ describe('commands/model-crud', () => {
         </ink-page>
       `;
 
-      const blocks = [
-        block`<ink-paragraph>111</ink-paragraph>`,
-        block`<ink-code></ink-code>`,
-      ]
+      const blocks = [block`<ink-paragraph>111</ink-paragraph>`, block`<ink-code></ink-code>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 
@@ -490,12 +478,9 @@ describe('commands/model-crud', () => {
         </ink-page>
       `;
 
-      const blocks = [
-        block`<ink-code></ink-code>`,
-        block`<ink-paragraph>222</ink-paragraph>`,
-      ]
+      const blocks = [block`<ink-code></ink-code>`, block`<ink-paragraph>222</ink-paragraph>`]
         .filter((b): b is NonNullable<typeof b> => b !== null)
-        .map(b => b.model);
+        .map((b) => b.model);
 
       const textSelection = host.selection.value[0] as TextSelection;
 

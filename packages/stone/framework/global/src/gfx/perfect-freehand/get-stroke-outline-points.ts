@@ -1,19 +1,7 @@
 import type { IVec } from '../model/index.js';
 import { getStrokeRadius } from './get-stroke-radius.js';
 import type { StrokeOptions, StrokePoint } from './types.js';
-import {
-  add,
-  dist2,
-  dpr,
-  lrp,
-  mul,
-  neg,
-  per,
-  prj,
-  rotAround,
-  sub,
-  uni,
-} from './vec.js';
+import { add, dist2, dpr, lrp, mul, neg, per, prj, rotAround, sub, uni } from './vec.js';
 
 const { min, PI } = Math;
 
@@ -39,24 +27,22 @@ const FIXED_PI = PI + 0.0001;
  */
 export function getStrokeOutlinePoints(
   points: StrokePoint[],
-  options: Partial<StrokeOptions> = {} as Partial<StrokeOptions>
+  options: Partial<StrokeOptions> = {} as Partial<StrokeOptions>,
 ): IVec[] {
   const {
     size = 16,
     smoothing = 0.5,
     thinning = 0.5,
     simulatePressure = true,
-    easing = t => t,
+    easing = (t) => t,
     start = {},
     end = {},
     last: isComplete = false,
   } = options;
 
-  const { cap: capStart = true, easing: taperStartEase = t => t * (2 - t) } =
-    start;
+  const { cap: capStart = true, easing: taperStartEase = (t) => t * (2 - t) } = start;
 
-  const { cap: capEnd = true, easing: taperEndEase = t => --t * t * t + 1 } =
-    end;
+  const { cap: capEnd = true, easing: taperEndEase = (t) => --t * t * t + 1 } = end;
 
   // We can't do anything with an empty array or a stroke with negative size.
   if (points.length === 0 || size <= 0) {
@@ -106,12 +92,7 @@ export function getStrokeOutlinePoints(
   }, points[0].pressure);
 
   // The current radius
-  let radius = getStrokeRadius(
-    size,
-    thinning,
-    points[points.length - 1].pressure,
-    easing
-  );
+  let radius = getStrokeRadius(size, thinning, points[points.length - 1].pressure, easing);
 
   // The radius of the first saved point
   let firstRadius: number | undefined = undefined;
@@ -164,10 +145,7 @@ export function getStrokeOutlinePoints(
         // of the stroke. Otherwise, use the input pressure.
         const sp = min(1, distance / size);
         const rp = min(1, 1 - sp);
-        pressure = min(
-          1,
-          prevPressure + (rp - prevPressure) * (sp * RATE_OF_PRESSURE_CHANGE)
-        );
+        pressure = min(1, prevPressure + (rp - prevPressure) * (sp * RATE_OF_PRESSURE_CHANGE));
       }
 
       radius = getStrokeRadius(size, thinning, pressure, easing);
@@ -187,10 +165,7 @@ export function getStrokeOutlinePoints(
       of the two taper strengths to the radius.
     */
 
-    const ts =
-      runningLength < taperStart
-        ? taperStartEase(runningLength / taperStart)
-        : 1;
+    const ts = runningLength < taperStart ? taperStartEase(runningLength / taperStart) : 1;
 
     const te =
       totalLength - runningLength < taperEnd
@@ -209,8 +184,7 @@ export function getStrokeOutlinePoints(
       draw a cap at the current point.
     */
 
-    const nextVector = (i < points.length - 1 ? points[i + 1] : points[i])
-      .vector;
+    const nextVector = (i < points.length - 1 ? points[i + 1] : points[i]).vector;
     const nextDpr = i < points.length - 1 ? dpr(vector, nextVector) : 1.0;
     const prevDpr = dpr(vector, prevVector);
 
@@ -312,11 +286,7 @@ export function getStrokeOutlinePoints(
 
   if (points.length === 1) {
     if (!(taperStart || taperEnd) || isComplete) {
-      const start = prj(
-        firstPoint,
-        uni(per(sub(firstPoint, lastPoint))),
-        -(firstRadius || radius)
-      );
+      const start = prj(firstPoint, uni(per(sub(firstPoint, lastPoint))), -(firstRadius || radius));
       const dotPts: IVec[] = [];
       for (let step = 1 / 13, t = step; t <= 1; t += step) {
         dotPts.push(rotAround(start, firstPoint, FIXED_PI * 2 * t));
@@ -351,7 +321,7 @@ export function getStrokeOutlinePoints(
         sub(firstPoint, offsetA),
         sub(firstPoint, offsetB),
         add(firstPoint, offsetB),
-        add(firstPoint, offsetA)
+        add(firstPoint, offsetA),
       );
     }
 
@@ -383,7 +353,7 @@ export function getStrokeOutlinePoints(
         add(lastPoint, mul(direction, radius)),
         add(lastPoint, mul(direction, radius * 0.99)),
         sub(lastPoint, mul(direction, radius * 0.99)),
-        sub(lastPoint, mul(direction, radius))
+        sub(lastPoint, mul(direction, radius)),
       );
     }
   }

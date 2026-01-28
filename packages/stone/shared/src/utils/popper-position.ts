@@ -29,7 +29,7 @@ function calcSafeCoordinate({
   const safeX = clamp(
     positioningPoint.x + offsetX,
     edgeGap,
-    boundaryRect.width - objRect.width - edgeGap
+    boundaryRect.width - objRect.width - edgeGap,
   );
   const y = positioningPoint.y + offsetY;
   // Not use clamp for y coordinate to avoid the quick bar always showing after scrolling
@@ -53,14 +53,13 @@ function calcSafeCoordinate({
 function compareTopAndBottomSpace(
   obj: { getBoundingClientRect: () => DOMRect },
   container = document.body,
-  gap = 20
+  gap = 20,
 ) {
   const objRect = obj.getBoundingClientRect();
   const spaceRect = container.getBoundingClientRect();
   const topSpace = objRect.top - spaceRect.top;
   const bottomSpace = spaceRect.bottom - objRect.bottom;
-  const topOrBottom: 'top' | 'bottom' =
-    topSpace > bottomSpace ? 'top' : 'bottom';
+  const topOrBottom: 'top' | 'bottom' = topSpace > bottomSpace ? 'top' : 'bottom';
   return {
     placement: topOrBottom,
     // the height is the available space.
@@ -79,19 +78,13 @@ export function getPopperPosition(
   reference: {
     getBoundingClientRect: () => DOMRect;
   },
-  { gap = 12, offsetY = 5 }: { gap?: number; offsetY?: number } = {}
+  { gap = 12, offsetY = 5 }: { gap?: number; offsetY?: number } = {},
 ) {
   if (!popper) {
     // foolproof, someone may use element with non-null assertion
-    console.warn(
-      'The popper element is not exist. Popper position maybe incorrect'
-    );
+    console.warn('The popper element is not exist. Popper position maybe incorrect');
   }
-  const { placement, height } = compareTopAndBottomSpace(
-    reference,
-    document.body,
-    gap + offsetY
-  );
+  const { placement, height } = compareTopAndBottomSpace(reference, document.body, gap + offsetY);
 
   const referenceRect = reference.getBoundingClientRect();
   if (

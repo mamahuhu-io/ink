@@ -1,14 +1,7 @@
 import { Bound } from '@ink/stone-global/gfx';
-import type {
-  GfxCompatibleProps,
-  GfxElementGeometry,
-} from '@ink/stone-std/gfx';
+import type { GfxCompatibleProps, GfxElementGeometry } from '@ink/stone-std/gfx';
 import { GfxCompatible } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 import { z } from 'zod';
 
 import {
@@ -75,11 +68,7 @@ export const NoteBlockSchema = defineBlockSchema({
     version: 1,
     role: 'hub',
     parent: ['@root'],
-    children: [
-      '@content',
-      'ink:database',
-      'ink:data-view',
-    ],
+    children: ['@content', 'ink:database', 'ink:data-view'],
   },
   toModel: () => {
     return new NoteBlockModel();
@@ -157,9 +146,9 @@ export class NoteBlockModel
   isPageBlock() {
     return (
       this.parent?.children.find(
-        child =>
+        (child) =>
           child instanceof NoteBlockModel &&
-          child.props.displayMode !== NoteDisplayMode.EdgelessOnly
+          child.props.displayMode !== NoteDisplayMode.EdgelessOnly,
       ) === this
     );
   }

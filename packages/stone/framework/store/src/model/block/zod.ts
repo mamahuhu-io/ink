@@ -30,11 +30,7 @@ export const BlockSchema = z.object({
     parent: ParentSchema,
     children: ContentSchema,
     isFlatData: z.boolean().optional(),
-    props: z
-      .function()
-      .args(z.custom<InternalPrimitives>())
-      .returns(z.record(z.any()))
-      .optional(),
+    props: z.function().args(z.custom<InternalPrimitives>()).returns(z.record(z.any())).optional(),
     toModel: z.function().args().returns(z.custom<BlockModel>()).optional(),
   }),
   transformer: z
@@ -46,9 +42,7 @@ export const BlockSchema = z.object({
 
 export type BlockSchemaType = z.infer<typeof BlockSchema>;
 
-export type PropsGetter<Props> = (
-  internalPrimitives: InternalPrimitives
-) => Props;
+export type PropsGetter<Props> = (internalPrimitives: InternalPrimitives) => Props;
 
 export function defineBlockSchema<
   Flavour extends string,
@@ -95,9 +89,7 @@ export function defineBlockSchema({
   };
   props?: (internalPrimitives: InternalPrimitives) => Record<string, unknown>;
   toModel?: () => BlockModel;
-  transformer?: (
-    transformerConfig: Map<string, unknown>
-  ) => BaseBlockTransformer;
+  transformer?: (transformerConfig: Map<string, unknown>) => BaseBlockTransformer;
 }): BlockSchemaType {
   const schema = {
     version: metadata.version,

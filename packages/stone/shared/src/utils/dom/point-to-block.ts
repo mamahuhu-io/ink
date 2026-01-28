@@ -1,11 +1,11 @@
-import { NoteBlockModel, RootBlockModel } from "@ink/stone-model";
-import { clamp, type Point, type Rect } from "@ink/stone-global/gfx";
-import { BLOCK_ID_ATTR, type BlockComponent } from "@ink/stone-std";
-import { SurfaceBlockModel } from "@ink/stone-std/gfx";
-import type { BlockModel } from "@ink/stone-store";
+import { clamp, type Point, type Rect } from '@ink/stone-global/gfx';
+import { NoteBlockModel, RootBlockModel } from '@ink/stone-model';
+import { BLOCK_ID_ATTR, type BlockComponent } from '@ink/stone-std';
+import { SurfaceBlockModel } from '@ink/stone-std/gfx';
+import type { BlockModel } from '@ink/stone-store';
 
-import { BLOCK_CHILDREN_CONTAINER_PADDING_LEFT } from "../../consts/index.js";
-import { matchModels } from "../model/checker.js";
+import { BLOCK_CHILDREN_CONTAINER_PADDING_LEFT } from '../../consts/index.js';
+import { matchModels } from '../model/checker.js';
 
 const ATTR_SELECTOR = `[${BLOCK_ID_ATTR}]`;
 
@@ -19,9 +19,7 @@ const STEPS = MAX_SPACE / 2 / 2;
  * Otherwise return `0`.
  */
 function contains(parent: Element, node: Element) {
-  return (
-    parent.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_CONTAINED_BY
-  );
+  return parent.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_CONTAINED_BY;
 }
 
 /**
@@ -35,11 +33,7 @@ function hasBlockId(element: Element): element is BlockComponent {
  * Returns `true` if element is default/edgeless page or note.
  */
 function isRootOrNoteOrSurface(element: BlockComponent) {
-  return matchModels(element.model, [
-    RootBlockModel,
-    NoteBlockModel,
-    SurfaceBlockModel,
-  ]);
+  return matchModels(element.model, [RootBlockModel, NoteBlockModel, SurfaceBlockModel]);
 }
 
 function isBlock(element: BlockComponent) {
@@ -47,11 +41,11 @@ function isBlock(element: BlockComponent) {
 }
 
 function isImage({ tagName }: Element) {
-  return tagName === "INK-IMAGE";
+  return tagName === 'INK-IMAGE';
 }
 
 function isDatabase({ tagName }: Element) {
-  return tagName === "INK-TABLE";
+  return tagName === 'INK-TABLE';
 }
 
 /**
@@ -106,16 +100,14 @@ export function getClosestBlockComponentByPoint(
     if (rect) {
       if (snapToEdge.x) {
         point.x = Math.min(
-          Math.max(point.x, rect.left) +
-            BLOCK_CHILDREN_CONTAINER_PADDING_LEFT * scale -
-            1,
+          Math.max(point.x, rect.left) + BLOCK_CHILDREN_CONTAINER_PADDING_LEFT * scale - 1,
           rect.right - BLOCK_CHILDREN_CONTAINER_PADDING_LEFT * scale - 1,
         );
       }
       if (snapToEdge.y) {
         // TODO handle scale
         if (scale !== 1) {
-          console.warn("scale is not supported yet");
+          console.warn('scale is not supported yet');
         }
         point.y = clamp(point.y, rect.top + 1, rect.bottom - 1);
       }
@@ -123,10 +115,7 @@ export function getClosestBlockComponentByPoint(
   }
 
   // find block element
-  element = findBlockComponent(
-    document.elementsFromPoint(point.x, point.y),
-    container,
-  );
+  element = findBlockComponent(document.elementsFromPoint(point.x, point.y), container);
 
   // Horizontal direction: for nested structures
   if (element) {
@@ -150,7 +139,7 @@ export function getClosestBlockComponentByPoint(
       bounds = getRectByBlockComponent(element);
       // Indented paragraphs or list
       childBounds = element
-        .querySelector(".ink-block-children-container")
+        .querySelector('.ink-block-children-container')
         ?.firstElementChild?.getBoundingClientRect();
 
       if (childBounds && childBounds.height) {
@@ -175,10 +164,7 @@ export function getClosestBlockComponentByPoint(
     n *= -1;
 
     // find block element
-    element = findBlockComponent(
-      document.elementsFromPoint(point.x, point.y),
-      container,
-    );
+    element = findBlockComponent(document.elementsFromPoint(point.x, point.y), container);
 
     if (element) {
       bounds = getRectByBlockComponent(element);
@@ -209,9 +195,7 @@ export function findClosestBlockComponent(
   point: Point,
   selector: string,
 ): BlockComponent | null {
-  const children = (
-    Array.from(container.querySelectorAll(selector)) as BlockComponent[]
-  )
+  const children = (Array.from(container.querySelectorAll(selector)) as BlockComponent[])
     .filter((child) => child.host === container.host)
     .filter((child) => child !== container);
 
@@ -222,11 +206,9 @@ export function findClosestBlockComponent(
 
   for (const child of children) {
     const rect = child.getBoundingClientRect();
-    if (rect.height === 0 || point.y > rect.bottom || point.y < rect.top)
-      continue;
+    if (rect.height === 0 || point.y > rect.bottom || point.y < rect.top) continue;
     const distance =
-      Math.pow(point.y - (rect.y + rect.height / 2), 2) +
-      Math.pow(point.x - rect.x, 2);
+      Math.pow(point.y - (rect.y + rect.height / 2), 2) + Math.pow(point.x - rect.x, 2);
 
     if (distance <= lastDistance) {
       lastDistance = distance;
@@ -242,9 +224,7 @@ export function findClosestBlockComponent(
 /**
  * Returns the closest block element by element that does not contain the page element and note element.
  */
-export function getClosestBlockComponentByElement(
-  element: Element | null,
-): BlockComponent | null {
+export function getClosestBlockComponentByElement(element: Element | null): BlockComponent | null {
   if (!element) return null;
   if (hasBlockId(element) && isBlock(element)) {
     return element;
@@ -272,16 +252,14 @@ export function getRectByBlockComponent(element: Element | BlockComponent) {
  * Returns block elements excluding their subtrees.
  * Only keep block elements of same level.
  */
-export function getBlockComponentsExcludeSubtrees(
-  elements: BlockComponent[],
-): BlockComponent[] {
+export function getBlockComponentsExcludeSubtrees(elements: BlockComponent[]): BlockComponent[] {
   if (elements.length <= 1) return elements as BlockComponent[];
 
   const getLevel = (element: BlockComponent) => {
     let level = 0;
     let model: BlockModel | null = element.model;
 
-    while (model && model.role !== "root") {
+    while (model && model.role !== 'root') {
       level++;
       model = model.parent;
     }
@@ -330,5 +308,5 @@ function findBlockComponent(elements: Element[], parent?: Element) {
  * Gets the rows of the database.
  */
 function getDatabaseBlockRowsElement(element: Element) {
-  return element.querySelector(".ink-database-block-rows");
+  return element.querySelector('.ink-database-block-rows');
 }

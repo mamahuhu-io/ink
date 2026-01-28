@@ -110,29 +110,23 @@ export class ResizeController {
     const { x: xSign, y: ySign } = this.getHandleSign(handle);
     const pivot = new DOMPoint(
       originalBound.x + ((-xSign + 1) / 2) * originalBound.w,
-      originalBound.y + ((-ySign + 1) / 2) * originalBound.h
+      originalBound.y + ((-ySign + 1) / 2) * originalBound.h,
     );
     const toLocalM = new DOMMatrix().translate(-pivot.x, -pivot.y);
     const toLocalRotatedM = new DOMMatrix()
       .translate(-pivot.x, -pivot.y)
-      .translate(
-        originalBound.w / 2 + originalBound.x,
-        originalBound.h / 2 + originalBound.y
-      )
+      .translate(originalBound.w / 2 + originalBound.x, originalBound.h / 2 + originalBound.y)
       .rotate(-(originalBound.rotate ?? 0))
       .translate(
         -(originalBound.w / 2 + originalBound.x),
-        -(originalBound.h / 2 + originalBound.y)
+        -(originalBound.h / 2 + originalBound.y),
       );
 
     const toLocal = (p: DOMPoint, withRotation: boolean = false) =>
       p.matrixTransform(withRotation ? toLocalRotatedM : toLocalM);
-    const toModel = (p: DOMPoint) =>
-      p.matrixTransform(toLocalRotatedM.inverse());
+    const toModel = (p: DOMPoint) => p.matrixTransform(toLocalRotatedM.inverse());
 
-    const handlePos = toModel(
-      new DOMPoint(originalBound.w * xSign, originalBound.h * ySign)
-    );
+    const handlePos = toModel(new DOMPoint(originalBound.w * xSign, originalBound.h * ySign));
 
     return {
       xSign,
@@ -150,12 +144,12 @@ export class ResizeController {
     transform: ReturnType<ResizeController['getCoordsTransform']>,
     delta: { dx: number; dy: number },
     handleStartPos: IVec,
-    lockRatio: boolean
+    lockRatio: boolean,
   ) {
     const { originalBound, xSign, ySign, toModel, toLocal } = transform;
     const currentPos = toLocal(
       new DOMPoint(handleStartPos[0] + delta.dx, handleStartPos[1] + delta.dy),
-      true
+      true,
     );
 
     let scaleX = xSign ? currentPos.x / (originalBound.w * xSign) : 1;
@@ -168,10 +162,7 @@ export class ResizeController {
     }
 
     const finalHandlePos = toModel(
-      new DOMPoint(
-        originalBound.w * xSign * scaleX,
-        originalBound.h * ySign * scaleY
-      )
+      new DOMPoint(originalBound.w * xSign * scaleX, originalBound.h * ySign * scaleY),
     );
 
     return {
@@ -181,10 +172,7 @@ export class ResizeController {
     };
   }
 
-  getScaleMatrix(
-    { scaleX, scaleY }: { scaleX: number; scaleY: number },
-    lockRatio: boolean
-  ) {
+  getScaleMatrix({ scaleX, scaleY }: { scaleX: number; scaleY: number }, lockRatio: boolean) {
     if (lockRatio) {
       const min = Math.min(Math.abs(scaleX), Math.abs(scaleY));
       scaleX = Math.sign(scaleX) * min;
@@ -199,17 +187,10 @@ export class ResizeController {
   }
 
   startResize(options: OptionResize) {
-    const {
-      elements,
-      handle,
-      onResizeStart,
-      onResizeMove,
-      onResizeUpdate,
-      onResizeEnd,
-      event,
-    } = options;
+    const { elements, handle, onResizeStart, onResizeMove, onResizeUpdate, onResizeEnd, event } =
+      options;
 
-    const originals: ReadonlyIBound[] = elements.map(el => ({
+    const originals: ReadonlyIBound[] = elements.map((el) => ({
       x: el.x,
       y: el.y,
       w: el.w,
@@ -226,10 +207,7 @@ export class ResizeController {
             h: originals[0].h,
             rotate: originals[0].rotate,
           };
-    const startPt = this.gfx.viewport.toModelCoordFromClientCoord([
-      event.clientX,
-      event.clientY,
-    ]);
+    const startPt = this.gfx.viewport.toModelCoordFromClientCoord([event.clientX, event.clientY]);
     const transform = this.getCoordsTransform(originalBound, handle);
     const handleSign = {
       x: transform.xSign,
@@ -237,26 +215,17 @@ export class ResizeController {
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      const currPt = this.gfx.viewport.toModelCoordFromClientCoord([
-        e.clientX,
-        e.clientY,
-      ]);
-      let delta = {
+      const currPt = this.gfx.viewport.toModelCoordFromClientCoord([e.clientX, e.clientY]);
+      const delta = {
         dx: currPt[0] - startPt[0],
         dy: currPt[1] - startPt[1],
       };
-      const shouldLockRatio =
-        options.lockRatio || e.shiftKey || elements.length > 1;
+      const shouldLockRatio = options.lockRatio || e.shiftKey || elements.length > 1;
       const {
         scaleX,
         scaleY,
         handlePos: currentHandlePos,
-      } = this.getScaleFromDelta(
-        transform,
-        delta,
-        transform.handlePos,
-        shouldLockRatio
-      );
+      } = this.getScaleFromDelta(transform, delta, transform.handlePos, shouldLockRatio);
 
       const scale = onResizeMove({
         scaleX,
@@ -280,23 +249,17 @@ export class ResizeController {
           shouldLockRatio,
           transform,
           scaleInfo,
-          onResizeUpdate
+          onResizeUpdate,
         );
       } else {
-        this.resizeMulti(
-          originals,
-          elements,
-          transform,
-          scaleInfo,
-          onResizeUpdate
-        );
+        this.resizeMulti(originals, elements, transform, scaleInfo, onResizeUpdate);
       }
     };
 
     onResizeStart?.({
       handleSign,
       handlePos: transform.handlePos,
-      data: elements.map(model => ({ model })),
+      data: elements.map((model) => ({ model })),
     });
 
     const onPointerUp = () => {
@@ -306,7 +269,7 @@ export class ResizeController {
       onResizeEnd?.({
         handleSign,
         handlePos: transform.handlePos,
-        data: elements.map(model => ({ model })),
+        data: elements.map((model) => ({ model })),
       });
     };
 
@@ -320,7 +283,7 @@ export class ResizeController {
     lockRatio: boolean,
     transform: ReturnType<typeof ResizeController.prototype.getCoordsTransform>,
     scale: { scaleX: number; scaleY: number; scaleM: DOMMatrix },
-    updateCallback: OptionResize['onResizeUpdate']
+    updateCallback: OptionResize['onResizeUpdate'],
   ) {
     const { toLocalM, toLocalRotatedM, toLocal, toModel } = transform;
     const { scaleX, scaleY, scaleM } = scale;
@@ -328,7 +291,7 @@ export class ResizeController {
     const [visualTopLeft, visualBottomRight] = [
       new DOMPoint(orig.x, orig.y),
       new DOMPoint(orig.x + orig.w, orig.y + orig.h),
-    ].map(p => {
+    ].map((p) => {
       const localP = toLocal(p, false);
       const scaledP = localP.matrixTransform(scaleM);
 
@@ -350,12 +313,9 @@ export class ResizeController {
       .translate(-center.x, -center.y);
 
     // only used to provide the matrix information
-    const finalM = restoreM
-      .multiply(toLocalRotatedM.inverse())
-      .multiply(scaleM)
-      .multiply(toLocalM);
+    const finalM = restoreM.multiply(toLocalRotatedM.inverse()).multiply(scaleM).multiply(toLocalM);
 
-    const [topLeft, bottomRight] = [visualTopLeft, visualBottomRight].map(p => {
+    const [topLeft, bottomRight] = [visualTopLeft, visualBottomRight].map((p) => {
       return p.matrixTransform(restoreM);
     });
 
@@ -371,7 +331,7 @@ export class ResizeController {
             Math.min(topLeft.x, bottomRight.x),
             Math.min(bottomRight.y, topLeft.y),
             Math.abs(bottomRight.x - topLeft.x),
-            Math.abs(bottomRight.y - topLeft.y)
+            Math.abs(bottomRight.y - topLeft.y),
           ),
           lockRatio: lockRatio,
           matrix: finalM,
@@ -385,7 +345,7 @@ export class ResizeController {
     elements: GfxModel[],
     transform: ReturnType<ResizeController['getCoordsTransform']>,
     scale: { scaleX: number; scaleY: number; scaleM: DOMMatrix },
-    updateCallback: OptionResize['onResizeUpdate']
+    updateCallback: OptionResize['onResizeUpdate'],
   ) {
     const { toLocalM } = transform;
     const { scaleX, scaleY, scaleM } = scale;
@@ -399,7 +359,7 @@ export class ResizeController {
       const [topLeft, bottomRight] = [
         new DOMPoint(orig.x, orig.y),
         new DOMPoint(orig.x + orig.w, orig.y + orig.h),
-      ].map(p => {
+      ].map((p) => {
         return p.matrixTransform(finalM);
       });
 
@@ -407,7 +367,7 @@ export class ResizeController {
         Math.min(topLeft.x, bottomRight.x),
         Math.min(bottomRight.y, topLeft.y),
         Math.abs(bottomRight.x - topLeft.x),
-        Math.abs(bottomRight.y - topLeft.y)
+        Math.abs(bottomRight.y - topLeft.y),
       );
 
       return {
@@ -425,7 +385,7 @@ export class ResizeController {
   startRotate(option: RotateOption) {
     const { event, elements, onRotateUpdate } = option;
 
-    const originals: ReadonlyIBound[] = elements.map(el => ({
+    const originals: ReadonlyIBound[] = elements.map((el) => ({
       x: el.x,
       y: el.y,
       w: el.w,
@@ -433,15 +393,9 @@ export class ResizeController {
       rotate: el.rotate,
     }));
 
-    const startPt = this.gfx.viewport.toModelCoordFromClientCoord([
-      event.clientX,
-      event.clientY,
-    ]);
+    const startPt = this.gfx.viewport.toModelCoordFromClientCoord([event.clientX, event.clientY]);
     const onPointerMove = (e: PointerEvent) => {
-      const currentPt = this.gfx.viewport.toModelCoordFromClientCoord([
-        e.clientX,
-        e.clientY,
-      ]);
+      const currentPt = this.gfx.viewport.toModelCoordFromClientCoord([e.clientX, e.clientY]);
       const snap = e.shiftKey;
 
       if (elements.length > 1) {
@@ -469,10 +423,10 @@ export class ResizeController {
       this.host.removeEventListener('pointerup', onPointerUp);
       this.host.removeEventListener('pointercancel', onPointerUp);
 
-      option.onRotateEnd?.({ data: elements.map(model => ({ model })) });
+      option.onRotateEnd?.({ data: elements.map((model) => ({ model })) });
     };
 
-    option.onRotateStart?.({ data: elements.map(model => ({ model })) });
+    option.onRotateStart?.({ data: elements.map((model) => ({ model })) });
 
     this.host.addEventListener('pointermove', onPointerMove, false);
     this.host.addEventListener('pointerup', onPointerUp, false);
@@ -522,9 +476,8 @@ export class ResizeController {
     const rotatedAngle = orig.rotate + deltaDeg;
     const targetRotate = this.toNormalizedAngle(
       snap
-        ? Math.round((rotatedAngle % 15) / 15) * 15 +
-            Math.floor(rotatedAngle / 15) * 15
-        : rotatedAngle
+        ? Math.round((rotatedAngle % 15) / 15) * 15 + Math.floor(rotatedAngle / 15) * 15
+        : rotatedAngle,
     );
 
     // only used to provide the matrix information
@@ -595,7 +548,7 @@ export class ResizeController {
         const [rotatedVisualLeftTop, rotatedVisualBottomRight] = [
           new DOMPoint(orig.x, orig.y),
           new DOMPoint(orig.x + orig.w, orig.y + orig.h),
-        ].map(p => toRotatedPoint(toVisual(p)));
+        ].map((p) => toRotatedPoint(toVisual(p)));
 
         const newCenter = {
           x:
@@ -617,7 +570,7 @@ export class ResizeController {
           new DOMMatrix()
             .translate(newCenter.x, newCenter.y)
             .rotate(-newRotated)
-            .translate(-newCenter.x, -newCenter.y)
+            .translate(-newCenter.x, -newCenter.y),
         );
 
         return {

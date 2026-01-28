@@ -3,8 +3,8 @@ import { InlineDeltaToHtmlAdapterExtension } from '@ink/stone-shared/adapters';
 
 export const emojiDeltaToHtmlAdapterMatcher = InlineDeltaToHtmlAdapterExtension({
   name: 'emoji',
-  match: delta => typeof delta.attributes?.emoji === 'string',
-  toAST: delta => {
+  match: (delta) => typeof delta.attributes?.emoji === 'string',
+  toAST: (delta) => {
     const emoji = delta.attributes?.emoji;
     if (!emoji) {
       return { type: 'text', value: '' };

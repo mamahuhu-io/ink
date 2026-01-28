@@ -1,21 +1,13 @@
 import { effects as tooltipEffects } from '../tooltip/effect.js';
 import { EditorIconButton } from './icon-button.js';
-import {
-  EditorMenuAction,
-  EditorMenuButton,
-  EditorMenuContent,
-} from './menu-button.js';
+import { EditorMenuAction, EditorMenuButton, EditorMenuContent } from './menu-button.js';
 import { EditorToolbarSeparator } from './separator.js';
 import { EditorToolbar } from './toolbar.js';
 
 export { EditorChevronDown } from './chevron-down.js';
 export { ToolbarMoreMenuConfigExtension } from './config.js';
 export { EditorIconButton } from './icon-button.js';
-export {
-  EditorMenuAction,
-  EditorMenuButton,
-  EditorMenuContent,
-} from './menu-button.js';
+export { EditorMenuAction, EditorMenuButton, EditorMenuContent } from './menu-button.js';
 export { MenuContext } from './menu-context.js';
 export { EditorToolbarSeparator } from './separator.js';
 export { darkToolbarStyles, lightToolbarStyles } from './styles.js';

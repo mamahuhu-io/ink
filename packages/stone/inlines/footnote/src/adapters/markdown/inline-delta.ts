@@ -4,10 +4,10 @@ import {
 } from '@ink/stone-shared/adapters';
 import type { PhrasingContent } from 'mdast';
 
-export const footnoteReferenceDeltaToMarkdownAdapterMatcher =
-  InlineDeltaToMarkdownAdapterExtension({
+export const footnoteReferenceDeltaToMarkdownAdapterMatcher = InlineDeltaToMarkdownAdapterExtension(
+  {
     name: 'footnote-reference',
-    match: delta => !!delta.attributes?.footnote,
+    match: (delta) => !!delta.attributes?.footnote,
     toAST: (delta, context) => {
       const mdast: PhrasingContent = {
         type: 'text',
@@ -27,19 +27,12 @@ export const footnoteReferenceDeltaToMarkdownAdapterMatcher =
         const clonedFootnoteReference = { ...footnote.reference };
         // If the footnote reference contains url, encode it
         if (clonedFootnoteReference.url) {
-          clonedFootnoteReference.url = encodeURIComponent(
-            clonedFootnoteReference.url
-          );
+          clonedFootnoteReference.url = encodeURIComponent(clonedFootnoteReference.url);
         }
         if (clonedFootnoteReference.favicon) {
-          clonedFootnoteReference.favicon = encodeURIComponent(
-            clonedFootnoteReference.favicon
-          );
+          clonedFootnoteReference.favicon = encodeURIComponent(clonedFootnoteReference.favicon);
         }
-        configs.set(
-          footnoteDefinitionKey,
-          JSON.stringify(clonedFootnoteReference)
-        );
+        configs.set(footnoteDefinitionKey, JSON.stringify(clonedFootnoteReference));
       }
       return {
         type: 'footnoteReference',
@@ -47,4 +40,5 @@ export const footnoteReferenceDeltaToMarkdownAdapterMatcher =
         identifier: footnote.label,
       };
     },
-  });
+  },
+);

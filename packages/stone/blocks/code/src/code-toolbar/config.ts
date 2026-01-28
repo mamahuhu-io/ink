@@ -1,20 +1,16 @@
-import {
-  CopyIcon,
-  DeleteIcon,
-  DuplicateIcon,
-} from '@ink/stone-components/icons';
+import { CopyIcon, DeleteIcon, DuplicateIcon } from '@ink/stone-components/icons';
 import type { MenuItemGroup } from '@ink/stone-components/toolbar';
-import { CommentProviderIdentifier } from '@ink/stone-shared/services';
-import { isInsidePageEditor } from '@ink/stone-shared/utils';
 import { noop, sleep } from '@ink/stone-global/utils';
 import { CommentIcon } from '@ink/stone-icons/lit';
+import { CommentProviderIdentifier } from '@ink/stone-shared/services';
+import { isInsidePageEditor } from '@ink/stone-shared/utils';
 import { BlockSelection } from '@ink/stone-std';
 import { html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
+import { t } from '../configs/i18n.js';
 import type { CodeBlockToolbarContext } from './context.js';
 import { duplicateCodeBlock } from './utils.js';
-import { t } from '../configs/i18n.js';
 
 export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => [
   {
@@ -48,8 +44,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
           return {
             action: noop,
             render: () => html`
-              <preview-button .blockComponent=${blockComponent}>
-              </preview-button>
+              <preview-button .blockComponent=${blockComponent}> </preview-button>
             `,
           };
         },
@@ -63,7 +58,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
             action: () => {
               blockComponent.copyCode();
             },
-            render: item => html`
+            render: (item) => html`
               <editor-icon-button
                 class="code-toolbar-button copy-code"
                 aria-label=${ifDefined(item.label)}
@@ -94,9 +89,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
         generate: ({ blockComponent }) => {
           return {
             action: () => {
-              const commentProvider = blockComponent.std.getOptional(
-                CommentProviderIdentifier
-              );
+              const commentProvider = blockComponent.std.getOptional(CommentProviderIdentifier);
               if (!commentProvider) return;
 
               commentProvider.addComment([
@@ -105,7 +98,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
                 }),
               ]);
             },
-            render: item =>
+            render: (item) =>
               html`<editor-icon-button
                 class="code-toolbar-button comment"
                 aria-label=${ifDefined(item.label)}
@@ -152,7 +145,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
 
               close();
             },
-            render: item => html`
+            render: (item) => html`
               <editor-icon-button
                 class="code-toolbar-button duplicate"
                 aria-label=${ifDefined(item.label)}
@@ -182,7 +175,7 @@ export const getPrimaryGroups = (): MenuItemGroup<CodeBlockToolbarContext>[] => 
               doc.deleteBlock(blockComponent.model);
               close();
             },
-            render: item => html`
+            render: (item) => html`
               <editor-icon-button
                 class="code-toolbar-button delete"
                 aria-label=${ifDefined(item.label)}

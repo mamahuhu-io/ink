@@ -1,12 +1,9 @@
 import type { RootContentMap } from 'hast';
 
-type HastUnionType<
-  K extends keyof RootContentMap,
-  V extends RootContentMap[K],
-> = V;
+type HastUnionType<K extends keyof RootContentMap, V extends RootContentMap[K]> = V;
 
 export function onlyContainImgElement(
-  ast: HastUnionType<keyof RootContentMap, RootContentMap[keyof RootContentMap]>
+  ast: HastUnionType<keyof RootContentMap, RootContentMap[keyof RootContentMap]>,
 ): 'yes' | 'no' | 'maybe' {
   if (ast.type === 'element') {
     switch (ast.tagName) {

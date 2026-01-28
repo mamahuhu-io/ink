@@ -5,8 +5,7 @@ export class EdgelessClipboardImageConfig extends EdgelessClipboardConfig {
   static override readonly key = 'ink:image';
 
   override async createBlock(image: BlockSnapshot) {
-    const { xywh, rotate, sourceId, size, width, height, caption } =
-      image.props;
+    const { xywh, rotate, sourceId, size, width, height, caption } = image.props;
 
     if (!this.surface) return null;
 
@@ -24,7 +23,7 @@ export class EdgelessClipboardImageConfig extends EdgelessClipboardConfig {
         width,
         height,
       },
-      this.surface.model.id
+      this.surface.model.id,
     );
   }
 }

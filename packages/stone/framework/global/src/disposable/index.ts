@@ -6,11 +6,7 @@ export interface Disposable {
   dispose: DisposeCallback;
 }
 
-export type DisposableMember =
-  | Disposable
-  | Subscription
-  | Subject<any>
-  | DisposeCallback;
+export type DisposableMember = Disposable | Subscription | Subject<any> | DisposeCallback;
 
 export class DisposableGroup {
   private _disposables: DisposableMember[] = [];
@@ -37,38 +33,38 @@ export class DisposableGroup {
     element: Window,
     eventName: N,
     handler: (e: WindowEventMap[N]) => void,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
   ): void;
   addFromEvent<N extends keyof DocumentEventMap>(
     element: Document,
     eventName: N,
     handler: (e: DocumentEventMap[N]) => void,
-    eventOptions?: boolean | AddEventListenerOptions
+    eventOptions?: boolean | AddEventListenerOptions,
   ): void;
   addFromEvent<N extends keyof HTMLElementEventMap>(
     element: HTMLElement,
     eventName: N,
     handler: (e: HTMLElementEventMap[N]) => void,
-    eventOptions?: boolean | AddEventListenerOptions
+    eventOptions?: boolean | AddEventListenerOptions,
   ): void;
   addFromEvent<N extends keyof VisualViewportEventMap>(
     element: VisualViewport,
     eventName: N,
     handler: (e: VisualViewportEventMap[N]) => void,
-    eventOptions?: boolean | AddEventListenerOptions
+    eventOptions?: boolean | AddEventListenerOptions,
   ): void;
   addFromEvent<N extends keyof VirtualKeyboardEventMap>(
     element: VirtualKeyboard,
     eventName: N,
     handler: (e: VirtualKeyboardEventMap[N]) => void,
-    eventOptions?: boolean | AddEventListenerOptions
+    eventOptions?: boolean | AddEventListenerOptions,
   ): void;
 
   addFromEvent(
     target: HTMLElement | Window | Document | VisualViewport | VirtualKeyboard,
     type: string,
     handler: (e: Event) => void,
-    eventOptions?: boolean | AddEventListenerOptions
+    eventOptions?: boolean | AddEventListenerOptions,
   ) {
     this.add({
       dispose: () => {

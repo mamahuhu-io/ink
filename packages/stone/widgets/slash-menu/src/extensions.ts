@@ -1,9 +1,5 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import {
-  type BlockStdScope,
-  StdIdentifier,
-  WidgetViewExtension,
-} from '@ink/stone-std';
+import { type BlockStdScope, StdIdentifier, WidgetViewExtension } from '@ink/stone-std';
 import { Extension, type ExtensionType } from '@ink/stone-store';
 import { literal, unsafeStatic } from 'lit/static-html.js';
 
@@ -19,7 +15,7 @@ export class SlashMenuExtension extends Extension {
     WidgetViewExtension(
       'ink:page',
       INK_SLASH_MENU_WIDGET,
-      literal`${unsafeStatic(INK_SLASH_MENU_WIDGET)}`
+      literal`${unsafeStatic(INK_SLASH_MENU_WIDGET)}`,
     ).setup(di);
 
     di.add(this, [StdIdentifier]);
@@ -29,22 +25,17 @@ export class SlashMenuExtension extends Extension {
 
   constructor(readonly std: BlockStdScope) {
     super();
-    this.config = mergeSlashMenuConfigs(
-      this.std.provider.getAll(SlashMenuConfigIdentifier)
-    );
+    this.config = mergeSlashMenuConfigs(this.std.provider.getAll(SlashMenuConfigIdentifier));
   }
 }
 
 export const SlashMenuConfigIdentifier = createIdentifier<SlashMenuConfig>(
-  `${INK_SLASH_MENU_WIDGET}-config`
+  `${INK_SLASH_MENU_WIDGET}-config`,
 );
 
-export function SlashMenuConfigExtension(
-  id: string,
-  config: SlashMenuConfig
-): ExtensionType {
+export function SlashMenuConfigExtension(id: string, config: SlashMenuConfig): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(SlashMenuConfigIdentifier(id), config);
     },
   };

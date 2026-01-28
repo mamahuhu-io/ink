@@ -1,7 +1,4 @@
-import {
-  panelBaseStyle,
-  scrollbarStyle,
-} from '@ink/stone-shared/styles';
+import { panelBaseStyle, scrollbarStyle } from '@ink/stone-shared/styles';
 import { css } from 'lit';
 
 export const filterableListStyles = css`

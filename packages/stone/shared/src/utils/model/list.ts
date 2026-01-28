@@ -10,10 +10,9 @@ import { matchModels } from './checker.js';
  */
 export function getNextContinuousNumberedLists(
   doc: Store,
-  modelOrId: BlockModel | string
+  modelOrId: BlockModel | string,
 ): ListBlockModel[] {
-  const model =
-    typeof modelOrId === 'string' ? doc.getBlock(modelOrId)?.model : modelOrId;
+  const model = typeof modelOrId === 'string' ? doc.getBlock(modelOrId)?.model : modelOrId;
   if (!model) return [];
   const parent = doc.getParent(model);
   if (!parent) return [];
@@ -22,17 +21,15 @@ export function getNextContinuousNumberedLists(
 
   const firstNotNumberedListIndex = parent.children.findIndex(
     (model, i) =>
-      i > modelIndex &&
-      (!matchModels(model, [ListBlockModel]) || model.props.type !== 'numbered')
+      i > modelIndex && (!matchModels(model, [ListBlockModel]) || model.props.type !== 'numbered'),
   );
   const newContinuousLists = parent.children.slice(
     modelIndex + 1,
-    firstNotNumberedListIndex === -1 ? undefined : firstNotNumberedListIndex
+    firstNotNumberedListIndex === -1 ? undefined : firstNotNumberedListIndex,
   );
   if (
     !newContinuousLists.every(
-      model =>
-        matchModels(model, [ListBlockModel]) && model.props.type === 'numbered'
+      (model) => matchModels(model, [ListBlockModel]) && model.props.type === 'numbered',
     )
   )
     return [];
@@ -40,11 +37,7 @@ export function getNextContinuousNumberedLists(
   return newContinuousLists as ListBlockModel[];
 }
 
-export function toNumberedList(
-  std: BlockStdScope,
-  model: BlockModel,
-  order: number
-) {
+export function toNumberedList(std: BlockStdScope, model: BlockModel, order: number) {
   const { store: doc } = std;
   if (!model.text) return;
   const parent = doc.getParent(model);
@@ -74,7 +67,7 @@ export function toNumberedList(
       order: realOrder,
     },
     parent,
-    index
+    index,
   );
   const newList = doc.getBlock(newListId)?.model;
   if (!newList) {
@@ -87,12 +80,9 @@ export function toNumberedList(
   });
 
   // if there is a numbered list following, correct their order to keep them continuous
-  const nextContinuousNumberedLists = getNextContinuousNumberedLists(
-    doc,
-    newList
-  );
+  const nextContinuousNumberedLists = getNextContinuousNumberedLists(doc, newList);
   let base = realOrder + 1;
-  nextContinuousNumberedLists.forEach(list => {
+  nextContinuousNumberedLists.forEach((list) => {
     doc.transact(() => {
       list.props.order = base;
     });

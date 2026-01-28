@@ -1,9 +1,6 @@
 import type { ExtensionType } from '@ink/stone-store';
 
-import {
-  DocNoteBlockHtmlAdapterExtension,
-  EdgelessNoteBlockHtmlAdapterExtension,
-} from './html';
+import { DocNoteBlockHtmlAdapterExtension, EdgelessNoteBlockHtmlAdapterExtension } from './html';
 import {
   DocNoteBlockMarkdownAdapterExtension,
   EdgelessNoteBlockMarkdownAdapterExtension,

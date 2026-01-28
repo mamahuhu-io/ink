@@ -1,3 +1,5 @@
+import { Container } from '@ink/stone-global/di';
+import { sha } from '@ink/stone-global/utils';
 import {
   docLinkBaseURLMiddleware,
   fileNameMiddleware,
@@ -5,14 +7,7 @@ import {
   HtmlAdapter,
   titleMiddleware,
 } from '@ink/stone-shared/adapters';
-import { Container } from '@ink/stone-global/di';
-import { sha } from '@ink/stone-global/utils';
-import type {
-  ExtensionType,
-  Schema,
-  Store,
-  Workspace,
-} from '@ink/stone-store';
+import type { ExtensionType, Schema, Store, Workspace } from '@ink/stone-store';
 import { extMimeMap, Transformer } from '@ink/stone-store';
 
 import type { AssetMap, ImportedFileEntry, PathBlobIdMap } from './type.js';
@@ -35,7 +30,7 @@ type ImportHTMLZipOptions = {
 
 function getProvider(extensions: ExtensionType[]) {
   const container = new Container();
-  extensions.forEach(ext => {
+  extensions.forEach((ext) => {
     ext.setup(container);
   });
   return container.provider();
@@ -107,10 +102,7 @@ async function importHTMLToDoc({
       get: (id: string) => collection.getDoc(id)?.getStore({ id }) ?? null,
       delete: (id: string) => collection.removeDoc(id),
     },
-    middlewares: [
-      fileNameMiddleware(fileName),
-      docLinkBaseURLMiddleware(collection.id),
-    ],
+    middlewares: [fileNameMiddleware(fileName), docLinkBaseURLMiddleware(collection.id)],
   });
   const htmlAdapter = new HtmlAdapter(job, provider);
   const page = await htmlAdapter.toDoc({
@@ -132,12 +124,7 @@ async function importHTMLToDoc({
  * @param options.imported - The zip file as a Blob.
  * @returns A Promise that resolves to an array of IDs of the newly created docs.
  */
-async function importHTMLZip({
-  collection,
-  schema,
-  imported,
-  extensions,
-}: ImportHTMLZipOptions) {
+async function importHTMLZip({ collection, schema, imported, extensions }: ImportHTMLZipOptions) {
   const provider = getProvider(extensions);
   const unzip = new Unzip();
   await unzip.load(imported);
@@ -169,7 +156,7 @@ async function importHTMLZip({
   }
 
   await Promise.all(
-    htmlBlobs.map(async htmlFile => {
+    htmlBlobs.map(async (htmlFile) => {
       const { filename, contentBlob, fullPath } = htmlFile;
       const fileNameWithoutExt = filename.replace(/\.[^/.]+$/, '');
       const job = new Transformer({
@@ -203,7 +190,7 @@ async function importHTMLZip({
       if (doc) {
         docIds.push(doc.id);
       }
-    })
+    }),
   );
   return docIds;
 }

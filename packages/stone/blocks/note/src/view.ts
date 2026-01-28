@@ -1,7 +1,4 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { NoteBlockSchema } from '@ink/stone-model';
 import { BlockViewExtension, FlavourExtension } from '@ink/stone-std';
 import { literal } from 'lit/static-html.js';

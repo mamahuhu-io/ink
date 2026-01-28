@@ -10,15 +10,10 @@ export const isNothingSelectedCommand: Command<
   },
   { isNothingSelected: boolean }
 > = (ctx, next) => {
-  const textSelection =
-    ctx.currentTextSelection || ctx.std.selection.find(TextSelection);
-  const imageSelections =
-    ctx.currentImageSelections || ctx.std.selection.filter(ImageSelection);
-  const blockSelections =
-    ctx.currentBlockSelections || ctx.std.selection.filter(BlockSelection);
+  const textSelection = ctx.currentTextSelection || ctx.std.selection.find(TextSelection);
+  const imageSelections = ctx.currentImageSelections || ctx.std.selection.filter(ImageSelection);
+  const blockSelections = ctx.currentBlockSelections || ctx.std.selection.filter(BlockSelection);
   const isNothingSelected =
-    !textSelection &&
-    imageSelections.length === 0 &&
-    blockSelections.length === 0;
+    !textSelection && imageSelections.length === 0 && blockSelections.length === 0;
   next({ isNothingSelected });
 };

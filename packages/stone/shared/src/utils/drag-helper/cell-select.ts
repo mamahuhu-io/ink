@@ -7,7 +7,7 @@ type CellOffsets = {
 export const domToOffsets = (
   element: HTMLElement,
   rowSelector: string,
-  cellSelector: string
+  cellSelector: string,
 ): CellOffsets | undefined => {
   const rowDoms = Array.from(element.querySelectorAll(rowSelector));
   const firstRowDom = rowDoms[0];
@@ -38,22 +38,14 @@ export const domToOffsets = (
   };
 };
 
-export const getIndexByPosition = (
-  positions: OffsetList,
-  offset: number,
-  reverse = false
-) => {
+export const getIndexByPosition = (positions: OffsetList, offset: number, reverse = false) => {
   if (reverse) {
-    return positions.slice(1).findIndex(p => offset <= p);
+    return positions.slice(1).findIndex((p) => offset <= p);
   }
-  return positions.slice(0, -1).findLastIndex(p => offset >= p);
+  return positions.slice(0, -1).findLastIndex((p) => offset >= p);
 };
 
-export const getRangeByPositions = (
-  positions: OffsetList,
-  start: number,
-  end: number
-) => {
+export const getRangeByPositions = (positions: OffsetList, start: number, end: number) => {
   const startIndex = getIndexByPosition(positions, start, true);
   const endIndex = getIndexByPosition(positions, end);
   return {
@@ -67,7 +59,7 @@ export const getAreaByOffsets = (
   top: number,
   bottom: number,
   left: number,
-  right: number
+  right: number,
 ) => {
   const { rows, columns } = offsets;
   const startRow = getIndexByPosition(rows, top, true);

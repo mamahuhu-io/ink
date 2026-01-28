@@ -1,6 +1,6 @@
 export const playCheckAnimation = async (
   refElement: Element,
-  { left = 0, size = 20 }: { left?: number; size?: number } = {}
+  { left = 0, size = 20 }: { left?: number; size?: number } = {},
 ) => {
   const sparkingEl = document.createElement('div');
   sparkingEl.classList.add('ink-check-animation');
@@ -23,7 +23,7 @@ export const playCheckAnimation = async (
           '0 -18px 0 -8px #1e96eb, 16px -8px 0 -8px #1e96eb, 16px 8px 0 -8px #1e96eb, 0 18px 0 -8px #1e96eb, -16px 8px 0 -8px #1e96eb, -16px -8px 0 -8px #1e96eb',
       },
     ],
-    { duration: 240, easing: 'ease', fill: 'forwards' }
+    { duration: 240, easing: 'ease', fill: 'forwards' },
   ).finished;
   await sparkingEl.animate(
     [
@@ -32,7 +32,7 @@ export const playCheckAnimation = async (
           '0 -36px 0 -10px transparent, 32px -16px 0 -10px transparent, 32px 16px 0 -10px transparent, 0 36px 0 -10px transparent, -32px 16px 0 -10px transparent, -32px -16px 0 -10px transparent',
       },
     ],
-    { duration: 360, easing: 'ease', fill: 'forwards' }
+    { duration: 360, easing: 'ease', fill: 'forwards' },
   ).finished;
 
   sparkingEl.remove();

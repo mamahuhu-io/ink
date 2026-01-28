@@ -68,14 +68,9 @@ export class TextSelection extends BaseSelection {
     return new TextSelection(result);
   }
 
-  private _equalPoint(
-    a: TextRangePoint | null,
-    b: TextRangePoint | null
-  ): boolean {
+  private _equalPoint(a: TextRangePoint | null, b: TextRangePoint | null): boolean {
     if (a && b) {
-      return (
-        a.blockId === b.blockId && a.index === b.index && a.length === b.length
-      );
+      return a.blockId === b.blockId && a.index === b.index && a.length === b.length;
     }
 
     return a === b;

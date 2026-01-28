@@ -1,5 +1,5 @@
-import { unsafeCSSVar, unsafeCSSVarV2 } from "@ink/stone-shared/theme";
-import { css } from "lit";
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import { css } from 'lit';
 
 export const mermaidBlockStyles = css`
   .mermaid-block-container {
@@ -17,7 +17,7 @@ export const mermaidBlockStyles = css`
   }
 
   .mermaid-block-container:hover {
-    background: ${unsafeCSSVar("hoverColor")};
+    background: ${unsafeCSSVar('hoverColor')};
   }
 
   .mermaid-diagram-wrapper {
@@ -44,10 +44,10 @@ export const mermaidBlockStyles = css`
     top: 8px;
     right: 8px;
     padding: 2px 8px;
-    background: ${unsafeCSSVarV2("layer/background/secondary")};
-    border: 1px solid ${unsafeCSSVarV2("border/border")};
+    background: ${unsafeCSSVarV2('layer/background/secondary')};
+    border: 1px solid ${unsafeCSSVarV2('border/border')};
     border-radius: 4px;
-    color: ${unsafeCSSVarV2("text/secondary")};
+    color: ${unsafeCSSVarV2('text/secondary')};
     font-size: 11px;
     font-weight: 500;
     user-select: none;
@@ -55,7 +55,7 @@ export const mermaidBlockStyles = css`
   }
 
   .mermaid-block-error-placeholder {
-    color: ${unsafeCSSVarV2("text/highlight/fg/red")};
+    color: ${unsafeCSSVarV2('text/highlight/fg/red')};
     font-family: Inter;
     font-size: 12px;
     font-weight: 500;
@@ -66,7 +66,7 @@ export const mermaidBlockStyles = css`
   }
 
   .mermaid-block-empty-placeholder {
-    color: ${unsafeCSSVarV2("text/secondary")};
+    color: ${unsafeCSSVarV2('text/secondary')};
     font-family: Inter;
     font-size: 12px;
     font-weight: 500;

@@ -1,5 +1,6 @@
-const svgr = require("@svgr/core");
-const utils = require("./utils");
+/* eslint-disable @typescript-eslint/no-require-imports */
+const svgr = require('@svgr/core');
+const utils = require('./utils');
 
 function addSvgWrapper(svgContent, size) {
   return `
@@ -24,7 +25,8 @@ function addSvgWrapper(svgContent, size) {
  * @returns {string}
  */
 async function generateRC(svg, name, size, replaceColor = true) {
-  let svgContent = svg.match(/<svg [^\>]+>([\s\S]*?)<\/svg>/)[1];
+  // eslint-disable-next-line no-useless-escape
+  let svgContent = svg.match(/<svg [^>]+>([\s\S]*?)<\/svg>/)[1];
   if (replaceColor) {
     const colorRegex = /(fill|stroke)="#[0-9a-fA-F]+"/g;
     svgContent = svgContent.replaceAll(colorRegex, "$1='currentColor'");
@@ -35,9 +37,9 @@ async function generateRC(svg, name, size, replaceColor = true) {
     {
       icon: true,
       typescript: true,
-      plugins: ["@svgr/plugin-jsx"],
+      plugins: ['@svgr/plugin-jsx'],
     },
-    { componentName: utils.getIconName(name) }
+    { componentName: utils.getIconName(name) },
   );
   return code;
 }

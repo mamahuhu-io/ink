@@ -1,11 +1,7 @@
 import { IS_MOBILE } from '@ink/stone-global/env';
-import {
-  CheckBoxCheckSolidIcon,
-  CheckBoxUnIcon,
-  DoneIcon,
-} from '@ink/stone-icons/lit';
-import type { ReadonlySignal } from '@preact/signals-core';
+import { CheckBoxCheckSolidIcon, CheckBoxUnIcon, DoneIcon } from '@ink/stone-icons/lit';
 import { cssVarV2 } from '@ink/stone-theme';
+import type { ReadonlySignal } from '@preact/signals-core';
 import { css, html, type TemplateResult, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -99,10 +95,7 @@ export class MenuButton extends MenuFocusable {
       focused: this.isFocused$.value,
       ...this.data.class,
     });
-    return html` <div
-      class="${classString}"
-      data-testid=${ifDefined(this.data.testId)}
-    >
+    return html` <div class="${classString}" data-testid=${ifDefined(this.data.testId)}>
       ${this.data.content()}
     </div>`;
   }
@@ -146,7 +139,6 @@ export class MobileMenuButton extends MenuFocusable {
     this.disposables.addFromEvent(this, 'click', this.onClick);
   }
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
   onClick() {
     if (this.data.select(this) !== false) {
       this.menu.options.onComplete?.();
@@ -164,10 +156,7 @@ export class MobileMenuButton extends MenuFocusable {
       focused: this.isFocused$.value,
       ...this.data.class,
     });
-    return html` <div
-      class="${classString}"
-      data-testid=${ifDefined(this.data.testId)}
-    >
+    return html` <div class="${classString}" data-testid=${ifDefined(this.data.testId)}>
       ${this.data.content()}
     </div>`;
   }
@@ -178,15 +167,9 @@ export class MobileMenuButton extends MenuFocusable {
 
 const renderButton = (data: MenuButtonData, menu: Menu) => {
   if (IS_MOBILE) {
-    return html`<mobile-menu-button
-      .data="${data}"
-      .menu="${menu}"
-    ></mobile-menu-button>`;
+    return html`<mobile-menu-button .data="${data}" .menu="${menu}"></mobile-menu-button>`;
   }
-  return html`<ink-menu-button
-    .data="${data}"
-    .menu="${menu}"
-  ></ink-menu-button>`;
+  return html`<ink-menu-button .data="${data}" .menu="${menu}"></ink-menu-button>`;
 };
 export const menuButtonItems = {
   action:
@@ -203,7 +186,7 @@ export const menuButtonItems = {
       hide?: () => boolean;
       testId?: string;
     }) =>
-    menu => {
+    (menu) => {
       if (config.hide?.() || !menu.search(config.name)) {
         return;
       }
@@ -237,7 +220,7 @@ export const menuButtonItems = {
       class?: ClassInfo;
       testId?: string;
     }) =>
-    menu => {
+    (menu) => {
       if (!menu.search(config.name)) {
         return;
       }
@@ -246,9 +229,7 @@ export const menuButtonItems = {
           ${config.checked.value
             ? CheckBoxCheckSolidIcon({ style: `color:#1E96EB` })
             : CheckBoxUnIcon()}
-          <div class="ink-menu-action-text">
-            ${config.label?.() ?? config.name}
-          </div>
+          <div class="ink-menu-action-text">${config.label?.() ?? config.name}</div>
           ${config.postfix}
         `,
         select: () => {
@@ -271,7 +252,7 @@ export const menuButtonItems = {
       class?: ClassInfo;
       testId?: string;
     }) =>
-    menu => {
+    (menu) => {
       if (!menu.search(config.name)) {
         return;
       }
@@ -282,13 +263,8 @@ export const menuButtonItems = {
       const data: MenuButtonData = {
         content: () => html`
           ${config.prefix}
-          <div class="ink-menu-action-text">
-            ${config.label?.() ?? config.name}
-          </div>
-          <toggle-switch
-            .on="${config.on}"
-            .onChange="${onChange}"
-          ></toggle-switch>
+          <div class="ink-menu-action-text">${config.label?.() ?? config.name}</div>
+          <toggle-switch .on="${config.on}" .onChange="${onChange}"></toggle-switch>
           ${config.postfix}
         `,
         select: () => {

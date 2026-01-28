@@ -1,22 +1,22 @@
-import { isMacOS } from '../services/platform'
+import { isMacOS } from '../services/platform';
 
 export interface ShortcutConfig {
-  id: string
-  mac: string
-  win: string
-  label?: string // Optional override for display
+  id: string;
+  mac: string;
+  win: string;
+  label?: string; // Optional override for display
 }
 
 // Helper to get shortcut for current platform
 export function getShortcut(id: string): string | undefined {
-  const shortcut = SHORTCUTS[id]
-  if (!shortcut) return undefined
-  return isMacOS() ? shortcut.mac : shortcut.win
+  const shortcut = SHORTCUTS[id];
+  if (!shortcut) return undefined;
+  return isMacOS() ? shortcut.mac : shortcut.win;
 }
 
 // Helper to format shortcut for display in menu
 export function formatShortcut(shortcut: string): string {
-  if (!shortcut) return ''
+  if (!shortcut) return '';
   // Replace standard keys with symbols or friendly names if needed
   // For now, we keep the format compatible with Tauri/Electron accelerators
   return shortcut
@@ -26,7 +26,7 @@ export function formatShortcut(shortcut: string): string {
     .replace('Control', 'Ctrl')
     .replace('Shift', '⇧')
     .replace('Alt', isMacOS() ? '⌥' : 'Alt')
-    .replace(/\+/g, isMacOS() ? '' : '+') // Mac menus usually don't show +
+    .replace(/\+/g, isMacOS() ? '' : '+'); // Mac menus usually don't show +
 }
 
 export const SHORTCUTS: Record<string, ShortcutConfig> = {
@@ -54,4 +54,4 @@ export const SHORTCUTS: Record<string, ShortcutConfig> = {
   zoom_out: { id: 'zoom_out', mac: 'Cmd+-', win: 'Ctrl+-' },
   zoom_reset: { id: 'zoom_reset', mac: 'Cmd+0', win: 'Ctrl+0' },
   fullscreen: { id: 'fullscreen', mac: 'Ctrl+Cmd+F', win: 'F11' }, // Mac standard fullscreen is Ctrl+Cmd+F
-}
+};

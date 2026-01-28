@@ -1,25 +1,19 @@
+import { IS_MAC } from '@ink/stone-global/env';
 import { textKeymap } from '@ink/stone-inline-preset';
 import { ListBlockSchema } from '@ink/stone-model';
 import { getSelectedModelsCommand } from '@ink/stone-shared/commands';
-import { IS_MAC } from '@ink/stone-global/env';
 import { KeymapExtension, TextSelection } from '@ink/stone-std';
 
-import {
-  canDedentListCommand,
-  dedentListCommand,
-} from './commands/dedent-list.js';
-import {
-  canIndentListCommand,
-  indentListCommand,
-} from './commands/indent-list.js';
+import { canDedentListCommand, dedentListCommand } from './commands/dedent-list.js';
+import { canIndentListCommand, indentListCommand } from './commands/indent-list.js';
 import { listToParagraphCommand } from './commands/list-to-paragraph.js';
 import { splitListCommand } from './commands/split-list.js';
 import { forwardDelete } from './utils/forward-delete.js';
 
 export const ListKeymapExtension = KeymapExtension(
-  std => {
+  (std) => {
     return {
-      Enter: ctx => {
+      Enter: (ctx) => {
         const text = std.selection.find(TextSelection);
         if (!text) return false;
 
@@ -33,7 +27,7 @@ export const ListKeymapExtension = KeymapExtension(
           .run();
         return true;
       },
-      'Mod-Enter': ctx => {
+      'Mod-Enter': (ctx) => {
         const text = std.selection.find(TextSelection);
         if (!text) return false;
 
@@ -47,7 +41,7 @@ export const ListKeymapExtension = KeymapExtension(
           .run();
         return true;
       },
-      Tab: ctx => {
+      Tab: (ctx) => {
         const [_, { selectedModels }] = std.command
           .chain()
           .pipe(getSelectedModelsCommand, {
@@ -71,7 +65,7 @@ export const ListKeymapExtension = KeymapExtension(
           .run();
         return true;
       },
-      'Shift-Tab': ctx => {
+      'Shift-Tab': (ctx) => {
         const [_, { selectedModels }] = std.command
           .chain()
           .pipe(getSelectedModelsCommand, {
@@ -95,7 +89,7 @@ export const ListKeymapExtension = KeymapExtension(
           .run();
         return true;
       },
-      Backspace: ctx => {
+      Backspace: (ctx) => {
         const text = std.selection.find(TextSelection);
         if (!text) return false;
         const isCollapsed = text.isCollapsed();
@@ -111,14 +105,14 @@ export const ListKeymapExtension = KeymapExtension(
           .run();
         return true;
       },
-      'Control-d': ctx => {
+      'Control-d': (ctx) => {
         if (!IS_MAC) return;
         const deleted = forwardDelete(std);
         if (!deleted) return;
         ctx.get('keyboardState').raw.preventDefault();
         return true;
       },
-      Delete: ctx => {
+      Delete: (ctx) => {
         const deleted = forwardDelete(std);
         if (!deleted) return;
         ctx.get('keyboardState').raw.preventDefault();
@@ -128,7 +122,7 @@ export const ListKeymapExtension = KeymapExtension(
   },
   {
     flavour: ListBlockSchema.model.flavour,
-  }
+  },
 );
 
 export const ListTextKeymapExtension = KeymapExtension(textKeymap, {

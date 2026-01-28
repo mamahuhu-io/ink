@@ -1,9 +1,6 @@
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { css, html, LitElement, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -79,9 +76,7 @@ export class PreviewButton extends WithDisposable(SignalWatcher(LitElement)) {
 
   override render() {
     const lang = this.blockComponent.model.props.language$.value ?? '';
-    const previewContext = this.blockComponent.std.getOptional(
-      CodeBlockPreviewIdentifier(lang)
-    );
+    const previewContext = this.blockComponent.std.getOptional(CodeBlockPreviewIdentifier(lang));
     if (!previewContext) return nothing;
 
     return html`

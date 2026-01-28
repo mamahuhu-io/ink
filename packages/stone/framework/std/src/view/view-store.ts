@@ -30,9 +30,7 @@ export class ViewStore extends LifeCycleWatcher {
     return Array.from(this._blockMap.values());
   }
 
-  private readonly _fromId = (
-    blockId: string | undefined | null
-  ): BlockComponent | null => {
+  private readonly _fromId = (blockId: string | undefined | null): BlockComponent | null => {
     const id = blockId ?? this.std.store.root?.id;
     if (!id) {
       return null;
@@ -68,10 +66,7 @@ export class ViewStore extends LifeCycleWatcher {
     return this._blockMap.get(id) ?? null;
   };
 
-  getWidget = (
-    widgetName: string,
-    hostBlockId: string
-  ): WidgetComponent | null => {
+  getWidget = (widgetName: string, hostBlockId: string): WidgetComponent | null => {
     const widgetIndex = `${hostBlockId}|${widgetName}`;
     return this._widgetMap.get(widgetIndex) ?? null;
   };
@@ -105,31 +100,30 @@ export class ViewStore extends LifeCycleWatcher {
     fn: (
       nodeView: BlockComponent,
       index: number,
-      parent: BlockComponent
+      parent: BlockComponent,
     ) => undefined | null | true,
-    blockId?: string | undefined | null
+    blockId?: string | undefined | null,
   ) => {
     const top = this._fromId(blockId);
     if (!top) {
       return;
     }
 
-    const iterate =
-      (parent: BlockComponent) => (node: BlockComponent, index: number) => {
-        const result = fn(node, index, parent);
-        if (result === true) {
-          return;
+    const iterate = (parent: BlockComponent) => (node: BlockComponent, index: number) => {
+      const result = fn(node, index, parent);
+      if (result === true) {
+        return;
+      }
+      const children = node.model.children;
+      children.forEach((child) => {
+        const childNode = this._blockMap.get(child.id);
+        if (childNode) {
+          iterate(node)(childNode, children.indexOf(child));
         }
-        const children = node.model.children;
-        children.forEach(child => {
-          const childNode = this._blockMap.get(child.id);
-          if (childNode) {
-            iterate(node)(childNode, children.indexOf(child));
-          }
-        });
-      };
+      });
+    };
 
-    top.model.children.forEach(child => {
+    top.model.children.forEach((child) => {
       const childNode = this._blockMap.get(child.id);
       if (childNode) {
         iterate(childNode)(childNode, top.model.children.indexOf(child));

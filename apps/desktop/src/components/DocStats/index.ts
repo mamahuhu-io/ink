@@ -1,1 +1,1 @@
-export { DocStats } from './DocStats'
+export { DocStats } from './DocStats';

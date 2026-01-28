@@ -1,4 +1,4 @@
-import { html } from "lit";
+import { html } from 'lit';
 // prettier-ignore
 export const NewDocTooltip = html`<svg width="170" height="68" viewBox="0 0 170 68" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="170" height="68" rx="2" fill="white"/>

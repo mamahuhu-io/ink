@@ -36,14 +36,8 @@ export class TestDoc implements Doc {
 
   private _loaded!: boolean;
 
-  private readonly _onSubdocEvent = ({
-    loaded,
-  }: {
-    loaded: Set<Y.Doc>;
-  }): void => {
-    const result = Array.from(loaded).find(
-      doc => doc.guid === this._ySpaceDoc.guid
-    );
+  private readonly _onSubdocEvent = ({ loaded }: { loaded: Set<Y.Doc> }): void => {
+    const result = Array.from(loaded).find((doc) => doc.guid === this._ySpaceDoc.guid);
     if (!result) {
       return;
     }
@@ -131,16 +125,10 @@ export class TestDoc implements Doc {
     }
   }
 
-  getStore({
-    readonly,
-    query,
-    provider,
-    extensions,
-    id,
-  }: GetStoreOptions = {}) {
-    const storeExtensions = (
-      this.workspace as TestWorkspace
-    ).storeExtensions.concat(extensions ?? []);
+  getStore({ readonly, query, provider, extensions, id }: GetStoreOptions = {}) {
+    const storeExtensions = (this.workspace as TestWorkspace).storeExtensions.concat(
+      extensions ?? [],
+    );
 
     let storeId: string | undefined;
 

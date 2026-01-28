@@ -10,7 +10,7 @@ export function insertContent(
   std: BlockStdScope,
   model: BlockModel,
   text: string,
-  attributes?: InkTextAttributes
+  attributes?: InkTextAttributes,
 ) {
   if (!model.text) {
     console.error("Can't insert text! Text not found");
@@ -34,17 +34,11 @@ export function insertContent(
 // When the user selects a range, check if it matches the previous selection.
 // If it does, apply the marks from the previous selection.
 // If it does not, remove the marks from the previous selection.
-export function clearMarksOnDiscontinuousInput(
-  inlineEditor: InlineEditor
-): void {
+export function clearMarksOnDiscontinuousInput(inlineEditor: InlineEditor): void {
   let inlineRange = inlineEditor.getInlineRange();
   const dispose = effect(() => {
     const r = inlineEditor.inlineRange$.value;
-    if (
-      inlineRange &&
-      r &&
-      (inlineRange.index === r.index || inlineRange.index === r.index + 1)
-    ) {
+    if (inlineRange && r && (inlineRange.index === r.index || inlineRange.index === r.index + 1)) {
       inlineRange = r;
     } else {
       inlineEditor.resetMarks();
@@ -60,9 +54,6 @@ export function getPrefixText(inlineEditor: InlineEditor) {
   const nearestLineBreakIndex = inlineEditor.yTextString
     .slice(0, inlineRange.index)
     .lastIndexOf('\n');
-  const prefixText = inlineEditor.yTextString.slice(
-    nearestLineBreakIndex + 1,
-    inlineRange.index
-  );
+  const prefixText = inlineEditor.yTextString.slice(nearestLineBreakIndex + 1, inlineRange.index);
   return prefixText;
 }

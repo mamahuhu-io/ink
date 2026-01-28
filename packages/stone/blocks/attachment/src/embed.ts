@@ -1,16 +1,8 @@
-import {
-  type AttachmentBlockModel,
-  type ImageBlockProps,
-  MAX_IMAGE_WIDTH,
-} from '@ink/stone-model';
-import {
-  readImageSize,
-  transformModel,
-  withTempBlobData,
-} from '@ink/stone-shared/utils';
 import type { Container } from '@ink/stone-global/di';
 import { createIdentifier } from '@ink/stone-global/di';
 import { Bound } from '@ink/stone-global/gfx';
+import { type AttachmentBlockModel, type ImageBlockProps, MAX_IMAGE_WIDTH } from '@ink/stone-model';
+import { readImageSize, transformModel, withTempBlobData } from '@ink/stone-shared/utils';
 import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import type { ExtensionType } from '@ink/stone-store';
 import { Extension } from '@ink/stone-store';
@@ -26,24 +18,20 @@ export type AttachmentEmbedConfig = {
   /**
    * The action will be executed when the attachment needs to be converted.
    */
-  action?: (
-    model: AttachmentBlockModel,
-    std: BlockStdScope
-  ) => Promise<void> | void;
+  action?: (model: AttachmentBlockModel, std: BlockStdScope) => Promise<void> | void;
 };
 
 // Single embed config.
-export const AttachmentEmbedConfigIdentifier =
-  createIdentifier<AttachmentEmbedConfig>(
-    'InkAttachmentEmbedConfigIdentifier'
-  );
+export const AttachmentEmbedConfigIdentifier = createIdentifier<AttachmentEmbedConfig>(
+  'InkAttachmentEmbedConfigIdentifier',
+);
 
 export function AttachmentEmbedConfigExtension(
-  configs: AttachmentEmbedConfig[] = embedConfig
+  configs: AttachmentEmbedConfig[] = embedConfig,
 ): ExtensionType {
   return {
-    setup: di => {
-      configs.forEach(option => {
+    setup: (di) => {
+      configs.forEach((option) => {
         di.addImpl(AttachmentEmbedConfigIdentifier(option.name), () => option);
       });
     },
@@ -56,7 +44,7 @@ export const AttachmentEmbedConfigMapIdentifier = createIdentifier<
 >('InkAttachmentEmbedConfigMapIdentifier');
 
 export const AttachmentEmbedProvider = createIdentifier<AttachmentEmbedService>(
-  'InkAttachmentEmbedProvider'
+  'InkAttachmentEmbedProvider',
 );
 
 export class AttachmentEmbedService extends Extension {
@@ -69,8 +57,8 @@ export class AttachmentEmbedService extends Extension {
   }
 
   static override setup(di: Container) {
-    di.addImpl(AttachmentEmbedConfigMapIdentifier, provider =>
-      provider.getAll(AttachmentEmbedConfigIdentifier)
+    di.addImpl(AttachmentEmbedConfigMapIdentifier, (provider) =>
+      provider.getAll(AttachmentEmbedConfigIdentifier),
     );
     di.addImpl(AttachmentEmbedProvider, this, [StdIdentifier]);
   }
@@ -79,16 +67,14 @@ export class AttachmentEmbedService extends Extension {
    * Check if the attachment should be converted to another block type (e.g., image).
    */
   shouldBeConverted(model: AttachmentBlockModel) {
-    return Array.from(this.configs.values()).some(config => config.check(model));
+    return Array.from(this.configs.values()).some((config) => config.check(model));
   }
 
   /**
    * Convert the attachment to another block type if applicable.
    */
   convertTo(model: AttachmentBlockModel) {
-    const config = Array.from(this.configs.values()).find(config =>
-      config.check(model)
-    );
+    const config = Array.from(this.configs.values()).find((config) => config.check(model));
 
     if (config?.action) {
       config.action(model, this.std)?.catch(console.error);
@@ -100,9 +86,8 @@ export class AttachmentEmbedService extends Extension {
 const embedConfig: AttachmentEmbedConfig[] = [
   {
     name: 'image',
-    check: model =>
-      model.store.schema.flavourSchemaMap.has('ink:image') &&
-      model.props.type.startsWith('image/'),
+    check: (model) =>
+      model.store.schema.flavourSchemaMap.has('ink:image') && model.props.type.startsWith('image/'),
     async action(model, std) {
       const component = std.view.getBlock(model.id);
       if (!component) return;
@@ -127,13 +112,9 @@ async function turnIntoImageBlock(model: AttachmentBlockModel) {
   const { saveAttachmentData, getImageData } = withTempBlobData();
   saveAttachmentData(sourceId, { name: model.props.name });
 
-  let imageSize = model.props.sourceId
-    ? getImageData(model.props.sourceId)
-    : undefined;
+  let imageSize = model.props.sourceId ? getImageData(model.props.sourceId) : undefined;
 
-  const bounds = model.xywh
-    ? Bound.fromXYWH(model.deserializedXYWH)
-    : undefined;
+  const bounds = model.xywh ? Bound.fromXYWH(model.deserializedXYWH) : undefined;
 
   if (bounds) {
     if (!imageSize?.width || !imageSize?.height) {

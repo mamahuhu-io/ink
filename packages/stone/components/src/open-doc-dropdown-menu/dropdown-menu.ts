@@ -1,10 +1,6 @@
-import {
-  type OpenDocMode,
-  type ToolbarAction,
-  ToolbarContext,
-} from '@ink/stone-shared/services';
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { type OpenDocMode, type ToolbarAction, ToolbarContext } from '@ink/stone-shared/services';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { PropTypes, requiredProperties } from '@ink/stone-std';
 import { computed, type ReadonlySignal } from '@preact/signals-core';
 import { css, html, LitElement } from 'lit';
@@ -20,9 +16,7 @@ import { EditorChevronDown } from '../toolbar';
   openDocMode$: PropTypes.object,
   updateOpenDocMode: PropTypes.instanceOf(Function),
 })
-export class OpenDocDropdownMenu extends SignalWatcher(
-  WithDisposable(LitElement)
-) {
+export class OpenDocDropdownMenu extends SignalWatcher(WithDisposable(LitElement)) {
   static override styles = css`
     :host {
       display: flex;
@@ -66,9 +60,7 @@ export class OpenDocDropdownMenu extends SignalWatcher(
 
   currentAction$ = computed(() => {
     const currentOpenDocMode = this.openDocMode$.value;
-    return (
-      this.actions.find(a => a.mode === currentOpenDocMode) ?? this.actions[0]
-    );
+    return this.actions.find((a) => a.mode === currentOpenDocMode) ?? this.actions[0];
   });
 
   override render() {
@@ -92,15 +84,13 @@ export class OpenDocDropdownMenu extends SignalWatcher(
         aria-label="Open doc menu"
         .contentPadding="${'8px'}"
         .button=${html`
-          <editor-icon-button aria-label="Open doc with">
-            ${EditorChevronDown}
-          </editor-icon-button>
+          <editor-icon-button aria-label="Open doc with"> ${EditorChevronDown} </editor-icon-button>
         `}
       >
         <div data-orientation="vertical">
           ${repeat(
             actions,
-            action => action.id,
+            (action) => action.id,
             ({ label, icon, run, disabled, mode, shortcut }) => html`
               <editor-menu-action
                 aria-label=${ifDefined(label)}
@@ -116,7 +106,7 @@ export class OpenDocDropdownMenu extends SignalWatcher(
                   <span class="shortcut">${shortcut}</span>
                 </div>
               </editor-menu-action>
-            `
+            `,
           )}
         </div>
       </editor-menu-button>

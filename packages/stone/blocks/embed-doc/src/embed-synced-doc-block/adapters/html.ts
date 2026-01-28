@@ -7,7 +7,7 @@ import {
 export const embedSyncedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: EmbedSyncedDocBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === EmbedSyncedDocBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === EmbedSyncedDocBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: async (o, context) => {
@@ -15,14 +15,10 @@ export const embedSyncedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       const type = configs.get('embedSyncedDocExportType');
 
       // this context is used for nested sync block
-      if (
-        walkerContext.getGlobalContext('embed-synced-doc-counter') === undefined
-      ) {
+      if (walkerContext.getGlobalContext('embed-synced-doc-counter') === undefined) {
         walkerContext.setGlobalContext('embed-synced-doc-counter', 0);
       }
-      let counter = walkerContext.getGlobalContext(
-        'embed-synced-doc-counter'
-      ) as number;
+      let counter = walkerContext.getGlobalContext('embed-synced-doc-counter') as number;
       walkerContext.setGlobalContext('embed-synced-doc-counter', ++counter);
 
       if (type === 'content') {
@@ -47,18 +43,16 @@ export const embedSyncedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .openNode(
               {
                 type: 'element',
                 tagName: 'p',
                 properties: {},
-                children: [
-                  { type: 'text', value: syncedDoc.meta?.title ?? '' },
-                ],
+                children: [{ type: 'text', value: syncedDoc.meta?.title ?? '' }],
               },
-              'children'
+              'children',
             )
             .closeNode()
             .closeNode();
@@ -67,22 +61,15 @@ export const embedSyncedDocBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
     },
     leave: (_, context) => {
       const { walkerContext } = context;
-      const counter = walkerContext.getGlobalContext(
-        'embed-synced-doc-counter'
-      ) as number;
+      const counter = walkerContext.getGlobalContext('embed-synced-doc-counter') as number;
       const currentCounter = counter - 1;
-      walkerContext.setGlobalContext(
-        'embed-synced-doc-counter',
-        currentCounter
-      );
+      walkerContext.setGlobalContext('embed-synced-doc-counter', currentCounter);
       // When leave the last embed synced doc block, we need to set the html root doc context to true
-      walkerContext.setGlobalContext(
-        'hast:html-root-doc',
-        currentCounter === 0
-      );
+      walkerContext.setGlobalContext('hast:html-root-doc', currentCounter === 0);
     },
   },
 };
 
-export const EmbedSyncedDocBlockHtmlAdapterExtension =
-  BlockHtmlAdapterExtension(embedSyncedDocBlockHtmlAdapterMatcher);
+export const EmbedSyncedDocBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
+  embedSyncedDocBlockHtmlAdapterMatcher,
+);

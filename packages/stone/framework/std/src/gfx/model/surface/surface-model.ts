@@ -6,10 +6,7 @@ import { signal } from '@preact/signals-core';
 import { Subject } from 'rxjs';
 import * as Y from 'yjs';
 
-import {
-  type GfxGroupCompatibleInterface,
-  isGfxGroupCompatibleModel,
-} from '../base.js';
+import { type GfxGroupCompatibleInterface, isGfxGroupCompatibleModel } from '../base.js';
 import type { GfxGroupModel, GfxModel } from '../model.js';
 import { createDecoratorState } from './decorators/common.js';
 import { initializeObservers, initializeWatchers } from './decorators/index.js';
@@ -55,10 +52,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
 
   protected _elementCtorMap: Record<
     string,
-    Constructor<
-      GfxPrimitiveElementModel,
-      ConstructorParameters<typeof GfxPrimitiveElementModel>
-    >
+    Constructor<GfxPrimitiveElementModel, ConstructorParameters<typeof GfxPrimitiveElementModel>>
   > = Object.create(null);
 
   protected _elementModels = new Map<
@@ -105,7 +99,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
 
   get elementModels() {
     const models: GfxPrimitiveElementModel[] = [];
-    this._elementModels.forEach(model => models.push(model.model));
+    this._elementModels.forEach((model) => models.push(model.model));
     return models;
   }
 
@@ -142,7 +136,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
         oldValues: Record<string, unknown>;
         local: boolean;
       }) => void;
-    }
+    },
   ) {
     const { type, id, ...rest } = props;
 
@@ -151,22 +145,17 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     }
 
     const yMap = new Y.Map();
-    const elementModel = this._createElementFromYMap(
-      type as string,
-      id as string,
-      yMap,
-      {
-        ...options,
-        newCreate: true,
-      }
-    );
+    const elementModel = this._createElementFromYMap(type as string, id as string, yMap, {
+      ...options,
+      newCreate: true,
+    });
 
     props = this._propsToY(type as string, props);
 
     yMap.set('type', type);
     yMap.set('id', id);
 
-    Object.keys(rest).forEach(key => {
+    Object.keys(rest).forEach((key) => {
       if (props[key] !== undefined) {
         // @ts-expect-error ignore
         elementModel.model[key] = props[key];
@@ -189,7 +178,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       }) => void;
       skipFieldInit?: boolean;
       newCreate?: boolean;
-    }
+    },
   ) {
     const stashed = new Map<string | symbol, unknown>();
     const Ctor = this._elementCtorMap[type];
@@ -211,7 +200,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       yMap,
       model: this,
       stashedStore: stashed,
-      onChange: payload => mounted && options.onChange({ id, ...payload }),
+      onChange: (payload) => mounted && options.onChange({ id, ...payload }),
     }) as GfxPrimitiveElementModel;
 
     // @ts-expect-error ignore
@@ -228,13 +217,13 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       initializeObservers(Ctor.prototype, elementModel);
       initializeWatchers(Ctor.prototype, elementModel);
       elementModel['_disposable'].add(
-        syncElementFromY(elementModel, payload => {
+        syncElementFromY(elementModel, (payload) => {
           mounted &&
             options.onChange({
               id,
               ...payload,
             });
-        })
+        }),
       );
       mounted = true;
       elementModel.onCreated();
@@ -276,7 +265,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     };
     const onElementsMapChange = (
       event: Y.YMapEvent<Y.Map<unknown>>,
-      transaction: Y.Transaction
+      transaction: Y.Transaction,
     ) => {
       const { changes, keysChanged } = event;
       const addedElements: {
@@ -288,7 +277,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
         model: GfxPrimitiveElementModel;
       }[] = [];
 
-      keysChanged.forEach(id => {
+      keysChanged.forEach((id) => {
         const change = changes.keys.get(id);
         const element = this.elements.getValue()!.get(id);
 
@@ -303,14 +292,14 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
                     element.get('id') as string,
                     element,
                     {
-                      onChange: payload => {
+                      onChange: (payload) => {
                         this.elementUpdated.next(payload);
-                        Object.keys(payload.props).forEach(key => {
+                        Object.keys(payload.props).forEach((key) => {
                           model.model.propsUpdated.next({ key });
                         });
                       },
                       skipFieldInit: true,
-                    }
+                    },
                   );
 
               !hasModel && this._elementModels.set(id, model);
@@ -350,14 +339,14 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
         val.get('id') as string,
         val,
         {
-          onChange: payload => {
-            this.elementUpdated.next(payload),
-              Object.keys(payload.props).forEach(key => {
+          onChange: (payload) => {
+            (this.elementUpdated.next(payload),
+              Object.keys(payload.props).forEach((key) => {
                 model.model.propsUpdated.next({ key });
-              });
+              }));
           },
           skipFieldInit: true,
-        }
+        },
       );
 
       this._elementModels.set(key, model);
@@ -368,7 +357,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       mount();
     });
 
-    Object.values(this.store.blocks.peek()).forEach(block => {
+    Object.values(this.store.blocks.peek()).forEach((block) => {
       if (isGfxGroupCompatibleModel(block.model)) {
         this._groupLikeModels.set(block.id, block.model);
       }
@@ -376,7 +365,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
 
     elementsYMap.observe(onElementsMapChange);
 
-    const subscription = this.store.slots.blockUpdated.subscribe(payload => {
+    const subscription = this.store.slots.blockUpdated.subscribe((payload) => {
       switch (payload.type) {
         case 'add':
           if (isGfxGroupCompatibleModel(payload.model)) {
@@ -425,7 +414,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
           const childJson = Reflect.get(val, 'json') as Record<string, unknown>;
           const childrenYMap = new Y.Map<unknown>();
 
-          Object.keys(childJson).forEach(childId => {
+          Object.keys(childJson).forEach((childId) => {
             childrenYMap.set(childId, childJson[childId]);
           });
           Reflect.set(props, key, childrenYMap);
@@ -438,19 +427,13 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
   }
 
   private _watchGroupRelationChange() {
-    const isGroup = (
-      element: GfxPrimitiveElementModel
-    ): element is GfxGroupLikeElementModel =>
+    const isGroup = (element: GfxPrimitiveElementModel): element is GfxGroupLikeElementModel =>
       element instanceof GfxGroupLikeElementModel;
 
     const disposable = this.elementUpdated.subscribe(({ id, oldValues }) => {
       const element = this.getElementById(id)!;
 
-      if (
-        isGroup(element) &&
-        oldValues['childIds'] &&
-        element.childIds.length === 0
-      ) {
+      if (isGroup(element) && oldValues['childIds'] && element.childIds.length === 0) {
         this.deleteElement(id);
       }
     });
@@ -461,14 +444,13 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
 
   private _watchChildrenChange() {
     const updateIsEmpty = () => {
-      this._isEmpty$.value =
-        this._elementModels.size === 0 && this.children.length === 0;
+      this._isEmpty$.value = this._elementModels.size === 0 && this.children.length === 0;
     };
 
     const disposables = new DisposableGroup();
     disposables.add(this.elementAdded.subscribe(updateIsEmpty));
     disposables.add(this.elementRemoved.subscribe(updateIsEmpty));
-    this.store.slots.blockUpdated.subscribe(payload => {
+    this.store.slots.blockUpdated.subscribe((payload) => {
       if (['add', 'delete'].includes(payload.type)) {
         updateIsEmpty();
       }
@@ -481,11 +463,8 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
   protected _extendElement(
     ctorMap: Record<
       string,
-      Constructor<
-        GfxPrimitiveElementModel,
-        ConstructorParameters<typeof GfxPrimitiveElementModel>
-      >
-    >
+      Constructor<GfxPrimitiveElementModel, ConstructorParameters<typeof GfxPrimitiveElementModel>>
+    >,
   ) {
     Object.assign(this._elementCtorMap, ctorMap);
   }
@@ -500,9 +479,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     return this._elementCtorMap[type];
   }
 
-  addElement<T extends object = Record<string, unknown>>(
-    props: Partial<T> & { type: string }
-  ) {
+  addElement<T extends object = Record<string, unknown>>(props: Partial<T> & { type: string }) {
     if (this.store.readonly) {
       throw new Error('Cannot add element in readonly mode');
     }
@@ -515,7 +492,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       },
     };
 
-    this._middlewares.forEach(mid => mid(middlewareCtx));
+    this._middlewares.forEach((mid) => mid(middlewareCtx));
 
     props = middlewareCtx.payload.props as Partial<T> & { type: string };
 
@@ -525,9 +502,9 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     props.id = id;
 
     const elementModel = this._createElementFromProps(props, {
-      onChange: payload => {
+      onChange: (payload) => {
         this.elementUpdated.next(payload);
-        Object.keys(payload.props).forEach(key => {
+        Object.keys(payload.props).forEach((key) => {
           elementModel.model.propsUpdated.next({ key });
         });
       },
@@ -565,7 +542,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
       const group = this.getGroup(id);
 
       if (element instanceof GfxGroupLikeElementModel) {
-        element.childIds.forEach(childId => {
+        element.childIds.forEach((childId) => {
           if (this.hasElementById(childId)) {
             this.deleteElement(childId);
           } else if (this.store.hasBlock(childId)) {
@@ -609,8 +586,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
   getGroup(elem: string | GfxModel): GfxGroupModel | null {
     elem =
       typeof elem === 'string'
-        ? ((this.getElementById(elem) ??
-            this.store.getBlock(elem)?.model) as GfxModel)
+        ? ((this.getElementById(elem) ?? this.store.getBlock(elem)?.model) as GfxModel)
         : elem;
 
     if (!elem) return null;
@@ -669,10 +645,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     }
   }
 
-  updateElement<T extends object = Record<string, unknown>>(
-    id: string,
-    props: Partial<T>
-  ) {
+  updateElement<T extends object = Record<string, unknown>>(id: string, props: Partial<T>) {
     if (this.store.readonly) {
       throw new Error('Cannot update element in readonly mode');
     }
@@ -684,10 +657,7 @@ export class SurfaceBlockModel extends BlockModel<SurfaceBlockProps> {
     }
 
     this.store.transact(() => {
-      props = this._propsToY(
-        elementModel.type,
-        props as Record<string, unknown>
-      ) as T;
+      props = this._propsToY(elementModel.type, props as Record<string, unknown>) as T;
       Object.entries(props).forEach(([key, value]) => {
         // @ts-expect-error ignore
         elementModel[key] = value;

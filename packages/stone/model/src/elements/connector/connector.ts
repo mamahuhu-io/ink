@@ -12,17 +12,8 @@ import {
   polyLineNearestPoint,
   Vec,
 } from '@ink/stone-global/gfx';
-import type {
-  BaseElementProps,
-  PointTestOptions,
-  SerializedElement,
-} from '@ink/stone-std/gfx';
-import {
-  derive,
-  field,
-  GfxPrimitiveElementModel,
-  local,
-} from '@ink/stone-std/gfx';
+import type { BaseElementProps, PointTestOptions, SerializedElement } from '@ink/stone-std/gfx';
+import { derive, field, GfxPrimitiveElementModel, local } from '@ink/stone-std/gfx';
 import * as Y from 'yjs';
 
 import {
@@ -141,11 +132,9 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
 
   override containsBound(bounds: Bound) {
     return (
-      this.absolutePath.some(point => bounds.containsPoint(point)) ||
+      this.absolutePath.some((point) => bounds.containsPoint(point)) ||
       (this.hasLabel() &&
-        Bound.fromXYWH(this.labelXYWH!).points.some(p =>
-          bounds.containsPoint(p)
-        ))
+        Bound.fromXYWH(this.labelXYWH!).points.some((p) => bounds.containsPoint(p)))
     );
   }
 
@@ -161,11 +150,7 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
     }
 
     if (!intersected && this.hasLabel()) {
-      intersected = linePolylineIntersects(
-        start,
-        end,
-        Bound.fromXYWH(this.labelXYWH!).points
-      );
+      intersected = linePolylineIntersects(start, end, Bound.fromXYWH(this.labelXYWH!).points);
     }
 
     return intersected;
@@ -184,7 +169,7 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
     }
 
     if (mode === ConnectorMode.Orthogonal) {
-      const points = path.map<IVec>(p => [p[0], p[1]]);
+      const points = path.map<IVec>((p) => [p[0], p[1]]);
       return Polyline.nearestPoint(points, point);
     }
 
@@ -225,7 +210,7 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
     }
 
     if (mode === ConnectorMode.Orthogonal) {
-      const points = path.map<IVec>(p => [p[0], p[1]]);
+      const points = path.map<IVec>((p) => [p[0], p[1]]);
       const p = Polyline.nearestPoint(points, point);
       const pl = Polyline.lenAtPoint(points, p);
       const fl = Polyline.len(points);
@@ -259,7 +244,7 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
     }
 
     if (mode === ConnectorMode.Orthogonal) {
-      const points = path.map<IVec>(p => [p[0], p[1]]);
+      const points = path.map<IVec>((p) => [p[0], p[1]]);
       const point = Polyline.pointAt(points, offsetDistance);
       if (point) return point;
       return [x + w / 2, y + h / 2];
@@ -272,26 +257,16 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
   }
 
   override getRelativePointLocation(point: IVec): PointLocation {
-    return new PointLocation(
-      Bound.deserialize(this.xywh).getRelativePoint(point)
-    );
+    return new PointLocation(Bound.deserialize(this.xywh).getRelativePoint(point));
   }
 
   hasLabel() {
     return Boolean(
-      !this.labelEditing &&
-        this.labelDisplay &&
-        this.labelXYWH &&
-        this.text &&
-        this.text.length
+      !this.labelEditing && this.labelDisplay && this.labelXYWH && this.text && this.text.length,
     );
   }
 
-  override includesPoint(
-    x: number,
-    y: number,
-    options?: PointTestOptions | undefined
-  ): boolean {
+  override includesPoint(x: number, y: number, options?: PointTestOptions | undefined): boolean {
     const currentPoint: IVec = [x, y];
 
     if (this.labelIncludesPoint(currentPoint as IVec)) {
@@ -309,16 +284,11 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
       return false;
     }
 
-    return (
-      Vec.dist(point, currentPoint) <
-      (options?.hitThreshold ? strokeWidth / 2 : 0) + 8
-    );
+    return Vec.dist(point, currentPoint) < (options?.hitThreshold ? strokeWidth / 2 : 0) + 8;
   }
 
   labelIncludesPoint(point: IVec) {
-    return (
-      this.hasLabel() && Bound.fromXYWH(this.labelXYWH!).isPointInBound(point)
-    );
+    return this.hasLabel() && Bound.fromXYWH(this.labelXYWH!).isPointInBound(point);
   }
 
   moveTo(bound: Bound) {
@@ -372,22 +342,17 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
 
   resizePath(originalPath: PointLocation[], matrix: DOMMatrix) {
     if (this.mode === ConnectorMode.Curve) {
-      return originalPath.map(point => {
-        const [p, t, absIn, absOut] = [
-          point,
-          point.tangent,
-          point.absIn,
-          point.absOut,
-        ]
-          .map(p => new DOMPoint(...p).matrixTransform(matrix))
-          .map(p => [p.x, p.y] as IVec);
+      return originalPath.map((point) => {
+        const [p, t, absIn, absOut] = [point, point.tangent, point.absIn, point.absOut]
+          .map((p) => new DOMPoint(...p).matrixTransform(matrix))
+          .map((p) => [p.x, p.y] as IVec);
         const ip = Vec.sub(absIn, p);
         const op = Vec.sub(absOut, p);
         return new PointLocation(p, t, ip, op);
       });
     }
 
-    return originalPath.map(point => {
+    return originalPath.map((point) => {
       const { x, y } = new DOMPoint(...point).matrixTransform(matrix);
       const p: IVec = [x, y];
       return PointLocation.fromVec(p);
@@ -465,7 +430,7 @@ export class ConnectorElementModel extends GfxPrimitiveElementModel<ConnectorEle
     const { x, y } = instance;
 
     return {
-      absolutePath: path.map(p => p.clone().setVec(Vec.add(p, [x, y]))),
+      absolutePath: path.map((p) => p.clone().setVec(Vec.add(p, [x, y]))),
     };
   })
   @local()

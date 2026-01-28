@@ -55,12 +55,10 @@ export class IndexedDBDocSource implements DocSource {
 
   async pull(
     docId: string,
-    state: Uint8Array
+    state: Uint8Array,
   ): Promise<{ data: Uint8Array; state?: Uint8Array | undefined } | null> {
     const db = await this.getDb();
-    const store = db
-      .transaction('collection', 'readonly')
-      .objectStore('collection');
+    const store = db.transaction('collection', 'readonly').objectStore('collection');
     const data = await store.get(docId);
 
     if (!data) {
@@ -77,15 +75,10 @@ export class IndexedDBDocSource implements DocSource {
 
   async push(docId: string, data: Uint8Array): Promise<void> {
     const db = await this.getDb();
-    const store = db
-      .transaction('collection', 'readwrite')
-      .objectStore('collection');
+    const store = db.transaction('collection', 'readwrite').objectStore('collection');
 
     const { updates } = (await store.get(docId)) ?? { updates: [] };
-    let rows: UpdateMessage[] = [
-      ...updates,
-      { timestamp: Date.now(), update: data },
-    ];
+    let rows: UpdateMessage[] = [...updates, { timestamp: Date.now(), update: data }];
     if (this.mergeCount && rows.length >= this.mergeCount) {
       const merged = mergeUpdates(rows.map(({ update }) => update));
       rows = [{ timestamp: Date.now(), update: merged }];

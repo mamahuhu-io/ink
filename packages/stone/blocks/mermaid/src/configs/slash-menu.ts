@@ -1,6 +1,6 @@
+import { ImageIcon } from '@ink/stone-icons/lit';
 import { getSelectedModelsCommand } from '@ink/stone-shared/commands';
 import { type SlashMenuConfig } from '@ink/stone-widget-slash-menu';
-import { ImageIcon } from '@ink/stone-icons/lit';
 
 import { insertMermaidBlockCommand } from '../commands.js';
 
@@ -11,8 +11,7 @@ export const mermaidSlashMenuConfig: SlashMenuConfig = {
       description: 'Insert a Mermaid flowchart diagram.',
       icon: ImageIcon(),
       group: '3_Diagram@0',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:mermaid'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:mermaid'),
       action: ({ std }) => {
         const [success, ctx] = std.command
           .chain()
@@ -31,8 +30,7 @@ export const mermaidSlashMenuConfig: SlashMenuConfig = {
       description: 'Insert a Mermaid sequence diagram.',
       icon: ImageIcon(),
       group: '3_Diagram@1',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:mermaid'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:mermaid'),
       action: ({ std }) => {
         const [success, ctx] = std.command
           .chain()
@@ -51,8 +49,7 @@ export const mermaidSlashMenuConfig: SlashMenuConfig = {
       description: 'Insert a Mermaid gantt chart.',
       icon: ImageIcon(),
       group: '3_Diagram@2',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:mermaid'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:mermaid'),
       action: ({ std }) => {
         const [success, ctx] = std.command
           .chain()
@@ -71,8 +68,7 @@ export const mermaidSlashMenuConfig: SlashMenuConfig = {
       description: 'Insert a Mermaid diagram (custom).',
       icon: ImageIcon(),
       group: '3_Diagram@3',
-      when: ({ model }) =>
-        model.store.schema.flavourSchemaMap.has('ink:mermaid'),
+      when: ({ model }) => model.store.schema.flavourSchemaMap.has('ink:mermaid'),
       action: ({ std }) => {
         const [success, ctx] = std.command
           .chain()

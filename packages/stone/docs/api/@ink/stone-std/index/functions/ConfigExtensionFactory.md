@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [index](../README.md) / ConfigExtensionFactory
 
@@ -11,6 +11,7 @@
 Create a config extension.
 A config extension provides a configuration object for a block flavour.
 The configuration object can be used like:
+
 ```ts
 const config = std.provider.getOptional(ConfigIdentifier('my-flavour'));
 ```
@@ -19,7 +20,7 @@ const config = std.provider.getOptional(ConfigIdentifier('my-flavour'));
 
 ### Config
 
-`Config` *extends* `Record`\<`string`, `any`\>
+`Config` _extends_ `Record`\<`string`, `any`\>
 
 ## Parameters
 

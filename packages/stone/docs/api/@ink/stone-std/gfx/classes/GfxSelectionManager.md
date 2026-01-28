@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / GfxSelectionManager
 
@@ -27,7 +27,7 @@ check if the element is selected in local
 
 `boolean`
 
-***
+---
 
 ### hasRemote()
 
@@ -45,7 +45,7 @@ check if element is selected by remote peers
 
 `boolean`
 
-***
+---
 
 ### toggle()
 

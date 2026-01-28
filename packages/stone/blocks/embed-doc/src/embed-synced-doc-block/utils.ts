@@ -1,7 +1,4 @@
-import {
-  EmbedEdgelessIcon,
-  EmbedPageIcon,
-} from '@ink/stone-components/icons';
+import { EmbedEdgelessIcon, EmbedPageIcon } from '@ink/stone-components/icons';
 import { ColorScheme } from '@ink/stone-model';
 import type { BlockComponent } from '@ink/stone-std';
 import type { TemplateResult } from 'lit';
@@ -29,7 +26,7 @@ type SyncedCardImages = {
 
 export function getSyncedDocIcons(
   theme: ColorScheme,
-  editorMode: 'page' | 'edgeless'
+  editorMode: 'page' | 'edgeless',
 ): SyncedCardImages {
   if (theme === ColorScheme.Light) {
     return {
@@ -61,8 +58,7 @@ export function calcSyncedDocFullHeight(block: BlockComponent) {
   }
   const headerHeight = block.headerWrapper?.getBoundingClientRect().height ?? 0;
   // When the content is not found, we use a default height to display empty information
-  const contentHeight =
-    block.contentElement?.getBoundingClientRect().height ?? 200;
+  const contentHeight = block.contentElement?.getBoundingClientRect().height ?? 200;
 
   const bottomPadding = 8;
 

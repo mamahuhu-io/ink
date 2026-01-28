@@ -1,3 +1,4 @@
+import { DisposableGroup } from '@ink/stone-global/disposable';
 import { deleteTextCommand } from '@ink/stone-inline-preset';
 import {
   pasteMiddleware,
@@ -15,7 +16,6 @@ import {
   getTextSelectionCommand,
   retainFirstModelCommand,
 } from '@ink/stone-shared/commands';
-import { DisposableGroup } from '@ink/stone-global/disposable';
 import type { UIEventHandler } from '@ink/stone-std';
 import type { BlockSnapshot, Store } from '@ink/stone-store';
 
@@ -54,25 +54,20 @@ export class PageClipboard extends ReadOnlyClipboard {
     snapshot: BlockSnapshot,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ) => {
-    const block = await this.std.clipboard.pasteBlockSnapshot(
-      snapshot,
-      doc,
-      parent,
-      index
-    );
+    const block = await this.std.clipboard.pasteBlockSnapshot(snapshot, doc, parent, index);
     return block?.id ?? null;
   };
 
-  onPageCut: UIEventHandler = ctx => {
+  onPageCut: UIEventHandler = (ctx) => {
     const e = ctx.get('clipboardState').raw;
     e.preventDefault();
 
     this._copySelectedInPage(() => {
       this.std.command
         .chain()
-        .try<{}>(cmd => [
+        .try<{}>((cmd) => [
           cmd.pipe(getTextSelectionCommand).pipe(deleteTextCommand),
           cmd.pipe(getSelectedModelsCommand).pipe(deleteSelectedModelsCommand),
         ])
@@ -80,7 +75,7 @@ export class PageClipboard extends ReadOnlyClipboard {
     }).run();
   };
 
-  onPagePaste: UIEventHandler = ctx => {
+  onPagePaste: UIEventHandler = (ctx) => {
     const e = ctx.get('clipboardState').raw;
     e.preventDefault();
 
@@ -88,7 +83,7 @@ export class PageClipboard extends ReadOnlyClipboard {
     this.std.store.captureSync();
     this.std.command
       .chain()
-      .try<{}>(cmd => [
+      .try<{}>((cmd) => [
         cmd.pipe(getTextSelectionCommand).pipe((ctx, next) => {
           const { currentTextSelection } = ctx;
           if (!currentTextSelection) {
@@ -108,7 +103,7 @@ export class PageClipboard extends ReadOnlyClipboard {
           .pipe(retainFirstModelCommand)
           .pipe(deleteSelectedModelsCommand),
       ])
-      .try<{ currentSelectionPath: string }>(cmd => [
+      .try<{ currentSelectionPath: string }>((cmd) => [
         cmd.pipe(getTextSelectionCommand).pipe((ctx, next) => {
           const textSelection = ctx.currentTextSelection;
           if (!textSelection) {
@@ -149,7 +144,7 @@ export class PageClipboard extends ReadOnlyClipboard {
             e,
             this.std.store,
             ctx.parentBlock.model.id,
-            ctx.blockIndex ? ctx.blockIndex + 1 : 1
+            ctx.blockIndex ? ctx.blockIndex + 1 : 1,
           )
           .catch(console.error);
 
@@ -160,9 +155,7 @@ export class PageClipboard extends ReadOnlyClipboard {
 
   override mounted() {
     if (!navigator.clipboard) {
-      console.error(
-        'navigator.clipboard is not supported in current environment.'
-      );
+      console.error('navigator.clipboard is not supported in current environment.');
       return;
     }
     if (this._disposables.disposed) {

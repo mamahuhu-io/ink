@@ -19,10 +19,7 @@ import {
   type InteractivityEventAPI,
   InteractivityExtensionIdentifier,
 } from './extension/base.js';
-import {
-  type GfxViewInteractionConfig,
-  GfxViewInteractionIdentifier,
-} from './extension/view.js';
+import { type GfxViewInteractionConfig, GfxViewInteractionIdentifier } from './extension/view.js';
 import { GfxViewEventManager } from './gfx-view-event-handler.js';
 import {
   DEFAULT_HANDLES,
@@ -46,13 +43,10 @@ import type {
   SelectContext,
 } from './types/view.js';
 
-type ExtensionPointerHandler = Exclude<
-  SupportedEvents,
-  'pointerleave' | 'pointerenter'
->;
+type ExtensionPointerHandler = Exclude<SupportedEvents, 'pointerleave' | 'pointerenter'>;
 
 export const InteractivityIdentifier = GfxExtensionIdentifier(
-  'interactivity-manager'
+  'interactivity-manager',
 ) as ServiceIdentifier<InteractivityManager>;
 
 export class InteractivityManager extends GfxExtension {
@@ -64,7 +58,7 @@ export class InteractivityManager extends GfxExtension {
 
   override mounted(): void {
     this.canvasEventHandler = new GfxViewEventManager(this.gfx);
-    this.interactExtensions.forEach(ext => {
+    this.interactExtensions.forEach((ext) => {
       ext.mounted();
     });
   }
@@ -76,7 +70,7 @@ export class InteractivityManager extends GfxExtension {
 
   override unmounted(): void {
     this._disposable.dispose();
-    this.interactExtensions.forEach(ext => {
+    this.interactExtensions.forEach((ext) => {
       ext.unmounted();
     });
   }
@@ -111,12 +105,11 @@ export class InteractivityManager extends GfxExtension {
     const { context, preventDefaultState } = createInteractionContext(evt);
     const extensions = this.interactExtensions;
 
-    extensions.forEach(ext => {
+    extensions.forEach((ext) => {
       (ext.event as InteractivityEventAPI).emit(eventName, context);
     });
 
-    const handledByView =
-      this.canvasEventHandler.dispatch(eventName, evt) ?? false;
+    const handledByView = this.canvasEventHandler.dispatch(eventName, evt) ?? false;
 
     return {
       preventDefaultState,
@@ -138,12 +131,10 @@ export class InteractivityManager extends GfxExtension {
       }
     >();
 
-    models.forEach(model => {
+    models.forEach((model) => {
       const typeOrFlavour = 'flavour' in model ? model.flavour : model.type;
       const view = this.gfx.view.get(model);
-      const config = this.std.getOptional(
-        GfxViewInteractionIdentifier(typeOrFlavour)
-      );
+      const config = this.std.getOptional(GfxViewInteractionIdentifier(typeOrFlavour));
 
       if (!view) {
         return;
@@ -184,10 +175,7 @@ export class InteractivityManager extends GfxExtension {
     return selectionConfigMap;
   }
 
-  private _getSuggestedTarget(context: {
-    candidates: GfxModel[];
-    target: GfxModel;
-  }) {
+  private _getSuggestedTarget(context: { candidates: GfxModel[]; target: GfxModel }) {
     const { candidates, target } = context;
 
     const suggestedElements: {
@@ -202,7 +190,7 @@ export class InteractivityManager extends GfxExtension {
     extensions
       .values()
       .toArray()
-      .forEach(ext => {
+      .forEach((ext) => {
         return (ext.action as InteractivityActionAPI).emit('elementSelect', {
           candidates,
           target,
@@ -221,8 +209,7 @@ export class InteractivityManager extends GfxExtension {
       };
       const elm = this.gfx.getElementById(suggested.id);
 
-      return elm instanceof GfxPrimitiveElementModel ||
-        elm instanceof GfxBlockElementModel
+      return elm instanceof GfxPrimitiveElementModel || elm instanceof GfxBlockElementModel
         ? elm
         : target;
     }
@@ -250,7 +237,7 @@ export class InteractivityManager extends GfxExtension {
       position: Point.from([x, y]),
     };
 
-    candidates = candidates.filter(model => {
+    candidates = candidates.filter((model) => {
       if (!selectionConfigs.has(model.id)) {
         return false;
       }
@@ -308,7 +295,7 @@ export class InteractivityManager extends GfxExtension {
   }
 
   handleBoxSelection(context: { box: BoxSelectionContext['box'] }) {
-    const elements = this.gfx.getElementsByBound(context.box).filter(model => {
+    const elements = this.gfx.getElementsByBound(context.box).filter((model) => {
       const view = this.gfx.view.get(model);
 
       if (
@@ -322,7 +309,7 @@ export class InteractivityManager extends GfxExtension {
       return true;
     });
 
-    return getTopElements(elements).filter(elm => !elm.isLocked());
+    return getTopElements(elements).filter((elm) => !elm.isLocked());
   }
 
   /**
@@ -344,51 +331,41 @@ export class InteractivityManager extends GfxExtension {
       },
 
       dragStartPos: Point.from(
-        this.gfx.viewport.toModelCoordFromClientCoord([
-          options.event.x,
-          options.event.y,
-        ])
+        this.gfx.viewport.toModelCoordFromClientCoord([options.event.x, options.event.y]),
       ),
     };
     const extension = this.interactExtensions;
     const activeExtensionHandlers = Array.from(
-      extension.values().map(ext => {
-        return (ext.action as InteractivityActionAPI).emit(
-          'dragInitialize',
-          context
-        );
-      })
+      extension.values().map((ext) => {
+        return (ext.action as InteractivityActionAPI).emit('dragInitialize', context);
+      }),
     );
 
     if (cancelledByExt) {
-      activeExtensionHandlers.forEach(handler => handler?.clear?.());
+      activeExtensionHandlers.forEach((handler) => handler?.clear?.());
       return;
     }
 
     const host = this.std.host;
     const { event } = options;
     const internal = {
-      elements: context.elements.map(model => {
+      elements: context.elements.map((model) => {
         return {
           view: this.gfx.view.get(model)!,
           originalBound: Bound.deserialize(model.xywh),
           model: model,
         };
       }),
-      dragStartPos: Point.from(
-        this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y])
-      ),
+      dragStartPos: Point.from(this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y])),
     };
     let dragLastPos = internal.dragStartPos;
-    let lastEvent = event;
+    const lastEvent = event;
 
     const viewportWatcher = this.gfx.viewport.viewportMoved.subscribe(() => {
       onDragMove(lastEvent as PointerEvent);
     });
     const onDragMove = (event: PointerEvent) => {
-      dragLastPos = Point.from(
-        this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y])
-      );
+      dragLastPos = Point.from(this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y]));
 
       const moveContext: ExtensionDragMoveContext = {
         ...internal,
@@ -401,19 +378,16 @@ export class InteractivityManager extends GfxExtension {
       // If shift key is pressed, restrict the movement to one direction
       if (this.keyboard.shiftKey$.peek()) {
         const angle = Math.abs(Math.atan2(moveContext.dy, moveContext.dx));
-        const direction =
-          angle < Math.PI / 4 || angle > 3 * (Math.PI / 4) ? 'dy' : 'dx';
+        const direction = angle < Math.PI / 4 || angle > 3 * (Math.PI / 4) ? 'dy' : 'dx';
 
         moveContext[direction] = 0;
       }
 
       this._safeExecute(() => {
-        activeExtensionHandlers.forEach(handler =>
-          handler?.onDragMove?.(moveContext)
-        );
+        activeExtensionHandlers.forEach((handler) => handler?.onDragMove?.(moveContext));
       }, 'Error while executing extension `onDragMove`');
 
-      internal.elements.forEach(element => {
+      internal.elements.forEach((element) => {
         const { view, originalBound } = element;
 
         view.onDragMove({
@@ -431,9 +405,7 @@ export class InteractivityManager extends GfxExtension {
       host.removeEventListener('pointerup', onDragEnd, false);
       viewportWatcher.unsubscribe();
 
-      dragLastPos = Point.from(
-        this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y])
-      );
+      dragLastPos = Point.from(this.gfx.viewport.toModelCoordFromClientCoord([event.x, event.y]));
       const endContext: ExtensionDragEndContext = {
         ...internal,
         event,
@@ -443,13 +415,11 @@ export class InteractivityManager extends GfxExtension {
       };
 
       this._safeExecute(() => {
-        activeExtensionHandlers.forEach(handler =>
-          handler?.onDragEnd?.(endContext)
-        );
+        activeExtensionHandlers.forEach((handler) => handler?.onDragEnd?.(endContext));
       }, 'Error while executing extension `onDragEnd` handler');
 
       this.std.store.transact(() => {
-        internal.elements.forEach(element => {
+        internal.elements.forEach((element) => {
           const { view, originalBound } = element;
 
           view.onDragEnd({
@@ -462,7 +432,7 @@ export class InteractivityManager extends GfxExtension {
       });
 
       this._safeExecute(() => {
-        activeExtensionHandlers.forEach(handler => handler?.clear?.());
+        activeExtensionHandlers.forEach((handler) => handler?.clear?.());
       }, 'Error while executing extension `clear` handler');
 
       options.onDragEnd?.();
@@ -491,9 +461,7 @@ export class InteractivityManager extends GfxExtension {
       };
 
       this._safeExecute(() => {
-        activeExtensionHandlers.forEach(handler =>
-          handler?.onDragStart?.(dragStartContext)
-        );
+        activeExtensionHandlers.forEach((handler) => handler?.onDragStart?.(dragStartContext));
       }, 'Error while executing extension `onDragStart` handler');
     };
 
@@ -502,20 +470,13 @@ export class InteractivityManager extends GfxExtension {
   }
 
   handleElementRotate(
-    options: Omit<
-      RotateOption,
-      'onRotateStart' | 'onRotateEnd' | 'onRotateUpdate'
-    > & {
-      onRotateUpdate?: (payload: {
-        currentAngle: number;
-        delta: number;
-      }) => void;
+    options: Omit<RotateOption, 'onRotateStart' | 'onRotateEnd' | 'onRotateUpdate'> & {
+      onRotateUpdate?: (payload: { currentAngle: number; delta: number }) => void;
       onRotateStart?: () => void;
       onRotateEnd?: () => void;
-    }
+    },
   ) {
-    const { rotatable, viewConfigMap, initialRotate } =
-      this._getViewRotateConfig(options.elements);
+    const { rotatable, viewConfigMap, initialRotate } = this._getViewRotateConfig(options.elements);
 
     if (!rotatable) {
       return;
@@ -523,13 +484,13 @@ export class InteractivityManager extends GfxExtension {
 
     const handler = new ResizeController({ gfx: this.gfx });
     const elements = Array.from(viewConfigMap.values()).map(
-      config => config.view.model
+      (config) => config.view.model,
     ) as GfxModel[];
 
     handler.startRotate({
       ...options,
       elements,
-      onRotateStart: payload => {
+      onRotateStart: (payload) => {
         this.activeInteraction$.value = {
           type: 'rotate',
           elements,
@@ -540,8 +501,7 @@ export class InteractivityManager extends GfxExtension {
             return;
           }
 
-          const { handlers, defaultHandlers, view, constraint } =
-            viewConfigMap.get(model.id)!;
+          const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
 
           handlers.onRotateStart({
             default: defaultHandlers.onRotateStart as () => void,
@@ -551,26 +511,18 @@ export class InteractivityManager extends GfxExtension {
           });
         });
       },
-      onRotateUpdate: payload => {
+      onRotateUpdate: (payload) => {
         options.onRotateUpdate?.({
           currentAngle: initialRotate + payload.delta,
           delta: payload.delta,
         });
         payload.data.forEach(
-          ({
-            model,
-            newBound,
-            originalBound,
-            newRotate,
-            originalRotate,
-            matrix,
-          }) => {
+          ({ model, newBound, originalBound, newRotate, originalRotate, matrix }) => {
             if (!viewConfigMap.has(model.id)) {
               return;
             }
 
-            const { handlers, defaultHandlers, view, constraint } =
-              viewConfigMap.get(model.id)!;
+            const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
 
             handlers.onRotateMove({
               model,
@@ -583,10 +535,10 @@ export class InteractivityManager extends GfxExtension {
               view,
               matrix,
             });
-          }
+          },
         );
       },
-      onRotateEnd: payload => {
+      onRotateEnd: (payload) => {
         this.activeInteraction$.value = null;
         options.onRotateEnd?.();
         this.std.store.transact(() => {
@@ -595,8 +547,7 @@ export class InteractivityManager extends GfxExtension {
               return;
             }
 
-            const { handlers, defaultHandlers, view, constraint } =
-              viewConfigMap.get(model.id)!;
+            const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
 
             handlers.onRotateEnd({
               default: defaultHandlers.onRotateEnd as () => void,
@@ -637,9 +588,7 @@ export class InteractivityManager extends GfxExtension {
 
     const addToConfigMap = (model: GfxModel) => {
       const flavourOrType = 'type' in model ? model.type : model.flavour;
-      const interactionConfig = this.std.getOptional(
-        GfxViewInteractionIdentifier(flavourOrType)
-      );
+      const interactionConfig = this.std.getOptional(GfxViewInteractionIdentifier(flavourOrType));
       const view = this.gfx.view.get(model);
 
       if (!view) {
@@ -648,7 +597,7 @@ export class InteractivityManager extends GfxExtension {
 
       const defaultHandlers: ViewRotateHandlers = {
         beforeRotate: () => {},
-        onRotateStart: context => {
+        onRotateStart: (context) => {
           if (!context.constraint.rotatable) {
             return;
           }
@@ -664,7 +613,7 @@ export class InteractivityManager extends GfxExtension {
             model.stash('xywh');
           }
         },
-        onRotateEnd: context => {
+        onRotateEnd: (context) => {
           if (!context.constraint.rotatable) {
             return;
           }
@@ -680,7 +629,7 @@ export class InteractivityManager extends GfxExtension {
             model.pop('xywh');
           }
         },
-        onRotateMove: context => {
+        onRotateMove: (context) => {
           if (!context.constraint.rotatable) {
             return;
           }
@@ -712,13 +661,13 @@ export class InteractivityManager extends GfxExtension {
 
     elements.forEach(addToConfigMap);
 
-    deleted.forEach(model => {
+    deleted.forEach((model) => {
       if (viewConfigMap.has(model.id)) {
         viewConfigMap.delete(model.id);
       }
     });
 
-    added.forEach(model => {
+    added.forEach((model) => {
       if (viewConfigMap.has(model.id)) {
         return;
       }
@@ -726,10 +675,10 @@ export class InteractivityManager extends GfxExtension {
       addToConfigMap(model);
     });
 
-    const views = Array.from(viewConfigMap.values().map(item => item.view));
+    const views = Array.from(viewConfigMap.values().map((item) => item.view));
 
     let rotatable = true;
-    viewConfigMap.forEach(config => {
+    viewConfigMap.forEach((config) => {
       const handlers = config.handlers;
 
       handlers.beforeRotate({
@@ -774,9 +723,7 @@ export class InteractivityManager extends GfxExtension {
     >();
     const addToConfigMap = (model: GfxModel) => {
       const flavourOrType = 'type' in model ? model.type : model.flavour;
-      const interactionConfig = this.std.getOptional(
-        GfxViewInteractionIdentifier(flavourOrType)
-      );
+      const interactionConfig = this.std.getOptional(GfxViewInteractionIdentifier(flavourOrType));
       const view = this.gfx.view.get(model);
 
       if (!view) {
@@ -791,7 +738,7 @@ export class InteractivityManager extends GfxExtension {
         onResizeEnd: () => {
           model.pop('xywh');
         },
-        onResizeMove: context => {
+        onResizeMove: (context) => {
           const { newBound, constraint } = context;
           const { minWidth, minHeight, maxWidth, maxHeight } = constraint;
 
@@ -829,13 +776,13 @@ export class InteractivityManager extends GfxExtension {
 
     elements.forEach(addToConfigMap);
 
-    deleted.forEach(model => {
+    deleted.forEach((model) => {
       if (viewConfigMap.has(model.id)) {
         viewConfigMap.delete(model.id);
       }
     });
 
-    added.forEach(model => {
+    added.forEach((model) => {
       if (viewConfigMap.has(model.id)) {
         return;
       }
@@ -843,10 +790,10 @@ export class InteractivityManager extends GfxExtension {
       addToConfigMap(model);
     });
 
-    const views = Array.from(viewConfigMap.values().map(item => item.view));
-    let allowedHandlers = new Set(DEFAULT_HANDLES);
+    const views = Array.from(viewConfigMap.values().map((item) => item.view));
+    const allowedHandlers = new Set(DEFAULT_HANDLES);
 
-    viewConfigMap.forEach(config => {
+    viewConfigMap.forEach((config) => {
       const currConstraint: Required<ResizeConstraint> = config.constraint;
 
       config.handlers.beforeResize({
@@ -859,7 +806,7 @@ export class InteractivityManager extends GfxExtension {
       config.constraint = currConstraint;
 
       const currentAllowedHandlers = new Set(currConstraint.allowedHandlers);
-      allowedHandlers.forEach(h => {
+      allowedHandlers.forEach((h) => {
         if (!currentAllowedHandlers.has(h)) {
           allowedHandlers.delete(h);
         }
@@ -883,11 +830,7 @@ export class InteractivityManager extends GfxExtension {
   handleElementResize(
     options: Omit<
       OptionResize,
-      | 'lockRatio'
-      | 'onResizeStart'
-      | 'onResizeEnd'
-      | 'onResizeUpdate'
-      | 'onResizeMove'
+      'lockRatio' | 'onResizeStart' | 'onResizeEnd' | 'onResizeUpdate' | 'onResizeMove'
     > & {
       onResizeStart?: () => void;
       onResizeEnd?: () => void;
@@ -900,11 +843,9 @@ export class InteractivityManager extends GfxExtension {
           h: boolean;
         };
       }) => void;
-    }
+    },
   ) {
-    const { viewConfigMap, allowedHandlers } = this._getViewResizeConfig(
-      options.elements
-    );
+    const { viewConfigMap, allowedHandlers } = this._getViewResizeConfig(options.elements);
 
     if (!allowedHandlers.includes(options.handle)) {
       return;
@@ -913,16 +854,13 @@ export class InteractivityManager extends GfxExtension {
     const { handle } = options;
     const controller = new ResizeController({ gfx: this.gfx });
     const elements = Array.from(viewConfigMap.values()).map(
-      config => config.view.model
+      (config) => config.view.model,
     ) as GfxModel[];
     const extensionHandlers = this.interactExtensions.values().reduce(
       (handlers, ext) => {
-        const extHandlers = (ext.action as InteractivityActionAPI).emit(
-          'elementResize',
-          {
-            elements,
-          }
-        );
+        const extHandlers = (ext.action as InteractivityActionAPI).emit('elementResize', {
+          elements,
+        });
 
         if (extHandlers) {
           handlers.push(extHandlers);
@@ -930,11 +868,11 @@ export class InteractivityManager extends GfxExtension {
 
         return handlers;
       },
-      [] as ActionContextMap['elementResize']['returnType'][]
+      [] as ActionContextMap['elementResize']['returnType'][],
     );
     let lockRatio = false;
 
-    viewConfigMap.forEach(config => {
+    viewConfigMap.forEach((config) => {
       const { lockRatio: lockRatioConfig } = config.constraint;
 
       lockRatio =
@@ -965,7 +903,7 @@ export class InteractivityManager extends GfxExtension {
           suggested.push(distance);
         };
 
-        extensionHandlers.forEach(ext => {
+        extensionHandlers.forEach((ext) => {
           ext.onResizeMove?.({
             scaleX,
             scaleY,
@@ -991,7 +929,7 @@ export class InteractivityManager extends GfxExtension {
           type: 'resize',
           elements,
         };
-        extensionHandlers.forEach(ext => {
+        extensionHandlers.forEach((ext) => {
           ext.onResizeStart?.({
             elements,
             handle,
@@ -1006,8 +944,7 @@ export class InteractivityManager extends GfxExtension {
             return;
           }
 
-          const { handlers, defaultHandlers, view, constraint } =
-            viewConfigMap.get(model.id)!;
+          const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
 
           handlers.onResizeStart({
             handle,
@@ -1024,44 +961,36 @@ export class InteractivityManager extends GfxExtension {
           h: false,
         };
 
-        data.forEach(
-          ({ model, newBound, originalBound, lockRatio, matrix }) => {
-            if (!viewConfigMap.has(model.id)) {
-              return;
-            }
-
-            const { handlers, defaultHandlers, view, constraint } =
-              viewConfigMap.get(model.id)!;
-
-            handlers.onResizeMove({
-              model,
-              newBound,
-              originalBound,
-              handle,
-              default: defaultHandlers.onResizeMove as () => void,
-              constraint,
-              view,
-              lockRatio,
-              matrix,
-            });
-
-            exceed.w =
-              exceed.w ||
-              model.w === constraint.minWidth ||
-              model.w === constraint.maxWidth;
-            exceed.h =
-              exceed.h ||
-              model.h === constraint.minHeight ||
-              model.h === constraint.maxHeight;
+        data.forEach(({ model, newBound, originalBound, lockRatio, matrix }) => {
+          if (!viewConfigMap.has(model.id)) {
+            return;
           }
-        );
+
+          const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
+
+          handlers.onResizeMove({
+            model,
+            newBound,
+            originalBound,
+            handle,
+            default: defaultHandlers.onResizeMove as () => void,
+            constraint,
+            view,
+            lockRatio,
+            matrix,
+          });
+
+          exceed.w = exceed.w || model.w === constraint.minWidth || model.w === constraint.maxWidth;
+          exceed.h =
+            exceed.h || model.h === constraint.minHeight || model.h === constraint.maxHeight;
+        });
 
         options.onResizeUpdate?.({ scaleX, scaleY, lockRatio, exceed });
       },
       onResizeEnd: ({ handleSign, handlePos, data }) => {
         this.activeInteraction$.value = null;
 
-        extensionHandlers.forEach(ext => {
+        extensionHandlers.forEach((ext) => {
           ext.onResizeEnd?.({
             elements,
             handle,
@@ -1076,8 +1005,7 @@ export class InteractivityManager extends GfxExtension {
               return;
             }
 
-            const { handlers, defaultHandlers, view, constraint } =
-              viewConfigMap.get(model.id)!;
+            const { handlers, defaultHandlers, view, constraint } = viewConfigMap.get(model.id)!;
 
             handlers.onResizeEnd({
               default: defaultHandlers.onResizeEnd as () => void,
@@ -1095,11 +1023,8 @@ export class InteractivityManager extends GfxExtension {
   requestElementClone(options: RequestElementsCloneContext) {
     const extensions = this.interactExtensions;
 
-    for (let ext of extensions.values()) {
-      const cloneData = (ext.action as InteractivityActionAPI).emit(
-        'elementsClone',
-        options
-      );
+    for (const ext of extensions.values()) {
+      const cloneData = (ext.action as InteractivityActionAPI).emit('elementsClone', options);
 
       if (cloneData) {
         return cloneData;

@@ -21,12 +21,9 @@ import type { BlockViewType } from '../spec/type.js';
  * );
  * ```
  */
-export function BlockViewExtension(
-  flavour: string,
-  view: BlockViewType
-): ExtensionType {
+export function BlockViewExtension(flavour: string, view: BlockViewType): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(BlockViewIdentifier(flavour), () => view);
     },
   };

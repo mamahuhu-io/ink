@@ -11,8 +11,6 @@ export type GfxGroupModel =
   | (GfxGroupCompatibleInterface & GfxBlockElementModel)
   | GfxGroupLikeElementModel;
 
-export const isPrimitiveModel = (
-  model: GfxModel
-): model is GfxPrimitiveElementModel => {
+export const isPrimitiveModel = (model: GfxModel): model is GfxPrimitiveElementModel => {
   return model instanceof GfxPrimitiveElementModel;
 };

@@ -1,7 +1,7 @@
+import { WithDisposable } from '@ink/stone-global/lit';
 import type { Color, ColorScheme, Palette } from '@ink/stone-model';
 import { DefaultTheme, resolveColor } from '@ink/stone-model';
 import type { ColorEvent } from '@ink/stone-shared/utils';
-import { WithDisposable } from '@ink/stone-global/lit';
 import { html, LitElement } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { choose } from 'lit/directives/choose.js';
@@ -42,9 +42,9 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
             preprocessColor(window.getComputedStyle(this))({
               type: 'normal',
               value: this.color,
-            }).rgba
+            }).rgba,
           )
-        : this.color
+        : this.color,
     );
   }
 
@@ -53,9 +53,7 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
   }
 
   get isCustomColor() {
-    return !this.palettes
-      .map(({ value }) => resolveColor(value, this.theme))
-      .includes(this.color);
+    return !this.palettes.map(({ value }) => resolveColor(value, this.theme)).includes(this.color);
   }
 
   get tabContentPadding() {
@@ -69,16 +67,12 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
   }
 
   override firstUpdated() {
-    this.disposables.addFromEvent(
-      this.menuButton,
-      'toggle',
-      (e: CustomEvent<boolean>) => {
-        const opened = e.detail;
-        if (!opened && this.tabType !== 'normal') {
-          this.tabType = 'normal';
-        }
+    this.disposables.addFromEvent(this.menuButton, 'toggle', (e: CustomEvent<boolean>) => {
+      const opened = e.detail;
+      if (!opened && this.tabType !== 'normal') {
+        this.tabType = 'normal';
       }
-    );
+    });
   }
 
   override render() {
@@ -86,10 +80,7 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
       <editor-menu-button
         .contentPadding=${this.tabContentPadding}
         .button=${html`
-          <editor-icon-button
-            aria-label=${this.label}
-            .tooltip=${this.tooltip || this.label}
-          >
+          <editor-icon-button aria-label=${this.label} .tooltip=${this.tooltip || this.label}>
             ${when(
               this.isText,
               () => html`
@@ -102,7 +93,7 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
                   .color=${this.colorWithoutAlpha}
                   .hollowCircle=${this.hollowCircle}
                 ></edgeless-color-button>
-              `
+              `,
             )}
           </editor-icon-button>
         `}
@@ -133,7 +124,7 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
                         ?active=${this.isCustomColor}
                         @click=${this.switchToCustomTab}
                       ></edgeless-color-custom-button>
-                    `
+                    `,
                   )}
                 </edgeless-color-panel>
               </div>
@@ -142,15 +133,9 @@ export class EdgelessColorPickerButton extends WithDisposable(LitElement) {
           [
             'custom',
             () => {
-              const packed = packColorsWith(
-                this.theme,
-                this.color,
-                this.originalColor
-              );
+              const packed = packColorsWith(this.theme, this.color, this.originalColor);
               const type = packed.type === 'palette' ? 'normal' : packed.type;
-              const modes = packed.colors.map(
-                preprocessColor(window.getComputedStyle(this))
-              );
+              const modes = packed.colors.map(preprocessColor(window.getComputedStyle(this)));
 
               return html`
                 <edgeless-color-picker

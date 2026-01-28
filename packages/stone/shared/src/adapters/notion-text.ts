@@ -1,5 +1,5 @@
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { DefaultTheme } from '@ink/stone-model';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
 import {
   type AssetsManager,
   BaseAdapter,
@@ -47,7 +47,7 @@ export class NotionTextAdapter extends BaseAdapter<NotionText> {
     | Promise<FromBlockSnapshotResult<NotionText>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'NotionTextAdapter.fromBlockSnapshot is not implemented.'
+      'NotionTextAdapter.fromBlockSnapshot is not implemented.',
     );
   }
 
@@ -56,7 +56,7 @@ export class NotionTextAdapter extends BaseAdapter<NotionText> {
     | Promise<FromDocSnapshotResult<NotionText>> {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'NotionTextAdapter.fromDocSnapshot is not implemented.'
+      'NotionTextAdapter.fromDocSnapshot is not implemented.',
     );
   }
 
@@ -66,9 +66,7 @@ export class NotionTextAdapter extends BaseAdapter<NotionText> {
     return {
       file: JSON.stringify({
         blockType: 'text',
-        editing: [
-          ['Notion Text is not supported to be exported from InkStone', []],
-        ],
+        editing: [['Notion Text is not supported to be exported from InkStone', []]],
       }),
       assetsIds: [],
     };
@@ -77,20 +75,18 @@ export class NotionTextAdapter extends BaseAdapter<NotionText> {
   override toBlockSnapshot(): Promise<BlockSnapshot> | BlockSnapshot {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'NotionTextAdapter.toBlockSnapshot is not implemented.'
+      'NotionTextAdapter.toBlockSnapshot is not implemented.',
     );
   }
 
   override toDocSnapshot(): Promise<DocSnapshot> | DocSnapshot {
     throw new InkStoneError(
       ErrorCode.TransformerNotImplementedError,
-      'NotionTextAdapter.toDocSnapshot is not implemented.'
+      'NotionTextAdapter.toDocSnapshot is not implemented.',
     );
   }
 
-  override toSliceSnapshot(
-    payload: NotionHtmlToSliceSnapshotPayload
-  ): SliceSnapshot | null {
+  override toSliceSnapshot(payload: NotionHtmlToSliceSnapshotPayload): SliceSnapshot | null {
     const notionText = JSON.parse(payload.file) as NotionTextSerialized;
     const content: SliceSnapshot['content'] = [];
     const deltas: DeltaInsert<InkTextAttributes>[] = [];
@@ -179,12 +175,11 @@ export class NotionTextAdapter extends BaseAdapter<NotionText> {
   }
 }
 
-export const NotionTextAdapterFactoryIdentifier =
-  AdapterFactoryIdentifier('NotionText');
+export const NotionTextAdapterFactoryIdentifier = AdapterFactoryIdentifier('NotionText');
 
 export const NotionTextAdapterFactoryExtension: ExtensionType = {
-  setup: di => {
-    di.addImpl(NotionTextAdapterFactoryIdentifier, provider => ({
+  setup: (di) => {
+    di.addImpl(NotionTextAdapterFactoryIdentifier, (provider) => ({
       get: (job: Transformer) => new NotionTextAdapter(job, provider),
     }));
   },

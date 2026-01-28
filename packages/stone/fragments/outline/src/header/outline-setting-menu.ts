@@ -6,11 +6,10 @@ import { html } from 'lit';
 import { type TocContext, tocContext } from '../config';
 import * as styles from './outline-setting-menu.css';
 
-export const INK_OUTLINE_NOTE_PREVIEW_SETTING_MENU =
-  'ink-outline-note-preview-setting-menu';
+export const INK_OUTLINE_NOTE_PREVIEW_SETTING_MENU = 'ink-outline-note-preview-setting-menu';
 
 export class OutlineNotePreviewSettingMenu extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
+  WithDisposable(ShadowlessElement),
 ) {
   override render() {
     const showPreviewIcon = this._context.showIcons$.value;

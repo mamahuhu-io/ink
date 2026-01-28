@@ -1,9 +1,9 @@
-import { normalizeUrl, stopPropagation } from '@ink/stone-shared/utils';
-import { unsafeCSSVarV2, unsafeCSSVar } from '@ink/stone-shared/theme';
-import { baseTheme } from '@ink/stone-theme';
 import { WithDisposable } from '@ink/stone-global/lit';
 import { DoneIcon } from '@ink/stone-icons/lit';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import { normalizeUrl, stopPropagation } from '@ink/stone-shared/utils';
 import { ShadowlessElement } from '@ink/stone-std';
+import { baseTheme } from '@ink/stone-theme';
 import { css, html, unsafeCSS } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 
@@ -113,7 +113,9 @@ const styles = css`
     font-size: var(--ink-font-sm);
     font-family: inherit;
     outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
   }
 
   .ink-slash-link-popover input::placeholder {
@@ -262,10 +264,12 @@ export class SlashMenuLinkPopup extends WithDisposable(ShadowlessElement) {
     }
 
     // Focus the text input
-    this.updateComplete.then(() => {
-      this.textInput?.focus();
-      this._updateConfirmBtn();
-    }).catch(() => {});
+    this.updateComplete
+      .then(() => {
+        this.textInput?.focus();
+        this._updateConfirmBtn();
+      })
+      .catch(() => {});
   }
 
   override render() {

@@ -1,12 +1,11 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 
 import type { Store } from '../model/store';
 import { StoreIdentifier } from '../model/store/identifier';
 import { Extension } from './extension';
 
-export const StoreExtensionIdentifier =
-  createIdentifier<StoreExtension>('StoreExtension');
+export const StoreExtensionIdentifier = createIdentifier<StoreExtension>('StoreExtension');
 
 export const storeExtensionSymbol = Symbol('StoreExtension');
 
@@ -41,21 +40,14 @@ export class StoreExtension extends Extension {
 
   static override setup(di: Container) {
     if (!this.key) {
-      throw new InkStoneError(
-        ErrorCode.ValueNotExists,
-        'Key is not defined in the StoreExtension'
-      );
+      throw new InkStoneError(ErrorCode.ValueNotExists, 'Key is not defined in the StoreExtension');
     }
 
     di.add(this, [StoreIdentifier]);
-    di.addImpl(StoreExtensionIdentifier(this.key), provider =>
-      provider.get(this)
-    );
+    di.addImpl(StoreExtensionIdentifier(this.key), (provider) => provider.get(this));
   }
 }
 
-export function isStoreExtensionConstructor(
-  extension: object
-): extension is typeof StoreExtension {
+export function isStoreExtensionConstructor(extension: object): extension is typeof StoreExtension {
   return storeExtensionSymbol in extension;
 }

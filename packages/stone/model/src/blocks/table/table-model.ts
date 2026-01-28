@@ -1,9 +1,5 @@
 import type { DeltaInsert, Text } from '@ink/stone-store';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 import type { TextAlign } from '../../consts';
 import type { BlockMeta } from '../../utils/types';

@@ -28,6 +28,4 @@ export const EmbedYoutubeBlockSchema = createEmbedBlockSchema({
   props: (): EmbedYoutubeBlockProps => defaultEmbedYoutubeProps,
 });
 
-export const EmbedYoutubeBlockSchemaExtension = BlockSchemaExtension(
-  EmbedYoutubeBlockSchema
-);
+export const EmbedYoutubeBlockSchemaExtension = BlockSchemaExtension(EmbedYoutubeBlockSchema);

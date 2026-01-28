@@ -1,63 +1,50 @@
 // Ink Stone effects initialization and custom element registration
 
 // Import extension managers
+import { setCaptionI18nGetter } from '@ink/stone-components/caption';
+import { setHighlightI18nGetter } from '@ink/stone-components/highlight-dropdown-menu';
+import { setAttachmentI18nGetter } from '@ink/stone-core/blocks/attachment';
+import { setCodeLangI18nGetter } from '@ink/stone-core/blocks/code';
+import { setImageI18nGetter } from '@ink/stone-core/blocks/image';
+import { setNoteI18nGetter } from '@ink/stone-core/blocks/note';
+// Import i18n setters from Stone packages (synchronous imports)
+import { notifyLanguageChange, setPlaceholderGetter } from '@ink/stone-core/blocks/paragraph';
+import { setToolbarI18nGetter } from '@ink/stone-core/blocks/root';
+import { setTableI18nGetter } from '@ink/stone-core/blocks/table';
+import { StoreExtensionManager, ViewExtensionManager } from '@ink/stone-core/ext-loader';
+import { getInternalStoreExtensions } from '@ink/stone-core/extensions/store';
+import { getInternalViewExtensions } from '@ink/stone-core/extensions/view';
+import { setLatexI18nGetter } from '@ink/stone-core/inlines/latex';
+import { setLinkI18nGetter, setLinkPopupI18nGetter } from '@ink/stone-core/inlines/link';
+import { setTextFormatI18nGetter } from '@ink/stone-core/inlines/preset';
 import {
-  ViewExtensionManager,
-  StoreExtensionManager,
-} from "@ink/stone-core/ext-loader";
-import { getInternalViewExtensions } from "@ink/stone-core/extensions/view";
-import { getInternalStoreExtensions } from "@ink/stone-core/extensions/store";
+  setSlashMenuEmojiPickerI18nGetter,
+  setSlashMenuI18nGetter,
+  setSlashMenuLinkPopupI18nGetter,
+} from '@ink/stone-core/widgets/slash-menu';
+import { setTextAlignI18nGetter, setTextConversionI18nGetter } from '@ink/stone-rich-text';
+import { setIconPickerI18nGetter } from '@ink/stone-shared/services';
 
 // Import i18n support
 import {
-  getPlaceholder,
-  getSlashMenuTranslation,
-  getSlashMenuLinkPopupTranslation,
-  getLinkPopupTranslation,
-  getLinkToolbarTranslation,
+  getBlockTranslation,
   getCaptionTranslation,
   getCodeLangTranslation,
+  getEmojiTranslation,
+  getHighlightTranslation,
+  getIconPickerTranslation,
   getLatexTranslation,
+  getLinkPopupTranslation,
+  getLinkToolbarTranslation,
+  getPlaceholder,
+  getSlashMenuLinkPopupTranslation,
+  getSlashMenuTranslation,
+  getTextAlignTranslation,
+  getTextConversionTranslation,
   getTextFormatTranslation,
   getToolbarTranslation,
-  getBlockTranslation,
-  getTextConversionTranslation,
-  getTextAlignTranslation,
-  getHighlightTranslation,
-  getEmojiTranslation,
-  getIconPickerTranslation,
   onLanguageChange,
-} from "./i18n";
-
-// Import i18n setters from Stone packages (synchronous imports)
-import {
-  setPlaceholderGetter,
-  notifyLanguageChange,
-} from "@ink/stone-core/blocks/paragraph";
-import {
-  setSlashMenuI18nGetter,
-  setSlashMenuLinkPopupI18nGetter,
-  setSlashMenuEmojiPickerI18nGetter,
-} from "@ink/stone-core/widgets/slash-menu";
-import {
-  setLinkPopupI18nGetter,
-  setLinkI18nGetter,
-} from "@ink/stone-core/inlines/link";
-import { setCaptionI18nGetter } from "@ink/stone-components/caption";
-import { setCodeLangI18nGetter } from "@ink/stone-core/blocks/code";
-import { setLatexI18nGetter } from "@ink/stone-core/inlines/latex";
-import { setTextFormatI18nGetter } from "@ink/stone-core/inlines/preset";
-import { setToolbarI18nGetter } from "@ink/stone-core/blocks/root";
-import { setTableI18nGetter } from "@ink/stone-core/blocks/table";
-import { setImageI18nGetter } from "@ink/stone-core/blocks/image";
-import { setAttachmentI18nGetter } from "@ink/stone-core/blocks/attachment";
-import { setNoteI18nGetter } from "@ink/stone-core/blocks/note";
-import {
-  setTextConversionI18nGetter,
-  setTextAlignI18nGetter,
-} from "@ink/stone-rich-text";
-import { setHighlightI18nGetter } from "@ink/stone-components/highlight-dropdown-menu";
-import { setIconPickerI18nGetter } from "@ink/stone-shared/services";
+} from './i18n';
 
 // Create extension managers (this will trigger Stone's internal registration)
 const viewManager = new ViewExtensionManager(getInternalViewExtensions());
@@ -82,7 +69,7 @@ export function effects() {
   setLinkPopupI18nGetter(getLinkPopupTranslation);
   setLinkI18nGetter(getLinkToolbarTranslation);
   setCaptionI18nGetter(getCaptionTranslation);
-  setCodeLangI18nGetter(getBlockTranslation);
+  setCodeLangI18nGetter(getCodeLangTranslation);
   setLatexI18nGetter(getLatexTranslation);
   setTextFormatI18nGetter(getTextFormatTranslation);
   setToolbarI18nGetter(getToolbarTranslation);
@@ -101,18 +88,18 @@ export function effects() {
   });
 
   // Dynamically import and register editor container to avoid side effect conflicts
-  import("./editor-container").then(({ InkEditorContainer }) => {
-    if (!customElements.get("ink-editor-container")) {
-      customElements.define("ink-editor-container", InkEditorContainer);
+  import('./editor-container').then(({ InkEditorContainer }) => {
+    if (!customElements.get('ink-editor-container')) {
+      customElements.define('ink-editor-container', InkEditorContainer);
     }
   });
 
   // Register source editor component
-  import("./source-editor").then(({ InkSourceEditor }) => {
-    if (!customElements.get("ink-source-editor")) {
-      customElements.define("ink-source-editor", InkSourceEditor);
+  import('./source-editor').then(({ InkSourceEditor }) => {
+    if (!customElements.get('ink-source-editor')) {
+      customElements.define('ink-source-editor', InkSourceEditor);
     }
   });
 
-  console.log("Ink Stone effects initialized with i18n support");
+  console.log('Ink Stone effects initialized with i18n support');
 }

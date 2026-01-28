@@ -1,18 +1,9 @@
 import { toEdgelessEmbedBlock } from '@ink/stone-block-embed';
-import {
-  EdgelessCRUDIdentifier,
-  reassociateConnectorsCommand,
-} from '@ink/stone-block-surface';
-import { type AliasInfo } from '@ink/stone-model';
-import {
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-} from '@ink/stone-shared/consts';
-import {
-  ThemeExtensionIdentifier,
-  ThemeProvider,
-} from '@ink/stone-shared/services';
+import { EdgelessCRUDIdentifier, reassociateConnectorsCommand } from '@ink/stone-block-surface';
 import { Bound } from '@ink/stone-global/gfx';
+import { type AliasInfo } from '@ink/stone-model';
+import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH } from '@ink/stone-shared/consts';
+import { ThemeExtensionIdentifier, ThemeProvider } from '@ink/stone-shared/services';
 import { type BlockComponent, BlockStdScope } from '@ink/stone-std';
 import { html, nothing } from 'lit';
 import { query } from 'lit/decorators.js';
@@ -25,7 +16,7 @@ import { EmbedSyncedDocConfigExtension } from './configs';
 import { EmbedSyncedDocBlockComponent } from './embed-synced-doc-block';
 
 export class EmbedEdgelessSyncedDocBlockComponent extends toEdgelessEmbedBlock(
-  EmbedSyncedDocBlockComponent
+  EmbedSyncedDocBlockComponent,
 ) {
   @query('.ink-embed-synced-doc-edgeless-header-wrapper')
   accessor headerWrapper: HTMLDivElement | null = null;
@@ -98,12 +89,10 @@ export class EmbedEdgelessSyncedDocBlockComponent extends toEdgelessEmbedBlock(
     };
 
     const header =
-      this.std
-        .getOptional(EmbedSyncedDocConfigExtension.identifier)
-        ?.edgelessHeader({
-          model: this.model,
-          std: this.std,
-        }) ?? nothing;
+      this.std.getOptional(EmbedSyncedDocConfigExtension.identifier)?.edgelessHeader({
+        model: this.model,
+        std: this.std,
+      }) ?? nothing;
 
     return this.renderEmbed(
       () => html`
@@ -119,23 +108,19 @@ export class EmbedEdgelessSyncedDocBlockComponent extends toEdgelessEmbedBlock(
           style=${containerStyleMap}
           ?data-scale=${scale}
         >
-          <div class="ink-embed-synced-doc-edgeless-header-wrapper">
-            ${header}
-          </div>
+          <div class="ink-embed-synced-doc-edgeless-header-wrapper">${header}</div>
           <div class="ink-embed-synced-doc-editor">
             ${this.isPageMode && this._isEmptySyncedDoc
               ? html`
                   <div class="ink-embed-synced-doc-editor-empty">
-                    <span>
-                      This is a linked doc, you can add content here.
-                    </span>
+                    <span> This is a linked doc, you can add content here. </span>
                   </div>
                 `
               : guard([editorMode, syncedDoc], renderEditor)}
           </div>
           <div class="ink-embed-synced-doc-editor-overlay"></div>
         </div>
-      `
+      `,
     );
   };
 
@@ -159,7 +144,7 @@ export class EmbedEdgelessSyncedDocBlockComponent extends toEdgelessEmbedBlock(
         ...this.referenceInfo,
         ...aliasInfo,
       },
-      surface
+      surface,
     );
 
     this.std.command.exec(reassociateConnectorsCommand, {

@@ -1,6 +1,6 @@
 import type { ResolvedStateInfo } from '@ink/stone-components/resource';
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { WithDisposable } from '@ink/stone-global/lit';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { ShadowlessElement } from '@ink/stone-std';
 import { css, html } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -104,13 +104,9 @@ export class ImageBlockFallbackCard extends WithDisposable(ShadowlessElement) {
       <div class=${classMap(classInfo)}>
         <div class="ink-image-fallback-card-title">
           <div class="ink-image-fallback-card-title-icon">${icon}</div>
-          <div class="ink-image-fallback-card-title-text truncate">
-            ${title}
-          </div>
+          <div class="ink-image-fallback-card-title-text truncate">${title}</div>
         </div>
-        <div class="ink-image-fallback-card-description truncate">
-          ${description}
-        </div>
+        <div class="ink-image-fallback-card-description truncate">${description}</div>
       </div>
     `;
   }

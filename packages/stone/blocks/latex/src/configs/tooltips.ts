@@ -3,11 +3,7 @@ import katex from 'katex';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-export const LatexTooltip = (
-  str: string,
-  latex: string,
-  displayMode: boolean = false
-) =>
+export const LatexTooltip = (str: string, latex: string, displayMode: boolean = false) =>
   html` <style>
       .latex-tooltip {
         background: ${unsafeCSSVarV2('layer/pureWhite')};
@@ -35,7 +31,7 @@ export const LatexTooltip = (
           katex.renderToString(latex, {
             displayMode,
             output: 'mathml',
-          })
+          }),
         )}
       </div>
     </div>`;

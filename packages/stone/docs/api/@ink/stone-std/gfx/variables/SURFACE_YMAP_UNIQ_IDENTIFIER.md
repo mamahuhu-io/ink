@@ -1,11 +1,11 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
-[InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / SURFACE\_YMAP\_UNIQ\_IDENTIFIER
+[InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / SURFACE_YMAP_UNIQ_IDENTIFIER
 
-# Variable: SURFACE\_YMAP\_UNIQ\_IDENTIFIER
+# Variable: SURFACE_YMAP_UNIQ_IDENTIFIER
 
-> `const` **SURFACE\_YMAP\_UNIQ\_IDENTIFIER**: `"ink:surface:ymap"` = `'ink:surface:ymap'`
+> `const` **SURFACE_YMAP_UNIQ_IDENTIFIER**: `"ink:surface:ymap"` = `'ink:surface:ymap'`
 
 Used for field that use Y.Map. E.g. group children field

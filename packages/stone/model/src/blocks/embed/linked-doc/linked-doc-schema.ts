@@ -25,6 +25,4 @@ export const EmbedLinkedDocBlockSchema = createEmbedBlockSchema({
   props: (): EmbedLinkedDocBlockProps => defaultEmbedLinkedDocBlockProps,
 });
 
-export const EmbedLinkedDocBlockSchemaExtension = BlockSchemaExtension(
-  EmbedLinkedDocBlockSchema
-);
+export const EmbedLinkedDocBlockSchemaExtension = BlockSchemaExtension(EmbedLinkedDocBlockSchema);

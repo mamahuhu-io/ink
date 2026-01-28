@@ -21,8 +21,8 @@ const isCodeOrHtmlNode = (node: MarkdownAST): node is Code | Html =>
 
 export const codeBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: CodeBlockSchema.model.flavour,
-  toMatch: o => isCodeOrHtmlNode(o.node),
-  fromMatch: o => o.node.flavour === 'ink:code',
+  toMatch: (o) => isCodeOrHtmlNode(o.node),
+  fromMatch: (o) => o.node.flavour === 'ink:code',
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!isCodeOrHtmlNode(o.node)) {
@@ -40,9 +40,7 @@ export const codeBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
           break;
         }
         case 'html': {
-          const inParagraphNode = !!walkerContext.getGlobalContext(
-            IN_PARAGRAPH_NODE_CONTEXT_KEY
-          );
+          const inParagraphNode = !!walkerContext.getGlobalContext(IN_PARAGRAPH_NODE_CONTEXT_KEY);
           // only handle top level html node
           if (inParagraphNode) {
             return;
@@ -71,7 +69,7 @@ export const codeBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -88,9 +86,9 @@ export const codeBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             type: 'code',
             lang: (o.node.props.language as string) ?? null,
             meta: null,
-            value: text.delta.map(delta => delta.insert).join(''),
+            value: text.delta.map((delta) => delta.insert).join(''),
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -98,5 +96,5 @@ export const codeBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const CodeBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  codeBlockMarkdownAdapterMatcher
+  codeBlockMarkdownAdapterMatcher,
 );

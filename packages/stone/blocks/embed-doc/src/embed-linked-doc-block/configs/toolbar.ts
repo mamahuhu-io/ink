@@ -1,14 +1,16 @@
 import { toast } from '@ink/stone-components/toast';
 import { EditorChevronDown } from '@ink/stone-components/toolbar';
+import { Bound } from '@ink/stone-global/gfx';
 import {
-  type EmbedCardStyle,
-  EmbedLinkedDocModel,
-  EmbedLinkedDocStyles,
-} from '@ink/stone-model';
-import {
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-} from '@ink/stone-shared/consts';
+  CaptionIcon,
+  CopyIcon,
+  DeleteIcon,
+  DuplicateIcon,
+  ExpandFullIcon,
+  OpenInNewIcon,
+} from '@ink/stone-icons/lit';
+import { type EmbedCardStyle, EmbedLinkedDocModel, EmbedLinkedDocStyles } from '@ink/stone-model';
+import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH } from '@ink/stone-shared/consts';
 import {
   ActionPlacement,
   DocDisplayMetaProvider,
@@ -21,19 +23,7 @@ import {
   type ToolbarModuleConfig,
   ToolbarModuleExtension,
 } from '@ink/stone-shared/services';
-import {
-  getBlockProps,
-  referenceToNode,
-} from '@ink/stone-shared/utils';
-import { Bound } from '@ink/stone-global/gfx';
-import {
-  CaptionIcon,
-  CopyIcon,
-  DeleteIcon,
-  DuplicateIcon,
-  ExpandFullIcon,
-  OpenInNewIcon,
-} from '@ink/stone-icons/lit';
+import { getBlockProps, referenceToNode } from '@ink/stone-shared/utils';
 import { BlockFlavourIdentifier, isGfxBlockComponent } from '@ink/stone-std';
 import { type ExtensionType, Slice } from '@ink/stone-store';
 import { computed, signal } from '@preact/signals-core';
@@ -54,11 +44,9 @@ const createOnToggleFn =
     ctx: ToolbarContext,
     name: Extract<
       LinkEventType,
-      | 'OpenedViewSelector'
-      | 'OpenedCardStyleSelector'
-      | 'OpenedCardScaleSelector'
+      'OpenedViewSelector' | 'OpenedCardStyleSelector' | 'OpenedCardScaleSelector'
     >,
-    control: 'switch view' | 'switch card style' | 'switch card scale'
+    control: 'switch view' | 'switch card style' | 'switch card scale',
   ) =>
   (e: CustomEvent<boolean>) => {
     e.stopPropagation();
@@ -78,8 +66,7 @@ const docTitleAction = {
     if (!model.props.title) return null;
 
     const originalTitle =
-      ctx.std.get(DocDisplayMetaProvider).title(model.props.pageId).value ||
-      'Untitled';
+      ctx.std.get(DocDisplayMetaProvider).title(model.props.pageId).value || 'Untitled';
     const open = (event: MouseEvent) => block.open({ event });
 
     return html`<ink-linked-doc-title
@@ -122,14 +109,12 @@ const openDocActionGroup = {
     const block = ctx.getCurrentBlockByType(EmbedLinkedDocBlockComponent);
     if (!block) return null;
 
-    const actions = openDocActions.map<ToolbarAction>(action => {
+    const actions = openDocActions.map<ToolbarAction>((action) => {
       const openMode = action.mode;
       const shouldOpenInActiveView = openMode === 'open-in-active-view';
       return {
         ...action,
-        disabled: shouldOpenInActiveView
-          ? block.model.props.pageId === ctx.store.id
-          : false,
+        disabled: shouldOpenInActiveView ? block.model.props.pageId === ctx.store.id : false,
         when: true,
         run: (_ctx: ToolbarContext) => block.open({ openMode }),
       };
@@ -147,18 +132,16 @@ const openDocActionGroup = {
         <div data-size="small" data-orientation="vertical">
           ${repeat(
             actions,
-            action => action.id,
+            (action) => action.id,
             ({ label, icon, run, disabled }) => html`
               <editor-menu-action
                 aria-label=${ifDefined(label)}
-                ?disabled=${ifDefined(
-                  typeof disabled === 'function' ? disabled(ctx) : disabled
-                )}
+                ?disabled=${ifDefined(typeof disabled === 'function' ? disabled(ctx) : disabled)}
                 @click=${() => run?.(ctx)}
               >
                 ${icon}<span class="label">${label}</span>
               </editor-menu-action>
-            `
+            `,
           )}
         </div>
       </editor-menu-button>
@@ -186,7 +169,7 @@ const conversionsActionGroup = {
           type: 'inline view',
         });
       },
-      when: ctx => !ctx.hasSelectedSurfaceModels,
+      when: (ctx) => !ctx.hasSelectedSurfaceModels,
     },
     {
       id: 'card',
@@ -217,10 +200,7 @@ const conversionsActionGroup = {
 
         if (isGfxBlockComponent(block)) {
           const editorSetting = ctx.std.getOptional(EditorSettingProvider);
-          editorSetting?.set?.(
-            'docCanvasPreferView',
-            'ink:embed-synced-doc'
-          );
+          editorSetting?.set?.('docCanvasPreferView', 'ink:embed-synced-doc');
         }
 
         block?.convertToEmbed();
@@ -237,7 +217,7 @@ const conversionsActionGroup = {
     const model = ctx.getCurrentModelByType(EmbedLinkedDocModel);
     if (!model) return null;
 
-    const actions = this.actions.map(action => ({ ...action }));
+    const actions = this.actions.map((action) => ({ ...action }));
     const viewType$ = signal('Card view');
     const onToggle = createOnToggleFn(ctx, 'OpenedViewSelector', 'switch view');
 
@@ -248,7 +228,7 @@ const conversionsActionGroup = {
         .actions=${actions}
         .context=${ctx}
         .viewType$=${viewType$}
-      ></ink-view-dropdown-menu>`
+      ></ink-view-dropdown-menu>`,
     )}`;
   },
 } as const satisfies ToolbarActionGroup<ToolbarAction>;
@@ -270,12 +250,12 @@ const builtinToolbarConfig = {
             label: 'Small horizontal style',
           },
         ] as const
-      ).filter(action => EmbedLinkedDocStyles.includes(action.id)),
+      ).filter((action) => EmbedLinkedDocStyles.includes(action.id)),
       content(ctx) {
         const model = ctx.getCurrentModelByType(EmbedLinkedDocModel);
         if (!model) return null;
 
-        const actions = this.actions.map(action => ({
+        const actions = this.actions.map((action) => ({
           ...action,
           run: ({ store }) => {
             store.updateBlock(model, { style: action.id });
@@ -287,11 +267,7 @@ const builtinToolbarConfig = {
             });
           },
         })) satisfies ToolbarAction[];
-        const onToggle = createOnToggleFn(
-          ctx,
-          'OpenedCardStyleSelector',
-          'switch card style'
-        );
+        const onToggle = createOnToggleFn(ctx, 'OpenedCardStyleSelector', 'switch card style');
 
         return html`${keyed(
           model,
@@ -300,7 +276,7 @@ const builtinToolbarConfig = {
             .actions=${actions}
             .context=${ctx}
             .style$=${model.props.style$}
-          ></ink-card-style-dropdown-menu>`
+          ></ink-card-style-dropdown-menu>`,
         )}`;
       },
     } satisfies ToolbarActionGroup<ToolbarAction>,
@@ -387,12 +363,12 @@ const builtinSurfaceToolbarConfig = {
             label: 'Small vertical style',
           },
         ] as const
-      ).filter(action => EmbedLinkedDocStyles.includes(action.id)),
+      ).filter((action) => EmbedLinkedDocStyles.includes(action.id)),
       content(ctx) {
         const model = ctx.getCurrentModelByType(EmbedLinkedDocModel);
         if (!model) return null;
 
-        const actions = this.actions.map(action => ({
+        const actions = this.actions.map((action) => ({
           ...action,
           run: ({ store }) => {
             const style = action.id as EmbedCardStyle;
@@ -411,11 +387,7 @@ const builtinSurfaceToolbarConfig = {
           },
         })) satisfies ToolbarAction[];
         const style$ = model.props.style$;
-        const onToggle = createOnToggleFn(
-          ctx,
-          'OpenedCardStyleSelector',
-          'switch card style'
-        );
+        const onToggle = createOnToggleFn(ctx, 'OpenedCardStyleSelector', 'switch card style');
 
         return html`${keyed(
           model,
@@ -424,7 +396,7 @@ const builtinSurfaceToolbarConfig = {
             .actions=${actions}
             .context=${ctx}
             .style$=${style$}
-          ></ink-card-style-dropdown-menu>`
+          ></ink-card-style-dropdown-menu>`,
         )}`;
       },
     } satisfies ToolbarActionGroup<ToolbarAction>,
@@ -432,9 +404,7 @@ const builtinSurfaceToolbarConfig = {
     {
       id: 'e.scale',
       content(ctx) {
-        const model = ctx.getCurrentBlockByType(
-          EmbedLinkedDocBlockComponent
-        )?.model;
+        const model = ctx.getCurrentBlockByType(EmbedLinkedDocBlockComponent)?.model;
         if (!model) return null;
 
         const scale$ = computed(() => {
@@ -466,11 +436,7 @@ const builtinSurfaceToolbarConfig = {
             control: 'select card scale',
           });
         };
-        const onToggle = createOnToggleFn(
-          ctx,
-          'OpenedCardScaleSelector',
-          'switch card scale'
-        );
+        const onToggle = createOnToggleFn(ctx, 'OpenedCardScaleSelector', 'switch card scale');
         const format = (value: number) => `${value}%`;
 
         return html`${keyed(
@@ -480,18 +446,16 @@ const builtinSurfaceToolbarConfig = {
             @toggle=${onToggle}
             .format=${format}
             .size$=${scale$}
-          ></ink-size-dropdown-menu>`
+          ></ink-size-dropdown-menu>`,
         )}`;
       },
     },
   ],
 
-  when: ctx => ctx.getSurfaceModelsByType(EmbedLinkedDocModel).length === 1,
+  when: (ctx) => ctx.getSurfaceModelsByType(EmbedLinkedDocModel).length === 1,
 } as const satisfies ToolbarModuleConfig;
 
-export const createBuiltinToolbarConfigExtension = (
-  flavour: string
-): ExtensionType[] => {
+export const createBuiltinToolbarConfigExtension = (flavour: string): ExtensionType[] => {
   const name = flavour.split(':').pop();
 
   return [

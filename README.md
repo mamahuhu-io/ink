@@ -4,14 +4,15 @@
 
 ![Ink Logo](apps/desktop/public/icon.png)
 
-**A Local-First, Extensible Markdown Workspace.**
+**A Modern, Local-First, AI-Enhanced Markdown Editor.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tauri](https://img.shields.io/badge/built_with-Tauri-24C8DB.svg)](https://tauri.app/)
 [![React](https://img.shields.io/badge/frontend-React-61DAFB.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/language-TypeScript-3178C6.svg)](https://www.typescriptlang.org/)
+[![Rust](https://img.shields.io/badge/backend-Rust-000000.svg)](https://www.rust-lang.org/)
 
-[Features](#-features) • [Installation](#-installation) • [Development](#-development) • [Architecture](#-architecture) • [Contributing](#-contributing)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Development](#-development) • [Architecture](#-architecture) • [Contributing](#-contributing)
 
 </div>
 
@@ -19,107 +20,123 @@
 
 ## 📖 Introduction
 
-**Ink** is a modern, elegant desktop Markdown editor built for the privacy-conscious and the power user. It combines the fluidity of a block-based editor with the reliability of local file storage.
+**Ink** is an elegant desktop Markdown editor designed for seamless writing and knowledge management. It marries the fluidity of a modern block-based editor with the privacy and speed of a local-first application.
 
-Powered by the **Stone** engine and wrapped in **Tauri**, Ink delivers native performance with a web-based extensibility model. Whether you are taking quick notes, writing long-form articles, or managing a personal knowledge base, Ink grows with your needs through its plugin architecture.
+Built on the robust **Tauri** framework and the extensible **Stone** engine, Ink offers a native experience across macOS, Windows, and Linux. With built-in **AI capabilities** (via the Well engine), Ink helps you write, refine, and organize your thoughts without leaving your editor.
 
 ## ✨ Features
 
-- **🔒 Local-First**: Your data lives on your device. No cloud lock-in, fully offline capable.
-- **🧱 Block-Based Editing**: Intuitive drag-and-drop blocks for paragraphs, headers, lists, code, and more.
-- **🔌 Extensible Architecture**: Built on the **Stone** engine, supporting custom blocks, widgets, and themes.
-- **🎨 Theming**: Built-in support for Light, Dark, GitHub, and Nord themes.
-- **🌍 Internationalization**: 
-  - English
-  - Chinese (Simplified & Traditional)
-  - Japanese
-  - Korean
-  - Spanish
-  - Portuguese (Brazil)
-- **⚡ Performance**: Written in Rust (Tauri) and TypeScript (React/Lit), optimized for speed.
-- **📤 Export**: Export your documents to HTML, PDF, Markdown, Image, or Word.
-- **🔍 Global Search**: Fast file and content search.
+- **🔒 Local-First & Private**: Your data resides on your device. Works fully offline with no cloud dependency.
+- **🧱 Block-Based Editing**: Effortlessly structure content with drag-and-drop blocks for paragraphs, headers, lists, code, tables, and more.
+- **🤖 AI Assistant**: Integrated AI conversational assistant to help draft, summarize, and enhance your writing (powered by **Well**).
+- **🔌 Extensible Architecture**:
+  - **Plugins**: Extend functionality via the plugin system.
+  - **Themes**: Switch between Light, Dark, GitHub, and Nord themes, or create your own.
+- **🌍 Global Ready**: Multilingual support including English, Chinese (Simplified/Traditional), Japanese, Korean, Spanish, and Portuguese.
+- **⚡ High Performance**: Optimized Rust backend ensures instant startup and low memory footprint.
+- **📤 Versatile Export**: Export documents to HTML, PDF, Markdown, Image, or Word formats.
+- **🔍 Deep Search**: Instant global search across all your local files and content.
 
 ## 📥 Installation
 
 ### Download Binaries
 
-Visit the [Releases](https://github.com/mamahuhu-io/ink/releases) page to download the latest installer for your operating system:
+Visit the [Releases](https://github.com/mamahuhu-io/ink/releases) page to download the latest installer for your OS:
 
-- **macOS** (`.dmg`, `.app`)
-- **Windows** (`.msi`, `.exe`)
-- **Linux** (`.deb`, `.AppImage`)
+| Platform    | Format                     |
+| ----------- | -------------------------- |
+| **macOS**   | `.dmg`, `.app` (Universal) |
+| **Windows** | `.msi`, `.exe`             |
+| **Linux**   | `.deb`, `.AppImage`        |
+
+## 🚀 Usage
+
+### Quick Start
+
+1.  **Open a Folder**: Launch Ink and open any local folder to start managing your Markdown files.
+2.  **Create Note**: Click `+` or use `Cmd/Ctrl + N` to create a new document.
+3.  **Insert Blocks**: Type `/` to open the block menu and insert images, code blocks, or dividers.
+4.  **AI Assist**: Access the AI assistant panel to get help with your writing context.
 
 ## 🛠 Development
 
 ### Prerequisites
 
-- **Node.js** (v18 or later)
-- **pnpm** (v9.x)
-- **Rust** (latest stable)
-- **System Dependencies** (for Tauri, see [Tauri Docs](https://tauri.app/v1/guides/getting-started/prerequisites))
+- **Node.js**: v18 or later
+- **pnpm**: v9.x
+- **Rust**: Latest stable version
+- **OS Dependencies**: See [Tauri Prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites) for your platform.
 
-### Setup
+### Setup Guide
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/mamahuhu-io/ink.git
-   cd ink
-   ```
+1.  **Clone the Repository**
 
-2. **Install dependencies**
-   ```bash
-   pnpm install
-   ```
+    ```bash
+    git clone https://github.com/mamahuhu-io/ink.git
+    cd ink
+    ```
 
-3. **Build Core Packages**
-   Before running the app, ensure core packages are built:
-   ```bash
-   pnpm build:stone
-   ```
+2.  **Install Dependencies**
 
-### Running the App
+    ```bash
+    pnpm install
+    ```
 
-To start the development server with hot-reload:
+3.  **Build Core Libraries**
+    The editor engine (`stone`) must be built before running the app.
 
-```bash
-pnpm tauri:dev
-```
+    ```bash
+    pnpm build:stone
+    ```
 
-This command will start the React dev server and launch the Tauri application window.
+4.  **Run in Development Mode**
+    Starts the React frontend and Tauri window with hot-reloading.
 
-### Building for Production
+    ```bash
+    pnpm tauri:dev
+    ```
 
-To build the application bundle/installer:
-
-```bash
-pnpm tauri:build
-```
-
-The output binaries will be located in `apps/desktop/src-tauri/target/release/bundle`.
+5.  **Build for Production**
+    Generates the optimized application bundle.
+    ```bash
+    pnpm tauri:build
+    ```
+    Artifacts will be in `apps/desktop/src-tauri/target/release/bundle`.
 
 ## 🏗 Architecture
 
-Ink is a **Monorepo** managed by pnpm workspaces.
+Ink uses a Monorepo structure managed by **pnpm workspaces**.
 
-- **`apps/desktop`**: The main application entry point, built with Tauri and React.
-- **`packages/stone`**: The core editor engine.
-  - **`stone-core`**: Core logic and state management (Yjs CRDT).
-  - **`stone-blocks`**: Standard block implementations (Paragraph, Heading, List, etc.).
-  - **`stone-ext-loader`**: Plugin loading and management system.
-  - **`stone-theme`**: Theming system.
+### 📂 Directory Structure
+
+- **`apps/desktop`**: The main application shell built with **Tauri** (Rust) and **React** (TypeScript).
+- **`packages/stone`**: The Core Editor Engine.
+  - `stone-core`: CRDT-based state management (Yjs) and editor logic.
+  - `stone-blocks`: Standard block implementations (Paragraph, Image, List, etc.).
+  - `stone-ext-loader`: Plugin and extension loading system.
+  - `stone-theme`: Theming and styling primitives.
+- **`packages/well`**: The AI & Intelligence Layer.
+  - `well-assistant`: Conversational AI logic and session management.
+  - `well-core`: Core intelligence utilities.
+  - `well-enhance`: Text enhancement and processing features.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and request features.
+We love contributions! Whether it's a bug fix, new feature, or documentation improvement.
+
+1.  **Fork** the repository.
+2.  **Create a branch** for your feature (`git checkout -b feature/amazing-feature`).
+3.  **Commit** your changes (`git commit -m 'Add amazing feature'`).
+4.  **Push** to the branch (`git push origin feature/amazing-feature`).
+5.  **Open a Pull Request**.
 
 ### Localization
 
-Help us translate Ink! Translation files are located in `apps/desktop/src/i18n/locales/`.
+Help translate Ink to your language! Locales are located in `apps/desktop/src/i18n/locales/`.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
 

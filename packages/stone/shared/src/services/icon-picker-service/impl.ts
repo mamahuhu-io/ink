@@ -1,13 +1,13 @@
 import type { ExtensionType } from '@ink/stone-store';
 
-import {
-  type IconData,
-  IconPickerServiceIdentifier,
-  type IconPickerService,
-  IconType,
-} from './index.js';
 import type { UniComponent } from '../../types/uni-component.js';
 import { searchEmojisByKeyword } from '../../utils/emoji-search.js';
+import {
+  type IconData,
+  type IconPickerService,
+  IconPickerServiceIdentifier,
+  IconType,
+} from './index.js';
 
 export interface EmojiIconPickerProps {
   onSelect?: (iconData?: IconData) => void;
@@ -20,9 +20,7 @@ let i18nGetter: ((key: string, fallback: string) => string) | null = null;
 /**
  * Set a custom i18n getter function for icon picker translations
  */
-export function setIconPickerI18nGetter(
-  getter: (key: string, fallback: string) => string
-) {
+export function setIconPickerI18nGetter(getter: (key: string, fallback: string) => string) {
   i18nGetter = getter;
 }
 
@@ -47,72 +45,330 @@ const EMOJI_CATEGORIES: EmojiCategory[] = [
     id: 'smileys',
     name: 'Smileys & Emotion',
     emojis: [
-      '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃',
-      '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '☺️', '😚',
-      '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭',
-      '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄',
-      '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕',
-      '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳',
-      '🥸', '😎', '🤓', '🧐',
+      '😀',
+      '😃',
+      '😄',
+      '😁',
+      '😆',
+      '😅',
+      '🤣',
+      '😂',
+      '🙂',
+      '🙃',
+      '😉',
+      '😊',
+      '😇',
+      '🥰',
+      '😍',
+      '🤩',
+      '😘',
+      '😗',
+      '☺️',
+      '😚',
+      '😙',
+      '🥲',
+      '😋',
+      '😛',
+      '😜',
+      '🤪',
+      '😝',
+      '🤑',
+      '🤗',
+      '🤭',
+      '🤫',
+      '🤔',
+      '🤐',
+      '🤨',
+      '😐',
+      '😑',
+      '😶',
+      '😏',
+      '😒',
+      '🙄',
+      '😬',
+      '🤥',
+      '😌',
+      '😔',
+      '😪',
+      '🤤',
+      '😴',
+      '😷',
+      '🤒',
+      '🤕',
+      '🤢',
+      '🤮',
+      '🤧',
+      '🥵',
+      '🥶',
+      '🥴',
+      '😵',
+      '🤯',
+      '🤠',
+      '🥳',
+      '🥸',
+      '😎',
+      '🤓',
+      '🧐',
     ],
   },
   {
     id: 'gestures',
     name: 'People & Body',
     emojis: [
-      '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞',
-      '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍',
-      '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝',
-      '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂',
+      '👋',
+      '🤚',
+      '🖐️',
+      '✋',
+      '🖖',
+      '👌',
+      '🤌',
+      '🤏',
+      '✌️',
+      '🤞',
+      '🤟',
+      '🤘',
+      '🤙',
+      '👈',
+      '👉',
+      '👆',
+      '🖕',
+      '👇',
+      '☝️',
+      '👍',
+      '👎',
+      '✊',
+      '👊',
+      '🤛',
+      '🤜',
+      '👏',
+      '🙌',
+      '👐',
+      '🤲',
+      '🤝',
+      '🙏',
+      '✍️',
+      '💅',
+      '🤳',
+      '💪',
+      '🦾',
+      '🦿',
+      '🦵',
+      '🦶',
+      '👂',
     ],
   },
   {
     id: 'animals',
     name: 'Animals & Nature',
     emojis: [
-      '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨',
-      '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊',
-      '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉',
-      '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪱', '🐛', '🦋', '🐌',
+      '🐶',
+      '🐱',
+      '🐭',
+      '🐹',
+      '🐰',
+      '🦊',
+      '🐻',
+      '🐼',
+      '🐻‍❄️',
+      '🐨',
+      '🐯',
+      '🦁',
+      '🐮',
+      '🐷',
+      '🐽',
+      '🐸',
+      '🐵',
+      '🙈',
+      '🙉',
+      '🙊',
+      '🐒',
+      '🐔',
+      '🐧',
+      '🐦',
+      '🐤',
+      '🐣',
+      '🐥',
+      '🦆',
+      '🦅',
+      '🦉',
+      '🦇',
+      '🐺',
+      '🐗',
+      '🐴',
+      '🦄',
+      '🐝',
+      '🪱',
+      '🐛',
+      '🦋',
+      '🐌',
     ],
   },
   {
     id: 'food',
     name: 'Food & Drink',
     emojis: [
-      '🍇', '🍈', '🍉', '🍊', '🍋', '🍌', '🍍', '🥭', '🍎', '🍏',
-      '🍐', '🍑', '🍒', '🍓', '🫐', '🥝', '🍅', '🫒', '🥥', '🥑',
-      '🍆', '🥔', '🥕', '🌽', '🌶️', '🫑', '🥒', '🥬', '🥦', '🧄',
-      '🧅', '🍄', '🥜', '🫘', '🌰', '🍞', '🥐', '🥖', '🫓', '🥨',
+      '🍇',
+      '🍈',
+      '🍉',
+      '🍊',
+      '🍋',
+      '🍌',
+      '🍍',
+      '🥭',
+      '🍎',
+      '🍏',
+      '🍐',
+      '🍑',
+      '🍒',
+      '🍓',
+      '🫐',
+      '🥝',
+      '🍅',
+      '🫒',
+      '🥥',
+      '🥑',
+      '🍆',
+      '🥔',
+      '🥕',
+      '🌽',
+      '🌶️',
+      '🫑',
+      '🥒',
+      '🥬',
+      '🥦',
+      '🧄',
+      '🧅',
+      '🍄',
+      '🥜',
+      '🫘',
+      '🌰',
+      '🍞',
+      '🥐',
+      '🥖',
+      '🫓',
+      '🥨',
     ],
   },
   {
     id: 'objects',
     name: 'Objects',
     emojis: [
-      '💡', '🔦', '🕯️', '📱', '💻', '⌨️', '🖥️', '🖨️', '📷', '📸',
-      '📹', '🎥', '📞', '☎️', '📺', '📻', '🎙️', '⏰', '⏱️', '⏲️',
-      '🕰️', '⌛', '⏳', '📡', '🔋', '🔌', '💰', '💳', '💎', '⚖️',
-      '🔧', '🔨', '⚒️', '🛠️', '⛏️', '🔩', '⚙️', '🧱', '📦', '📫',
+      '💡',
+      '🔦',
+      '🕯️',
+      '📱',
+      '💻',
+      '⌨️',
+      '🖥️',
+      '🖨️',
+      '📷',
+      '📸',
+      '📹',
+      '🎥',
+      '📞',
+      '☎️',
+      '📺',
+      '📻',
+      '🎙️',
+      '⏰',
+      '⏱️',
+      '⏲️',
+      '🕰️',
+      '⌛',
+      '⏳',
+      '📡',
+      '🔋',
+      '🔌',
+      '💰',
+      '💳',
+      '💎',
+      '⚖️',
+      '🔧',
+      '🔨',
+      '⚒️',
+      '🛠️',
+      '⛏️',
+      '🔩',
+      '⚙️',
+      '🧱',
+      '📦',
+      '📫',
     ],
   },
   {
     id: 'symbols',
     name: 'Symbols',
     emojis: [
-      '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔',
-      '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️',
-      '✅', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️',
-      '🔅', '🔆', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✳️', '❇️',
+      '❤️',
+      '🧡',
+      '💛',
+      '💚',
+      '💙',
+      '💜',
+      '🖤',
+      '🤍',
+      '🤎',
+      '💔',
+      '❣️',
+      '💕',
+      '💞',
+      '💓',
+      '💗',
+      '💖',
+      '💘',
+      '💝',
+      '💟',
+      '☮️',
+      '✅',
+      '❌',
+      '⭕',
+      '🛑',
+      '⛔',
+      '📛',
+      '🚫',
+      '💯',
+      '💢',
+      '♨️',
+      '🔅',
+      '🔆',
+      '⚠️',
+      '🚸',
+      '🔱',
+      '⚜️',
+      '🔰',
+      '♻️',
+      '✳️',
+      '❇️',
     ],
   },
   {
     id: 'flags',
     name: 'Flags',
     emojis: [
-      '🏳️', '🏴', '🏴‍☠️', '🏁', '🚩', '🎌', '🏳️‍🌈', '🏳️‍⚧️', '🇺🇳', '🇨🇳',
-      '🇺🇸', '🇬🇧', '🇯🇵', '🇰🇷', '🇫🇷', '🇩🇪', '🇮🇹', '🇪🇸', '🇷🇺', '🇧🇷',
-      '🇮🇳', '🇦🇺', '🇨🇦', '🇲🇽',
+      '🏳️',
+      '🏴',
+      '🏴‍☠️',
+      '🏁',
+      '🚩',
+      '🎌',
+      '🏳️‍🌈',
+      '🏳️‍⚧️',
+      '🇺🇳',
+      '🇨🇳',
+      '🇺🇸',
+      '🇬🇧',
+      '🇯🇵',
+      '🇰🇷',
+      '🇫🇷',
+      '🇩🇪',
+      '🇮🇹',
+      '🇪🇸',
+      '🇷🇺',
+      '🇧🇷',
+      '🇮🇳',
+      '🇦🇺',
+      '🇨🇦',
+      '🇲🇽',
     ],
   },
 ];
@@ -365,7 +621,7 @@ export function createEmojiIconPickerComponent(): UniComponent<EmojiIconPickerPr
     }
 
     function getFlatEmojis(): string[] {
-      return getFilteredCategories().flatMap(category => category.emojis);
+      return getFilteredCategories().flatMap((category) => category.emojis);
     }
 
     // Handle emoji selection
@@ -380,12 +636,12 @@ export function createEmojiIconPickerComponent(): UniComponent<EmojiIconPickerPr
 
     // Render categories tabs
     function renderCategoryTabs() {
-      const allCategoryIds = ['recent', ...EMOJI_CATEGORIES.map(c => c.id)];
+      const allCategoryIds = ['recent', ...EMOJI_CATEGORIES.map((c) => c.id)];
       const recentEmojis = getRecentEmojis();
 
       categoriesContainer.innerHTML = allCategoryIds
-        .filter(id => id !== 'recent' || recentEmojis.length > 0)
-        .map(id => {
+        .filter((id) => id !== 'recent' || recentEmojis.length > 0)
+        .map((id) => {
           const icon = CATEGORY_ICONS[id] || '📁';
           const isActive = activeCategory === id;
           return `<div class="category-tab ${isActive ? 'active' : ''}" data-category="${id}" title="${id}">${icon}</div>`;
@@ -404,9 +660,9 @@ export function createEmojiIconPickerComponent(): UniComponent<EmojiIconPickerPr
 
       let globalIndex = 0;
       contentContainer.innerHTML = categories
-        .map(category => {
+        .map((category) => {
           const emojiItems = category.emojis
-            .map(emoji => {
+            .map((emoji) => {
               const currentIndex = globalIndex++;
               const isFocused = keyboardNavActive && currentIndex === focusedIndex;
               return `<div class="emoji-item ${isFocused ? 'focused' : ''}" data-emoji="${emoji}" data-index="${currentIndex}">${emoji}</div>`;
@@ -469,14 +725,18 @@ export function createEmojiIconPickerComponent(): UniComponent<EmojiIconPickerPr
       }
     });
 
-    contentContainer.addEventListener('mouseenter', (e) => {
-      const item = (e.target as HTMLElement).closest('.emoji-item') as HTMLElement;
-      if (item && item.dataset.index) {
-        focusedIndex = parseInt(item.dataset.index, 10);
-        keyboardNavActive = true;
-        renderContent();
-      }
-    }, true);
+    contentContainer.addEventListener(
+      'mouseenter',
+      (e) => {
+        const item = (e.target as HTMLElement).closest('.emoji-item') as HTMLElement;
+        if (item && item.dataset.index) {
+          focusedIndex = parseInt(item.dataset.index, 10);
+          keyboardNavActive = true;
+          renderContent();
+        }
+      },
+      true,
+    );
 
     // Keyboard navigation
     function handleKeydown(e: KeyboardEvent) {
@@ -574,10 +834,10 @@ export const defaultIconPickerService: IconPickerService = {
  * Extension to register IconPickerService
  */
 export function IconPickerServiceExtension(
-  service: IconPickerService = defaultIconPickerService
+  service: IconPickerService = defaultIconPickerService,
 ): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.override(IconPickerServiceIdentifier, () => service);
     },
   };

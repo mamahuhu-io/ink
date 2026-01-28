@@ -1,18 +1,20 @@
-import { useEffect, useState, useCallback } from 'react'
-import { AlertTriangle } from 'lucide-react'
-import { setFileChangeDialogCallback } from '../../hooks/useFileWatcher'
-import './FileChangeDialog.css'
+import './FileChangeDialog.css';
+
+import { AlertTriangle } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+
+import { setFileChangeDialogCallback } from '../../hooks/useFileWatcher';
 
 interface FileChangeInfo {
-  filePath: string
-  fileName: string
-  isModified: boolean
-  onReload: () => void
-  onKeepLocal: () => void
+  filePath: string;
+  fileName: string;
+  isModified: boolean;
+  onReload: () => void;
+  onKeepLocal: () => void;
 }
 
 export function FileChangeDialog() {
-  const [pendingChanges, setPendingChanges] = useState<FileChangeInfo[]>([])
+  const [pendingChanges, setPendingChanges] = useState<FileChangeInfo[]>([]);
 
   // Register the dialog callback
   useEffect(() => {
@@ -20,39 +22,39 @@ export function FileChangeDialog() {
       setPendingChanges((prev) => {
         // Avoid duplicates
         if (prev.some((p) => p.filePath === options.filePath)) {
-          return prev
+          return prev;
         }
-        return [...prev, options]
-      })
-    })
+        return [...prev, options];
+      });
+    });
 
     return () => {
-      setFileChangeDialogCallback(() => {})
-    }
-  }, [])
+      setFileChangeDialogCallback(() => {});
+    };
+  }, []);
 
   const handleReload = useCallback((change: FileChangeInfo) => {
-    change.onReload()
-    setPendingChanges((prev) => prev.filter((p) => p.filePath !== change.filePath))
-  }, [])
+    change.onReload();
+    setPendingChanges((prev) => prev.filter((p) => p.filePath !== change.filePath));
+  }, []);
 
   const handleKeepLocal = useCallback((change: FileChangeInfo) => {
-    change.onKeepLocal()
-    setPendingChanges((prev) => prev.filter((p) => p.filePath !== change.filePath))
-  }, [])
+    change.onKeepLocal();
+    setPendingChanges((prev) => prev.filter((p) => p.filePath !== change.filePath));
+  }, []);
 
   const handleReloadAll = useCallback(() => {
-    pendingChanges.forEach((change) => change.onReload())
-    setPendingChanges([])
-  }, [pendingChanges])
+    pendingChanges.forEach((change) => change.onReload());
+    setPendingChanges([]);
+  }, [pendingChanges]);
 
   const handleKeepAllLocal = useCallback(() => {
-    pendingChanges.forEach((change) => change.onKeepLocal())
-    setPendingChanges([])
-  }, [pendingChanges])
+    pendingChanges.forEach((change) => change.onKeepLocal());
+    setPendingChanges([]);
+  }, [pendingChanges]);
 
   if (pendingChanges.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -66,7 +68,8 @@ export function FileChangeDialog() {
         <div className="file-change-dialog-content">
           {pendingChanges.length === 1 ? (
             <p>
-              The file <strong>{pendingChanges[0].fileName}</strong> has been modified by another program.
+              The file <strong>{pendingChanges[0].fileName}</strong> has been modified by another
+              program.
               <br />
               You have unsaved changes. What would you like to do?
             </p>
@@ -84,16 +87,10 @@ export function FileChangeDialog() {
                 <li key={change.filePath}>
                   <span className="file-name">{change.fileName}</span>
                   <div className="file-actions">
-                    <button
-                      className="btn-small btn-reload"
-                      onClick={() => handleReload(change)}
-                    >
+                    <button className="btn-small btn-reload" onClick={() => handleReload(change)}>
                       Reload
                     </button>
-                    <button
-                      className="btn-small btn-keep"
-                      onClick={() => handleKeepLocal(change)}
-                    >
+                    <button className="btn-small btn-keep" onClick={() => handleKeepLocal(change)}>
                       Keep
                     </button>
                   </div>
@@ -106,16 +103,10 @@ export function FileChangeDialog() {
         <div className="file-change-dialog-actions">
           {pendingChanges.length === 1 ? (
             <>
-              <button
-                className="btn-secondary"
-                onClick={() => handleKeepLocal(pendingChanges[0])}
-              >
+              <button className="btn-secondary" onClick={() => handleKeepLocal(pendingChanges[0])}>
                 Keep My Changes
               </button>
-              <button
-                className="btn-primary"
-                onClick={() => handleReload(pendingChanges[0])}
-              >
+              <button className="btn-primary" onClick={() => handleReload(pendingChanges[0])}>
                 Reload from Disk
               </button>
             </>
@@ -132,5 +123,5 @@ export function FileChangeDialog() {
         </div>
       </div>
     </div>
-  )
+  );
 }

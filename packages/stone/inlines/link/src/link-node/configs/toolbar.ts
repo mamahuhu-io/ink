@@ -1,4 +1,5 @@
-import { toast } from "@ink/stone-components/toast";
+import { toast } from '@ink/stone-components/toast';
+import { CopyIcon, DeleteIcon, EditIcon, UnlinkIcon } from '@ink/stone-icons/lit';
 import {
   ActionPlacement,
   EmbedIframeService,
@@ -7,35 +8,28 @@ import {
   type ToolbarActionGenerator,
   type ToolbarActionGroup,
   type ToolbarModuleConfig,
-} from "@ink/stone-shared/services";
-import {
-  CopyIcon,
-  DeleteIcon,
-  EditIcon,
-  UnlinkIcon,
-} from "@ink/stone-icons/lit";
-import { BlockSelection } from "@ink/stone-std";
-import { signal } from "@preact/signals-core";
-import { html } from "lit-html";
-import { keyed } from "lit-html/directives/keyed.js";
+} from '@ink/stone-shared/services';
+import { BlockSelection } from '@ink/stone-std';
+import { signal } from '@preact/signals-core';
+import { html } from 'lit-html';
+import { keyed } from 'lit-html/directives/keyed.js';
 
-import { t } from "../../configs/i18n";
-
-import { InkLink } from "../ink-link";
-import { toggleLinkPopup } from "../link-popup/toggle-link-popup";
+import { t } from '../../configs/i18n';
+import { InkLink } from '../ink-link';
+import { toggleLinkPopup } from '../link-popup/toggle-link-popup';
 
 const trackBaseProps = {
-  segment: "doc",
-  page: "doc editor",
-  module: "toolbar",
-  category: "link",
-  type: "inline view",
+  segment: 'doc',
+  page: 'doc editor',
+  module: 'toolbar',
+  category: 'link',
+  type: 'inline view',
 };
 
 export const builtinInlineLinkToolbarConfig = {
   actions: [
     {
-      id: "a.preview",
+      id: 'a.preview',
       content(cx) {
         const target = cx.message$.peek()?.element;
         if (!(target instanceof InkLink)) return null;
@@ -47,12 +41,12 @@ export const builtinInlineLinkToolbarConfig = {
       },
     },
     {
-      id: "b.copy-link-and-edit",
+      id: 'b.copy-link-and-edit',
       actions: [
         {
-          id: "copy-link",
+          id: 'copy-link',
           generate: (ctx) => ({
-            tooltip: t("copyLink", "Copy link"),
+            tooltip: t('copyLink', 'Copy link'),
             icon: CopyIcon(),
             run(ctx) {
               const target = ctx.message$.peek()?.element;
@@ -66,22 +60,19 @@ export const builtinInlineLinkToolbarConfig = {
               ctx.reset();
 
               navigator.clipboard.writeText(link).catch(console.error);
-              toast(
-                ctx.host,
-                t("copiedLinkToClipboard", "Copied link to clipboard")
-              );
+              toast(ctx.host, t('copiedLinkToClipboard', 'Copied link to clipboard'));
 
-              ctx.track("CopiedLink", {
+              ctx.track('CopiedLink', {
                 ...trackBaseProps,
-                control: "copy link",
+                control: 'copy link',
               });
             },
           }),
         } as ToolbarActionGenerator,
         {
-          id: "edit",
+          id: 'edit',
           generate: (ctx) => ({
-            tooltip: t("edit", "Edit"),
+            tooltip: t('edit', 'Edit'),
             icon: EditIcon(),
             run(ctx) {
               const target = ctx.message$.peek()?.element;
@@ -94,16 +85,16 @@ export const builtinInlineLinkToolbarConfig = {
               const abortController = new AbortController();
               const popover = toggleLinkPopup(
                 ctx.std,
-                "edit",
+                'edit',
                 inlineEditor,
                 selfInlineRange,
-                abortController
+                abortController,
               );
               abortController.signal.onabort = () => popover.remove();
 
-              ctx.track("OpenedAliasPopup", {
+              ctx.track('OpenedAliasPopup', {
                 ...trackBaseProps,
-                control: "edit",
+                control: 'edit',
               });
             },
           }),
@@ -111,19 +102,19 @@ export const builtinInlineLinkToolbarConfig = {
       ],
     },
     {
-      id: "c.conversions",
+      id: 'c.conversions',
       actions: [
         {
-          id: "inline",
-          generate: (ctx) => ({
-            label: t("inlineView", "Inline view"),
+          id: 'inline',
+          generate: (_) => ({
+            label: t('inlineView', 'Inline view'),
             disabled: true,
           }),
         } as ToolbarActionGenerator,
         {
-          id: "card",
+          id: 'card',
           generate: (ctx) => ({
-            label: t("cardView", "Card view"),
+            label: t('cardView', 'Card view'),
             run(ctx) {
               const target = ctx.message$.peek()?.element;
               if (!(target instanceof InkLink)) return;
@@ -146,26 +137,18 @@ export const builtinInlineLinkToolbarConfig = {
 
               const title = inlineEditor.yTextString.slice(
                 selfInlineRange.index,
-                selfInlineRange.index + selfInlineRange.length
+                selfInlineRange.index + selfInlineRange.length,
               );
 
-              const options = ctx.std
-                .get(EmbedOptionProvider)
-                .getEmbedBlockOptions(url);
-              const flavour =
-                options?.viewType === "card" ? options.flavour : "ink:bookmark";
+              const options = ctx.std.get(EmbedOptionProvider).getEmbedBlockOptions(url);
+              const flavour = options?.viewType === 'card' ? options.flavour : 'ink:bookmark';
               const index = parent.children.indexOf(model);
               const props = {
                 url,
-                title: title === url ? "" : title,
+                title: title === url ? '' : title,
               };
 
-              const blockId = ctx.store.addBlock(
-                flavour,
-                props,
-                parent,
-                index + 1
-              );
+              const blockId = ctx.store.addBlock(flavour, props, parent, index + 1);
 
               const totalTextLength = inlineEditor.yTextLength;
               const inlineTextLength = selfInlineRange.length;
@@ -175,22 +158,20 @@ export const builtinInlineLinkToolbarConfig = {
                 inlineEditor.formatText(selfInlineRange, { link: null });
               }
 
-              ctx.select("note", [
-                ctx.selection.create(BlockSelection, { blockId }),
-              ]);
+              ctx.select('note', [ctx.selection.create(BlockSelection, { blockId })]);
 
-              ctx.track("SelectedView", {
+              ctx.track('SelectedView', {
                 ...trackBaseProps,
-                control: "select view",
-                type: "card view",
+                control: 'select view',
+                type: 'card view',
               });
             },
           }),
         } as ToolbarActionGenerator,
         {
-          id: "embed",
+          id: 'embed',
           generate: (ctx) => ({
-            label: t("embedView", "Embed view"),
+            label: t('embedView', 'Embed view'),
             when(ctx) {
               const target = ctx.message$.peek()?.element;
               if (!(target instanceof InkLink)) return false;
@@ -212,10 +193,8 @@ export const builtinInlineLinkToolbarConfig = {
               const embedIframeService = ctx.std.get(EmbedIframeService);
               const canEmbedAsIframe = embedIframeService.canEmbed(url);
 
-              const options = ctx.std
-                .get(EmbedOptionProvider)
-                .getEmbedBlockOptions(url);
-              return canEmbedAsIframe || options?.viewType === "embed";
+              const options = ctx.std.get(EmbedOptionProvider).getEmbedBlockOptions(url);
+              return canEmbedAsIframe || options?.viewType === 'embed';
             },
             run(ctx) {
               const target = ctx.message$.peek()?.element;
@@ -242,19 +221,13 @@ export const builtinInlineLinkToolbarConfig = {
               let blockId: string | undefined;
 
               const embedIframeService = ctx.std.get(EmbedIframeService);
-              const embedOptions = ctx.std
-                .get(EmbedOptionProvider)
-                .getEmbedBlockOptions(url);
+              const embedOptions = ctx.std.get(EmbedOptionProvider).getEmbedBlockOptions(url);
 
-              if (embedOptions?.viewType === "embed") {
+              if (embedOptions?.viewType === 'embed') {
                 const flavour = embedOptions.flavour;
                 blockId = ctx.store.addBlock(flavour, props, parent, index + 1);
               } else if (embedIframeService.canEmbed(url)) {
-                blockId = embedIframeService.addEmbedIframeBlock(
-                  props,
-                  parent.id,
-                  index + 1
-                );
+                blockId = embedIframeService.addEmbedIframeBlock(props, parent.id, index + 1);
               }
 
               if (!blockId) return;
@@ -267,14 +240,12 @@ export const builtinInlineLinkToolbarConfig = {
                 inlineEditor.formatText(selfInlineRange, { link: null });
               }
 
-              ctx.select("note", [
-                ctx.selection.create(BlockSelection, { blockId }),
-              ]);
+              ctx.select('note', [ctx.selection.create(BlockSelection, { blockId })]);
 
-              ctx.track("SelectedView", {
+              ctx.track('SelectedView', {
                 ...trackBaseProps,
-                control: "select view",
-                type: "embed view",
+                control: 'select view',
+                type: 'embed view',
               });
             },
           }),
@@ -286,7 +257,7 @@ export const builtinInlineLinkToolbarConfig = {
 
         // Generate actions at runtime
         const actions = this.actions.map((action) => {
-          if ("generate" in action) {
+          if ('generate' in action) {
             return { ...action, ...action.generate(ctx) };
           }
           return action;
@@ -295,17 +266,15 @@ export const builtinInlineLinkToolbarConfig = {
         // Get the label of the first action for the view type signal
         const firstAction = actions[0];
         const initialLabel =
-          firstAction && "label" in firstAction
-            ? firstAction.label
-            : "Inline view";
+          firstAction && 'label' in firstAction ? firstAction.label : 'Inline view';
         const viewType$ = signal(initialLabel);
         const onToggle = (e: CustomEvent<boolean>) => {
           const opened = e.detail;
           if (!opened) return;
 
-          ctx.track("OpenedViewSelector", {
+          ctx.track('OpenedViewSelector', {
             ...trackBaseProps,
-            control: "switch view",
+            control: 'switch view',
           });
         };
 
@@ -316,7 +285,7 @@ export const builtinInlineLinkToolbarConfig = {
             .context=${ctx}
             .onToggle=${onToggle}
             .viewType$=${viewType$}
-          ></ink-view-dropdown-menu>`
+          ></ink-view-dropdown-menu>`,
         )}`;
       },
       when(ctx) {
@@ -325,20 +294,16 @@ export const builtinInlineLinkToolbarConfig = {
         if (!target.block) return false;
 
         if (ctx.flags.isNative()) return false;
-        if (
-          target.block.closest("ink-database") ||
-          target.block.closest("ink-table")
-        )
-          return false;
+        if (target.block.closest('ink-database') || target.block.closest('ink-table')) return false;
 
-        if (!target.link.startsWith("http")) return false;
+        if (!target.link.startsWith('http')) return false;
 
         const { model } = target.block;
         const parent = model.parent;
         if (!parent) return false;
 
         const schema = ctx.store.schema;
-        const bookmarkSchema = schema.flavourSchemaMap.get("ink:bookmark");
+        const bookmarkSchema = schema.flavourSchemaMap.get('ink:bookmark');
         if (!bookmarkSchema) return false;
 
         const parentSchema = schema.flavourSchemaMap.get(parent.flavour);
@@ -355,9 +320,9 @@ export const builtinInlineLinkToolbarConfig = {
     } satisfies ToolbarActionGroup<ToolbarAction>,
     {
       placement: ActionPlacement.More,
-      id: "b.remove-link",
+      id: 'b.remove-link',
       generate: (ctx) => ({
-        label: t("removeLink", "Remove link"),
+        label: t('removeLink', 'Remove link'),
         icon: UnlinkIcon(),
         run(ctx) {
           const target = ctx.message$.peek()?.element;
@@ -374,11 +339,11 @@ export const builtinInlineLinkToolbarConfig = {
     } as ToolbarActionGenerator,
     {
       placement: ActionPlacement.More,
-      id: "c.delete",
+      id: 'c.delete',
       generate: (ctx) => ({
-        label: t("delete", "Delete"),
+        label: t('delete', 'Delete'),
         icon: DeleteIcon(),
-        variant: "destructive",
+        variant: 'destructive',
         run(ctx) {
           const target = ctx.message$.peek()?.element;
           if (!(target instanceof InkLink)) return;

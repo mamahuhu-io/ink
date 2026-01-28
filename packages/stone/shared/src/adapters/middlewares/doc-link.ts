@@ -2,20 +2,15 @@ import type { TransformerMiddleware } from '@ink/stone-store';
 
 const customDocLinkBaseUrlMiddleware = (
   baseUrl: string,
-  collectionId: string
+  collectionId: string,
 ): TransformerMiddleware => {
   return ({ adapterConfigs }) => {
-    const docLinkBaseUrl = baseUrl
-      ? `${baseUrl}/workspace/${collectionId}`
-      : '';
+    const docLinkBaseUrl = baseUrl ? `${baseUrl}/workspace/${collectionId}` : '';
     adapterConfigs.set('docLinkBaseUrl', docLinkBaseUrl);
   };
 };
 
-export const docLinkBaseURLMiddlewareBuilder = (
-  baseUrl: string,
-  collectionId: string
-) => {
+export const docLinkBaseURLMiddlewareBuilder = (baseUrl: string, collectionId: string) => {
   let middleware = customDocLinkBaseUrlMiddleware(baseUrl, collectionId);
   return {
     get: () => middleware,
@@ -28,7 +23,7 @@ export const docLinkBaseURLMiddlewareBuilder = (
 const defaultDocLinkBaseURLMiddlewareBuilder = (collectionId: string) =>
   docLinkBaseURLMiddlewareBuilder(
     typeof window !== 'undefined' ? window.location.origin : '.',
-    collectionId
+    collectionId,
   );
 
 export const docLinkBaseURLMiddleware = (collectionId: string) =>

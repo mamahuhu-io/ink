@@ -9,7 +9,7 @@ export interface NotificationService {
     options?: {
       duration?: number;
       portal?: HTMLElement;
-    }
+    },
   ): void;
   confirm(options: {
     title: string | TemplateResult;
@@ -44,32 +44,22 @@ export interface NotificationService {
    * Notify with undo action, it is a helper function to notify with undo action.
    * And the notification card will be closed when undo action is triggered by shortcut key or other ways.
    */
-  notifyWithUndoAction: (
-    options: Parameters<NotificationService['notify']>[0]
-  ) => void;
+  notifyWithUndoAction: (options: Parameters<NotificationService['notify']>[0]) => void;
 }
 
-export const NotificationProvider = createIdentifier<NotificationService>(
-  'InkNotificationService'
-);
+export const NotificationProvider = createIdentifier<NotificationService>('InkNotificationService');
 
-export function NotificationExtension(
-  notificationService: NotificationService
-): ExtensionType {
+export function NotificationExtension(notificationService: NotificationService): ExtensionType {
   return {
-    setup: di => {
-      di.addImpl(NotificationProvider, provider => {
+    setup: (di) => {
+      di.addImpl(NotificationProvider, (provider) => {
         return {
           notify: notificationService.notify,
           toast: notificationService.toast,
           confirm: notificationService.confirm,
           prompt: notificationService.prompt,
-          notifyWithUndoAction: options => {
-            notifyWithUndoActionImpl(
-              provider,
-              notificationService.notify,
-              options
-            );
+          notifyWithUndoAction: (options) => {
+            notifyWithUndoActionImpl(provider, notificationService.notify, options);
           },
         };
       });
@@ -80,7 +70,7 @@ export function NotificationExtension(
 function notifyWithUndoActionImpl(
   provider: ServiceProvider,
   notify: NotificationService['notify'],
-  options: Parameters<NotificationService['notifyWithUndoAction']>[0]
+  options: Parameters<NotificationService['notifyWithUndoAction']>[0],
 ) {
   const store = provider.get(StoreIdentifier);
 

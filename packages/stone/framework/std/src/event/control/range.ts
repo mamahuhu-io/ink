@@ -1,10 +1,6 @@
 import type { BlockComponent } from '../../view/index.js';
 import { UIEventState, UIEventStateContext } from '../base.js';
-import type {
-  EventHandlerRunner,
-  EventName,
-  UIEventDispatcher,
-} from '../dispatcher.js';
+import type { EventHandlerRunner, EventName, UIEventDispatcher } from '../dispatcher.js';
 import { EventScopeSourceType, EventSourceState } from '../state/source.js';
 
 export class RangeControl {
@@ -38,11 +34,7 @@ export class RangeControl {
   private readonly _compositionUpdate = (event: Event) => {
     const scope = this._buildScope('compositionUpdate');
 
-    this._dispatcher.run(
-      'compositionUpdate',
-      this._createContext(event),
-      scope
-    );
+    this._dispatcher.run('compositionUpdate', this._createContext(event), scope);
   };
 
   private _prev: Range | null = null;
@@ -73,7 +65,7 @@ export class RangeControl {
       new EventSourceState({
         event,
         sourceType: EventScopeSourceType.Selection,
-      })
+      }),
     );
   }
 
@@ -110,12 +102,9 @@ export class RangeControl {
       if (current === start) {
         startRecorded = true;
       }
-      // eslint-disable-next-line sonarjs/no-collapsible-if
+
       if (startRecorded) {
-        if (
-          current.nodeType === Node.TEXT_NODE ||
-          current.nodeType === Node.ELEMENT_NODE
-        ) {
+        if (current.nodeType === Node.TEXT_NODE || current.nodeType === Node.ELEMENT_NODE) {
           nodes.add(current);
         }
       }
@@ -125,7 +114,7 @@ export class RangeControl {
     dfsDOMSearch(ancestor.firstChild, ancestor);
 
     const blocks = new Set<string>();
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       const blockView = getBlockView(node);
       if (!blockView) {
         return;
@@ -140,17 +129,9 @@ export class RangeControl {
 
   listen() {
     const { host, disposables } = this._dispatcher;
-    disposables.addFromEvent(
-      document,
-      'selectionchange',
-      this._selectionChange
-    );
+    disposables.addFromEvent(document, 'selectionchange', this._selectionChange);
     disposables.addFromEvent(host, 'compositionstart', this._compositionStart);
     disposables.addFromEvent(host, 'compositionend', this._compositionEnd);
-    disposables.addFromEvent(
-      host,
-      'compositionupdate',
-      this._compositionUpdate
-    );
+    disposables.addFromEvent(host, 'compositionupdate', this._compositionUpdate);
   }
 }

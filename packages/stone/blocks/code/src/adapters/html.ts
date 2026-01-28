@@ -10,8 +10,8 @@ import { nanoid } from '@ink/stone-store';
 
 export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: CodeBlockSchema.model.flavour,
-  toMatch: o => HastUtils.isElement(o.node) && o.node.tagName === 'pre',
-  fromMatch: o => o.node.flavour === 'ink:code',
+  toMatch: (o) => HastUtils.isElement(o.node) && o.node.tagName === 'pre',
+  fromMatch: (o) => o.node.flavour === 'ink:code',
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -28,14 +28,10 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
           : { ...code, tagName: 'div' };
       let codeLang = Array.isArray(code.properties?.className)
         ? code.properties.className.find(
-            className =>
-              typeof className === 'string' && className.startsWith('code-')
+            (className) => typeof className === 'string' && className.startsWith('code-'),
           )
         : undefined;
-      codeLang =
-        typeof codeLang === 'string'
-          ? codeLang.replace('code-', '')
-          : undefined;
+      codeLang = typeof codeLang === 'string' ? codeLang.replace('code-', '') : undefined;
 
       const { walkerContext, deltaConverter, configs } = context;
       const wrap = configs.get(CODE_BLOCK_WRAP_KEY) === 'true';
@@ -58,7 +54,7 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
       walkerContext.skipAllChildren();
@@ -68,9 +64,8 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
     enter: async (o, context) => {
       const { walkerContext } = context;
       const rawLang = o.node.props.language as string | null;
-      const text = (o.node.props.text as Record<string, unknown>)
-        .delta as DeltaInsert[];
-      const code = text.map(delta => delta.insert).join('');
+      const text = (o.node.props.text as Record<string, unknown>).delta as DeltaInsert[];
+      const code = text.map((delta) => delta.insert).join('');
 
       walkerContext
         .openNode(
@@ -80,7 +75,7 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             properties: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
@@ -96,7 +91,7 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               },
             ],
           },
-          'children'
+          'children',
         )
         .closeNode()
         .closeNode();
@@ -104,6 +99,4 @@ export const codeBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   },
 };
 
-export const CodeBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  codeBlockHtmlAdapterMatcher
-);
+export const CodeBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(codeBlockHtmlAdapterMatcher);

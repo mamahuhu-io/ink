@@ -20,7 +20,7 @@ import type { StrokeOptions } from './types.js';
 
 export function getStroke(
   points: (IVec | IVec3 | { x: number; y: number; pressure?: number })[],
-  options: StrokeOptions = {} as StrokeOptions
+  options: StrokeOptions = {} as StrokeOptions,
 ) {
   return getStrokeOutlinePoints(getStrokePoints(points, options), options);
 }

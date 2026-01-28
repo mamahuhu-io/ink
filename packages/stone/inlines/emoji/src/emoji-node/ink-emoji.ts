@@ -1,10 +1,7 @@
-import type { InkTextAttributes } from '@ink/stone-shared/types';
 import { WithDisposable } from '@ink/stone-global/lit';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
 import { type BlockStdScope, ShadowlessElement } from '@ink/stone-std';
-import {
-  ZERO_WIDTH_FOR_EMBED_NODE,
-  ZERO_WIDTH_FOR_EMPTY_LINE,
-} from '@ink/stone-std/inline';
+import { ZERO_WIDTH_FOR_EMBED_NODE, ZERO_WIDTH_FOR_EMPTY_LINE } from '@ink/stone-std/inline';
 import type { DeltaInsert } from '@ink/stone-store';
 import { css, html, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -19,8 +16,8 @@ export class InkEmoji extends WithDisposable(ShadowlessElement) {
     .emoji-node {
       display: inline;
       user-select: text;
-      font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji', sans-serif;
+      font-family:
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
       font-size: 1em;
       line-height: 1;
       vertical-align: baseline;
@@ -52,8 +49,7 @@ export class InkEmoji extends WithDisposable(ShadowlessElement) {
     });
 
     return html`<span class=${nodeClasses}
-      ><span class="emoji-content">${emoji}</span
-      ><v-text .str=${ZERO_WIDTH_FOR_EMBED_NODE}></v-text
+      ><span class="emoji-content">${emoji}</span><v-text .str=${ZERO_WIDTH_FOR_EMBED_NODE}></v-text
     ></span>`;
   }
 

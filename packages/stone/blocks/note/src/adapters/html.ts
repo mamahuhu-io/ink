@@ -12,11 +12,11 @@ import {
  * @returns The html adapter matcher.
  */
 const createNoteBlockHtmlAdapterMatcher = (
-  displayModeToSkip: NoteDisplayMode
+  displayModeToSkip: NoteDisplayMode,
 ): BlockHtmlAdapterMatcher => ({
   flavour: NoteBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === NoteBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === NoteBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
@@ -29,16 +29,17 @@ const createNoteBlockHtmlAdapterMatcher = (
 });
 
 export const docNoteBlockHtmlAdapterMatcher = createNoteBlockHtmlAdapterMatcher(
-  NoteDisplayMode.EdgelessOnly
+  NoteDisplayMode.EdgelessOnly,
 );
 
-export const edgelessNoteBlockHtmlAdapterMatcher =
-  createNoteBlockHtmlAdapterMatcher(NoteDisplayMode.DocOnly);
+export const edgelessNoteBlockHtmlAdapterMatcher = createNoteBlockHtmlAdapterMatcher(
+  NoteDisplayMode.DocOnly,
+);
 
 export const DocNoteBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  docNoteBlockHtmlAdapterMatcher
+  docNoteBlockHtmlAdapterMatcher,
 );
 
 export const EdgelessNoteBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  edgelessNoteBlockHtmlAdapterMatcher
+  edgelessNoteBlockHtmlAdapterMatcher,
 );

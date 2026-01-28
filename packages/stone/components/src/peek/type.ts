@@ -2,8 +2,7 @@ import type { DisposableClass } from '@ink/stone-global/lit';
 import type { BlockComponent, BlockStdScope } from '@ink/stone-std';
 import type { LitElement, TemplateResult } from 'lit';
 
-export type PeekableClass = { std: BlockStdScope } & DisposableClass &
-  LitElement;
+export type PeekableClass = { std: BlockStdScope } & DisposableClass & LitElement;
 
 export interface PeekOptions {
   /**
@@ -28,7 +27,7 @@ export interface PeekViewService {
       elementIds?: string[];
       target?: HTMLElement;
     },
-    options?: PeekOptions
+    options?: PeekOptions,
   ): Promise<void>;
 
   /**
@@ -40,14 +39,13 @@ export interface PeekViewService {
    * @returns A promise that resolves when the peek view is closed.
    */
   peek(
-    // eslint-disable-next-line @typescript-eslint/unified-signatures
     element: { target: HTMLElement; template?: TemplateResult },
-    options?: PeekOptions
+    options?: PeekOptions,
   ): Promise<void>;
 
   peek<Element extends BlockComponent>(
     element: { target: Element; template?: TemplateResult },
-    options?: PeekOptions
+    options?: PeekOptions,
   ): Promise<void>;
 }
 

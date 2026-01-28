@@ -25,9 +25,7 @@ export interface OpenDocService {
   items: OpenDocConfig['items'];
 }
 
-export const OpenDocExtensionIdentifier = createIdentifier<OpenDocService>(
-  'InkOpenDocExtension'
-);
+export const OpenDocExtensionIdentifier = createIdentifier<OpenDocService>('InkOpenDocExtension');
 
 const defaultConfig: OpenDocConfig = {
   items: [
@@ -45,9 +43,9 @@ const defaultConfig: OpenDocConfig = {
 };
 
 export const OpenDocExtension = (config: OpenDocConfig): ExtensionType => ({
-  setup: di => {
+  setup: (di) => {
     di.override(OpenDocExtensionIdentifier, () => {
-      const allowedOpenDocModes = new Set(config.items.map(item => item.type));
+      const allowedOpenDocModes = new Set(config.items.map((item) => item.type));
       return {
         isAllowed: (mode: OpenDocMode) => allowedOpenDocModes.has(mode),
         items: config.items,

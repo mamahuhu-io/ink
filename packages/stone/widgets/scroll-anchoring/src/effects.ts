@@ -1,13 +1,7 @@
-import {
-  INK_SCROLL_ANCHORING_WIDGET,
-  InkScrollAnchoringWidget,
-} from './scroll-anchoring.js';
+import { INK_SCROLL_ANCHORING_WIDGET, InkScrollAnchoringWidget } from './scroll-anchoring.js';
 
 export function effects() {
-  customElements.define(
-    INK_SCROLL_ANCHORING_WIDGET,
-    InkScrollAnchoringWidget
-  );
+  customElements.define(INK_SCROLL_ANCHORING_WIDGET, InkScrollAnchoringWidget);
 }
 
 declare global {

@@ -33,23 +33,14 @@ export const rect = {
     ctx.rect(x, y, w, h);
     ctx.restore();
   },
-  includesPoint(
-    this: ShapeElementModel,
-    x: number,
-    y: number,
-    options: PointTestOptions
-  ) {
+  includesPoint(this: ShapeElementModel, x: number, y: number, options: PointTestOptions) {
     const point: IVec = [x, y];
-    const points = getPointsFromBoundWithRotation(
-      this,
-      undefined,
-      options.responsePadding
-    );
+    const points = getPointsFromBoundWithRotation(this, undefined, options.responsePadding);
 
     let hit = pointOnPolygonStoke(
       point,
       points,
-      (options?.hitThreshold ?? 1) / (options.zoom ?? 1)
+      (options?.hitThreshold ?? 1) / (options.zoom ?? 1),
     );
 
     if (!hit) {
@@ -63,20 +54,14 @@ export const rect = {
         const text = this.text;
         if (!text || !text.length) {
           // if not, check the default center area of the shape
-          const centralBounds = getCenterAreaBounds(
-            this,
-            DEFAULT_CENTRAL_AREA_RATIO
-          );
+          const centralBounds = getCenterAreaBounds(this, DEFAULT_CENTRAL_AREA_RATIO);
           const centralPoints = getPointsFromBoundWithRotation(centralBounds);
           // Check if the point is in the center area
           hit = pointInPolygon([x, y], centralPoints);
         } else if (this.textBound) {
           hit = pointInPolygon(
             point,
-            getPointsFromBoundWithRotation(
-              this,
-              () => Bound.from(this.textBound!).points
-            )
+            getPointsFromBoundWithRotation(this, () => Bound.from(this.textBound!).points),
           );
         }
       }
@@ -87,7 +72,7 @@ export const rect = {
 
   containsBound(bounds: Bound, element: ShapeElementModel): boolean {
     const points = getPointsFromBoundWithRotation(element);
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   },
 
   getNearestPoint(point: IVec, element: ShapeElementModel) {
@@ -103,16 +88,8 @@ export const rect = {
   getRelativePointLocation(relativePoint: IVec, element: ShapeElementModel) {
     const bound = Bound.deserialize(element.xywh);
     const point = bound.getRelativePoint(relativePoint);
-    const rotatePoint = rotatePoints(
-      [point],
-      bound.center,
-      element.rotate ?? 0
-    )[0];
-    const points = rotatePoints(
-      bound.points,
-      bound.center,
-      element.rotate ?? 0
-    );
+    const rotatePoint = rotatePoints([point], bound.center, element.rotate ?? 0)[0];
+    const points = rotatePoints(bound.points, bound.center, element.rotate ?? 0);
     const tangent = polygonGetPointTangent(points, rotatePoint);
     return new PointLocation(rotatePoint, tangent);
   },

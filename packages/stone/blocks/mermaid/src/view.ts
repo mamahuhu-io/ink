@@ -1,16 +1,13 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
-import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { BlockViewExtension, FlavourExtension } from '@ink/stone-std';
+import { SlashMenuConfigExtension } from '@ink/stone-widget-slash-menu';
 import { literal } from 'lit/static-html.js';
 
 import { mermaidSlashMenuConfig } from './configs/slash-menu.js';
 import { effects } from './effects.js';
+import { MermaidEditorUnitSpecExtension } from './inline-spec.js';
 import { MermaidBlockService } from './mermaid-block-service.js';
 import { MermaidEditorInlineManagerExtension } from './mermaid-editor-menu.js';
-import { MermaidEditorUnitSpecExtension } from './inline-spec.js';
 
 export class MermaidBlockViewExtension extends ViewExtensionProvider {
   override name = 'ink-mermaid-block';

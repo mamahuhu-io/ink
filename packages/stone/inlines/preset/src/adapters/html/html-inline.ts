@@ -1,7 +1,4 @@
-import {
-  type HtmlAST,
-  HtmlASTToDeltaExtension,
-} from '@ink/stone-shared/adapters';
+import { type HtmlAST, HtmlASTToDeltaExtension } from '@ink/stone-shared/adapters';
 import { collapseWhiteSpace } from 'collapse-white-space';
 import type { Element } from 'hast';
 
@@ -18,9 +15,7 @@ import type { Element } from 'hast';
  * and return an empty array in that case.
  */
 const isEmptyText = (ast: HtmlAST): boolean => {
-  return (
-    ast.type === 'text' && collapseWhiteSpace(ast.value, { trim: true }) === ''
-  );
+  return ast.type === 'text' && collapseWhiteSpace(ast.value, { trim: true }) === '';
 };
 
 const isElement = (ast: HtmlAST): ast is Element => {
@@ -50,8 +45,7 @@ const isStrongElement = (ast: HtmlAST) => {
   if (!isElement(ast)) {
     return false;
   }
-  const style =
-    typeof ast.properties.style === 'string' ? ast.properties.style : '';
+  const style = typeof ast.properties.style === 'string' ? ast.properties.style : '';
 
   const isStrongTag = strongElementTags.has(ast.tagName);
   // Should exclude the case like <b style="font-weight: normal;">
@@ -77,8 +71,7 @@ const isItalicElement = (ast: HtmlAST) => {
   if (!isElement(ast)) {
     return false;
   }
-  const style =
-    typeof ast.properties.style === 'string' ? ast.properties.style : '';
+  const style = typeof ast.properties.style === 'string' ? ast.properties.style : '';
   const isItalicTag = italicElementTags.has(ast.tagName);
   const isItalicStyle = /font-style:\s*italic/.test(style);
   return isItalicTag || isItalicStyle;
@@ -100,8 +93,7 @@ const isUnderlineElement = (ast: HtmlAST) => {
   if (!isElement(ast)) {
     return false;
   }
-  const style =
-    typeof ast.properties.style === 'string' ? ast.properties.style : '';
+  const style = typeof ast.properties.style === 'string' ? ast.properties.style : '';
   const isUnderlineTag = ast.tagName === 'u';
   const isUnderlineStyle = /text-decoration:\s*underline/.test(style);
   return isUnderlineTag || isUnderlineStyle;
@@ -123,8 +115,7 @@ const isLineThroughElement = (ast: HtmlAST) => {
   if (!isElement(ast)) {
     return false;
   }
-  const style =
-    typeof ast.properties.style === 'string' ? ast.properties.style : '';
+  const style = typeof ast.properties.style === 'string' ? ast.properties.style : '';
   const isLineThroughTag = ast.tagName === 'del';
   const isLineThroughStyle = /text-decoration:\s*line-through/.test(style);
   return isLineThroughTag || isLineThroughStyle;
@@ -150,7 +141,7 @@ const isTextLikeElement = (ast: HtmlAST) => {
 
 export const htmlTextToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'text',
-  match: ast => ast.type === 'text',
+  match: (ast) => ast.type === 'text',
   toDelta: (ast, context) => {
     if (!('value' in ast)) {
       return [];
@@ -175,20 +166,18 @@ export const htmlTextToDeltaMatcher = HtmlASTToDeltaExtension({
 
 export const htmlTextLikeElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'text-like-element',
-  match: ast => isTextLikeElement(ast),
+  match: (ast) => isTextLikeElement(ast),
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false })
-    );
+    return ast.children.flatMap((child) => context.toDelta(child, { trim: false }));
   },
 });
 
 export const htmlListToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'list-element',
-  match: ast => isElement(ast) && listElementTags.has(ast.tagName),
+  match: (ast) => isElement(ast) && listElementTags.has(ast.tagName),
   toDelta: () => {
     return [];
   },
@@ -196,103 +185,103 @@ export const htmlListToDeltaMatcher = HtmlASTToDeltaExtension({
 
 export const htmlStrongElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'strong-element',
-  match: ast => isStrongElement(ast),
+  match: (ast) => isStrongElement(ast),
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes, bold: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlItalicElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'italic-element',
-  match: ast => isItalicElement(ast),
+  match: (ast) => isItalicElement(ast),
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes, italic: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlCodeElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'code-element',
-  match: ast => isElement(ast) && ast.tagName === 'code',
+  match: (ast) => isElement(ast) && ast.tagName === 'code',
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes, code: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlDelElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'del-element',
-  match: ast => isLineThroughElement(ast),
+  match: (ast) => isLineThroughElement(ast),
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes, strike: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlUnderlineElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'underline-element',
-  match: ast => isUnderlineElement(ast),
+  match: (ast) => isUnderlineElement(ast),
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes, underline: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlMarkElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'mark-element',
-  match: ast => isElement(ast) && ast.tagName === 'mark',
+  match: (ast) => isElement(ast) && ast.tagName === 'mark',
   toDelta: (ast, context) => {
     if (!isElement(ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child, { trim: false }).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child, { trim: false }).map((delta) => {
         delta.attributes = { ...delta.attributes };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const htmlBrElementToDeltaMatcher = HtmlASTToDeltaExtension({
   name: 'br-element',
-  match: ast => isElement(ast) && ast.tagName === 'br',
+  match: (ast) => isElement(ast) && ast.tagName === 'br',
   toDelta: () => {
     return [{ insert: '\n' }];
   },

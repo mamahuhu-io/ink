@@ -29,12 +29,8 @@ export async function asyncGetRichText(std: BlockStdScope, id: string) {
   return richText;
 }
 
-export function getInlineEditorByModel(
-  std: BlockStdScope,
-  model: BlockModel | string
-) {
-  const blockModel =
-    typeof model === 'string' ? std.store.getBlock(model)?.model : model;
+export function getInlineEditorByModel(std: BlockStdScope, model: BlockModel | string) {
+  const blockModel = typeof model === 'string' ? std.store.getBlock(model)?.model : model;
   if (!blockModel || matchModels(blockModel, [DatabaseBlockModel])) {
     // Not support database model since it's may be have multiple inline editor instances.
     // Support to enter the editing state through the Enter key in the database.
@@ -48,7 +44,7 @@ export function getInlineEditorByModel(
 export async function asyncSetInlineRange(
   std: BlockStdScope,
   model: BlockModel,
-  inlineRange: InlineRange
+  inlineRange: InlineRange,
 ) {
   const richText = await asyncGetRichText(std, model.id);
   if (!richText) {
@@ -63,11 +59,7 @@ export async function asyncSetInlineRange(
   inlineEditor.setInlineRange(inlineRange);
 }
 
-export function focusTextModel(
-  std: BlockStdScope,
-  id: string,
-  offset: number = 0
-) {
+export function focusTextModel(std: BlockStdScope, id: string, offset: number = 0) {
   std.event.active = true;
   selectTextModel(std, id, offset);
 }
@@ -76,7 +68,7 @@ export function selectTextModel(
   std: BlockStdScope,
   id: string,
   index: number = 0,
-  length: number = 0
+  length: number = 0,
 ) {
   const { selection } = std;
   selection.setGroup('note', [
@@ -90,7 +82,7 @@ export function selectTextModel(
 export async function onModelTextUpdated(
   std: BlockStdScope,
   model: BlockModel,
-  callback?: (text: RichText) => void
+  callback?: (text: RichText) => void,
 ) {
   const richText = await asyncGetRichText(std, model.id);
   if (!richText) {
@@ -117,7 +109,7 @@ export async function onModelTextUpdated(
 export function cleanSpecifiedTail(
   std: BlockStdScope,
   inlineEditorOrModel: InlineEditor | BlockModel,
-  str: string
+  str: string,
 ) {
   if (!str) {
     console.warn('Failed to clean text! Unexpected empty string');
@@ -137,9 +129,7 @@ export function cleanSpecifiedTail(
   const idx = inlineRange.index - str.length;
   const textStr = inlineEditor.yText.toString().slice(idx, idx + str.length);
   if (textStr !== str) {
-    console.warn(
-      `Failed to clean text! Text mismatch expected: ${str} but actual: ${textStr}`
-    );
+    console.warn(`Failed to clean text! Text mismatch expected: ${str} but actual: ${textStr}`);
     return;
   }
   inlineEditor.deleteText({ index: idx, length: str.length });
@@ -151,7 +141,7 @@ export function cleanSpecifiedTail(
 
 export function getTextContentFromInlineRange(
   inlineEditor: InlineEditor,
-  startRange: InlineRange | null
+  startRange: InlineRange | null,
 ) {
   const nativeRange = getCurrentNativeRange();
   if (!nativeRange) {

@@ -13,7 +13,7 @@ export function mergeToCodeModel(models: BlockModel[]) {
   }
   const index = parent.children.indexOf(models[0]);
   const text = models
-    .map(model => {
+    .map((model) => {
       if (model.text instanceof Text) {
         return model.text.toString();
       }
@@ -21,13 +21,8 @@ export function mergeToCodeModel(models: BlockModel[]) {
     })
     .filter(Boolean)
     .join('\n');
-  models.forEach(model => doc.deleteBlock(model));
+  models.forEach((model) => doc.deleteBlock(model));
 
-  const id = doc.addBlock(
-    'ink:code',
-    { text: new Text(text) },
-    parent,
-    index
-  );
+  const id = doc.addBlock('ink:code', { text: new Text(text) }, parent, index);
   return id;
 }

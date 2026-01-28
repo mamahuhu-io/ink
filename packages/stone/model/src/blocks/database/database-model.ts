@@ -1,15 +1,7 @@
 import type { Text } from '@ink/stone-store';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
-import type {
-  ColumnDataType,
-  SerializedCells,
-  ViewBasicDataType,
-} from './types.js';
+import type { ColumnDataType, SerializedCells, ViewBasicDataType } from './types.js';
 
 export type DatabaseBlockProps = {
   views: ViewBasicDataType[];
@@ -39,5 +31,4 @@ export const DatabaseBlockSchema = defineBlockSchema({
   toModel: () => new DatabaseBlockModel(),
 });
 
-export const DatabaseBlockSchemaExtension =
-  BlockSchemaExtension(DatabaseBlockSchema);
+export const DatabaseBlockSchemaExtension = BlockSchemaExtension(DatabaseBlockSchema);

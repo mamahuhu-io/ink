@@ -1,13 +1,13 @@
+import { autoPlacement, offset } from '@floating-ui/dom';
 import { createLitPortal } from '@ink/stone-components/portal';
+import { WithDisposable } from '@ink/stone-global/lit';
+import { ArrowDownSmallIcon } from '@ink/stone-icons/lit';
 import {
   cleanSpecifiedTail,
   getInlineEditorByModel,
   getTextContentFromInlineRange,
 } from '@ink/stone-rich-text';
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
 import type { InkInlineEditor } from '@ink/stone-shared/types';
 import {
   createKeydownObserver,
@@ -17,9 +17,6 @@ import {
   isFuzzyMatch,
   substringMatchScore,
 } from '@ink/stone-shared/utils';
-import { WithDisposable } from '@ink/stone-global/lit';
-import { ArrowDownSmallIcon } from '@ink/stone-icons/lit';
-import { autoPlacement, offset } from '@floating-ui/dom';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -40,12 +37,7 @@ import type {
   SlashMenuItem,
   SlashMenuSubMenu,
 } from './types.js';
-import {
-  isActionItem,
-  isSubMenuItem,
-  parseGroup,
-  slashItemClassName,
-} from './utils.js';
+import { isActionItem, isSubMenuItem, parseGroup, slashItemClassName } from './utils.js';
 type InnerSlashMenuContext = SlashMenuContext & {
   onClickItem: (item: SlashMenuActionItem) => void;
   searching: boolean;
@@ -69,7 +61,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
     cleanSpecifiedTail(
       this.context.std,
       this.context.model,
-      INK_SLASH_MENU_TRIGGER_KEY + (this._query || '')
+      INK_SLASH_MENU_TRIGGER_KEY + (this._query || ''),
     );
     this.inlineEditor
       .waitForUpdate()
@@ -77,10 +69,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
         item.action(this.context);
         this._telemetry?.track('SelectSlashMenuItem', {
           page: this._editorMode ?? undefined,
-          segment:
-            this.context.model.flavour === 'ink:edgeless-text'
-              ? 'edgeless-text'
-              : 'doc',
+          segment: this.context.model.flavour === 'ink:edgeless-text' ? 'edgeless-text' : 'doc',
           module: 'slash menu',
           control: item.name,
         });
@@ -93,9 +82,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
     const traverse = (item: SlashMenuItem, path: number[]) => {
       this._itemPathMap.set(item, [...path]);
       if (isSubMenuItem(item)) {
-        item.subMenu.forEach((subItem, index) =>
-          traverse(subItem, [...path, index])
-        );
+        item.subMenu.forEach((subItem, index) => traverse(subItem, [...path, index]));
       }
     };
 
@@ -129,20 +116,18 @@ export class SlashMenu extends WithDisposable(LitElement) {
     let queue = this.items;
     while (queue.length !== 0) {
       // remove the sub menu item from the previous layer result
-      this._filteredItems = this._filteredItems.filter(
-        item => !isSubMenuItem(item)
-      );
+      this._filteredItems = this._filteredItems.filter((item) => !isSubMenuItem(item));
 
       this._filteredItems = this._filteredItems.concat(
         queue.filter(({ name, searchAlias = [] }) =>
-          [name, ...searchAlias].some(str => isFuzzyMatch(str, searchStr))
-        )
+          [name, ...searchAlias].some((str) => isFuzzyMatch(str, searchStr)),
+        ),
       );
 
       // We search first and second layer
       if (this._filteredItems.length !== 0 && depth >= 1) break;
 
-      queue = queue.flatMap(item => {
+      queue = queue.flatMap((item) => {
         if (isSubMenuItem(item)) {
           return item.subMenu;
         } else {
@@ -154,10 +139,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
     }
 
     this._filteredItems.sort((a, b) => {
-      return -(
-        substringMatchScore(a.name, searchStr) -
-        substringMatchScore(b.name, searchStr)
-      );
+      return -(substringMatchScore(a.name, searchStr) - substringMatchScore(b.name, searchStr));
     });
 
     this._queryState = this._filteredItems.length === 0 ? 'no_result' : 'on';
@@ -174,7 +156,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
 
   constructor(
     private readonly inlineEditor: InkInlineEditor,
-    private readonly abortController = new AbortController()
+    private readonly abortController = new AbortController(),
   ) {
     super();
   }
@@ -190,7 +172,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
 
     this._initItemPathMap();
 
-    this._disposables.addFromEvent(this, 'mousedown', e => {
+    this._disposables.addFromEvent(this, 'mousedown', (e) => {
       // Prevent input from losing focus
       e.preventDefault();
     });
@@ -247,16 +229,14 @@ export class SlashMenu extends WithDisposable(LitElement) {
 
         next();
       },
-      onInput: isComposition => {
+      onInput: (isComposition) => {
         if (isComposition) {
           this._updateFilteredItems();
         } else {
-          const subscription = this.inlineEditor.slots.renderComplete.subscribe(
-            () => {
-              subscription.unsubscribe();
-              this._updateFilteredItems();
-            }
-          );
+          const subscription = this.inlineEditor.slots.renderComplete.subscribe(() => {
+            subscription.unsubscribe();
+            this._updateFilteredItems();
+          });
         }
       },
       onPaste: () => {
@@ -272,12 +252,10 @@ export class SlashMenu extends WithDisposable(LitElement) {
         if (curRange.index < this._startRange.index) {
           this.abortController.abort();
         }
-        const subscription = this.inlineEditor.slots.renderComplete.subscribe(
-          () => {
-            subscription.unsubscribe();
-            this._updateFilteredItems();
-          }
-        );
+        const subscription = this.inlineEditor.slots.renderComplete.subscribe(() => {
+          subscription.unsubscribe();
+          this._updateFilteredItems();
+        });
       },
       onAbort: () => this.abortController.abort(),
     });
@@ -318,10 +296,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
         };
 
     return html`${this._queryState !== 'no_result'
-        ? html` <div
-            class="overlay-mask"
-            @click="${() => this.abortController.abort()}"
-          ></div>`
+        ? html` <div class="overlay-mask" @click="${() => this.abortController.abort()}"></div>`
         : nothing}
       <inner-slash-menu
         .context=${this._innerSlashMenuContext}
@@ -333,8 +308,7 @@ export class SlashMenu extends WithDisposable(LitElement) {
   }
 
   @state()
-  private accessor _filteredItems: (SlashMenuActionItem | SlashMenuSubMenu)[] =
-    [];
+  private accessor _filteredItems: (SlashMenuActionItem | SlashMenuSubMenu)[] = [];
 
   @state()
   private accessor _position: {
@@ -364,9 +338,7 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
   private readonly _openSubMenu = (item: SlashMenuSubMenu) => {
     if (item === this._currentSubMenu) return;
 
-    const itemElement = this.shadowRoot?.querySelector(
-      `.${slashItemClassName(item)}`
-    );
+    const itemElement = this.shadowRoot?.querySelector(`.${slashItemClassName(item)}`);
     if (!itemElement) return;
 
     this._closeSubMenu();
@@ -439,14 +411,11 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
     </icon-button>`;
   };
 
-  private readonly _renderGroup = (
-    groupName: string,
-    items: SlashMenuItem[]
-  ) => {
+  private readonly _renderGroup = (groupName: string, items: SlashMenuItem[]) => {
     return html`<div class="slash-menu-group">
       ${when(
         !this.context.searching,
-        () => html`<div class="slash-menu-group-name">${groupName}</div>`
+        () => html`<div class="slash-menu-group-name">${groupName}</div>`,
       )}
       ${items.map(this._renderItem)}
     </div>`;
@@ -477,15 +446,11 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
       }}
       @touchstart=${() => {
         isSubMenuItem(item) &&
-          (this._currentSubMenu === item
-            ? this._closeSubMenu()
-            : this._openSubMenu(item));
+          (this._currentSubMenu === item ? this._closeSubMenu() : this._openSubMenu(item));
       }}
     >
       ${icon && html`<div class="slash-menu-item-icon">${icon}</div>`}
-      <div slot="suffix" style="transform: rotate(-90deg);">
-        ${ArrowDownSmallIcon()}
-      </div>
+      <div slot="suffix" style="transform: rotate(-90deg);">${ArrowDownSmallIcon()}</div>
     </icon-button>`;
   };
 
@@ -513,16 +478,13 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
     this.abortController?.signal?.addEventListener('abort', () => {
       this._subMenuAbortController?.abort();
     });
-    this.addEventListener('wheel', event => {
+    this.addEventListener('wheel', (event) => {
       if (this._currentSubMenu) {
         event.preventDefault();
       }
     });
 
-    const inlineEditor = getInlineEditorByModel(
-      this.context.std,
-      this.context.model
-    );
+    const inlineEditor = getInlineEditorByModel(this.context.std, this.context.model);
 
     if (!inlineEditor || !inlineEditor.eventSource) {
       console.error('inlineEditor or eventSource is not found');
@@ -531,7 +493,7 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
 
     inlineEditor.eventSource.addEventListener(
       'keydown',
-      event => {
+      (event) => {
         if (this._currentSubMenu) return;
         if (event.isComposing) return;
 
@@ -562,8 +524,7 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
 
         if (moveStep !== 0) {
           const activeItemIndex = this.menu.indexOf(this._activeItem);
-          const itemIndex =
-            (activeItemIndex + moveStep + this.menu.length) % this.menu.length;
+          const itemIndex = (activeItemIndex + moveStep + this.menu.length) % this.menu.length;
 
           this._activeItem = this.menu[itemIndex] as typeof this._activeItem;
           this._scrollToItem(this._activeItem);
@@ -609,7 +570,7 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
       {
         capture: true,
         signal: this.abortController.signal,
-      }
+      },
     );
   }
 
@@ -623,17 +584,11 @@ export class InnerSlashMenu extends WithDisposable(LitElement) {
     const style = styleMap(this.mainMenuStyle ?? { position: 'relative' });
 
     const groups = groupBy(this.menu, ({ group }) =>
-      group && !this.context.searching ? parseGroup(group)[1] : ''
+      group && !this.context.searching ? parseGroup(group)[1] : '',
     );
 
-    return html`<div
-      class="slash-menu"
-      style=${style}
-      data-testid=${`sub-menu-${this.depth}`}
-    >
-      ${Object.entries(groups).map(([groupName, items]) =>
-        this._renderGroup(groupName, items)
-      )}
+    return html`<div class="slash-menu" style=${style} data-testid=${`sub-menu-${this.depth}`}>
+      ${Object.entries(groups).map(([groupName, items]) => this._renderGroup(groupName, items))}
     </div>`;
   }
 

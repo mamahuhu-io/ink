@@ -30,6 +30,4 @@ export type EmbedGithubBlockProps = {
   caption: string | null;
 } & EmbedGithubBlockUrlData;
 
-export class EmbedGithubModel extends defineEmbedModel<EmbedGithubBlockProps>(
-  BlockModel
-) {}
+export class EmbedGithubModel extends defineEmbedModel<EmbedGithubBlockProps>(BlockModel) {}

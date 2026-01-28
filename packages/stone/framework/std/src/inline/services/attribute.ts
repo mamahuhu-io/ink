@@ -31,15 +31,12 @@ export class AttributeService<TextAttributes extends BaseTextAttributes> {
       });
     const maybeAttributesList = deltas.map(([delta]) => delta.attributes);
     if (loose) {
-      return maybeAttributesList.reduce(
-        (acc, cur) => ({ ...acc, ...cur }),
-        {}
-      ) as TextAttributes;
+      return maybeAttributesList.reduce((acc, cur) => ({ ...acc, ...cur }), {}) as TextAttributes;
     }
     if (
       !maybeAttributesList.length ||
       // some text does not have any attribute
-      maybeAttributesList.some(attributes => !attributes)
+      maybeAttributesList.some((attributes) => !attributes)
     ) {
       return {} as TextAttributes;
     }
@@ -72,7 +69,7 @@ export class AttributeService<TextAttributes extends BaseTextAttributes> {
     }
     return Object.fromEntries(
       // filter out undefined values
-      Object.entries(attributeResult.data).filter(([_, v]) => v !== undefined)
+      Object.entries(attributeResult.data).filter(([_, v]) => v !== undefined),
     ) as TextAttributes;
   };
 
@@ -84,9 +81,7 @@ export class AttributeService<TextAttributes extends BaseTextAttributes> {
     this._attributeRenderer = renderer;
   };
 
-  setAttributeSchema = (
-    schema: z.ZodSchema<TextAttributes, ZodTypeDef, unknown>
-  ) => {
+  setAttributeSchema = (schema: z.ZodSchema<TextAttributes, ZodTypeDef, unknown>) => {
     this._attributeSchema = schema;
   };
 

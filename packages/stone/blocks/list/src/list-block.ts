@@ -14,10 +14,7 @@ import { DocModeProvider } from '@ink/stone-shared/services';
 import { getViewportElement } from '@ink/stone-shared/utils';
 import type { BlockComponent } from '@ink/stone-std';
 import { BlockSelection, TextSelection } from '@ink/stone-std';
-import {
-  getInlineRangeProvider,
-  type InlineRangeProvider,
-} from '@ink/stone-std/inline';
+import { getInlineRangeProvider, type InlineRangeProvider } from '@ink/stone-std/inline';
 import type { BaseSelection } from '@ink/stone-store';
 import { effect } from '@preact/signals-core';
 import { html, nothing, type TemplateResult } from 'lit';
@@ -85,20 +82,16 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
 
   override get topContenteditableElement() {
     if (this.std.get(DocModeProvider).getEditorMode() === 'edgeless') {
-      return this.closest<BlockComponent>(
-        EDGELESS_TOP_CONTENTEDITABLE_SELECTOR
-      );
+      return this.closest<BlockComponent>(EDGELESS_TOP_CONTENTEDITABLE_SELECTOR);
     }
     return this.rootComponent;
   }
 
   private _select() {
     const selection = this.host.selection;
-    selection.update(selList => {
+    selection.update((selList) => {
       return selList
-        .filter<BaseSelection>(
-          sel => !sel.is(TextSelection) && !sel.is(BlockSelection)
-        )
+        .filter<BaseSelection>((sel) => !sel.is(TextSelection) && !sel.is(BlockSelection))
         .concat(selection.create(BlockSelection, { blockId: this.blockId }));
     });
   }
@@ -112,7 +105,7 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
       effect(() => {
         const collapsed = this.model.props.collapsed$.value;
         this._readonlyCollapsed = collapsed;
-      })
+      }),
     );
 
     this.disposables.add(
@@ -127,7 +120,7 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
         if (type !== 'numbered' && order !== null) {
           this.model.props.order = null;
         }
-      })
+      }),
     );
   }
 
@@ -142,11 +135,9 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
     const widgets = html`${repeat(
       Object.entries(this.widgets),
       ([id]) => id,
-      ([_, widget]) => widget
+      ([_, widget]) => widget,
     )}`;
-    const collapsed = this.store.readonly
-      ? this._readonlyCollapsed
-      : model.props.collapsed;
+    const collapsed = this.store.readonly ? this._readonlyCollapsed : model.props.collapsed;
 
     const listIcon = getListIcon(model, !collapsed, _onClickIcon);
 
@@ -169,8 +160,7 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
         <div
           class=${classMap({
             'ink-list-rich-text-wrapper': true,
-            'ink-list--checked':
-              this.model.props.type === 'todo' && this.model.props.checked,
+            'ink-list--checked': this.model.props.type === 'todo' && this.model.props.checked,
             [TOGGLE_BUTTON_PARENT_CLASS]: true,
           })}
         >
@@ -204,8 +194,7 @@ export class ListBlockComponent extends CaptionedBlockComponent<ListBlockModel> 
             .inlineRangeProvider=${this._inlineRangeProvider}
             .enableClipboard=${false}
             .enableUndoRedo=${false}
-            .verticalScrollContainerGetter=${() =>
-              getViewportElement(this.host)}
+            .verticalScrollContainerGetter=${() => getViewportElement(this.host)}
           ></rich-text>
         </div>
 

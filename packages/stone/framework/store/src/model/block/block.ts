@@ -39,7 +39,7 @@ export class Block {
     readonly schema: Schema,
     readonly yBlock: YBlock,
     readonly doc?: Store,
-    readonly options: BlockOptions = {}
+    readonly options: BlockOptions = {},
   ) {
     const onChange = !options.onChange
       ? undefined
@@ -52,12 +52,7 @@ export class Block {
     const flavour = yBlock.get('sys:flavour') as string;
     const blockSchema = this.schema.get(flavour);
     if (blockSchema?.model.isFlatData) {
-      this._syncController = new FlatSyncController(
-        schema,
-        yBlock,
-        doc,
-        onChange
-      );
+      this._syncController = new FlatSyncController(schema, yBlock, doc, onChange);
     } else {
       this._syncController = new SyncController(schema, yBlock, doc, onChange);
     }

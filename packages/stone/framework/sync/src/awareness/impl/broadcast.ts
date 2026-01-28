@@ -1,16 +1,11 @@
 import type { Awareness } from 'y-protocols/awareness';
-import {
-  applyAwarenessUpdate,
-  encodeAwarenessUpdate,
-} from 'y-protocols/awareness';
+import { applyAwarenessUpdate, encodeAwarenessUpdate } from 'y-protocols/awareness';
 
 import type { AwarenessSource } from '../source.js';
 
 type AwarenessChanges = Record<'added' | 'updated' | 'removed', number[]>;
 
-type ChannelMessage =
-  | { type: 'connect' }
-  | { type: 'update'; update: Uint8Array };
+type ChannelMessage = { type: 'connect' } | { type: 'update'; update: Uint8Array };
 
 export class BroadcastChannelAwarenessSource implements AwarenessSource {
   awareness: Awareness | null = null;
@@ -22,9 +17,7 @@ export class BroadcastChannelAwarenessSource implements AwarenessSource {
       return;
     }
 
-    const changedClients = Object.values(changes).reduce((res, cur) =>
-      res.concat(cur)
-    );
+    const changedClients = Object.values(changes).reduce((res, cur) => res.concat(cur));
 
     const update = encodeAwarenessUpdate(this.awareness!, changedClients);
     this.channel?.postMessage({
@@ -42,12 +35,9 @@ export class BroadcastChannelAwarenessSource implements AwarenessSource {
     } satisfies ChannelMessage);
     this.awareness = awareness;
     awareness.on('update', this.handleAwarenessUpdate);
-    this.channel.addEventListener(
-      'message',
-      (event: MessageEvent<ChannelMessage>) => {
-        this.handleChannelMessage(event);
-      }
-    );
+    this.channel.addEventListener('message', (event: MessageEvent<ChannelMessage>) => {
+      this.handleChannelMessage(event);
+    });
   }
 
   disconnect(): void {
@@ -64,9 +54,7 @@ export class BroadcastChannelAwarenessSource implements AwarenessSource {
     if (event.data.type === 'connect') {
       this.channel?.postMessage({
         type: 'update',
-        update: encodeAwarenessUpdate(this.awareness!, [
-          this.awareness!.clientID,
-        ]),
+        update: encodeAwarenessUpdate(this.awareness!, [this.awareness!.clientID]),
       } satisfies ChannelMessage);
     }
   }

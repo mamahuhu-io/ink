@@ -1,13 +1,6 @@
-import type {
-  GfxCommonBlockProps,
-  GfxElementGeometry,
-} from '@ink/stone-std/gfx';
+import type { GfxCommonBlockProps, GfxElementGeometry } from '@ink/stone-std/gfx';
 import { GfxCompatible } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 import { z } from 'zod';
 
 import {
@@ -76,9 +69,7 @@ export const EdgelessTextBlockSchema = defineBlockSchema({
   toModel: () => new EdgelessTextBlockModel(),
 });
 
-export const EdgelessTextBlockSchemaExtension = BlockSchemaExtension(
-  EdgelessTextBlockSchema
-);
+export const EdgelessTextBlockSchemaExtension = BlockSchemaExtension(EdgelessTextBlockSchema);
 
 export class EdgelessTextBlockModel
   extends GfxCompatible<EdgelessTextProps>(BlockModel)

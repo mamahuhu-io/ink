@@ -13,8 +13,8 @@ const isMermaidNode = (node: HtmlAST) =>
 
 export const mermaidBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: MermaidBlockSchema.model.flavour,
-  toMatch: o => isMermaidNode(o.node),
-  fromMatch: o => o.node.flavour === MermaidBlockSchema.model.flavour,
+  toMatch: (o) => isMermaidNode(o.node),
+  fromMatch: (o) => o.node.flavour === MermaidBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       const node = o.node as HtmlAST;
@@ -22,12 +22,10 @@ export const mermaidBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 
       if (node.type === 'element' && node.children) {
         const codeNode = node.children.find(
-          (child: HtmlAST) => child.type === 'element' && child.tagName === 'code'
+          (child: HtmlAST) => child.type === 'element' && child.tagName === 'code',
         );
         if (codeNode && codeNode.type === 'element' && codeNode.children) {
-          const textNode = codeNode.children.find(
-            (child: HtmlAST) => child.type === 'text'
-          );
+          const textNode = codeNode.children.find((child: HtmlAST) => child.type === 'text');
           if (textNode && textNode.type === 'text') {
             code = textNode.value || '';
           }
@@ -46,15 +44,14 @@ export const mermaidBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
   },
   fromBlockSnapshot: {
     enter: (o, context) => {
-      const code =
-        'code' in o.node.props ? (o.node.props.code as string) : '';
+      const code = 'code' in o.node.props ? (o.node.props.code as string) : '';
       const { walkerContext } = context;
       walkerContext
         .openNode(
@@ -77,7 +74,7 @@ export const mermaidBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               },
             ],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -85,5 +82,5 @@ export const mermaidBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const MermaidBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  mermaidBlockHtmlAdapterMatcher
+  mermaidBlockHtmlAdapterMatcher,
 );

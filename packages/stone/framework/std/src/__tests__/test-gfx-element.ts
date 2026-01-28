@@ -19,14 +19,14 @@ export class TestShapeElement extends GfxPrimitiveElementModel {
   @field()
   accessor xywh: SerializedXYWH = '[0,0,10,10]';
 
-  @convert(val => {
+  @convert((val) => {
     if (['rect', 'triangle'].includes(val)) {
       return val;
     }
 
     return 'rect';
   })
-  @derive(val => {
+  @derive((val) => {
     if (val === 'triangle') {
       return {
         rotate: 0,

@@ -4,13 +4,10 @@ import {
   showPopFilterableList,
 } from '@ink/stone-components/filterable-list';
 import { ArrowDownIcon } from '@ink/stone-components/icons';
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
-import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { noop } from '@ink/stone-global/utils';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
+import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { BlockSelection } from '@ink/stone-std';
 import { css, LitElement, nothing } from 'lit';
 import { property, query } from 'lit/decorators.js';
@@ -20,9 +17,7 @@ import { html } from 'lit/static-html.js';
 import type { CodeBlockComponent } from '../..';
 import { t } from '../../configs/i18n.js';
 
-export class LanguageListButton extends WithDisposable(
-  SignalWatcher(LitElement)
-) {
+export class LanguageListButton extends WithDisposable(SignalWatcher(LitElement)) {
   static override styles = css`
     .lang-button {
       display: flex;
@@ -69,7 +64,7 @@ export class LanguageListButton extends WithDisposable(
 
     const options: FilterableListOptions = {
       placeholder: t('editor.code.searchLanguage', 'Search for a language'),
-      onSelect: item => {
+      onSelect: (item) => {
         const sortedBundledLanguages = this._sortedBundledLanguages;
         const index = sortedBundledLanguages.indexOf(item);
         if (index !== -1) {
@@ -78,8 +73,7 @@ export class LanguageListButton extends WithDisposable(
         }
 
         const std = this.blockComponent.std;
-        const mode =
-          std.getOptional(DocModeProvider)?.getEditorMode() ?? 'page';
+        const mode = std.getOptional(DocModeProvider)?.getEditorMode() ?? 'page';
         const telemetryService = std.getOptional(TelemetryProvider);
 
         // Auto-convert to Mermaid Block when language is switched to mermaid
@@ -111,7 +105,7 @@ export class LanguageListButton extends WithDisposable(
                 index: codeModel.index,
               },
               parent,
-              index
+              index,
             );
 
             if (!mermaidId) {
@@ -156,7 +150,7 @@ export class LanguageListButton extends WithDisposable(
           });
         }
       },
-      active: item => item.name === this.blockComponent.model.props.language,
+      active: (item) => item.name === this.blockComponent.model.props.language,
       items: this._sortedBundledLanguages,
     };
 
@@ -181,7 +175,7 @@ export class LanguageListButton extends WithDisposable(
     if (langList) {
       this._sortedBundledLanguages = JSON.parse(langList);
     } else {
-      this._sortedBundledLanguages = this.blockComponent.langs.map(lang => ({
+      this._sortedBundledLanguages = this.blockComponent.langs.map((lang) => ({
         label: lang.name,
         name: lang.id,
         aliases: lang.aliases,
@@ -191,7 +185,7 @@ export class LanguageListButton extends WithDisposable(
     this.disposables.add(() => {
       localStorage.setItem(
         'stone:code-block:lang-list',
-        JSON.stringify(this._sortedBundledLanguages)
+        JSON.stringify(this._sortedBundledLanguages),
       );
     });
   }
@@ -210,9 +204,7 @@ export class LanguageListButton extends WithDisposable(
       class="lang-button"
       data-testid="lang-button"
       width="auto"
-      .text=${html`<div style=${textStyles}>
-        ${this.blockComponent.languageName$.value}
-      </div>`}
+      .text=${html`<div style=${textStyles}>${this.blockComponent.languageName$.value}</div>`}
       height="24px"
       @click=${this._clickLangBtn}
       ?disabled=${this.blockComponent.store.readonly}

@@ -1,7 +1,4 @@
-import {
-  createAutoIncrementIdGenerator,
-  TestWorkspace,
-} from '@ink/stone-store/test';
+import { createAutoIncrementIdGenerator, TestWorkspace } from '@ink/stone-store/test';
 import { describe, expect, test } from 'vitest';
 
 import { effects } from '../../effects.js';
@@ -94,12 +91,8 @@ describe('gfx element view basic', () => {
 
     const waitGfxViewConnected = (id: string) => {
       const { promise, resolve } = Promise.withResolvers<void>();
-      const subscription = gfx.std.view.viewUpdated.subscribe(payload => {
-        if (
-          payload.id === id &&
-          payload.type === 'block' &&
-          payload.method === 'add'
-        ) {
+      const subscription = gfx.std.view.viewUpdated.subscribe((payload) => {
+        if (payload.id === id && payload.type === 'block' && payload.method === 'add') {
           subscription.unsubscribe();
           resolve();
         }

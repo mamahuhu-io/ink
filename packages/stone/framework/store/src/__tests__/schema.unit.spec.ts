@@ -22,7 +22,7 @@ function createTestOptions() {
 
 const TestCustomNoteBlockSchema = defineBlockSchema({
   flavour: 'ink:note-block-video',
-  props: internal => ({
+  props: (internal) => ({
     text: internal.Text(),
   }),
   metadata: {
@@ -33,13 +33,11 @@ const TestCustomNoteBlockSchema = defineBlockSchema({
   },
 });
 
-const TestCustomNoteBlockSchemaExtension = BlockSchemaExtension(
-  TestCustomNoteBlockSchema
-);
+const TestCustomNoteBlockSchemaExtension = BlockSchemaExtension(TestCustomNoteBlockSchema);
 
 const TestInvalidNoteBlockSchema = defineBlockSchema({
   flavour: 'ink:note-invalid-block-video',
-  props: internal => ({
+  props: (internal) => ({
     text: internal.Text(),
   }),
   metadata: {
@@ -50,9 +48,7 @@ const TestInvalidNoteBlockSchema = defineBlockSchema({
   },
 });
 
-const TestInvalidNoteBlockSchemaExtension = BlockSchemaExtension(
-  TestInvalidNoteBlockSchema
-);
+const TestInvalidNoteBlockSchemaExtension = BlockSchemaExtension(TestInvalidNoteBlockSchema);
 
 const TestRoleBlockSchema = defineBlockSchema({
   flavour: 'ink:note-block-role-test',
@@ -62,7 +58,7 @@ const TestRoleBlockSchema = defineBlockSchema({
     parent: ['ink:note'],
     children: ['@test'],
   },
-  props: internal => ({
+  props: (internal) => ({
     text: internal.Text(),
   }),
 });
@@ -78,9 +74,7 @@ const TestParagraphBlockSchema = defineBlockSchema({
   },
 });
 
-const TestParagraphBlockSchemaExtension = BlockSchemaExtension(
-  TestParagraphBlockSchema
-);
+const TestParagraphBlockSchemaExtension = BlockSchemaExtension(TestParagraphBlockSchema);
 
 const extensions = [
   RootBlockSchemaExtension,
@@ -107,9 +101,7 @@ function createTestDoc(docId = defaultDocId) {
 
 describe('schema', () => {
   it('should be able to validate schema by role', () => {
-    const consoleMock = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => undefined);
+    const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const doc = createTestDoc();
     const rootId = doc.addBlock('ink:page', {});
     const noteId = doc.addBlock('ink:note', {}, rootId);
@@ -141,9 +133,7 @@ describe('schema', () => {
   });
 
   it('should glob match works', () => {
-    const consoleMock = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => undefined);
+    const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const doc = createTestDoc();
     const rootId = doc.addBlock('ink:page', {});
     const noteId = doc.addBlock('ink:note', {}, rootId);
@@ -161,9 +151,7 @@ describe('schema', () => {
   });
 
   it('should be able to validate schema by role', () => {
-    const consoleMock = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => undefined);
+    const consoleMock = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const doc = createTestDoc();
     const rootId = doc.addBlock('ink:page', {});
     const noteId = doc.addBlock('ink:note', {}, rootId);

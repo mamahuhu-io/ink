@@ -23,12 +23,12 @@ export class BlobEngine {
   constructor(
     readonly main: BlobSource,
     readonly shadows: BlobSource[],
-    readonly logger: Logger
+    readonly logger: Logger,
   ) {}
 
   async delete(_key: string) {
     this.logger.error(
-      'You are trying to delete a blob. We do not support this feature yet. We need to wait until we implement the indexer, which will inform us which doc is using a particular blob so that we can safely delete it.'
+      'You are trying to delete a blob. We do not support this feature yet. We need to wait until we implement the indexer, which will inform us which doc is using a particular blob so that we can safely delete it.',
     );
   }
 
@@ -66,9 +66,7 @@ export class BlobEngine {
     }
 
     const key =
-      typeof valueOrKey === 'string'
-        ? valueOrKey
-        : await sha(await valueOrKey.arrayBuffer());
+      typeof valueOrKey === 'string' ? valueOrKey : await sha(await valueOrKey.arrayBuffer());
     const value = typeof valueOrKey === 'string' ? _value : valueOrKey;
 
     if (!value) {
@@ -81,18 +79,16 @@ export class BlobEngine {
     // uploads to other peers in the background
     Promise.allSettled(
       this.shadows
-        .filter(r => !r.readonly)
-        .map(peer =>
-          peer.set(key, value).catch(err => {
+        .filter((r) => !r.readonly)
+        .map((peer) =>
+          peer.set(key, value).catch((err) => {
             this.logger.error('Error when uploading to peer', err);
-          })
-        )
+          }),
+        ),
     )
-      .then(result => {
+      .then((result) => {
         if (result.some(({ status }) => status === 'rejected')) {
-          this.logger.error(
-            `blob ${key} update finish, but some peers failed to update`
-          );
+          this.logger.error(`blob ${key} update finish, but some peers failed to update`);
         } else {
           this.logger.debug(`blob ${key} update finish`);
         }
@@ -125,7 +121,7 @@ export class BlobEngine {
       }
 
       this.sync()
-        .catch(error => {
+        .catch((error) => {
           this.logger.error('sync blob error', error);
         })
         .finally(() => {
@@ -160,41 +156,37 @@ export class BlobEngine {
           continue;
         }
 
-        const needUpload = mainList.filter(key => !shadowList.includes(key));
+        const needUpload = mainList.filter((key) => !shadowList.includes(key));
         for (const key of needUpload) {
           try {
             const data = await this.main.get(key);
             if (data) {
               await shadow.set(key, data);
             } else {
-              this.logger.error(
-                'data not found when trying upload from main to shadow'
-              );
+              this.logger.error('data not found when trying upload from main to shadow');
             }
           } catch (err) {
             this.logger.error(
               `error when sync ${key} from [${this.main.name}] to [${shadow.name}]`,
-              err
+              err,
             );
           }
         }
       }
 
-      const needDownload = shadowList.filter(key => !mainList.includes(key));
+      const needDownload = shadowList.filter((key) => !mainList.includes(key));
       for (const key of needDownload) {
         try {
           const data = await shadow.get(key);
           if (data) {
             await this.main.set(key, data);
           } else {
-            this.logger.error(
-              'data not found when trying download from shadow to main'
-            );
+            this.logger.error('data not found when trying download from shadow to main');
           }
         } catch (err) {
           this.logger.error(
             `error when sync ${key} from [${shadow.name}] to [${this.main.name}]`,
-            err
+            err,
           );
         }
       }

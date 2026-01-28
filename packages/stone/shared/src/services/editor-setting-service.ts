@@ -20,21 +20,16 @@ export type EditorSetting = z.infer<typeof GeneralSettingSchema>;
 
 export interface EditorSettingService {
   setting$: Signal<DeepPartial<EditorSetting>>;
-  set?: (
-    key: keyof EditorSetting,
-    value: EditorSetting[keyof EditorSetting]
-  ) => void;
+  set?: (key: keyof EditorSetting, value: EditorSetting[keyof EditorSetting]) => void;
 }
 
 export const EditorSettingProvider = createIdentifier<EditorSettingService>(
-  'InkEditorSettingProvider'
+  'InkEditorSettingProvider',
 );
 
-export function EditorSettingExtension(
-  service: EditorSettingService
-): ExtensionType {
+export function EditorSettingExtension(service: EditorSettingService): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.override(EditorSettingProvider, () => service);
     },
   };

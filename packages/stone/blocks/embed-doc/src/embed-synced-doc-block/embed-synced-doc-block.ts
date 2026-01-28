@@ -1,13 +1,8 @@
-import {
-  EmbedBlockComponent,
-  isEmptyDoc,
-} from '@ink/stone-block-embed';
+import { EmbedBlockComponent, isEmptyDoc } from '@ink/stone-block-embed';
 import { Peekable } from '@ink/stone-components/peek';
 import { ViewExtensionManagerIdentifier } from '@ink/stone-ext-loader';
-import {
-  type DocLinkClickedEvent,
-  RefNodeSlotsProvider,
-} from '@ink/stone-inline-reference';
+import { Bound, getCommonBound } from '@ink/stone-global/gfx';
+import { type DocLinkClickedEvent, RefNodeSlotsProvider } from '@ink/stone-inline-reference';
 import {
   type AliasInfo,
   type DocMode,
@@ -26,13 +21,7 @@ import {
   ThemeProvider,
 } from '@ink/stone-shared/services';
 import { cloneReferenceInfo } from '@ink/stone-shared/utils';
-import { Bound, getCommonBound } from '@ink/stone-global/gfx';
-import {
-  BlockSelection,
-  BlockStdScope,
-  type EditorHost,
-  LifeCycleWatcher,
-} from '@ink/stone-std';
+import { BlockSelection, BlockStdScope, type EditorHost, LifeCycleWatcher } from '@ink/stone-std';
 import { GfxControllerIdentifier, GfxExtension } from '@ink/stone-std/gfx';
 import { type GetStoreOptions, type Query, Text } from '@ink/stone-store';
 import { computed, signal } from '@preact/signals-core';
@@ -63,9 +52,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
     const fitToContent = () => {
       if (this.isPageMode) return;
 
-      const controller = this.syncedDocEditorHost?.std.getOptional(
-        GfxControllerIdentifier
-      );
+      const controller = this.syncedDocEditorHost?.std.getOptional(GfxControllerIdentifier);
       if (!controller) return;
 
       const viewport = controller.viewport;
@@ -73,18 +60,14 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
 
       if (!this._cachedBounds) {
         this._cachedBounds = getCommonBound([
-          ...controller.layer.blocks.map(block =>
-            Bound.deserialize(block.xywh)
-          ),
+          ...controller.layer.blocks.map((block) => Bound.deserialize(block.xywh)),
           ...controller.layer.canvasElements,
         ]);
       }
 
       viewport.onResize();
 
-      const { centerX, centerY, zoom } = viewport.getFitToScreenData(
-        this._cachedBounds
-      );
+      const { centerX, centerY, zoom } = viewport.getFitToScreenData(this._cachedBounds);
       viewport.setCenter(centerX, centerY);
       viewport.setZoom(zoom);
     };
@@ -98,9 +81,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
       observer.disconnect();
     });
 
-    this.syncedDocEditorHost?.updateComplete
-      .then(() => fitToContent())
-      .catch(() => {});
+    this.syncedDocEditorHost?.updateComplete.then(() => fitToContent()).catch(() => {});
   };
 
   private readonly _pageFilter: Query = {
@@ -130,11 +111,8 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
 
       override mounted(): void {
         const { view } = this.std;
-        view.viewUpdated.subscribe(payload => {
-          if (
-            payload.type !== 'block' ||
-            payload.view.model.flavour !== 'ink:embed-synced-doc'
-          ) {
+        view.viewUpdated.subscribe((payload) => {
+          if (payload.type !== 'block' || payload.view.model.flavour !== 'ink:embed-synced-doc') {
             return;
           }
           const nextComponent = payload.view as EmbedSyncedDocBlockComponent;
@@ -245,15 +223,10 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
             ${isPageMode && this._isEmptySyncedDoc
               ? html`
                   <div class="ink-embed-synced-doc-editor-empty">
-                    <span>
-                      This is a linked doc, you can add content here.
-                    </span>
+                    <span> This is a linked doc, you can add content here. </span>
                   </div>
                 `
-              : guard(
-                  [editorMode, syncedDoc, appTheme, edgelessTheme],
-                  renderEditor
-                )}
+              : guard([editorMode, syncedDoc, appTheme, edgelessTheme], renderEditor)}
           </div>
           <div
             class=${classMap({
@@ -262,14 +235,12 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
             })}
           >
             <div class="ink-embed-synced-doc-header">
-              <span class="ink-embed-synced-doc-icon"
-                >${this.icon$.value}</span
-              >
+              <span class="ink-embed-synced-doc-icon">${this.icon$.value}</span>
               <span class="ink-embed-synced-doc-title">${this.title$}</span>
             </div>
           </div>
         </div>
-      `
+      `,
     );
   };
 
@@ -285,9 +256,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
 
     const parent = store.getParent(this.model);
     if (!parent) {
-      console.error(
-        `Trying to convert synced doc to card, but the parent is not found.`
-      );
+      console.error(`Trying to convert synced doc to card, but the parent is not found.`);
       return;
     }
     const index = parent.children.indexOf(this.model);
@@ -296,23 +265,19 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
       'ink:embed-linked-doc',
       { caption, ...this.referenceInfo, ...aliasInfo },
       parent,
-      index
+      index,
     );
 
     store.deleteBlock(this.model);
 
-    this.std.selection.setGroup('note', [
-      this.std.selection.create(BlockSelection, { blockId }),
-    ]);
+    this.std.selection.setGroup('note', [this.std.selection.create(BlockSelection, { blockId })]);
   };
 
   convertToInline = () => {
     const { store } = this.model;
     const parent = store.getParent(this.model);
     if (!parent) {
-      console.error(
-        `Trying to convert synced doc to inline, but the parent is not found.`
-      );
+      console.error(`Trying to convert synced doc to inline, but the parent is not found.`);
       return;
     }
     const index = parent.children.indexOf(this.model);
@@ -333,7 +298,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
         text,
       },
       parent,
-      index
+      index,
     );
 
     store.deleteBlock(this.model);
@@ -345,9 +310,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
 
   icon$ = computed(() => {
     const { pageId, params } = this.model.props;
-    return this.std
-      .get(DocDisplayMetaProvider)
-      .icon(pageId, { params, referenced: true }).value;
+    return this.std.get(DocDisplayMetaProvider).icon(pageId, { params, referenced: true }).value;
   });
 
   open = (event?: Partial<DocLinkClickedEvent>) => {
@@ -364,7 +327,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
       .then(() => {
         this._isEmptySyncedDoc = isEmptyDoc(this.syncedDoc, this.editorMode);
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
         this._error = true;
       });
@@ -372,9 +335,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
 
   title$ = computed(() => {
     const { pageId, params } = this.model.props;
-    return this.std
-      .get(DocDisplayMetaProvider)
-      .title(pageId, { params, referenced: true });
+    return this.std.get(DocDisplayMetaProvider).title(pageId, { params, referenced: true });
   });
 
   get blockState() {
@@ -420,17 +381,12 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
   private _checkCycle() {
     let editorHost: EditorHost | null = this.host;
     while (editorHost && !this._cycle) {
-      this._cycle =
-        !!editorHost && editorHost.store.id === this.model.props.pageId;
+      this._cycle = !!editorHost && editorHost.store.id === this.model.props.pageId;
       editorHost = editorHost.parentElement?.closest('editor-host') ?? null;
     }
   }
 
-  private _isClickAtBorder(
-    event: MouseEvent,
-    element: HTMLElement,
-    tolerance = 8
-  ): boolean {
+  private _isClickAtBorder(event: MouseEvent, element: HTMLElement, tolerance = 8): boolean {
     const { x, y } = event;
     const rect = element.getBoundingClientRect();
     if (!rect) {
@@ -471,7 +427,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
     }
 
     if (!this._error && !syncedDoc.root) {
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         const subscription = syncedDoc.slots.rootAdded.subscribe(() => {
           subscription.unsubscribe();
           resolve();
@@ -507,7 +463,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
     this._cardStyle = this.model.props.style;
 
     this.style.display = 'block';
-    this._load().catch(e => {
+    this._load().catch((e) => {
       console.error(e);
       this._error = true;
     });
@@ -517,12 +473,12 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
     this.disposables.add(
       this.model.propsUpdated.subscribe(({ key }) => {
         if (key === 'pageId' || key === 'style') {
-          this._load().catch(e => {
+          this._load().catch((e) => {
             console.error(e);
             this._error = true;
           });
         }
-      })
+      }),
     );
 
     this._setDocUpdatedAt();
@@ -530,7 +486,7 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
       this.store.workspace.slots.docListUpdated.subscribe(() => {
         this._setDocUpdatedAt();
         this.refreshData();
-      })
+      }),
     );
 
     if (!this.linkedMode) {
@@ -538,23 +494,24 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
       this.syncedDocMode = docMode.getPrimaryMode(this.model.props.pageId);
       this._isEmptySyncedDoc = isEmptyDoc(this.syncedDoc, this.editorMode);
       this.disposables.add(
-        docMode.onPrimaryModeChange(mode => {
+        docMode.onPrimaryModeChange((mode) => {
           this.syncedDocMode = mode;
           this._isEmptySyncedDoc = isEmptyDoc(this.syncedDoc, this.editorMode);
-        }, this.model.props.pageId)
+        }, this.model.props.pageId),
       );
     }
 
-    this.syncedDoc &&
+    if (this.syncedDoc) {
       this.disposables.add(
         this.syncedDoc.slots.blockUpdated.subscribe(() => {
           this._isEmptySyncedDoc = isEmptyDoc(this.syncedDoc, this.editorMode);
-        })
+        }),
       );
+    }
   }
 
   override firstUpdated() {
-    this.disposables.addFromEvent(this, 'click', e => {
+    this.disposables.addFromEvent(this, 'click', (e) => {
       e.stopPropagation();
       if (this._isClickAtBorder(e, this)) {
         e.preventDefault();
@@ -570,25 +527,20 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
     const { isLoading, isError, isDeleted, isCycle } = this.blockState;
     const isCardOnly = this.depth >= 1;
 
-    if (
-      isLoading ||
-      isError ||
-      isDeleted ||
-      isCardOnly ||
-      isCycle ||
-      !syncedDoc
-    ) {
+    if (isLoading || isError || isDeleted || isCardOnly || isCycle || !syncedDoc) {
       return this.renderEmbed(
         () => html`
           <ink-embed-synced-doc-card
             style=${this.cardStyleMap}
             .block=${this}
           ></ink-embed-synced-doc-card>
-        `
+        `,
       );
     }
 
-    !this._hasRenderedSyncedView && (this._hasRenderedSyncedView = true);
+    if (!this._hasRenderedSyncedView) {
+      this._hasRenderedSyncedView = true;
+    }
 
     return this._renderSyncedView();
   }
@@ -626,13 +578,11 @@ export class EmbedSyncedDocBlockComponent extends EmbedBlockComponent<EmbedSynce
   @state()
   accessor depth = 0;
 
-  @query(
-    ':scope > .ink-block-component > .embed-block-container > ink-embed-synced-doc-card'
-  )
+  @query(':scope > .ink-block-component > .embed-block-container > ink-embed-synced-doc-card')
   accessor syncedDocCard: EmbedSyncedDocCard | null = null;
 
   @query(
-    ':scope > .ink-block-component > .embed-block-container > .ink-embed-synced-doc-container > .ink-embed-synced-doc-editor > div > editor-host'
+    ':scope > .ink-block-component > .embed-block-container > .ink-embed-synced-doc-container > .ink-embed-synced-doc-editor > div > editor-host',
   )
   accessor syncedDocEditorHost: EditorHost | null = null;
 

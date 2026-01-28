@@ -1,7 +1,4 @@
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type StoreExtensionContext, StoreExtensionProvider } from '@ink/stone-ext-loader';
 import { CodeBlockSchemaExtension } from '@ink/stone-model';
 
 import { CodeBlockAdapterExtensions } from './adapters/extension.js';
@@ -20,7 +17,7 @@ export class CodeStoreExtension extends StoreExtensionProvider {
       CodeBlockConfigExtension({
         showLineNumbers: true,
         enableWordWrap: false,
-      })
+      }),
     );
   }
 }

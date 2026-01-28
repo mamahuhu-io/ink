@@ -1,20 +1,14 @@
 import { DisposableGroup } from '@ink/stone-global/disposable';
 
 import { onSurfaceAdded } from '../../utils/gfx.js';
-import {
-  type GfxBlockComponent,
-  isGfxBlockComponent,
-} from '../../view/index.js';
+import { type GfxBlockComponent, isGfxBlockComponent } from '../../view/index.js';
 import type { GfxController } from '../controller.js';
 import { GfxExtension, GfxExtensionIdentifier } from '../extension.js';
 import type { GfxModel } from '../model/model.js';
 import type { GfxPrimitiveElementModel } from '../model/surface/element-model.js';
 import type { GfxLocalElementModel } from '../model/surface/local-element-model.js';
 import type { SurfaceBlockModel } from '../model/surface/surface-model.js';
-import {
-  GfxElementModelView,
-  GfxElementModelViewExtIdentifier,
-} from './view.js';
+import { GfxElementModelView, GfxElementModelViewExtIdentifier } from './view.js';
 
 export class ViewManager extends GfxExtension {
   static override key = 'viewManager';
@@ -38,7 +32,7 @@ export class ViewManager extends GfxExtension {
   }
 
   get(
-    model: GfxModel | GfxLocalElementModel | string
+    model: GfxModel | GfxLocalElementModel | string,
   ): GfxElementModelView | GfxBlockComponent | null {
     model = typeof model === 'string' ? model : model.id;
 
@@ -56,18 +50,13 @@ export class ViewManager extends GfxExtension {
   }
 
   override mounted(): void {
-    this.std.provider
-      .getAll(GfxElementModelViewExtIdentifier)
-      .forEach(viewCtor => {
-        this._viewCtorMap.set(viewCtor.type, viewCtor);
-      });
+    this.std.provider.getAll(GfxElementModelViewExtIdentifier).forEach((viewCtor) => {
+      this._viewCtorMap.set(viewCtor.type, viewCtor);
+    });
 
     const updateViewOnElementChange = (surface: SurfaceBlockModel) => {
-      const createView = (
-        model: GfxPrimitiveElementModel | GfxLocalElementModel
-      ) => {
-        const ViewCtor =
-          this._viewCtorMap.get(model.type) ?? GfxElementModelView;
+      const createView = (model: GfxPrimitiveElementModel | GfxLocalElementModel) => {
+        const ViewCtor = this._viewCtorMap.get(model.type) ?? GfxElementModelView;
         const view = new ViewCtor(model, this.gfx);
 
         this._viewMap.set(model.id, view);
@@ -75,39 +64,39 @@ export class ViewManager extends GfxExtension {
       };
 
       this._disposable.add(
-        surface.elementAdded.subscribe(payload => {
+        surface.elementAdded.subscribe((payload) => {
           const model = surface.getElementById(payload.id)!;
           createView(model);
-        })
+        }),
       );
 
       this._disposable.add(
-        surface.elementRemoved.subscribe(elem => {
+        surface.elementRemoved.subscribe((elem) => {
           const view = this._viewMap.get(elem.id);
           this._viewMap.delete(elem.id);
           view?.onDestroyed();
-        })
+        }),
       );
 
       this._disposable.add(
-        surface.localElementAdded.subscribe(model => {
+        surface.localElementAdded.subscribe((model) => {
           createView(model);
-        })
+        }),
       );
 
       this._disposable.add(
-        surface.localElementDeleted.subscribe(model => {
+        surface.localElementDeleted.subscribe((model) => {
           const view = this._viewMap.get(model.id);
           this._viewMap.delete(model.id);
           view?.onDestroyed();
-        })
+        }),
       );
 
-      surface.localElementModels.forEach(model => {
+      surface.localElementModels.forEach((model) => {
         createView(model);
       });
 
-      surface.elementModels.forEach(model => {
+      surface.elementModels.forEach((model) => {
         createView(model);
       });
     };
@@ -116,18 +105,18 @@ export class ViewManager extends GfxExtension {
       updateViewOnElementChange(this.gfx.surface);
     } else {
       this._disposable.add(
-        onSurfaceAdded(this.std.store, surface => {
+        onSurfaceAdded(this.std.store, (surface) => {
           if (surface) {
             updateViewOnElementChange(surface);
           }
-        })
+        }),
       );
     }
   }
 
   override unmounted(): void {
     this._disposable.dispose();
-    this._viewMap.forEach(view => view.onDestroyed());
+    this._viewMap.forEach((view) => view.onDestroyed());
     this._viewMap.clear();
   }
 }

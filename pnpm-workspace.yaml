@@ -1,22 +1,22 @@
 packages:
   # Apps
-  - "apps/*"
+  - 'apps/*'
 
   # Stone - 编辑器引擎
-  - "packages/stone/core"
-  - "packages/stone/model"
-  - "packages/stone/shared"
-  - "packages/stone/components"
-  - "packages/stone/rich-text"
-  - "packages/stone/foundation"
-  - "packages/stone/ext-loader"
-  - "packages/stone/blocks/*"
-  - "packages/stone/widgets/*"
-  - "packages/stone/inlines/*"
-  - "packages/stone/fragments/*"
-  - "packages/stone/framework/*"
-  - "packages/stone/icons"
-  - "packages/stone/theme"
+  - 'packages/stone/core'
+  - 'packages/stone/model'
+  - 'packages/stone/shared'
+  - 'packages/stone/components'
+  - 'packages/stone/rich-text'
+  - 'packages/stone/foundation'
+  - 'packages/stone/ext-loader'
+  - 'packages/stone/blocks/*'
+  - 'packages/stone/widgets/*'
+  - 'packages/stone/inlines/*'
+  - 'packages/stone/fragments/*'
+  - 'packages/stone/framework/*'
+  - 'packages/stone/icons'
+  - 'packages/stone/theme'
 
   # Well - AI 功能 (预留)
-  - "packages/well/*"
+  - 'packages/well/*'

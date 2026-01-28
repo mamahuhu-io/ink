@@ -8,13 +8,7 @@ import type {
   PointTestOptions,
   SerializedElement,
 } from '@ink/stone-std/gfx';
-import {
-  convert,
-  field,
-  GfxGroupLikeElementModel,
-  observe,
-  watch,
-} from '@ink/stone-std/gfx';
+import { convert, field, GfxGroupLikeElementModel, observe, watch } from '@ink/stone-std/gfx';
 import { generateKeyBetween } from 'fractional-indexing';
 import last from 'lodash-es/last';
 import pick from 'lodash-es/pick';
@@ -96,30 +90,23 @@ type MindmapElementProps = BaseElementProps & {
 function observeChildren(
   _: unknown,
   instance: MindmapElementModel,
-  transaction: Y.Transaction | null
+  transaction: Y.Transaction | null,
 ) {
   if (instance.children.doc) {
-    instance.setChildIds(
-      Array.from(instance.children.keys()),
-      transaction?.local ?? true
-    );
+    instance.setChildIds(Array.from(instance.children.keys()), transaction?.local ?? true);
 
     instance.buildTree();
     instance.connectors.clear();
   }
 }
 
-function watchLayoutType(
-  _: unknown,
-  instance: MindmapElementModel,
-  local: boolean
-) {
+function watchLayoutType(_: unknown, instance: MindmapElementModel, local: boolean) {
   if (!local) {
     return;
   }
 
   instance.surface.store.transact(() => {
-    instance['_tree']?.children.forEach(child => {
+    instance['_tree']?.children.forEach((child) => {
       if (!instance.children.has(child.id)) {
         return;
       }
@@ -185,10 +172,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       const children: Y.Map<NodeDetail> = new Y.Map();
 
       Object.entries(props.children).forEach(([key, value]) => {
-        const detail = pick<Record<string, unknown>, keyof NodeDetail>(value, [
-          'index',
-          'parent',
-        ]);
+        const detail = pick<Record<string, unknown>, keyof NodeDetail>(value, ['index', 'parent']);
         children.set(key as string, detail as NodeDetail);
       });
 
@@ -225,7 +209,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
           layout: LayoutType;
           collapsed: boolean;
         },
-    updateKey: boolean = true
+    updateKey: boolean = true,
   ) {
     const hasFromTo = 'to' in options;
     const { connector, from, layout } = options;
@@ -269,7 +253,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     parent: string | MindmapNode | null,
     sibling?: string | number,
     position: 'before' | 'after' = 'after',
-    props: Record<string, unknown> = {}
+    props: Record<string, unknown> = {},
   ) {
     if (parent && typeof parent !== 'string') {
       parent = parent.id;
@@ -300,13 +284,8 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
             : sibling
               ? this._nodeMap.get(sibling)
               : undefined;
-        const path = siblingNode
-          ? this.getPath(siblingNode)
-          : this.getPath(parentNode).concat([0]);
-        const style = this.styleGetter.getNodeStyle(
-          siblingNode ?? parentNode,
-          path
-        );
+        const path = siblingNode ? this.getPath(siblingNode) : this.getPath(parentNode).concat([0]);
+        const style = this.styleGetter.getNodeStyle(siblingNode ?? parentNode, path);
 
         id = this.surface.addElement({
           type,
@@ -317,19 +296,17 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
         });
 
         if (siblingNode) {
-          const siblingIndex = parentNode.children.findIndex(
-            val => val.id === sibling
-          );
+          const siblingIndex = parentNode.children.findIndex((val) => val.id === sibling);
 
           index =
             position === 'after'
               ? generateKeyBetween(
                   siblingNode.detail.index,
-                  parentNode.children[siblingIndex + 1]?.detail.index ?? null
+                  parentNode.children[siblingIndex + 1]?.detail.index ?? null,
                 )
               : generateKeyBetween(
                   parentNode.children[siblingIndex - 1]?.detail.index ?? null,
-                  siblingNode.detail.index
+                  siblingNode.detail.index,
                 );
         }
 
@@ -416,13 +393,9 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       }
     });
 
-    mindmapNodeMap.forEach(node => {
+    mindmapNodeMap.forEach((node) => {
       node.children.sort((a, b) =>
-        a.detail.index === b.detail.index
-          ? 0
-          : a.detail.index > b.detail.index
-            ? 1
-            : -1
+        a.detail.index === b.detail.index ? 0 : a.detail.index > b.detail.index ? 1 : -1,
       );
     });
 
@@ -434,9 +407,9 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
 
     if (loops.length) {
       this.surface.store.withoutTransact(() => {
-        loops.forEach(loop => {
+        loops.forEach((loop) => {
           if (loop.detached) {
-            loop.chain.forEach(node => {
+            loop.chain.forEach((node) => {
               this.children.delete(node.id);
             });
           } else {
@@ -459,8 +432,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     if (this.layoutType === LayoutType.BALANCE) {
       this._cfgBalanceLayoutDir();
     } else {
-      this._tree[this.layoutType === LayoutType.RIGHT ? 'right' : 'left'] =
-        this._tree.children;
+      this._tree[this.layoutType === LayoutType.RIGHT ? 'right' : 'left'] = this._tree.children;
     }
   }
 
@@ -496,12 +468,11 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     if (node.detail.collapsed) {
       const id = `#${node.id}-collapsed`;
       const layout = this.getLayoutDir(node)!;
-      const connector =
-        this.connectors.get(id) ?? new LocalConnectorElementModel(this.surface);
+      const connector = this.connectors.get(id) ?? new LocalConnectorElementModel(this.surface);
       const connectorExist = this.connectors.has(id);
       const connectorStyle = this.styleGetter.getNodeStyle(
         node,
-        this.getPath(node).concat([0])
+        this.getPath(node).concat([0]),
       ).connector;
       const outdated = this._isConnectorOutdated({
         connector,
@@ -540,17 +511,12 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       return [{ outdated, connector }];
     } else {
       const from = node;
-      return from.children.map(to => {
+      return from.children.map((to) => {
         const layout = this.getLayoutDir(to)!;
         const id = `#${from.id}-${to.id}`;
         const connectorExist = this.connectors.has(id);
-        const connectorStyle = this.styleGetter.getNodeStyle(
-          to,
-          this.getPath(to)
-        ).connector;
-        const connector =
-          this.connectors.get(id) ??
-          new LocalConnectorElementModel(this.surface);
+        const connectorStyle = this.styleGetter.getNodeStyle(to, this.getPath(to)).connector;
+        const connector = this.connectors.get(id) ?? new LocalConnectorElementModel(this.surface);
         const outdated = this._isConnectorOutdated({
           connector,
           from,
@@ -650,9 +616,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
    * ```
    */
   getPath(element: string | MindmapNode) {
-    let node = this._nodeMap.get(
-      typeof element === 'string' ? element : element.id
-    );
+    let node = this._nodeMap.get(typeof element === 'string' ? element : element.id);
 
     if (!node) {
       throw new Error('Node not found');
@@ -679,7 +643,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
      * The subtree of which that the sibling node belongs to,
      * this is used when the layout type is BALANCED.
      */
-    subtree?: 'left' | 'right'
+    subtree?: 'left' | 'right',
   ) {
     const node = this._nodeMap.get(id);
 
@@ -694,9 +658,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     }
 
     const childrenTree =
-      subtree && parent.id === this._tree.id
-        ? this._tree[subtree]
-        : parent.children;
+      subtree && parent.id === this._tree.id ? this._tree[subtree] : parent.children;
     const idx = childrenTree.indexOf(node);
     if (idx === -1) {
       return null;
@@ -729,7 +691,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       applyStyle: true,
       calculateTreeBound: true,
       stashed: true,
-    }
+    },
   ) {
     // should be implemented by the view
     // otherwise, it would be just an empty function
@@ -740,13 +702,12 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
 
   moveTo(targetXYWH: SerializedXYWH | XYWH) {
     const { x, y } = this;
-    const targetPos =
-      typeof targetXYWH === 'string' ? deserializeXYWH(targetXYWH) : targetXYWH;
+    const targetPos = typeof targetXYWH === 'string' ? deserializeXYWH(targetXYWH) : targetXYWH;
     const offsetX = targetPos[0] - x;
     const offsetY = targetPos[1] - y;
 
     this.surface.store.transact(() => {
-      this.childElements.forEach(el => {
+      this.childElements.forEach((el) => {
         const deserializedXYWH = deserializeXYWH(el.xywh);
 
         el.xywh =
@@ -767,7 +728,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     const surface = this.surface;
     const removedDescendants: string[] = [];
     const remove = (node: MindmapNode) => {
-      node.children?.forEach(child => {
+      node.children?.forEach((child) => {
         remove(child);
       });
 
@@ -780,7 +741,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
     });
 
     queueMicrotask(() => {
-      removedDescendants.forEach(id => surface.deleteElement(id));
+      removedDescendants.forEach((id) => surface.deleteElement(id));
     });
 
     // This transaction may not end
@@ -839,7 +800,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       stashed.add(node.element);
 
       if (node.children.length) {
-        node.children.forEach(child => traverse(child));
+        node.children.forEach((child) => traverse(child));
       }
     };
 
@@ -847,7 +808,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
 
     return () => {
       this._stashedNode.delete(mindNode.id);
-      stashed.forEach(el => {
+      stashed.forEach((el) => {
         el.pop('xywh');
       });
     };
@@ -871,7 +832,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
           return;
         }
 
-        node.children.forEach(child => {
+        node.children.forEach((child) => {
           changeNodesVisibility(child);
         });
       };
@@ -893,7 +854,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
   traverse(
     callback: (node: MindmapNode, parent: MindmapNode | null) => void,
     root: MindmapNode = this._tree,
-    options: { stopOnCollapse?: boolean } = {}
+    options: { stopOnCollapse?: boolean } = {},
   ) {
     const { stopOnCollapse = false } = options;
     const traverse = (node: MindmapNode, parent: MindmapNode | null) => {
@@ -903,7 +864,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
         return;
       }
 
-      node?.children.forEach(child => {
+      node?.children.forEach((child) => {
         traverse(child, node);
       });
     };
@@ -922,11 +883,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
       const map: Y.Map<NodeDetail> = new Y.Map();
       const surface = instance.surface;
       const doc = surface.store;
-      const recursive = (
-        node: NodeType,
-        parent: string | null = null,
-        index: string = 'a0'
-      ) => {
+      const recursive = (node: NodeType, parent: string | null = null, index: string = 'a0') => {
         const id = surface.addElement({
           type: 'shape',
           text: node.text,
@@ -939,7 +896,7 @@ export class MindmapElementModel extends GfxGroupLikeElementModel<MindmapElement
         });
 
         let curIdx = 'a0';
-        node.children?.forEach(childNode => {
+        node.children?.forEach((childNode) => {
           recursive(childNode, id, curIdx);
           curIdx = generateKeyBetween(curIdx, null);
         });

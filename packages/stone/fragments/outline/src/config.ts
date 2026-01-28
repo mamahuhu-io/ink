@@ -1,4 +1,3 @@
-import type { ParagraphBlockModel } from '@ink/stone-model';
 import {
   AttachmentIcon,
   BlockIcon,
@@ -19,6 +18,7 @@ import {
   QuoteIcon,
   TextIcon,
 } from '@ink/stone-icons/lit';
+import type { ParagraphBlockModel } from '@ink/stone-model';
 import type { EditorHost } from '@ink/stone-std';
 import { createContext } from '@lit/context';
 import type { Signal } from '@preact/signals-core';
@@ -26,10 +26,7 @@ import type { TemplateResult } from 'lit';
 
 const _16px = { width: '16px', height: '16px' };
 
-const paragraphIconMap: Record<
-  ParagraphBlockModel['props']['type'],
-  TemplateResult<1>
-> = {
+const paragraphIconMap: Record<ParagraphBlockModel['props']['type'], TemplateResult<1>> = {
   quote: QuoteIcon(_16px),
   text: TextIcon(_16px),
   h1: Heading1Icon(_16px),
@@ -54,10 +51,7 @@ export const previewIconMap = {
   attachment: AttachmentIcon(_16px),
 };
 
-const paragraphPlaceholderMap: Record<
-  ParagraphBlockModel['props']['type'],
-  string
-> = {
+const paragraphPlaceholderMap: Record<ParagraphBlockModel['props']['type'], string> = {
   quote: 'Quote',
   text: 'Text Block',
   h1: 'Heading 1',
@@ -82,7 +76,7 @@ export const placeholderMap = {
 };
 
 export const headingKeys = new Set(
-  Object.keys(paragraphPlaceholderMap).filter(key => key.startsWith('h'))
+  Object.keys(paragraphPlaceholderMap).filter((key) => key.startsWith('h')),
 );
 
 export const outlineSettingsKey = 'outlinePanelSettings';

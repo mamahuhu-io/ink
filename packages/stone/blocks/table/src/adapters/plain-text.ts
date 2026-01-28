@@ -15,7 +15,7 @@ import { createTableProps, formatTable, processTable } from './utils.js';
 export const tableBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   flavour: TableBlockSchema.model.flavour,
   toMatch: () => true,
-  fromMatch: o => o.node.flavour === TableBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === TableBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       const { walkerContext } = context;
@@ -25,7 +25,7 @@ export const tableBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
       const rowTextLists: DeltaInsert[][][] = [];
       let columnCount: number | null = null;
       for (const row of rowTexts) {
-        const cells = row.split('\t').map<DeltaInsert[]>(text => [
+        const cells = row.split('\t').map<DeltaInsert[]>((text) => [
           {
             insert: text,
           },
@@ -57,13 +57,10 @@ export const tableBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
     enter: (o, context) => {
       const { walkerContext, deltaConverter } = context;
       const result: string[][] = [];
-      const { columns, rows, cells } = o.node
-        .props as unknown as TableBlockPropsSerialized;
+      const { columns, rows, cells } = o.node.props as unknown as TableBlockPropsSerialized;
       const table = processTable(columns, rows, cells);
-      table.rows.forEach(v => {
-        result.push(
-          v.cells.map(v => deltaConverter.deltaToAST(v.value.delta).join(''))
-        );
+      table.rows.forEach((v) => {
+        result.push(v.cells.map((v) => deltaConverter.deltaToAST(v.value.delta).join('')));
       });
 
       const tableString = formatTable(result);
@@ -75,5 +72,6 @@ export const tableBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   },
 };
 
-export const TableBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(tableBlockPlainTextAdapterMatcher);
+export const TableBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  tableBlockPlainTextAdapterMatcher,
+);

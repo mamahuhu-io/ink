@@ -1,33 +1,24 @@
-import {
-  type Color,
-  ColorScheme,
-  DefaultTheme,
-  resolveColor,
-} from '@ink/stone-model';
 import { type Container, createIdentifier } from '@ink/stone-global/di';
+import { type Color, ColorScheme, DefaultTheme, resolveColor } from '@ink/stone-model';
 import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import { Extension } from '@ink/stone-store';
-import { type Signal, signal } from '@preact/signals-core';
 import {
-  type InkCssVariables,
   combinedDarkCssVariables,
   combinedLightCssVariables,
+  type InkCssVariables,
 } from '@ink/stone-theme';
+import { type Signal, signal } from '@preact/signals-core';
 
 import { isInsideEdgelessEditor } from '../utils/dom';
 
-export const ThemeExtensionIdentifier = createIdentifier<ThemeExtension>(
-  'InkThemeExtension'
-);
+export const ThemeExtensionIdentifier = createIdentifier<ThemeExtension>('InkThemeExtension');
 
 export interface ThemeExtension {
   getAppTheme?: () => Signal<ColorScheme>;
   getEdgelessTheme?: (docId?: string) => Signal<ColorScheme>;
 }
 
-export const ThemeProvider = createIdentifier<ThemeService>(
-  'InkThemeProvider'
-);
+export const ThemeProvider = createIdentifier<ThemeService>('InkThemeProvider');
 
 export class ThemeService extends Extension {
   app$: Signal<ColorScheme>;
@@ -54,9 +45,7 @@ export class ThemeService extends Extension {
     super();
     const extension = this.std.getOptional(ThemeExtensionIdentifier);
     this.app$ = extension?.getAppTheme?.() || getThemeObserver().theme$;
-    this.edgeless$ =
-      extension?.getEdgelessTheme?.(this.std.store.id) ||
-      getThemeObserver().theme$;
+    this.edgeless$ = extension?.getEdgelessTheme?.(this.std.store.id) || getThemeObserver().theme$;
   }
 
   static override setup(di: Container) {
@@ -85,15 +74,13 @@ export class ThemeService extends Extension {
   generateColorProperty(
     color: Color,
     fallback: Color = DefaultTheme.transparent,
-    theme = this.theme
+    theme = this.theme,
   ) {
     const result = resolveColor(color, theme, resolveColor(fallback, theme));
 
     // Compatible old data
     if (result.startsWith('--')) {
-      return result.endsWith('transparent')
-        ? DefaultTheme.transparent
-        : `var(${result})`;
+      return result.endsWith('transparent') ? DefaultTheme.transparent : `var(${result})`;
     }
 
     return result;
@@ -120,7 +107,7 @@ export class ThemeService extends Extension {
     color: Color,
     fallback: Color = DefaultTheme.transparent,
     real = false,
-    theme = this.theme
+    theme = this.theme,
   ) {
     let result = resolveColor(color, theme, resolveColor(fallback, theme));
 
@@ -142,7 +129,9 @@ export class ThemeService extends Extension {
       }
 
       // First try to get from computed style (supports custom themes)
-      const computedColor = getComputedStyle(document.documentElement).getPropertyValue(property).trim();
+      const computedColor = getComputedStyle(document.documentElement)
+        .getPropertyValue(property)
+        .trim();
       if (computedColor) {
         return computedColor;
       }
@@ -150,9 +139,7 @@ export class ThemeService extends Extension {
       // Fallback to hardcoded values if CSS variable not found
       const key = property as keyof InkCssVariables;
       const color =
-        theme === ColorScheme.Dark
-          ? combinedDarkCssVariables[key]
-          : combinedLightCssVariables[key];
+        theme === ColorScheme.Dark ? combinedDarkCssVariables[key] : combinedLightCssVariables[key];
       return color;
     }
     return property;

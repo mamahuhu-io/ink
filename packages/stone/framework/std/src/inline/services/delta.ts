@@ -100,15 +100,10 @@ export class DeltaService<TextAttributes extends BaseTextAttributes> {
    *  [{ insert: 'ccc', attributes: { underline: true }, }, { index: 6, length: 3, }]]
    * ```
    */
-  getDeltasByInlineRange = (
-    inlineRange: InlineRange
-  ): DeltaEntry<TextAttributes>[] => {
+  getDeltasByInlineRange = (inlineRange: InlineRange): DeltaEntry<TextAttributes>[] => {
     return this.mapDeltasInInlineRange(
       inlineRange,
-      (delta, index): DeltaEntry<TextAttributes> => [
-        delta,
-        { index, length: delta.insert.length },
-      ]
+      (delta, index): DeltaEntry<TextAttributes> => [delta, { index, length: delta.insert.length }],
     );
   };
 
@@ -117,13 +112,12 @@ export class DeltaService<TextAttributes extends BaseTextAttributes> {
     callback: (
       delta: DeltaInsert<TextAttributes>,
       rangeIndex: number,
-      deltaIndex: number
-    ) => Result
+      deltaIndex: number,
+    ) => Result,
   ) => {
     const deltas = this.editor.embedDeltas;
     const result: Result[] = [];
 
-    // eslint-disable-next-line sonarjs/no-ignored-return
     deltas.reduce((rangeIndex, delta, deltaIndex) => {
       const length = delta.insert.length;
       const from = inlineRange.index - length;
@@ -131,8 +125,7 @@ export class DeltaService<TextAttributes extends BaseTextAttributes> {
 
       const deltaInRange =
         rangeIndex >= from &&
-        (rangeIndex < to ||
-          (inlineRange.length === 0 && rangeIndex === inlineRange.index));
+        (rangeIndex < to || (inlineRange.length === 0 && rangeIndex === inlineRange.index));
 
       if (deltaInRange) {
         const value = callback(delta, rangeIndex, deltaIndex);

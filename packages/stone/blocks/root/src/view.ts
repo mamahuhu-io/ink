@@ -1,17 +1,7 @@
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '@ink/stone-ext-loader';
+import { type ViewExtensionContext, ViewExtensionProvider } from '@ink/stone-ext-loader';
 import { NoteBlockSchema } from '@ink/stone-model';
-import {
-  ToolbarModuleExtension,
-  ViewportElementExtension,
-} from '@ink/stone-shared/services';
-import {
-  BlockFlavourIdentifier,
-  BlockViewExtension,
-  FlavourExtension,
-} from '@ink/stone-std';
+import { ToolbarModuleExtension, ViewportElementExtension } from '@ink/stone-shared/services';
+import { BlockFlavourIdentifier, BlockViewExtension, FlavourExtension } from '@ink/stone-std';
 import { literal } from 'lit/static-html.js';
 
 import { PageClipboard, ReadOnlyClipboard } from './clipboard';
@@ -42,10 +32,7 @@ export class RootViewExtension extends ViewExtensionProvider {
         config: builtinToolbarConfig,
       }),
     ]);
-    if (
-      context.scope === 'preview-page' ||
-      context.scope === 'preview-edgeless'
-    ) {
+    if (context.scope === 'preview-page' || context.scope === 'preview-edgeless') {
       context.register(ReadOnlyClipboard);
     }
     // [REMOVED] Edgeless mode check - always use Page mode
@@ -59,14 +46,10 @@ export class RootViewExtension extends ViewExtensionProvider {
   private readonly _setupPage = (context: ViewExtensionContext) => {
     context.register(ViewportElementExtension('.ink-page-viewport'));
     if (context.scope === 'preview-page') {
-      context.register(
-        BlockViewExtension('ink:page', literal`ink-preview-root`)
-      );
+      context.register(BlockViewExtension('ink:page', literal`ink-preview-root`));
       return;
     }
-    context.register(
-      BlockViewExtension('ink:page', literal`ink-page-root`)
-    );
+    context.register(BlockViewExtension('ink:page', literal`ink-page-root`));
     context.register(PageClipboard);
   };
 

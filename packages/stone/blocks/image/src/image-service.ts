@@ -2,6 +2,7 @@
 // import { SurfaceBlockModel } from '@ink/stone-block-surface';
 import { FileDropConfigExtension } from '@ink/stone-components/drop-indicator';
 import { ImageBlockSchema } from '@ink/stone-model';
+
 // [REMOVED] Edgeless blocks - these imports no longer needed
 // import { TelemetryProvider } from '@ink/stone-shared/services';
 // import { isInsideEdgelessEditor, matchModels } from '@ink/stone-shared/utils';
@@ -12,15 +13,13 @@ import { addSiblingImageBlocks } from './utils.js';
 export const ImageDropOption = FileDropConfigExtension({
   flavour: ImageBlockSchema.model.flavour,
   onDrop: ({ files, targetModel, placement, std }) => {
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    const imageFiles = files.filter((file) => file.type.startsWith('image/'));
     if (!imageFiles.length) return false;
 
     // [REMOVED] Edgeless blocks - simplified check for Page mode
     // if (targetModel && !matchModels(targetModel, [SurfaceBlockModel])) {
     if (targetModel) {
-      addSiblingImageBlocks(std, imageFiles, targetModel, placement).catch(
-        console.error
-      );
+      addSiblingImageBlocks(std, imageFiles, targetModel, placement).catch(console.error);
       return true;
     }
 

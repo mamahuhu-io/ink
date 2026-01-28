@@ -1,3 +1,4 @@
+import { InkStoneError } from '@ink/stone-global/exceptions';
 import {
   DatabaseBlockModel,
   EmbedLinkedDocModel,
@@ -6,7 +7,6 @@ import {
   ParagraphBlockModel,
   SurfaceRefBlockModel,
 } from '@ink/stone-model';
-import { InkStoneError } from '@ink/stone-global/exceptions';
 import type {
   AfterImportBlockPayload,
   BeforeImportBlockPayload,
@@ -25,17 +25,14 @@ export const replaceIdMiddleware =
     // After Import
 
     const afterImportBlock$ = slots.afterImport.pipe(
-      filter(
-        (payload): payload is AfterImportBlockPayload =>
-          payload.type === 'block'
-      ),
-      map(({ model }) => model)
+      filter((payload): payload is AfterImportBlockPayload => payload.type === 'block'),
+      map(({ model }) => model),
     );
 
     const afterImportBlockSubscription = afterImportBlock$
-      .pipe(filter(model => matchModels(model, [DatabaseBlockModel])))
-      .subscribe(model => {
-        Object.keys(model.props.cells).forEach(cellId => {
+      .pipe(filter((model) => matchModels(model, [DatabaseBlockModel])))
+      .subscribe((model) => {
+        Object.keys(model.props.cells).forEach((cellId) => {
           if (idMap.has(cellId)) {
             model.props.cells[idMap.get(cellId)!] = model.props.cells[cellId];
             delete model.props.cells[cellId];
@@ -45,12 +42,8 @@ export const replaceIdMiddleware =
 
     // replace LinkedPage pageId with new id in paragraph blocks
     const replaceLinkedPageIdSubscription = afterImportBlock$
-      .pipe(
-        filter(model =>
-          matchModels(model, [ParagraphBlockModel, ListBlockModel])
-        )
-      )
-      .subscribe(model => {
+      .pipe(filter((model) => matchModels(model, [ParagraphBlockModel, ListBlockModel])))
+      .subscribe((model) => {
         let prev = 0;
         const delta: DeltaOperation[] = [];
         for (const d of model.props.text.toDelta()) {
@@ -85,8 +78,8 @@ export const replaceIdMiddleware =
       });
 
     const replaceSurfaceRefIdSubscription = afterImportBlock$
-      .pipe(filter(model => matchModels(model, [SurfaceRefBlockModel])))
-      .subscribe(model => {
+      .pipe(filter((model) => matchModels(model, [SurfaceRefBlockModel])))
+      .subscribe((model) => {
         const original = model.props.reference;
         // If there exists a replacement, replace the reference with the new id.
         // Otherwise,
@@ -94,10 +87,7 @@ export const replaceIdMiddleware =
         // 2. If the reference is graph, keep the original id.
         if (idMap.has(original)) {
           model.props.reference = idMap.get(original)!;
-        } else if (
-          model.props.refFlavour === 'ink:frame' &&
-          !model.store.hasBlock(original)
-        ) {
+        } else if (model.props.refFlavour === 'ink:frame' && !model.store.hasBlock(original)) {
           const newId = idGenerator();
           idMap.set(original, newId);
           model.props.reference = newId;
@@ -106,12 +96,8 @@ export const replaceIdMiddleware =
 
     // TODO(@fundon): process linked block/element
     const replaceLinkedDocIdSubscription = afterImportBlock$
-      .pipe(
-        filter(model =>
-          matchModels(model, [EmbedLinkedDocModel, EmbedSyncedDocModel])
-        )
-      )
-      .subscribe(model => {
+      .pipe(filter((model) => matchModels(model, [EmbedLinkedDocModel, EmbedSyncedDocModel])))
+      .subscribe((model) => {
         const original = model.props.pageId;
         // If the pageId is not in the doc, generate a new id.
         // If we already have a replacement, use it.
@@ -129,8 +115,8 @@ export const replaceIdMiddleware =
     // Before Import
 
     const beforeImportPageSubscription = slots.beforeImport
-      .pipe(filter(payload => payload.type === 'page'))
-      .subscribe(payload => {
+      .pipe(filter((payload) => payload.type === 'page'))
+      .subscribe((payload) => {
         if (idMap.has(payload.snapshot.meta.id)) {
           payload.snapshot.meta.id = idMap.get(payload.snapshot.meta.id)!;
           return;
@@ -141,18 +127,11 @@ export const replaceIdMiddleware =
       });
 
     const beforeImportBlockSubscription = slots.beforeImport
-      .pipe(
-        filter(
-          (payload): payload is BeforeImportBlockPayload =>
-            payload.type === 'block'
-        )
-      )
-      .subscribe(payload => {
+      .pipe(filter((payload): payload is BeforeImportBlockPayload => payload.type === 'block'))
+      .subscribe((payload) => {
         const { snapshot } = payload;
         if (snapshot.flavour === 'ink:page') {
-          const index = snapshot.children.findIndex(
-            c => c.flavour === 'ink:surface'
-          );
+          const index = snapshot.children.findIndex((c) => c.flavour === 'ink:surface');
           if (index !== -1) {
             const [surface] = snapshot.children.splice(index, 1);
             snapshot.children.push(surface);
@@ -181,7 +160,7 @@ export const replaceIdMiddleware =
 
         if (snapshot.flavour === 'ink:surface') {
           // Generate new IDs for images and frames in advance.
-          snapshot.children.forEach(child => {
+          snapshot.children.forEach((child) => {
             const original = child.id;
             if (idMap.has(original)) {
               newId = idMap.get(original)!;
@@ -192,7 +171,7 @@ export const replaceIdMiddleware =
           });
 
           Object.entries(
-            snapshot.props.elements as Record<string, Record<string, unknown>>
+            snapshot.props.elements as Record<string, Record<string, unknown>>,
           ).forEach(([_, value]) => {
             switch (value.type) {
               case 'connector': {
@@ -202,7 +181,7 @@ export const replaceIdMiddleware =
                   if (!newId) {
                     throw new InkStoneError(
                       InkStoneError.ErrorCode.TransformerError,
-                      `reference id must exist: ${connection.id}`
+                      `reference id must exist: ${connection.id}`,
                     );
                   }
                   connection.id = newId;
@@ -213,7 +192,7 @@ export const replaceIdMiddleware =
                   if (!newId) {
                     throw new InkStoneError(
                       InkStoneError.ErrorCode.TransformerError,
-                      `reference id must exist: ${connection.id}`
+                      `reference id must exist: ${connection.id}`,
                     );
                   }
                   connection.id = newId;
@@ -221,8 +200,10 @@ export const replaceIdMiddleware =
                 break;
               }
               case 'group': {
-                const json = (value.children as Record<string, unknown>)
-                  .json as Record<string, unknown>;
+                const json = (value.children as Record<string, unknown>).json as Record<
+                  string,
+                  unknown
+                >;
                 Object.entries(json).forEach(([key, value]) => {
                   if (idMap.has(key)) {
                     delete json[key];
@@ -230,7 +211,7 @@ export const replaceIdMiddleware =
                     if (!newKey) {
                       throw new InkStoneError(
                         InkStoneError.ErrorCode.TransformerError,
-                        `reference id must exist: ${key}`
+                        `reference id must exist: ${key}`,
                       );
                     }
                     json[newKey] = value;

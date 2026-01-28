@@ -17,7 +17,7 @@ function preprocessMermaid(content: string) {
 const mermaidPreprocessor: MarkdownAdapterPreprocessor = {
   name: 'mermaid',
   levels: ['block', 'slice', 'doc'],
-  preprocess: content => {
+  preprocess: (content) => {
     return preprocessMermaid(content);
   },
 };

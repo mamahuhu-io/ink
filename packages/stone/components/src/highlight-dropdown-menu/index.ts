@@ -7,10 +7,7 @@ export * from './highlight-duotone-icon';
 export * from './text-duotone-icon';
 
 export function effects() {
-  customElements.define(
-    'ink-highlight-dropdown-menu',
-    HighlightDropdownMenu
-  );
+  customElements.define('ink-highlight-dropdown-menu', HighlightDropdownMenu);
   customElements.define('ink-highlight-duotone-icon', HighlightDuotoneIcon);
   customElements.define('ink-text-duotone-icon', TextDuotoneIcon);
 }

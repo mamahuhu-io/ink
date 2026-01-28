@@ -14,8 +14,8 @@ const isListMDASTType = (node: MarkdownAST) => LIST_MDAST_TYPE.has(node.type);
 
 export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: ListBlockSchema.model.flavour,
-  toMatch: o => isListMDASTType(o.node),
-  fromMatch: o => o.node.flavour === ListBlockSchema.model.flavour,
+  toMatch: (o) => isListMDASTType(o.node),
+  fromMatch: (o) => o.node.flavour === ListBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       const { walkerContext, deltaConverter } = context;
@@ -30,12 +30,7 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             id: nanoid(),
             flavour: 'ink:list',
             props: {
-              type:
-                o.node.checked !== null
-                  ? 'todo'
-                  : parentList.ordered
-                    ? 'numbered'
-                    : 'bulleted',
+              type: o.node.checked !== null ? 'todo' : parentList.ordered ? 'numbered' : 'bulleted',
               text: {
                 '$stone:internal:text$': true,
                 delta:
@@ -49,7 +44,7 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             },
             children: [],
           },
-          'children'
+          'children',
         );
         if (o.node.children[0] && o.node.children[0].type === 'paragraph') {
           walkerContext.skipChildren(1);
@@ -77,9 +72,7 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
         currentTNode.ordered === (o.node.props.type === 'numbered') &&
         AdapterTextUtils.isNullish(currentTNode.children[0].checked) ===
           AdapterTextUtils.isNullish(
-            o.node.props.type === 'todo'
-              ? (o.node.props.checked as boolean)
-              : undefined
+            o.node.props.type === 'todo' ? (o.node.props.checked as boolean) : undefined,
           )
       ) {
         // if true, add the list item to the list
@@ -93,7 +86,7 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
               spread: false,
               children: [],
             },
-            'children'
+            'children',
           )
           .setNodeContext('ink:list:parent', o.parent);
       }
@@ -101,21 +94,18 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
         .openNode(
           {
             type: 'listItem',
-            checked:
-              o.node.props.type === 'todo'
-                ? (o.node.props.checked as boolean)
-                : undefined,
+            checked: o.node.props.type === 'todo' ? (o.node.props.checked as boolean) : undefined,
             spread: false,
             children: [],
           },
-          'children'
+          'children',
         )
         .openNode(
           {
             type: 'paragraph',
             children: deltaConverter.deltaToAST(text.delta),
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -124,23 +114,17 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
       const currentTNode = walkerContext.currentNode();
       const previousTNode = walkerContext.previousNode();
       if (
-        walkerContext.getPreviousNodeContext('ink:list:parent') ===
-          o.parent &&
+        walkerContext.getPreviousNodeContext('ink:list:parent') === o.parent &&
         currentTNode.type === 'listItem' &&
         previousTNode?.type === 'list' &&
         previousTNode.ordered === (o.node.props.type === 'numbered') &&
         AdapterTextUtils.isNullish(currentTNode.checked) ===
           AdapterTextUtils.isNullish(
-            o.node.props.type === 'todo'
-              ? (o.node.props.checked as boolean)
-              : undefined
+            o.node.props.type === 'todo' ? (o.node.props.checked as boolean) : undefined,
           )
       ) {
         walkerContext.closeNode();
-        if (
-          o.next?.flavour !== 'ink:list' ||
-          o.next.props.type !== o.node.props.type
-        ) {
+        if (o.next?.flavour !== 'ink:list' || o.next.props.type !== o.node.props.type) {
           // If the next node is not a list or different type of list, close the list
           walkerContext.closeNode();
         }
@@ -152,5 +136,5 @@ export const listBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const ListBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  listBlockMarkdownAdapterMatcher
+  listBlockMarkdownAdapterMatcher,
 );

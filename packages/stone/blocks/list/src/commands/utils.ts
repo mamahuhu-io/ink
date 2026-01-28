@@ -1,8 +1,5 @@
 import { ListBlockModel } from '@ink/stone-model';
-import {
-  getNextContinuousNumberedLists,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { getNextContinuousNumberedLists, matchModels } from '@ink/stone-shared/utils';
 import type { BlockModel, Store } from '@ink/stone-store';
 
 /**
@@ -14,17 +11,13 @@ import type { BlockModel, Store } from '@ink/stone-store';
 export function correctNumberedListsOrderToPrev(
   doc: Store,
   modelOrId: BlockModel | string,
-  transact = true
+  transact = true,
 ) {
-  const model =
-    typeof modelOrId === 'string' ? doc.getBlock(modelOrId)?.model : modelOrId;
+  const model = typeof modelOrId === 'string' ? doc.getBlock(modelOrId)?.model : modelOrId;
 
   if (!model) return;
 
-  if (
-    !matchModels(model, [ListBlockModel]) ||
-    model.props.type$.value !== 'numbered'
-  ) {
+  if (!matchModels(model, [ListBlockModel]) || model.props.type$.value !== 'numbered') {
     return;
   }
 
@@ -45,7 +38,7 @@ export function correctNumberedListsOrderToPrev(
     // step 2
     let base = model.props.order + 1;
     const continuousNumberedLists = getNextContinuousNumberedLists(doc, model);
-    continuousNumberedLists.forEach(list => {
+    continuousNumberedLists.forEach((list) => {
       list.props.order = base;
       base++;
     });

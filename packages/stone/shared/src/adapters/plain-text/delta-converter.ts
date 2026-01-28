@@ -1,7 +1,4 @@
-import {
-  createIdentifier,
-  type ServiceIdentifier,
-} from '@ink/stone-global/di';
+import { createIdentifier, type ServiceIdentifier } from '@ink/stone-global/di';
 import type { DeltaInsert, ExtensionType } from '@ink/stone-store';
 
 import type { InkTextAttributes } from '../../types/index.js';
@@ -12,24 +9,19 @@ import {
   type InlineDeltaMatcher,
 } from '../types/delta-converter.js';
 
-export type InlineDeltaToPlainTextAdapterMatcher =
-  InlineDeltaMatcher<TextBuffer>;
+export type InlineDeltaToPlainTextAdapterMatcher = InlineDeltaMatcher<TextBuffer>;
 
 export const InlineDeltaToPlainTextAdapterMatcherIdentifier =
-  createIdentifier<InlineDeltaToPlainTextAdapterMatcher>(
-    'InlineDeltaToPlainTextAdapterMatcher'
-  );
+  createIdentifier<InlineDeltaToPlainTextAdapterMatcher>('InlineDeltaToPlainTextAdapterMatcher');
 
 export function InlineDeltaToPlainTextAdapterExtension(
-  matcher: InlineDeltaToPlainTextAdapterMatcher
+  matcher: InlineDeltaToPlainTextAdapterMatcher,
 ): ExtensionType & {
   identifier: ServiceIdentifier<InlineDeltaToPlainTextAdapterMatcher>;
 } {
-  const identifier = InlineDeltaToPlainTextAdapterMatcherIdentifier(
-    matcher.name
-  );
+  const identifier = InlineDeltaToPlainTextAdapterMatcherIdentifier(matcher.name);
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(identifier, () => matcher);
     },
     identifier,
@@ -38,14 +30,11 @@ export function InlineDeltaToPlainTextAdapterExtension(
 
 export type PlainTextASTToDeltaMatcher = ASTToDeltaMatcher<string>;
 
-export class PlainTextDeltaConverter extends DeltaASTConverter<
-  InkTextAttributes,
-  string
-> {
+export class PlainTextDeltaConverter extends DeltaASTConverter<InkTextAttributes, string> {
   constructor(
     readonly configs: Map<string, string>,
     readonly inlineDeltaMatchers: InlineDeltaToPlainTextAdapterMatcher[],
-    readonly plainTextASTToDeltaMatchers: PlainTextASTToDeltaMatcher[]
+    readonly plainTextASTToDeltaMatchers: PlainTextASTToDeltaMatcher[],
   ) {
     super();
   }
@@ -65,7 +54,7 @@ export class PlainTextDeltaConverter extends DeltaASTConverter<
   }
 
   deltaToAST(deltas: DeltaInsert<InkTextAttributes>[]): string[] {
-    return deltas.map(delta => {
+    return deltas.map((delta) => {
       const context = {
         configs: this.configs,
         current: { content: delta.insert },

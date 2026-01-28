@@ -10,7 +10,7 @@ import type { ImageBlockProps } from './image-model.js';
 
 export class ImageBlockTransformer extends BaseBlockTransformer<ImageBlockProps> {
   override async fromSnapshot(
-    payload: FromSnapshotPayload
+    payload: FromSnapshotPayload,
   ): Promise<SnapshotNode<ImageBlockProps>> {
     const snapshotRet = await super.fromSnapshot(payload);
     const sourceId = snapshotRet.props.sourceId;
@@ -20,9 +20,7 @@ export class ImageBlockTransformer extends BaseBlockTransformer<ImageBlockProps>
     return snapshotRet;
   }
 
-  override toSnapshot(
-    snapshot: ToSnapshotPayload<ImageBlockProps>
-  ): BlockSnapshotLeaf {
+  override toSnapshot(snapshot: ToSnapshotPayload<ImageBlockProps>): BlockSnapshotLeaf {
     const snapshotRet = super.toSnapshot(snapshot);
     const sourceId = snapshot.model.props.sourceId;
     if (sourceId) {

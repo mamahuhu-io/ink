@@ -1,10 +1,7 @@
 import type { Store } from '@ink/stone-store';
 
 import type { Layer } from '../gfx/layer.js';
-import {
-  type GfxGroupCompatibleInterface,
-  isGfxGroupCompatibleModel,
-} from '../gfx/model/base.js';
+import { type GfxGroupCompatibleInterface, isGfxGroupCompatibleModel } from '../gfx/model/base.js';
 import { type GfxBlockElementModel } from '../gfx/model/gfx-block-model.js';
 import type { GfxModel } from '../gfx/model/model.js';
 import { GfxLocalElementModel } from '../gfx/model/surface/local-element-model.js';
@@ -32,7 +29,7 @@ export function getElementIndex(indexable: GfxModel) {
 
   if (groups.length) {
     const groupIndexes = groups
-      .map(group => group.index)
+      .map((group) => group.index)
       .reverse()
       .join('-');
 
@@ -79,7 +76,7 @@ export function isInRange(edges: [GfxModel, GfxModel], target: GfxModel) {
 export function renderableInEdgeless(
   doc: Store,
   surface: SurfaceBlockModel,
-  block: GfxBlockElementModel
+  block: GfxBlockElementModel,
 ) {
   const parent = doc.getParent(block);
 
@@ -87,17 +84,10 @@ export function renderableInEdgeless(
 }
 
 export function compareIndex(aIndex: string, bIndex: string) {
-  return aIndex === bIndex
-    ? SortOrder.SAME
-    : aIndex < bIndex
-      ? SortOrder.BEFORE
-      : SortOrder.AFTER;
+  return aIndex === bIndex ? SortOrder.SAME : aIndex < bIndex ? SortOrder.BEFORE : SortOrder.AFTER;
 }
 
-function compareLocal(
-  a: GfxModel | GfxLocalElementModel,
-  b: GfxModel | GfxLocalElementModel
-) {
+function compareLocal(a: GfxModel | GfxLocalElementModel, b: GfxModel | GfxLocalElementModel) {
   const isALocal = a instanceof GfxLocalElementModel;
   const isBLocal = b instanceof GfxLocalElementModel;
 
@@ -124,10 +114,7 @@ function compareLocal(
  * SortOrder.AFTER means a should be rendered after b and so on.
  * @returns
  */
-export function compare(
-  a: GfxModel | GfxLocalElementModel,
-  b: GfxModel | GfxLocalElementModel
-) {
+export function compare(a: GfxModel | GfxLocalElementModel, b: GfxModel | GfxLocalElementModel) {
   const result = compareLocal(a, b);
 
   if (typeof result === 'number') {
@@ -146,16 +133,10 @@ export function compare(
     const bGroups = b.groups as GfxGroupCompatibleInterface[];
 
     let i = 1;
-    let aGroup:
-      | GfxModel
-      | GfxGroupCompatibleInterface
-      | GfxLocalElementModel
-      | undefined = aGroups.at(-i);
-    let bGroup:
-      | GfxModel
-      | GfxGroupCompatibleInterface
-      | GfxLocalElementModel
-      | undefined = bGroups.at(-i);
+    let aGroup: GfxModel | GfxGroupCompatibleInterface | GfxLocalElementModel | undefined =
+      aGroups.at(-i);
+    let bGroup: GfxModel | GfxGroupCompatibleInterface | GfxLocalElementModel | undefined =
+      bGroups.at(-i);
 
     while (aGroup === bGroup && aGroup) {
       ++i;

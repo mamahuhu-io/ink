@@ -21,12 +21,7 @@ export class SurfaceSelection extends BaseSelection {
 
   readonly inoperable: boolean;
 
-  constructor(
-    blockId: string,
-    elements: string[],
-    editing: boolean,
-    inoperable = false
-  ) {
+  constructor(blockId: string, elements: string[], editing: boolean, inoperable = false) {
     super({ blockId });
 
     this.elements = elements;
@@ -35,8 +30,7 @@ export class SurfaceSelection extends BaseSelection {
   }
 
   static override fromJSON(json: Record<string, unknown>): SurfaceSelection {
-    const { blockId, elements, editing, inoperable } =
-      SurfaceSelectionSchema.parse(json);
+    const { blockId, elements, editing, inoperable } = SurfaceSelectionSchema.parse(json);
     return new SurfaceSelection(blockId, elements, editing, inoperable);
   }
 

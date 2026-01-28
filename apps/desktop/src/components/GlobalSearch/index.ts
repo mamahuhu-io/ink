@@ -1,1 +1,1 @@
-export { GlobalSearchModal } from './GlobalSearchModal'
+export { GlobalSearchModal } from './GlobalSearchModal';

@@ -10,7 +10,8 @@ function parseStyleMarkers(text: string): DeltaInsert[] {
 
   // Combined regex to match both SPAN and U markers
   // [[SPAN:style]]content[[/SPAN]] or [[U]]content[[/U]]
-  const markerRegex = /\[\[SPAN:([^\]]*)\]\]([\s\S]*?)\[\[\/SPAN\]\]|\[\[U\]\]([\s\S]*?)\[\[\/U\]\]/g;
+  const markerRegex =
+    /\[\[SPAN:([^\]]*)\]\]([\s\S]*?)\[\[\/SPAN\]\]|\[\[U\]\]([\s\S]*?)\[\[\/U\]\]/g;
 
   let lastIndex = 0;
   let match;
@@ -81,8 +82,8 @@ function hasStyleMarkers(text: string): boolean {
 
 export const markdownTextToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'text',
-  match: ast => ast.type === 'text',
-  toDelta: ast => {
+  match: (ast) => ast.type === 'text',
+  toDelta: (ast) => {
     if (!('value' in ast)) {
       return [];
     }
@@ -99,8 +100,8 @@ export const markdownTextToDeltaMatcher = MarkdownASTToDeltaExtension({
 
 export const markdownInlineCodeToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'inlineCode',
-  match: ast => ast.type === 'inlineCode',
-  toDelta: ast => {
+  match: (ast) => ast.type === 'inlineCode',
+  toDelta: (ast) => {
     if (!('value' in ast)) {
       return [];
     }
@@ -110,62 +111,62 @@ export const markdownInlineCodeToDeltaMatcher = MarkdownASTToDeltaExtension({
 
 export const markdownStrongToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'strong',
-  match: ast => ast.type === 'strong',
+  match: (ast) => ast.type === 'strong',
   toDelta: (ast, context) => {
     if (!('children' in ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child).map((delta) => {
         delta.attributes = { ...delta.attributes, bold: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const markdownEmphasisToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'emphasis',
-  match: ast => ast.type === 'emphasis',
+  match: (ast) => ast.type === 'emphasis',
   toDelta: (ast, context) => {
     if (!('children' in ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child).map((delta) => {
         delta.attributes = { ...delta.attributes, italic: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const markdownDeleteToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'delete',
-  match: ast => ast.type === 'delete',
+  match: (ast) => ast.type === 'delete',
   toDelta: (ast, context) => {
     if (!('children' in ast)) {
       return [];
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child).map((delta) => {
         delta.attributes = { ...delta.attributes, strike: true };
         return delta;
-      })
+      }),
     );
   },
 });
 
 export const markdownListToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'list',
-  match: ast => ast.type === 'list',
+  match: (ast) => ast.type === 'list',
   toDelta: () => [],
 });
 
 export const markdownHtmlToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'html',
-  match: ast => ast.type === 'html',
-  toDelta: ast => {
+  match: (ast) => ast.type === 'html',
+  toDelta: (ast) => {
     if (!('value' in ast)) {
       return [];
     }

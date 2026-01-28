@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import swc from 'unplugin-swc'
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
-import { resolve } from 'path'
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+import swc from 'unplugin-swc';
+import { defineConfig } from 'vite';
 
-const r = (path: string) => resolve(__dirname, path)
+const r = (path: string) => resolve(__dirname, path);
 
 export default defineConfig({
   plugins: [
@@ -48,7 +48,17 @@ export default defineConfig({
     },
   },
   resolve: {
-    dedupe: ['yjs', 'lib0', 'lit', '@preact/signals-core', 'rxjs', '@ink/stone-store', '@ink/stone-std', '@ink/stone-global', '@ink/stone-sync'],
+    dedupe: [
+      'yjs',
+      'lib0',
+      'lit',
+      '@preact/signals-core',
+      'rxjs',
+      '@ink/stone-store',
+      '@ink/stone-std',
+      '@ink/stone-global',
+      '@ink/stone-sync',
+    ],
     alias: {
       // ============ Stone 框架 ============
       '@ink/stone-store': r('../../packages/stone/framework/store/src'),
@@ -92,7 +102,9 @@ export default defineConfig({
       '@ink/stone-widget-linked-doc': r('../../packages/stone/widgets/linked-doc/src'),
       '@ink/stone-widget-drag-handle': r('../../packages/stone/widgets/drag-handle/src'),
       '@ink/stone-widget-keyboard-toolbar': r('../../packages/stone/widgets/keyboard-toolbar/src'),
-      '@ink/stone-widget-page-dragging-area': r('../../packages/stone/widgets/page-dragging-area/src'),
+      '@ink/stone-widget-page-dragging-area': r(
+        '../../packages/stone/widgets/page-dragging-area/src',
+      ),
       '@ink/stone-widget-scroll-anchoring': r('../../packages/stone/widgets/scroll-anchoring/src'),
 
       // ============ Stone Fragments ============
@@ -104,7 +116,7 @@ export default defineConfig({
       '@ink/stone-icons/lit': r('../../packages/stone/icons/dist/lit.mjs'),
       '@ink/stone-icons/rc': r('../../packages/stone/icons/dist/rc.mjs'),
       '@ink/stone-theme': r('../../packages/stone/theme'),
-    }
+    },
   },
   build: {
     target: 'esnext',
@@ -132,4 +144,4 @@ export default defineConfig({
   esbuild: {
     target: 'es2022',
   },
-})
+});

@@ -1,13 +1,10 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import type * as Y from 'yjs';
 
 import { VElement } from '../components/v-element.js';
 import type { InlineRange } from '../types.js';
 import { isInEmbedElement } from './embed.js';
-import {
-  nativePointToTextPoint,
-  textPointToDomPoint,
-} from './point-conversion.js';
+import { nativePointToTextPoint, textPointToDomPoint } from './point-conversion.js';
 import { calculateTextLength, getTextNodesFromElement } from './text.js';
 
 type InlineRangeRunnerContext = {
@@ -27,11 +24,7 @@ type InlineRangeRunnerContext = {
 type Predict = (context: InlineRangeRunnerContext) => boolean;
 type Handler = (context: InlineRangeRunnerContext) => InlineRange | null;
 
-const rangeHasAnchorAndFocus: Predict = ({
-  rootElement,
-  startText,
-  endText,
-}) => {
+const rangeHasAnchorAndFocus: Predict = ({ rootElement, startText, endText }) => {
   return rootElement.contains(startText) && rootElement.contains(endText);
 };
 
@@ -42,16 +35,8 @@ const rangeHasAnchorAndFocusHandler: Handler = ({
   startTextOffset,
   endTextOffset,
 }) => {
-  const anchorDomPoint = textPointToDomPoint(
-    startText,
-    startTextOffset,
-    rootElement
-  );
-  const focusDomPoint = textPointToDomPoint(
-    endText,
-    endTextOffset,
-    rootElement
-  );
+  const anchorDomPoint = textPointToDomPoint(startText, startTextOffset, rootElement);
+  const focusDomPoint = textPointToDomPoint(endText, endTextOffset, rootElement);
 
   if (!anchorDomPoint || !focusDomPoint) {
     return null;
@@ -67,16 +52,8 @@ const rangeOnlyHasFocus: Predict = ({ rootElement, startText, endText }) => {
   return !rootElement.contains(startText) && rootElement.contains(endText);
 };
 
-const rangeOnlyHasFocusHandler: Handler = ({
-  rootElement,
-  endText,
-  endTextOffset,
-}) => {
-  const focusDomPoint = textPointToDomPoint(
-    endText,
-    endTextOffset,
-    rootElement
-  );
+const rangeOnlyHasFocusHandler: Handler = ({ rootElement, endText, endTextOffset }) => {
+  const focusDomPoint = textPointToDomPoint(endText, endTextOffset, rootElement);
 
   if (!focusDomPoint) {
     return null;
@@ -92,17 +69,8 @@ const rangeOnlyHasAnchor: Predict = ({ rootElement, startText, endText }) => {
   return rootElement.contains(startText) && !rootElement.contains(endText);
 };
 
-const rangeOnlyHasAnchorHandler: Handler = ({
-  yText,
-  rootElement,
-  startText,
-  startTextOffset,
-}) => {
-  const startDomPoint = textPointToDomPoint(
-    startText,
-    startTextOffset,
-    rootElement
-  );
+const rangeOnlyHasAnchorHandler: Handler = ({ yText, rootElement, startText, startTextOffset }) => {
+  const startDomPoint = textPointToDomPoint(startText, startTextOffset, rootElement);
 
   if (!startDomPoint) {
     return null;
@@ -114,12 +82,7 @@ const rangeOnlyHasAnchorHandler: Handler = ({
   };
 };
 
-const rangeHasNoAnchorAndFocus: Predict = ({
-  rootElement,
-  startText,
-  endText,
-  range,
-}) => {
+const rangeHasNoAnchorAndFocus: Predict = ({ rootElement, startText, endText, range }) => {
   return (
     !rootElement.contains(startText) &&
     !rootElement.contains(endText) &&
@@ -137,7 +100,7 @@ const rangeHasNoAnchorAndFocusHandler: Handler = ({ yText }) => {
 const buildContext = (
   range: Range,
   rootElement: HTMLElement,
-  yText: Y.Text
+  yText: Y.Text,
 ): InlineRangeRunnerContext | null => {
   const { startContainer, startOffset, endContainer, endOffset } = range;
 
@@ -195,7 +158,7 @@ const buildContext = (
 export function domRangeToInlineRange(
   range: Range,
   rootElement: HTMLElement,
-  yText: Y.Text
+  yText: Y.Text,
 ): InlineRange | null {
   const context = buildContext(range, rootElement, yText);
 
@@ -210,7 +173,7 @@ export function domRangeToInlineRange(
     const anchorDomPoint = textPointToDomPoint(
       context.startText,
       context.startTextOffset,
-      rootElement
+      rootElement,
     );
 
     if (anchorDomPoint) {
@@ -249,7 +212,7 @@ export function domRangeToInlineRange(
  */
 export function inlineRangeToDomRange(
   rootElement: HTMLElement,
-  inlineRange: InlineRange
+  inlineRange: InlineRange,
 ): Range | null {
   const lineElements = Array.from(rootElement.querySelectorAll('v-line'));
 
@@ -260,7 +223,6 @@ export function inlineRangeToDomRange(
   let focusOffset = 0;
   let index = 0;
 
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of
   for (let i = 0; i < lineElements.length; i++) {
     if (startText && endText) {
       break;
@@ -278,10 +240,7 @@ export function inlineRangeToDomRange(
         startText = text;
         anchorOffset = inlineRange.index - index;
       }
-      if (
-        !endText &&
-        index + textLength >= inlineRange.index + inlineRange.length
-      ) {
+      if (!endText && index + textLength >= inlineRange.index + inlineRange.length) {
         endText = text;
         focusOffset = inlineRange.index + inlineRange.length - index;
       }
@@ -306,23 +265,20 @@ export function inlineRangeToDomRange(
     if (!anchorVElement) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'failed to find vElement for a text note in an embed element'
+        'failed to find vElement for a text note in an embed element',
       );
     }
     const nextSibling = anchorVElement.nextElementSibling;
     if (!nextSibling) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'failed to find nextSibling sibling of an embed element'
+        'failed to find nextSibling sibling of an embed element',
       );
     }
 
     const texts = getTextNodesFromElement(nextSibling);
     if (texts.length === 0) {
-      throw new InkStoneError(
-        ErrorCode.InlineEditorError,
-        'text node in v-text not found'
-      );
+      throw new InkStoneError(ErrorCode.InlineEditorError, 'text node in v-text not found');
     }
     if (nextSibling instanceof VElement) {
       startText = texts[texts.length - 1];
@@ -338,23 +294,20 @@ export function inlineRangeToDomRange(
     if (!focusVElement) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'failed to find vElement for a text note in an embed element'
+        'failed to find vElement for a text note in an embed element',
       );
     }
     const nextSibling = focusVElement.nextElementSibling;
     if (!nextSibling) {
       throw new InkStoneError(
         ErrorCode.InlineEditorError,
-        'failed to find nextSibling sibling of an embed element'
+        'failed to find nextSibling sibling of an embed element',
       );
     }
 
     const texts = getTextNodesFromElement(nextSibling);
     if (texts.length === 0) {
-      throw new InkStoneError(
-        ErrorCode.InlineEditorError,
-        'text node in v-text not found'
-      );
+      throw new InkStoneError(ErrorCode.InlineEditorError, 'text node in v-text not found');
     }
     endText = texts[0];
     focusOffset = 0;

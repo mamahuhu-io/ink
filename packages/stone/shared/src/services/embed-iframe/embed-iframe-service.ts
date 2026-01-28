@@ -1,10 +1,7 @@
 import type { EmbedIframeBlockProps } from '@ink/stone-model';
 import { type Store, StoreExtension } from '@ink/stone-store';
 
-import {
-  type EmbedIframeConfig,
-  EmbedIframeConfigIdentifier,
-} from './embed-iframe-config';
+import { type EmbedIframeConfig, EmbedIframeConfigIdentifier } from './embed-iframe-config';
 
 export type EmbedIframeData = {
   html?: string;
@@ -64,43 +61,38 @@ export interface EmbedIframeProvider {
   addEmbedIframeBlock: (
     props: Partial<EmbedIframeBlockProps>,
     parentId: string,
-    index?: number
+    index?: number,
   ) => string | undefined;
 }
 
-export class EmbedIframeService
-  extends StoreExtension
-  implements EmbedIframeProvider
-{
+export class EmbedIframeService extends StoreExtension implements EmbedIframeProvider {
   static override key = 'embed-iframe-service';
 
   private readonly _configs: EmbedIframeConfig[];
 
   constructor(store: Store) {
     super(store);
-    this._configs = Array.from(
-      store.provider.getAll(EmbedIframeConfigIdentifier).values()
-    );
+    this._configs = Array.from(store.provider.getAll(EmbedIframeConfigIdentifier).values());
   }
 
   canEmbed = (url: string): boolean => {
-    return this._configs.some(config => config.match(url));
+    return this._configs.some((config) => config.match(url));
   };
 
   buildOEmbedUrl = (url: string): string | undefined => {
-    return this._configs.find(config => config.match(url))?.buildOEmbedUrl(url);
+    return this._configs.find((config) => config.match(url))?.buildOEmbedUrl(url);
   };
 
   getConfig = (url: string): EmbedIframeConfig | undefined => {
-    return this._configs.find(config => config.match(url));
+    return this._configs.find((config) => config.match(url));
   };
 
   getEmbedIframeData = async (
     url: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<EmbedIframeData | null> => {
     try {
-      const config = this._configs.find(config => config.match(url));
+      const config = this._configs.find((config) => config.match(url));
       if (!config) {
         return null;
       }
@@ -120,9 +112,7 @@ export class EmbedIframeService
       // otherwise, fetch the oEmbed data
       const response = await fetch(oEmbedUrl, { signal });
       if (!response.ok) {
-        console.warn(
-          `Failed to fetch oEmbed data: ${response.status} ${response.statusText}`
-        );
+        console.warn(`Failed to fetch oEmbed data: ${response.status} ${response.statusText}`);
         return null;
       }
 
@@ -139,14 +129,9 @@ export class EmbedIframeService
   addEmbedIframeBlock = (
     props: Partial<EmbedIframeBlockProps>,
     parentId: string,
-    index?: number
+    index?: number,
   ): string | undefined => {
-    const blockId = this.store.addBlock(
-      'ink:embed-iframe',
-      props,
-      parentId,
-      index
-    );
+    const blockId = this.store.addBlock('ink:embed-iframe', props, parentId, index);
     return blockId;
   };
 }

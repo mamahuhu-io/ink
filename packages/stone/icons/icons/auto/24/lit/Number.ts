@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const Number =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const Number = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const Number =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M11.182 3.272a.75.75 0 0 1 .546.91L10.71 8.25h4.453l1.108-4.432a.75.75 0 0 1 1.456.364L16.71 8.25H20a.75.75 0 0 1 0 1.5h-3.664l-1.125 4.5H18a.75.75 0 1 1 0 1.5h-3.164l-1.108 4.432a.75.75 0 0 1-1.456-.364l1.017-4.068H8.836l-1.108 4.432a.75.75 0 0 1-1.456-.364L7.29 15.75H4a.75.75 0 0 1 0-1.5h3.664l1.125-4.5H6a.75.75 0 0 1 0-1.5h3.164l1.108-4.432a.75.75 0 0 1 .91-.546m-.846 6.478-1.125 4.5h4.453l1.125-4.5z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M11.182 3.272a.75.75 0 0 1 .546.91L10.71 8.25h4.453l1.108-4.432a.75.75 0 0 1 1.456.364L16.71 8.25H20a.75.75 0 0 1 0 1.5h-3.664l-1.125 4.5H18a.75.75 0 1 1 0 1.5h-3.164l-1.108 4.432a.75.75 0 0 1-1.456-.364l1.017-4.068H8.836l-1.108 4.432a.75.75 0 0 1-1.456-.364L7.29 15.75H4a.75.75 0 0 1 0-1.5h3.664l1.125-4.5H6a.75.75 0 0 1 0-1.5h3.164l1.108-4.432a.75.75 0 0 1 .91-.546m-.846 6.478-1.125 4.5h4.453l1.125-4.5z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default Number;

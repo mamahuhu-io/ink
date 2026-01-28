@@ -7,13 +7,12 @@ import {
 import { nanoid } from '@ink/stone-store';
 import type { ThematicBreak } from 'mdast';
 
-const isDividerNode = (node: MarkdownAST): node is ThematicBreak =>
-  node.type === 'thematicBreak';
+const isDividerNode = (node: MarkdownAST): node is ThematicBreak => node.type === 'thematicBreak';
 
 export const dividerBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: DividerBlockSchema.model.flavour,
-  toMatch: o => isDividerNode(o.node),
-  fromMatch: o => o.node.flavour === DividerBlockSchema.model.flavour,
+  toMatch: (o) => isDividerNode(o.node),
+  fromMatch: (o) => o.node.flavour === DividerBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (_, context) => {
       const { walkerContext } = context;
@@ -26,7 +25,7 @@ export const dividerBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             props: {},
             children: [],
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -39,12 +38,13 @@ export const dividerBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
           {
             type: 'thematicBreak',
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
   },
 };
 
-export const DividerBlockMarkdownAdapterExtension =
-  BlockMarkdownAdapterExtension(dividerBlockMarkdownAdapterMatcher);
+export const DividerBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
+  dividerBlockMarkdownAdapterMatcher,
+);

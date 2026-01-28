@@ -1,8 +1,4 @@
-export function autoScroll(
-  viewportElement: HTMLElement,
-  y: number,
-  threshold = 50
-): boolean {
+export function autoScroll(viewportElement: HTMLElement, y: number, threshold = 50): boolean {
   const { scrollHeight, clientHeight, scrollTop } = viewportElement;
   let _scrollTop = scrollTop;
   const max = scrollHeight - clientHeight;

@@ -8,8 +8,7 @@ export class EdgelessClipboardEmbedSyncedDocConfig extends EdgelessClipboardConf
   override createBlock(syncedDocEmbed: BlockSnapshot): string | null {
     if (!this.surface) return null;
 
-    const { xywh, style, caption, scale, pageId, params } =
-      syncedDocEmbed.props;
+    const { xywh, style, caption, scale, pageId, params } = syncedDocEmbed.props;
     const referenceInfo = ReferenceInfoSchema.parse({ pageId, params });
 
     return this.crud.addBlock(
@@ -21,7 +20,7 @@ export class EdgelessClipboardEmbedSyncedDocConfig extends EdgelessClipboardConf
         scale,
         ...referenceInfo,
       },
-      this.surface.model.id
+      this.surface.model.id,
     );
   }
 }

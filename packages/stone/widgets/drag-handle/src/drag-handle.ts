@@ -1,13 +1,10 @@
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { EdgelessCRUDIdentifier } from '@ink/stone-block-surface';
-import type { RootBlockModel } from '@ink/stone-model';
-import { DocModeProvider } from '@ink/stone-shared/services';
-import {
-  isInsideEdgelessEditor,
-  isInsidePageEditor,
-} from '@ink/stone-shared/utils';
 import { DisposableGroup } from '@ink/stone-global/disposable';
 import type { IVec, Point, Rect } from '@ink/stone-global/gfx';
+import type { RootBlockModel } from '@ink/stone-model';
+import { DocModeProvider } from '@ink/stone-shared/services';
+import { isInsideEdgelessEditor, isInsidePageEditor } from '@ink/stone-shared/utils';
 import { type BlockComponent, WidgetComponent } from '@ink/stone-std';
 import type { GfxModel } from '@ink/stone-std/gfx';
 import { computed, type ReadonlySignal, signal } from '@preact/signals-core';
@@ -81,9 +78,7 @@ export class InkDragHandleWidget extends WidgetComponent<RootBlockModel> {
 
   rectHelper = new RectHelper(this);
 
-  draggingAreaRect: ReadonlySignal<Rect | null> = computed(
-    this.rectHelper.getDraggingAreaRect
-  );
+  draggingAreaRect: ReadonlySignal<Rect | null> = computed(this.rectHelper.getDraggingAreaRect);
 
   lastDragPoint: Point | null = null;
 
@@ -101,9 +96,7 @@ export class InkDragHandleWidget extends WidgetComponent<RootBlockModel> {
 
     this._anchorModelDisposables = new DisposableGroup();
 
-    this._anchorModelDisposables.add(
-      blockModel.deleted.subscribe(() => this.hide())
-    );
+    this._anchorModelDisposables.add(blockModel.deleted.subscribe(() => this.hide()));
   };
 
   /**
@@ -204,7 +197,7 @@ export class InkDragHandleWidget extends WidgetComponent<RootBlockModel> {
           }
         : {
             display: 'none',
-          }
+          },
     );
     const isGfx = this.activeDragHandle === 'gfx';
     const classes = {

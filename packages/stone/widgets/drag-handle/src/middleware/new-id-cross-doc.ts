@@ -10,19 +10,17 @@ export const newIdCrossDoc =
     let samePage = false;
     const oldToNewIdMap = new Map<string, string>();
 
-    const beforeImportSliceSubscription = slots.beforeImport.subscribe(
-      payload => {
-        if (payload.type === 'slice') {
-          samePage = payload.snapshot.pageId === std.store.id;
-        }
-        if (payload.type === 'block' && !samePage) {
-          const newId = std.workspace.idGenerator();
-
-          oldToNewIdMap.set(payload.snapshot.id, newId);
-          payload.snapshot.id = newId;
-        }
+    const beforeImportSliceSubscription = slots.beforeImport.subscribe((payload) => {
+      if (payload.type === 'slice') {
+        samePage = payload.snapshot.pageId === std.store.id;
       }
-    );
+      if (payload.type === 'block' && !samePage) {
+        const newId = std.workspace.idGenerator();
+
+        oldToNewIdMap.set(payload.snapshot.id, newId);
+        payload.snapshot.id = newId;
+      }
+    });
 
     // [REMOVED] Database modules - not needed for local markdown editor
     // const afterImportBlockSubscription = slots.afterImport.subscribe(

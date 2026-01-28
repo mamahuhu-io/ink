@@ -1,47 +1,47 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface PreferencesState {
   // Auto-save settings
-  autoSaveEnabled: boolean
-  autoSaveDelay: number // seconds
+  autoSaveEnabled: boolean;
+  autoSaveDelay: number; // seconds
 
   // Editor settings
-  fontSize: number
-  lineHeight: number
-  spellCheck: boolean
+  fontSize: number;
+  lineHeight: number;
+  spellCheck: boolean;
 
   // General settings
-  defaultSaveLocation: string | null
-  recentFilesLimit: number
-  confirmDelete: boolean
-  openLastFile: boolean
+  defaultSaveLocation: string | null;
+  recentFilesLimit: number;
+  confirmDelete: boolean;
+  openLastFile: boolean;
 
   // Appearance settings
-  showDocStats: boolean
+  showDocStats: boolean;
 
   // Code Block settings
-  codeBlockShowLineNumbers: boolean
-  codeBlockEnableWordWrap: boolean
+  codeBlockShowLineNumbers: boolean;
+  codeBlockEnableWordWrap: boolean;
 
   // Update settings
-  autoCheckUpdates: boolean
+  autoCheckUpdates: boolean;
 
   // Actions
-  setAutoSaveEnabled: (enabled: boolean) => void
-  setAutoSaveDelay: (delay: number) => void
-  setFontSize: (size: number) => void
-  setLineHeight: (height: number) => void
-  setSpellCheck: (enabled: boolean) => void
-  setDefaultSaveLocation: (path: string | null) => void
-  setRecentFilesLimit: (limit: number) => void
-  setConfirmDelete: (confirm: boolean) => void
-  setOpenLastFile: (open: boolean) => void
-  setShowDocStats: (show: boolean) => void
-  setCodeBlockShowLineNumbers: (show: boolean) => void
-  setCodeBlockEnableWordWrap: (enable: boolean) => void
-  setAutoCheckUpdates: (check: boolean) => void
-  resetToDefaults: () => void
+  setAutoSaveEnabled: (enabled: boolean) => void;
+  setAutoSaveDelay: (delay: number) => void;
+  setFontSize: (size: number) => void;
+  setLineHeight: (height: number) => void;
+  setSpellCheck: (enabled: boolean) => void;
+  setDefaultSaveLocation: (path: string | null) => void;
+  setRecentFilesLimit: (limit: number) => void;
+  setConfirmDelete: (confirm: boolean) => void;
+  setOpenLastFile: (open: boolean) => void;
+  setShowDocStats: (show: boolean) => void;
+  setCodeBlockShowLineNumbers: (show: boolean) => void;
+  setCodeBlockEnableWordWrap: (enable: boolean) => void;
+  setAutoCheckUpdates: (check: boolean) => void;
+  resetToDefaults: () => void;
 }
 
 const DEFAULT_PREFERENCES = {
@@ -58,7 +58,7 @@ const DEFAULT_PREFERENCES = {
   codeBlockShowLineNumbers: true,
   codeBlockEnableWordWrap: false,
   autoCheckUpdates: true,
-}
+};
 
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
@@ -82,6 +82,6 @@ export const usePreferencesStore = create<PreferencesState>()(
     }),
     {
       name: 'preferences-storage',
-    }
-  )
-)
+    },
+  ),
+);

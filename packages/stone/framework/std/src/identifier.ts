@@ -6,25 +6,19 @@ import type { BlockService, LifeCycleWatcher } from './extension/index.js';
 import type { BlockStdScope } from './scope/index.js';
 import type { BlockViewType, WidgetViewType } from './spec/type.js';
 
-export const BlockServiceIdentifier =
-  createIdentifier<BlockService>('BlockService');
+export const BlockServiceIdentifier = createIdentifier<BlockService>('BlockService');
 
-export const BlockFlavourIdentifier = createIdentifier<{ flavour: string }>(
-  'BlockFlavour'
-);
+export const BlockFlavourIdentifier = createIdentifier<{ flavour: string }>('BlockFlavour');
 
 export const CommandIdentifier = createIdentifier<Command>('Commands');
 
-export const ConfigIdentifier =
-  createIdentifier<Record<string, unknown>>('Config');
+export const ConfigIdentifier = createIdentifier<Record<string, unknown>>('Config');
 
 export const BlockViewIdentifier = createIdentifier<BlockViewType>('BlockView');
 
-export const WidgetViewIdentifier =
-  createIdentifier<WidgetViewType>('WidgetView');
+export const WidgetViewIdentifier = createIdentifier<WidgetViewType>('WidgetView');
 
-export const LifeCycleWatcherIdentifier =
-  createIdentifier<LifeCycleWatcher>('LifeCycleWatcher');
+export const LifeCycleWatcherIdentifier = createIdentifier<LifeCycleWatcher>('LifeCycleWatcher');
 
 export const StdIdentifier = createIdentifier<BlockStdScope>('Std');
 

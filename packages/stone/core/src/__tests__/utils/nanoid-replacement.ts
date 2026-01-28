@@ -1,4 +1,4 @@
-import type { BlockSnapshot, SliceSnapshot } from "@stone/store";
+import type { BlockSnapshot, SliceSnapshot } from '@stone/store';
 
 export function nanoidReplacement(snapshot: BlockSnapshot | SliceSnapshot) {
   return JSON.parse(nanoidReplacementString(JSON.stringify(snapshot)));
@@ -24,10 +24,7 @@ function nanoidReplacementString(snapshotString: string) {
       matchesReplaceMap.set(match[0], match[0]);
       escapedNumber++;
     } else {
-      matchesReplaceMap.set(
-        match[0],
-        `"matchesReplaceMap[${index - escapedNumber}]"`
-      );
+      matchesReplaceMap.set(match[0], `"matchesReplaceMap[${index - escapedNumber}]"`);
     }
   });
   return snapshotString.replace(re, (match) => matchesReplaceMap.get(match));

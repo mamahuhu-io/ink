@@ -1,11 +1,7 @@
 import { BlockSchemaExtension } from '@ink/stone-store';
 
 import { createEmbedBlockSchema } from '../../../utils/index.js';
-import {
-  type EmbedHtmlBlockProps,
-  EmbedHtmlModel,
-  EmbedHtmlStyles,
-} from './html-model.js';
+import { type EmbedHtmlBlockProps, EmbedHtmlModel, EmbedHtmlStyles } from './html-model.js';
 
 const defaultEmbedHtmlProps: EmbedHtmlBlockProps = {
   style: EmbedHtmlStyles[0],
@@ -21,5 +17,4 @@ export const EmbedHtmlBlockSchema = createEmbedBlockSchema({
   props: (): EmbedHtmlBlockProps => defaultEmbedHtmlProps,
 });
 
-export const EmbedHtmlBlockSchemaExtension =
-  BlockSchemaExtension(EmbedHtmlBlockSchema);
+export const EmbedHtmlBlockSchemaExtension = BlockSchemaExtension(EmbedHtmlBlockSchema);

@@ -1,23 +1,13 @@
-import type {
-  AttributeRenderer,
-  InlineEditor,
-  InlineRange,
-} from '@ink/stone-std/inline';
+import type { AttributeRenderer, InlineEditor, InlineRange } from '@ink/stone-std/inline';
 import type { BaseTextAttributes, DeltaInsert } from '@ink/stone-store';
 import type * as Y from 'yjs';
 import type { AnyZodObject, KeySchema, ZodEffects, ZodRecord } from 'zod';
 
-export type InlineSpecs<
-  TextAttributes extends BaseTextAttributes = BaseTextAttributes,
-> = {
+export type InlineSpecs<TextAttributes extends BaseTextAttributes = BaseTextAttributes> = {
   name: keyof TextAttributes | string;
   schema:
     | AnyZodObject
-    | ZodEffects<
-        ZodRecord<KeySchema>,
-        Partial<Record<string, unknown>>,
-        unknown
-      >;
+    | ZodEffects<ZodRecord<KeySchema>, Partial<Record<string, unknown>>, unknown>;
   match: (delta: DeltaInsert<TextAttributes>) => boolean;
   renderer: AttributeRenderer<TextAttributes>;
   embed?: boolean;
@@ -35,10 +25,9 @@ export type InlineMarkdownMatchAction<
   undoManager: Y.UndoManager;
 }) => void;
 
-export type InlineMarkdownMatch<
-  InkTextAttributes extends BaseTextAttributes = BaseTextAttributes,
-> = {
-  name: string;
-  pattern: RegExp;
-  action: InlineMarkdownMatchAction<InkTextAttributes>;
-};
+export type InlineMarkdownMatch<InkTextAttributes extends BaseTextAttributes = BaseTextAttributes> =
+  {
+    name: string;
+    pattern: RegExp;
+    action: InlineMarkdownMatchAction<InkTextAttributes>;
+  };

@@ -15,7 +15,7 @@ export class PageWatcher {
     disposables.add(
       this.pageViewportService.subscribe(() => {
         this.widget.hide();
-      })
+      }),
     );
   }
 }

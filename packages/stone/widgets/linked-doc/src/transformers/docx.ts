@@ -20,12 +20,7 @@ type ImportDocxOptions = {
  * @param options.imported - The .docx file as a Blob.
  * @returns A Promise that resolves to the ID of the newly created doc, or undefined if import fails.
  */
-async function importDocx({
-  collection,
-  schema,
-  imported,
-  extensions,
-}: ImportDocxOptions) {
+async function importDocx({ collection, schema, imported, extensions }: ImportDocxOptions) {
   try {
     const { value } = await convertToHtml({
       arrayBuffer: await imported.arrayBuffer(),

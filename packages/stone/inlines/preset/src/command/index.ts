@@ -1,5 +1,5 @@
 export type { TextFormatConfig } from './config.js';
-export { textFormatConfigs, getTextFormatConfigs, setTextFormatI18nGetter } from './config.js';
+export { getTextFormatConfigs, setTextFormatI18nGetter, textFormatConfigs } from './config.js';
 export {
   FORMAT_BLOCK_SUPPORT_FLAVOURS,
   FORMAT_NATIVE_SUPPORT_FLAVOURS,

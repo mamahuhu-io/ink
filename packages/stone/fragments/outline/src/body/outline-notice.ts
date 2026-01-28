@@ -1,6 +1,6 @@
-import { NoteDisplayMode } from '@ink/stone-model';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { CloseIcon, SortIcon } from '@ink/stone-icons/lit';
+import { NoteDisplayMode } from '@ink/stone-model';
 import { ShadowlessElement } from '@ink/stone-std';
 import { consume } from '@lit/context';
 import { effect, signal } from '@preact/signals-core';
@@ -12,9 +12,7 @@ import * as styles from './outline-notice.css';
 
 export const INK_OUTLINE_NOTICE = 'ink-outline-notice';
 
-export class OutlineNotice extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class OutlineNotice extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   private readonly _visible$ = signal(false);
 
   override connectedCallback(): void {
@@ -31,14 +29,13 @@ export class OutlineNotice extends SignalWatcher(
         }
 
         const shouldShowNotice =
-          getNotesFromStore(this._context.editor$.value.store, [
-            NoteDisplayMode.DocOnly,
-          ]).length > 0;
+          getNotesFromStore(this._context.editor$.value.store, [NoteDisplayMode.DocOnly]).length >
+          0;
 
         if (shouldShowNotice && !this._visible$.peek()) {
           this._visible$.value = true;
         }
-      })
+      }),
     );
   }
 
@@ -61,9 +58,7 @@ export class OutlineNotice extends SignalWatcher(
           >
         </div>
         <div class=${styles.outlineNoticeBody}>
-          <div class="${styles.notice}">
-            Some contents are not visible on edgeless.
-          </div>
+          <div class="${styles.notice}">Some contents are not visible on edgeless.</div>
           <div
             data-testid="outline-notice-sort-button"
             class="${styles.button}"
@@ -73,9 +68,7 @@ export class OutlineNotice extends SignalWatcher(
             }}
           >
             <span class=${styles.buttonSpan}>Click here or</span>
-            <span class=${styles.buttonSpan}
-              >${SortIcon({ width: '20px', height: '20px' })}</span
-            >
+            <span class=${styles.buttonSpan}>${SortIcon({ width: '20px', height: '20px' })}</span>
             <span class=${styles.buttonSpan}>to organize content.</span>
           </div>
         </div>

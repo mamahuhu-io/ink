@@ -1,10 +1,11 @@
+import { flip, offset, shift } from '@floating-ui/dom';
 import { HoverController } from '@ink/stone-components/hover';
 import { PeekViewProvider } from '@ink/stone-components/peek';
+import { WithDisposable } from '@ink/stone-global/lit';
 import type { FootNote } from '@ink/stone-model';
 import { CitationProvider } from '@ink/stone-shared/services';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
-import { WithDisposable } from '@ink/stone-global/lit';
 import {
   BlockSelection,
   type BlockStdScope,
@@ -18,7 +19,6 @@ import {
   ZERO_WIDTH_FOR_EMPTY_LINE,
 } from '@ink/stone-std/inline';
 import type { DeltaInsert } from '@ink/stone-store';
-import { flip, offset, shift } from '@floating-ui/dom';
 import { baseTheme } from '@ink/stone-theme';
 import { css, html, nothing, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
@@ -99,9 +99,7 @@ export class InkFootnoteNode extends WithDisposable(ShadowlessElement) {
   }
 
   get inlineEditor() {
-    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(
-      `[${INLINE_ROOT_ATTR}]`
-    );
+    const inlineRoot = this.closest<InlineRootElement<InkTextAttributes>>(`[${INLINE_ROOT_ATTR}]`);
     return inlineRoot?.inlineEditor;
   }
 
@@ -170,17 +168,12 @@ export class InkFootnoteNode extends WithDisposable(ShadowlessElement) {
   };
 
   private readonly _FootNoteDefaultContent = (footnote: FootNote) => {
-    return html`<span
-      class="footnote-content-default"
-      @click=${this.onFootnoteClick}
+    return html`<span class="footnote-content-default" @click=${this.onFootnoteClick}
       >${footnote.label}</span
     >`;
   };
 
-  private readonly _FootNotePopup = (
-    footnote: FootNote,
-    abortController: AbortController
-  ) => {
+  private readonly _FootNotePopup = (footnote: FootNote, abortController: AbortController) => {
     return this.customPopupRenderer
       ? this.customPopupRenderer(footnote, this.std, abortController)
       : html`<footnote-popup
@@ -198,11 +191,7 @@ export class InkFootnoteNode extends WithDisposable(ShadowlessElement) {
       const { footnote } = this;
       if (!footnote) return null;
 
-      if (
-        this.config?.hidePopup ||
-        !this.selfInlineRange ||
-        !this.inlineEditor
-      ) {
+      if (this.config?.hidePopup || !this.selfInlineRange || !this.inlineEditor) {
         return null;
       }
 
@@ -231,15 +220,11 @@ export class InkFootnoteNode extends WithDisposable(ShadowlessElement) {
           referenceElement: this,
           placement: 'top',
           autoUpdate: true,
-          middleware: [
-            shift({ padding: POPUP_SHIFT_PADDING }),
-            flip(),
-            offset(POPUP_OFFSET),
-          ],
+          middleware: [shift({ padding: POPUP_SHIFT_PADDING }), flip(), offset(POPUP_OFFSET)],
         },
       };
     },
-    { enterDelay: 300 }
+    { enterDelay: 300 },
   );
 
   override render() {

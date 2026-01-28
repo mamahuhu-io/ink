@@ -12,6 +12,4 @@ export const EmbedIframeBlockSchema = defineBlockSchema({
   toModel: () => new EmbedIframeBlockModel(),
 });
 
-export const EmbedIframeBlockSchemaExtension = BlockSchemaExtension(
-  EmbedIframeBlockSchema
-);
+export const EmbedIframeBlockSchemaExtension = BlockSchemaExtension(EmbedIframeBlockSchema);

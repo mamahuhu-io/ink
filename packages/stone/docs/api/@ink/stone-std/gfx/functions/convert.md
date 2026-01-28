@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / convert
 
@@ -12,6 +12,7 @@ The convert decorator is used to convert the property value before it's
 set to the Y map.
 
 Note:
+
 1. This decorator function will not execute in model initialization.
 
 ## Type Parameters
@@ -22,7 +23,7 @@ Note:
 
 ### T
 
-`T` *extends* `GfxPrimitiveElementModel`\<`BaseElementProps`\>
+`T` _extends_ `GfxPrimitiveElementModel`\<`BaseElementProps`\>
 
 ## Parameters
 

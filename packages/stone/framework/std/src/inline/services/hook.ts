@@ -10,9 +10,7 @@ export interface BeforeinputHookCtx<TextAttributes extends BaseTextAttributes> {
   data: string | null;
   attributes: TextAttributes;
 }
-export interface CompositionEndHookCtx<
-  TextAttributes extends BaseTextAttributes,
-> {
+export interface CompositionEndHookCtx<TextAttributes extends BaseTextAttributes> {
   inlineEditor: InlineEditor<TextAttributes>;
   raw: CompositionEvent;
   inlineRange: InlineRange;
@@ -30,6 +28,6 @@ export class InlineHookService<TextAttributes extends BaseTextAttributes> {
     readonly hooks: {
       beforeinput?: (props: BeforeinputHookCtx<TextAttributes>) => void;
       compositionEnd?: (props: CompositionEndHookCtx<TextAttributes>) => void;
-    } = {}
+    } = {},
   ) {}
 }

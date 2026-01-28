@@ -56,16 +56,13 @@ export class AdapterMenu extends SignalWatcher(LitElement) {
 
   override render() {
     return html`<div class="adapter-menu">
-      ${ADAPTERS.map(adapter => {
+      ${ADAPTERS.map((adapter) => {
         const classes = classMap({
           'adapter-menu-item': true,
           active: this.activeAdapter.id === adapter.id,
         });
         return html`
-          <button
-            class=${classes}
-            @click=${() => this._handleAdapterChange(adapter)}
-          >
+          <button class=${classes} @click=${() => this._handleAdapterChange(adapter)}>
             ${adapter.label}
           </button>
         `;

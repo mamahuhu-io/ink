@@ -1,18 +1,12 @@
-import { insertLinkedNode } from "@ink/stone-inline-reference";
-import { CodeBlockModel } from "@ink/stone-model";
-import { getInlineEditorByModel } from "@ink/stone-rich-text";
-import { BRACKET_PAIRS } from "@ink/stone-shared/consts";
-import { createDefaultDoc, matchModels } from "@ink/stone-shared/utils";
-import {
-  type BlockStdScope,
-  TextSelection,
-  type UIEventHandler,
-} from "@ink/stone-std";
-import type { InlineEditor } from "@ink/stone-std/inline";
+import { insertLinkedNode } from '@ink/stone-inline-reference';
+import { CodeBlockModel } from '@ink/stone-model';
+import { getInlineEditorByModel } from '@ink/stone-rich-text';
+import { BRACKET_PAIRS } from '@ink/stone-shared/consts';
+import { createDefaultDoc, matchModels } from '@ink/stone-shared/utils';
+import { type BlockStdScope, TextSelection, type UIEventHandler } from '@ink/stone-std';
+import type { InlineEditor } from '@ink/stone-std/inline';
 
-export const bracketKeymap = (
-  std: BlockStdScope,
-): Record<string, UIEventHandler> => {
+export const bracketKeymap = (std: BlockStdScope): Record<string, UIEventHandler> => {
   const keymap = BRACKET_PAIRS.reduce(
     (acc, pair) => {
       return {
@@ -26,10 +20,7 @@ export const bracketKeymap = (
           const model = doc.getBlock(textSelection.from.blockId)?.model;
           if (!model) return;
           if (!matchModels(model, [CodeBlockModel])) return;
-          const inlineEditor = getInlineEditorByModel(
-            std,
-            textSelection.from.blockId,
-          );
+          const inlineEditor = getInlineEditorByModel(std, textSelection.from.blockId);
           if (!inlineEditor) return;
           const inlineRange = inlineEditor.getInlineRange();
           if (!inlineRange) return;
@@ -40,7 +31,7 @@ export const bracketKeymap = (
               index: inlineRange.index + 1,
               length: 0,
             });
-            ctx.get("keyboardState").raw.preventDefault();
+            ctx.get('keyboardState').raw.preventDefault();
           }
         },
         [pair.left]: (ctx) => {
@@ -57,28 +48,22 @@ export const bracketKeymap = (
           if (textSelection.isCollapsed() && !isCodeBlock) return;
           if (!textSelection.isInSameBlock()) return;
 
-          ctx.get("keyboardState").raw.preventDefault();
+          ctx.get('keyboardState').raw.preventDefault();
 
-          const inlineEditor = getInlineEditorByModel(
-            std,
-            textSelection.from.blockId,
-          );
+          const inlineEditor = getInlineEditorByModel(std, textSelection.from.blockId);
           if (!inlineEditor) return;
           const inlineRange = inlineEditor.getInlineRange();
           if (!inlineRange) return;
           const selectedText = inlineEditor.yText
             .toString()
             .slice(inlineRange.index, inlineRange.index + inlineRange.length);
-          if (!isCodeBlock && pair.name === "square bracket") {
+          if (!isCodeBlock && pair.name === 'square bracket') {
             // [[Selected text]] should automatically be converted to a Linked doc with the title "Selected text".
             // See https://github.com/mamahuhu-io/stone/issues/2730
             const success = tryConvertToLinkedDoc(std, inlineEditor);
             if (success) return true;
           }
-          inlineEditor.insertText(
-            inlineRange,
-            pair.left + selectedText + pair.right,
-          );
+          inlineEditor.insertText(inlineRange, pair.left + selectedText + pair.right);
 
           inlineEditor.setInlineRange({
             index: inlineRange.index + 1,
@@ -94,7 +79,7 @@ export const bracketKeymap = (
 
   return {
     ...keymap,
-    "`": (ctx) => {
+    '`': (ctx) => {
       const { store: doc, selection } = std;
       if (doc.readonly) return;
 
@@ -104,11 +89,8 @@ export const bracketKeymap = (
       const model = doc.getBlock(textSelection.from.blockId)?.model;
       if (!model) return;
 
-      ctx.get("keyboardState").raw.preventDefault();
-      const inlineEditor = getInlineEditorByModel(
-        std,
-        textSelection.from.blockId,
-      );
+      ctx.get('keyboardState').raw.preventDefault();
+      const inlineEditor = getInlineEditorByModel(std, textSelection.from.blockId);
       if (!inlineEditor) return;
       const inlineRange = inlineEditor.getInlineRange();
       if (!inlineRange) return;
@@ -127,10 +109,7 @@ export const bracketKeymap = (
 function tryConvertToLinkedDoc(std: BlockStdScope, inlineEditor: InlineEditor) {
   const root = std.store.root;
   if (!root) return false;
-  const linkedDocWidgetEle = std.view.getWidget(
-    "ink-linked-doc-widget",
-    root.id,
-  );
+  const linkedDocWidgetEle = std.view.getWidget('ink-linked-doc-widget', root.id);
   if (!linkedDocWidgetEle) return false;
 
   const inlineRange = inlineEditor.getInlineRange();
@@ -138,13 +117,10 @@ function tryConvertToLinkedDoc(std: BlockStdScope, inlineEditor: InlineEditor) {
   const text = inlineEditor.yText.toString();
   const left = text[inlineRange.index - 1];
   const right = text[inlineRange.index + inlineRange.length];
-  const needConvert = left === "[" && right === "]";
+  const needConvert = left === '[' && right === ']';
   if (!needConvert) return false;
 
-  const docName = text.slice(
-    inlineRange.index,
-    inlineRange.index + inlineRange.length,
-  );
+  const docName = text.slice(inlineRange.index, inlineRange.index + inlineRange.length);
   inlineEditor.deleteText({
     index: inlineRange.index - 1,
     length: inlineRange.length + 2,

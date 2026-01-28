@@ -7,10 +7,7 @@ import type { Workspace } from './workspace.js';
 import type { DocMeta } from './workspace-meta.js';
 
 export type GetStoreOptions = Omit<StoreOptions, 'schema' | 'doc'>;
-export type RemoveStoreOptions = Pick<
-  StoreOptions,
-  'query' | 'id' | 'readonly'
->;
+export type RemoveStoreOptions = Pick<StoreOptions, 'query' | 'id' | 'readonly'>;
 
 export interface Doc {
   readonly id: string;

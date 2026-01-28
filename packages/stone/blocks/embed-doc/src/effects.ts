@@ -9,21 +9,15 @@ export function effects() {
 
   customElements.define(
     'ink-embed-edgeless-linked-doc-block',
-    EmbedEdgelessLinkedDocBlockComponent
+    EmbedEdgelessLinkedDocBlockComponent,
   );
-  customElements.define(
-    'ink-embed-linked-doc-block',
-    EmbedLinkedDocBlockComponent
-  );
+  customElements.define('ink-embed-linked-doc-block', EmbedLinkedDocBlockComponent);
 
   customElements.define(
     'ink-embed-edgeless-synced-doc-block',
-    EmbedEdgelessSyncedDocBlockComponent
+    EmbedEdgelessSyncedDocBlockComponent,
   );
-  customElements.define(
-    'ink-embed-synced-doc-block',
-    EmbedSyncedDocBlockComponent
-  );
+  customElements.define('ink-embed-synced-doc-block', EmbedSyncedDocBlockComponent);
 }
 
 declare global {

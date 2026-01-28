@@ -26,10 +26,7 @@ const paragraphBlockMatchTags = new Set([
 const tagsInAncestor = (o: NodeProps<HtmlAST>, tagNames: Array<string>) => {
   let parent = o.parent;
   while (parent) {
-    if (
-      HastUtils.isElement(parent.node) &&
-      tagNames.includes(parent.node.tagName)
-    ) {
+    if (HastUtils.isElement(parent.node) && tagNames.includes(parent.node.tagName)) {
       return true;
     }
     parent = parent.parent;
@@ -39,9 +36,8 @@ const tagsInAncestor = (o: NodeProps<HtmlAST>, tagNames: Array<string>) => {
 
 export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
   flavour: ParagraphBlockSchema.model.flavour,
-  toMatch: o =>
-    HastUtils.isElement(o.node) && paragraphBlockMatchTags.has(o.node.tagName),
-  fromMatch: o => o.node.flavour === ParagraphBlockSchema.model.flavour,
+  toMatch: (o) => HastUtils.isElement(o.node) && paragraphBlockMatchTags.has(o.node.tagName),
+  fromMatch: (o) => o.node.flavour === ParagraphBlockSchema.model.flavour,
   toBlockSnapshot: {
     enter: (o, context) => {
       if (!HastUtils.isElement(o.node)) {
@@ -54,7 +50,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
           // Special case for no paragraph in blockquote
           const texts = HastUtils.getTextChildren(o.node);
           // check if only blank text
-          const onlyBlankText = texts.every(text => !text.value.trim());
+          const onlyBlankText = texts.every((text) => !text.value.trim());
           if (texts && !onlyBlankText) {
             walkerContext
               .openNode(
@@ -66,14 +62,12 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                     type: 'quote',
                     text: {
                       '$stone:internal:text$': true,
-                      delta: deltaConverter.astToDelta(
-                        HastUtils.getTextChildrenOnlyAst(o.node)
-                      ),
+                      delta: deltaConverter.astToDelta(HastUtils.getTextChildrenOnlyAst(o.node)),
                     },
                   },
                   children: [],
                 },
-                'children'
+                'children',
               )
               .closeNode();
           }
@@ -103,7 +97,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                   },
                   children: [],
                 },
-                'children'
+                'children',
               )
               .closeNode();
             walkerContext.skipAllChildren();
@@ -117,9 +111,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               id: nanoid(),
               flavour: 'ink:paragraph',
               props: {
-                type: walkerContext.getGlobalContext('hast:blockquote')
-                  ? 'quote'
-                  : 'text',
+                type: walkerContext.getGlobalContext('hast:blockquote') ? 'quote' : 'text',
                 text: {
                   '$stone:internal:text$': true,
                   delta: deltaConverter.astToDelta(o.node),
@@ -127,7 +119,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
               },
               children: [],
             },
-            'children'
+            'children',
           );
           break;
         }
@@ -152,7 +144,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .closeNode();
           walkerContext.skipAllChildren();
@@ -167,19 +159,14 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
       const { walkerContext } = context;
       switch (o.node.tagName) {
         case 'div': {
-          // eslint-disable-next-line sonarjs/no-collapsible-if
           if (
             o.parent?.node.type === 'element' &&
             o.parent.node.tagName !== 'li' &&
             Array.isArray(o.node.properties?.className)
           ) {
             if (
-              o.node.properties.className.includes(
-                'ink-paragraph-block-container'
-              ) ||
-              o.node.properties.className.includes(
-                'ink-block-children-container'
-              ) ||
+              o.node.properties.className.includes('ink-paragraph-block-container') ||
+              o.node.properties.className.includes('ink-block-children-container') ||
               o.node.properties.className.includes('indented')
             ) {
               walkerContext.closeNode();
@@ -196,9 +183,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
             o.next?.type === 'element' &&
             o.next.tagName === 'div' &&
             Array.isArray(o.next.properties?.className) &&
-            (o.next.properties.className.includes(
-              'ink-block-children-container'
-            ) ||
+            (o.next.properties.className.includes('ink-block-children-container') ||
               o.next.properties.className.includes('indented'))
           ) {
             // Close the node when leaving div indented
@@ -228,7 +213,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .openNode(
               {
@@ -237,7 +222,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 properties: {},
                 children: deltaConverter.deltaToAST(text.delta),
               },
-              'children'
+              'children',
             )
             .closeNode()
             .openNode(
@@ -250,7 +235,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             );
           break;
         }
@@ -270,7 +255,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .openNode(
               {
@@ -279,7 +264,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 properties: {},
                 children: deltaConverter.deltaToAST(text.delta),
               },
-              'children'
+              'children',
             )
             .closeNode()
             .openNode(
@@ -292,7 +277,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             );
           break;
         }
@@ -307,7 +292,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .openNode(
               {
@@ -318,7 +303,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             )
             .openNode(
               {
@@ -327,7 +312,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 properties: {},
                 children: deltaConverter.deltaToAST(text.delta),
               },
-              'children'
+              'children',
             )
             .closeNode()
             .closeNode()
@@ -341,7 +326,7 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
                 },
                 children: [],
               },
-              'children'
+              'children',
             );
           break;
         }
@@ -355,5 +340,5 @@ export const paragraphBlockHtmlAdapterMatcher: BlockHtmlAdapterMatcher = {
 };
 
 export const ParagraphBlockHtmlAdapterExtension = BlockHtmlAdapterExtension(
-  paragraphBlockHtmlAdapterMatcher
+  paragraphBlockHtmlAdapterMatcher,
 );

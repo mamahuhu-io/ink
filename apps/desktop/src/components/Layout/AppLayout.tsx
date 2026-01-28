@@ -1,27 +1,28 @@
-import { ReactNode, useState, useCallback, useEffect, useRef } from 'react'
-import { ActivityBar } from './ActivityBar'
-import { Sidebar } from './Sidebar'
-import { MainContent } from './MainContent'
-import { setToggleSidebarCallback, setToggleSourceModeCallback } from '../../hooks/useAppCommands'
-import { useSidebarStore } from '../../stores/sidebar'
-import { useEditorModeStore } from '../../stores/editorMode'
-import { useTabStore } from '../../stores/tabs'
-import { isTauri } from '../../services'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+
+import { setToggleSidebarCallback, setToggleSourceModeCallback } from '../../hooks/useAppCommands';
+import { isTauri } from '../../services';
+import { useEditorModeStore } from '../../stores/editorMode';
+import { useSidebarStore } from '../../stores/sidebar';
+import { useTabStore } from '../../stores/tabs';
+import { ActivityBar } from './ActivityBar';
+import { MainContent } from './MainContent';
+import { Sidebar } from './Sidebar';
 
 interface AppLayoutProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
-const MIN_SIDEBAR_WIDTH = 180
-const MAX_SIDEBAR_WIDTH = 500
-const DEFAULT_SIDEBAR_WIDTH = 240
+const MIN_SIDEBAR_WIDTH = 180;
+const MAX_SIDEBAR_WIDTH = 500;
+const DEFAULT_SIDEBAR_WIDTH = 240;
 
 // Update menu check state - unified function for all sidebar toggle sources
 async function syncMenuSidebarState(visible: boolean) {
   if (isTauri()) {
     try {
-      const { invoke } = await import('@tauri-apps/api/core')
-      await invoke('set_sidebar_visible', { visible })
+      const { invoke } = await import('@tauri-apps/api/core');
+      await invoke('set_sidebar_visible', { visible });
     } catch {
       // Silently ignore sync errors
     }
@@ -31,101 +32,107 @@ async function syncMenuSidebarState(visible: boolean) {
 export function AppLayout({ children }: AppLayoutProps) {
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     // Try to restore from localStorage
-    const saved = localStorage.getItem('sidebar-width')
+    const saved = localStorage.getItem('sidebar-width');
     if (saved) {
-      const width = parseInt(saved, 10)
+      const width = parseInt(saved, 10);
       if (!isNaN(width) && width >= MIN_SIDEBAR_WIDTH && width <= MAX_SIDEBAR_WIDTH) {
-        return width
+        return width;
       }
     }
-    return DEFAULT_SIDEBAR_WIDTH
-  })
+    return DEFAULT_SIDEBAR_WIDTH;
+  });
 
   // Use sidebar store for visibility
-  const { isVisible: sidebarVisible, toggleVisible: toggleSidebar } = useSidebarStore()
-  const toggleSourceMode = useEditorModeStore((state) => state.toggleMode)
-  const activeTabId = useTabStore((state) => state.activeTabId)
-  const tabs = useTabStore((state) => state.tabs)
+  const { isVisible: sidebarVisible, toggleVisible: toggleSidebar } = useSidebarStore();
+  const toggleSourceMode = useEditorModeStore((state) => state.toggleMode);
+  const activeTabId = useTabStore((state) => state.activeTabId);
+  const tabs = useTabStore((state) => state.tabs);
 
-  const [isResizing, setIsResizing] = useState(false)
-  const startXRef = useRef(0)
-  const startWidthRef = useRef(0)
+  const [isResizing, setIsResizing] = useState(false);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(0);
 
   // Sync menu state whenever visibility changes (from any source: menu, button, etc.)
   // This useEffect runs on mount and whenever sidebarVisible changes
   useEffect(() => {
-    syncMenuSidebarState(sidebarVisible)
-  }, [sidebarVisible])
+    syncMenuSidebarState(sidebarVisible);
+  }, [sidebarVisible]);
 
   // Register toggle sidebar callback for menu
   useEffect(() => {
-    setToggleSidebarCallback(toggleSidebar)
+    setToggleSidebarCallback(toggleSidebar);
     return () => {
-      setToggleSidebarCallback(() => {})
-    }
-  }, [toggleSidebar])
+      setToggleSidebarCallback(() => {});
+    };
+  }, [toggleSidebar]);
 
   // Register toggle source mode callback for menu
   useEffect(() => {
-    const activeTab = tabs.find(t => t.id === activeTabId)
+    const activeTab = tabs.find((t) => t.id === activeTabId);
     const handleToggleSourceMode = () => {
-      console.log('[ToggleSourceMode] Callback triggered, activeTab:', activeTab?.docId)
+      console.log('[ToggleSourceMode] Callback triggered, activeTab:', activeTab?.docId);
       if (activeTab?.docId) {
-        const newMode = toggleSourceMode(activeTab.docId)
-        console.log('[ToggleSourceMode] Mode toggled to:', newMode)
+        const newMode = toggleSourceMode(activeTab.docId);
+        console.log('[ToggleSourceMode] Mode toggled to:', newMode);
       } else {
-        console.warn('[ToggleSourceMode] No active tab docId')
+        console.warn('[ToggleSourceMode] No active tab docId');
       }
-    }
-    setToggleSourceModeCallback(handleToggleSourceMode)
+    };
+    setToggleSourceModeCallback(handleToggleSourceMode);
     return () => {
-      setToggleSourceModeCallback(() => {})
-    }
-  }, [toggleSourceMode, activeTabId, tabs])
+      setToggleSourceModeCallback(() => {});
+    };
+  }, [toggleSourceMode, activeTabId, tabs]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault()
-    setIsResizing(true)
-    startXRef.current = e.clientX
-    startWidthRef.current = sidebarWidth
-  }, [sidebarWidth])
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setIsResizing(true);
+      startXRef.current = e.clientX;
+      startWidthRef.current = sidebarWidth;
+    },
+    [sidebarWidth],
+  );
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isResizing) return
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isResizing) return;
 
-    const delta = e.clientX - startXRef.current
-    let newWidth = startWidthRef.current + delta
+      const delta = e.clientX - startXRef.current;
+      let newWidth = startWidthRef.current + delta;
 
-    // Clamp the width
-    newWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, newWidth))
+      // Clamp the width
+      newWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, newWidth));
 
-    setSidebarWidth(newWidth)
-  }, [isResizing])
+      setSidebarWidth(newWidth);
+    },
+    [isResizing],
+  );
 
   const handleMouseUp = useCallback(() => {
     if (isResizing) {
-      setIsResizing(false)
+      setIsResizing(false);
       // Save to localStorage
-      localStorage.setItem('sidebar-width', sidebarWidth.toString())
+      localStorage.setItem('sidebar-width', sidebarWidth.toString());
     }
-  }, [isResizing, sidebarWidth])
+  }, [isResizing, sidebarWidth]);
 
   useEffect(() => {
     if (isResizing) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
       // Add a class to body to prevent text selection during resize
-      document.body.style.userSelect = 'none'
-      document.body.style.cursor = 'col-resize'
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'col-resize';
 
       return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-        document.body.style.userSelect = ''
-        document.body.style.cursor = ''
-      }
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.userSelect = '';
+        document.body.style.cursor = '';
+      };
     }
-  }, [isResizing, handleMouseMove, handleMouseUp])
+  }, [isResizing, handleMouseMove, handleMouseUp]);
 
   return (
     <div className={`app-layout ${!sidebarVisible ? 'sidebar-hidden' : ''}`}>
@@ -138,10 +145,17 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div
             className={`resize-handle ${isResizing ? 'resizing' : ''}`}
             onMouseDown={handleMouseDown}
+            role="slider"
+            tabIndex={0}
+            aria-valuenow={sidebarWidth}
+            aria-valuemin={MIN_SIDEBAR_WIDTH}
+            aria-valuemax={MAX_SIDEBAR_WIDTH}
+            aria-orientation="vertical"
+            aria-label="Resize sidebar"
           />
         </>
       )}
       <MainContent>{children}</MainContent>
     </div>
-  )
+  );
 }

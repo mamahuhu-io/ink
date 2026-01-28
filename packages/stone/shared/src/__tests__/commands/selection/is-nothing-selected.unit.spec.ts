@@ -13,10 +13,7 @@ describe('commands/selection', () => {
     it('should return true when nothing is selected', () => {
       const host = ink`<ink-page></ink-page>`;
 
-      const [_, { isNothingSelected }] = host.command.exec(
-        isNothingSelectedCommand,
-        {}
-      );
+      const [_, { isNothingSelected }] = host.command.exec(isNothingSelectedCommand, {});
 
       expect(isNothingSelected).toBe(true);
     });
@@ -44,12 +41,9 @@ describe('commands/selection', () => {
         },
       });
 
-      const [_, { isNothingSelected }] = host.command.exec(
-        isNothingSelectedCommand,
-        {
-          currentTextSelection: textSelection,
-        }
-      );
+      const [_, { isNothingSelected }] = host.command.exec(isNothingSelectedCommand, {
+        currentTextSelection: textSelection,
+      });
 
       expect(isNothingSelected).toBe(false);
     });
@@ -68,12 +62,9 @@ describe('commands/selection', () => {
         blockId: 'paragraph-1',
       });
 
-      const [_, { isNothingSelected }] = host.command.exec(
-        isNothingSelectedCommand,
-        {
-          currentBlockSelections: [blockSelection],
-        }
-      );
+      const [_, { isNothingSelected }] = host.command.exec(isNothingSelectedCommand, {
+        currentBlockSelections: [blockSelection],
+      });
 
       expect(isNothingSelected).toBe(false);
     });
@@ -92,12 +83,9 @@ describe('commands/selection', () => {
         blockId: 'image-1',
       });
 
-      const [_, { isNothingSelected }] = host.command.exec(
-        isNothingSelectedCommand,
-        {
-          currentImageSelections: [imageSelection],
-        }
-      );
+      const [_, { isNothingSelected }] = host.command.exec(isNothingSelectedCommand, {
+        currentImageSelections: [imageSelection],
+      });
 
       expect(isNothingSelected).toBe(false);
     });
@@ -125,7 +113,7 @@ describe('commands/selection', () => {
         // No explicit `currentTextSelection provided
         std: {
           selection: {
-            find: vi.fn().mockImplementation(type => {
+            find: vi.fn().mockImplementation((type) => {
               if (type === TextSelection) {
                 return mockTextSelection;
               }
@@ -138,7 +126,7 @@ describe('commands/selection', () => {
 
       const [_, { isNothingSelected }] = host.command.exec(
         isNothingSelectedCommand,
-        mockContext as any
+        mockContext as any,
       );
 
       expect(isNothingSelected).toBe(false);

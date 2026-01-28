@@ -5,9 +5,7 @@ import type { ReferenceInfo } from '../../../consts/doc.js';
 import type { EmbedCardStyle } from '../../../utils/index.js';
 import { defineEmbedModel } from '../../../utils/index.js';
 
-export const EmbedSyncedDocStyles = [
-  'syncedDoc',
-] as const satisfies EmbedCardStyle[];
+export const EmbedSyncedDocStyles = ['syncedDoc'] as const satisfies EmbedCardStyle[];
 
 export type EmbedSyncedDocBlockProps = {
   style: EmbedCardStyle;
@@ -21,9 +19,7 @@ export type EmbedSyncedDocBlockProps = {
 } & ReferenceInfo &
   GfxCompatibleProps;
 
-export class EmbedSyncedDocModel extends defineEmbedModel<EmbedSyncedDocBlockProps>(
-  BlockModel
-) {
+export class EmbedSyncedDocModel extends defineEmbedModel<EmbedSyncedDocBlockProps>(BlockModel) {
   get isFolded() {
     return !!this.props.preFoldHeight$.value;
   }

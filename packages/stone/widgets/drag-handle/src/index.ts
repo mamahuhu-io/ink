@@ -11,5 +11,5 @@ export type { DragBlockPayload } from './watchers/drag-event-watcher';
 export const dragHandleWidget = WidgetViewExtension(
   'ink:page',
   INK_DRAG_HANDLE_WIDGET,
-  literal`${unsafeStatic(INK_DRAG_HANDLE_WIDGET)}`
+  literal`${unsafeStatic(INK_DRAG_HANDLE_WIDGET)}`,
 );

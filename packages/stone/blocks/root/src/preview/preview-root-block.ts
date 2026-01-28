@@ -23,15 +23,14 @@ export class PreviewRootBlockComponent extends BlockComponent {
     const widgets = html`${repeat(
       Object.entries(this.widgets),
       ([id]) => id,
-      ([_, widget]) => widget
+      ([_, widget]) => widget,
     )}`;
 
-    const children = this.renderChildren(this.model, child => {
+    const children = this.renderChildren(this.model, (child) => {
       const isNote = matchModels(child, [NoteBlockModel]);
       const note = child as NoteBlockModel;
       const displayOnEdgeless =
-        !!note.props.displayMode &&
-        note.props.displayMode === NoteDisplayMode.EdgelessOnly;
+        !!note.props.displayMode && note.props.displayMode === NoteDisplayMode.EdgelessOnly;
       // Should remove deprecated `hidden` property in the future
       return !(isNote && displayOnEdgeless);
     });

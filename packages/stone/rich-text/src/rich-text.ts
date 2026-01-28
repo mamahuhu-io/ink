@@ -1,8 +1,5 @@
-import type {
-  InkInlineEditor,
-  InkTextAttributes,
-} from '@ink/stone-shared/types';
 import { WithDisposable } from '@ink/stone-global/lit';
+import type { InkInlineEditor, InkTextAttributes } from '@ink/stone-shared/types';
 import { ShadowlessElement } from '@ink/stone-std';
 import {
   type AttributeRenderer,
@@ -71,7 +68,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
 
     const text = inlineEditor.yTextString.slice(
       inlineRange.index,
-      inlineRange.index + inlineRange.length
+      inlineRange.index + inlineRange.length,
     );
 
     e.clipboardData?.setData('text/plain', text);
@@ -88,7 +85,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
 
     const text = inlineEditor.yTextString.slice(
       inlineRange.index,
-      inlineRange.index + inlineRange.length
+      inlineRange.index + inlineRange.length,
     );
     inlineEditor.deleteText(inlineRange);
     inlineEditor.setInlineRange({
@@ -108,9 +105,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
     const inlineRange = inlineEditor.getInlineRange();
     if (!inlineRange) return;
 
-    const text = e.clipboardData
-      ?.getData('text/plain')
-      ?.replace(/\r?\n|\r/g, '\n');
+    const text = e.clipboardData?.getData('text/plain')?.replace(/\r?\n|\r/g, '\n');
     if (!text) return;
 
     inlineEditor.insertText(inlineRange, text);
@@ -123,18 +118,14 @@ export class RichText extends WithDisposable(ShadowlessElement) {
     e.stopPropagation();
   };
 
-  private readonly _onStackItemAdded = (event: {
-    stackItem: RichTextStackItem;
-  }) => {
+  private readonly _onStackItemAdded = (event: { stackItem: RichTextStackItem }) => {
     const inlineRange = this.inlineEditor?.getInlineRange();
     if (inlineRange) {
       event.stackItem.meta.set('richtext-v-range', inlineRange);
     }
   };
 
-  private readonly _onStackItemPopped = (event: {
-    stackItem: RichTextStackItem;
-  }) => {
+  private readonly _onStackItemPopped = (event: { stackItem: RichTextStackItem }) => {
     const inlineRange = event.stackItem.meta.get('richtext-v-range');
     if (inlineRange && this.inlineEditor?.isValidInlineRange(inlineRange)) {
       this.inlineEditor?.setInlineRange(inlineRange);
@@ -165,18 +156,15 @@ export class RichText extends WithDisposable(ShadowlessElement) {
     }
 
     // init inline editor
-    this._inlineEditor$.value = new InlineEditor<InkTextAttributes>(
-      this._yText,
-      {
-        isEmbed: delta => this.embedChecker(delta),
-        hooks: {
-          beforeinput: onVBeforeinput,
-          compositionEnd: onVCompositionEnd,
-        },
-        inlineRangeProvider: this.inlineRangeProvider,
-        vLineRenderer: this.vLineRenderer,
-      }
-    );
+    this._inlineEditor$.value = new InlineEditor<InkTextAttributes>(this._yText, {
+      isEmbed: (delta) => this.embedChecker(delta),
+      hooks: {
+        beforeinput: onVBeforeinput,
+        compositionEnd: onVCompositionEnd,
+      },
+      inlineRangeProvider: this.inlineRangeProvider,
+      vLineRenderer: this.vLineRenderer,
+    });
     const inlineEditor = this._inlineEditor$.value;
     if (this.attributesSchema) {
       inlineEditor.setAttributeSchema(this.attributesSchema);
@@ -203,7 +191,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
                   index: inlineRange.index,
                   length: 0,
                 },
-                ' '
+                ' ',
               );
               inlineEditor.setInlineRange({
                 index: inlineRange.index + 1,
@@ -227,20 +215,20 @@ export class RichText extends WithDisposable(ShadowlessElement) {
       };
 
       inlineEditor.disposables.add(
-        inlineEditor.slots.inputting.subscribe(data => {
+        inlineEditor.slots.inputting.subscribe((data) => {
           if (!inlineEditor.isComposing && data === ' ') {
             markdownTransform();
           }
-        })
+        }),
       );
 
       inlineEditor.disposables.add(
-        inlineEditor.slots.keydown.subscribe(event => {
+        inlineEditor.slots.keydown.subscribe((event) => {
           if (event.key === 'Enter' && markdownTransform(true)) {
             event.stopPropagation();
             event.preventDefault();
           }
-        })
+        }),
       );
     }
 
@@ -253,8 +241,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
         // lazy
         const verticalScrollContainer =
           this.#verticalScrollContainer ||
-          (this.#verticalScrollContainer =
-            this.verticalScrollContainerGetter?.() || null);
+          (this.#verticalScrollContainer = this.verticalScrollContainerGetter?.() || null);
 
         inlineEditor
           .waitForUpdate()
@@ -269,13 +256,12 @@ export class RichText extends WithDisposable(ShadowlessElement) {
               if (
                 !nativeRange ||
                 nativeRange.commonAncestorContainer.parentElement?.contains(
-                  inlineEditor.rootElement
+                  inlineEditor.rootElement,
                 )
               )
                 return;
 
-              const containerRect =
-                verticalScrollContainer.getBoundingClientRect();
+              const containerRect = verticalScrollContainer.getBoundingClientRect();
               const rangeRect = range.getBoundingClientRect();
 
               if (rangeRect.top < containerRect.top) {
@@ -291,28 +277,18 @@ export class RichText extends WithDisposable(ShadowlessElement) {
               const rangeRect = range.getBoundingClientRect();
 
               let scrollLeft = this.scrollLeft;
-              if (
-                rangeRect.left + rangeRect.width >
-                containerRect.left + containerRect.width
-              ) {
+              if (rangeRect.left + rangeRect.width > containerRect.left + containerRect.width) {
                 scrollLeft +=
-                  rangeRect.left +
-                  rangeRect.width -
-                  (containerRect.left + containerRect.width) +
-                  2;
+                  rangeRect.left + rangeRect.width - (containerRect.left + containerRect.width) + 2;
               }
               this.scrollLeft = scrollLeft;
             }
           })
           .catch(console.error);
-      })
+      }),
     );
 
-    inlineEditor.mount(
-      this.inlineEditorContainer,
-      this.inlineEventSource,
-      this.readonly
-    );
+    inlineEditor.mount(this.inlineEditorContainer, this.inlineEventSource, this.readonly);
   }
 
   private _unmount() {
@@ -342,7 +318,6 @@ export class RichText extends WithDisposable(ShadowlessElement) {
 
     if (this.enableUndoRedo) {
       this.disposables.addFromEvent(this, 'keydown', (e: KeyboardEvent) => {
-        // eslint-disable-next-line sonarjs/no-collapsible-if
         if (e.ctrlKey || e.metaKey) {
           if (e.key === 'z' || e.key === 'Z') {
             if (e.shiftKey) {
@@ -399,10 +374,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
       readonly: this.readonly,
     });
 
-    return html`<div
-      contenteditable=${this.readonly ? 'false' : 'true'}
-      class=${classes}
-    ></div>`;
+    return html`<div contenteditable=${this.readonly ? 'false' : 'true'} class=${classes}></div>`;
   }
 
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
@@ -427,10 +399,8 @@ export class RichText extends WithDisposable(ShadowlessElement) {
   accessor attributesSchema: z.ZodSchema | undefined = undefined;
 
   @property({ attribute: false })
-  accessor embedChecker: <
-    TextAttributes extends InkTextAttributes = InkTextAttributes,
-  >(
-    delta: DeltaInsert<TextAttributes>
+  accessor embedChecker: <TextAttributes extends InkTextAttributes = InkTextAttributes>(
+    delta: DeltaInsert<TextAttributes>,
   ) => boolean = () => false;
 
   @property({ attribute: false })
@@ -465,9 +435,7 @@ export class RichText extends WithDisposable(ShadowlessElement) {
   accessor undoManager!: Y.UndoManager;
 
   @property({ attribute: false })
-  accessor verticalScrollContainerGetter:
-    | (() => HTMLElement | null)
-    | undefined = undefined;
+  accessor verticalScrollContainerGetter: (() => HTMLElement | null) | undefined = undefined;
 
   @property({ attribute: false })
   accessor vLineRenderer: ((vLine: VLine) => TemplateResult) | undefined;

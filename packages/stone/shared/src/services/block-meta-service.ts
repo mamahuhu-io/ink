@@ -27,11 +27,11 @@ export class BlockMetaService extends StoreExtension {
     this.store.disposableGroup.add(
       this.store.slots.blockUpdated
         .pipe(
-          filter(payload => payload.isLocal),
-          groupBy(payload => `${payload.type}-${payload.id}`),
-          mergeMap(group => group.pipe(throttleTime(BLOCK_META_THROTTLE_TIME)))
+          filter((payload) => payload.isLocal),
+          groupBy((payload) => `${payload.type}-${payload.id}`),
+          mergeMap((group) => group.pipe(throttleTime(BLOCK_META_THROTTLE_TIME))),
         )
-        .subscribe(payload => {
+        .subscribe((payload) => {
           const { type, id } = payload;
           if (!this.isBlockMetaEnabled) return;
 
@@ -45,7 +45,7 @@ export class BlockMetaService extends StoreExtension {
           if (type === 'update') {
             return this._onBlockUpdated(model);
           }
-        })
+        }),
     );
   }
 
@@ -91,12 +91,9 @@ export class BlockMetaService extends StoreExtension {
 }
 
 function isBlockMetaSupported(model: BlockModel) {
-  return [
-    'meta:createdAt',
-    'meta:createdBy',
-    'meta:updatedAt',
-    'meta:updatedBy',
-  ].every(key => model.keys.includes(key));
+  return ['meta:createdAt', 'meta:createdBy', 'meta:updatedAt', 'meta:updatedBy'].every((key) =>
+    model.keys.includes(key),
+  );
 }
 
 function getNow() {

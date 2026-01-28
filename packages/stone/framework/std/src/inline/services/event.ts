@@ -1,16 +1,12 @@
-import { IS_ANDROID } from "@ink/stone-global/env";
-import type { BaseTextAttributes } from "@ink/stone-store";
+import { IS_ANDROID } from '@ink/stone-global/env';
+import type { BaseTextAttributes } from '@ink/stone-store';
 
-import type { InlineEditor } from "../inline-editor.js";
-import type { InlineRange } from "../types.js";
-import {
-  isInEmbedElement,
-  isInEmbedGap,
-  isInEmptyLine,
-} from "../utils/index.js";
-import { isMaybeInlineRangeEqual } from "../utils/inline-range.js";
-import { transformInput } from "../utils/transform-input.js";
-import type { BeforeinputHookCtx, CompositionEndHookCtx } from "./hook.js";
+import type { InlineEditor } from '../inline-editor.js';
+import type { InlineRange } from '../types.js';
+import { isInEmbedElement, isInEmbedGap, isInEmptyLine } from '../utils/index.js';
+import { isMaybeInlineRangeEqual } from '../utils/inline-range.js';
+import { transformInput } from '../utils/transform-input.js';
+import type { BeforeinputHookCtx, CompositionEndHookCtx } from './hook.js';
 
 export class EventService<TextAttributes extends BaseTextAttributes> {
   private _compositionInlineRange: InlineRange | null = null;
@@ -44,18 +40,13 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
 
   private readonly _onBeforeInput = async (event: InputEvent) => {
     const range = this.editor.rangeService.getNativeRange();
-    if (
-      this.editor.isReadonly ||
-      !range ||
-      !this._isRangeCompletelyInRoot(range)
-    )
-      return;
+    if (this.editor.isReadonly || !range || !this._isRangeCompletelyInRoot(range)) return;
 
     let inlineRange = this.editor.toInlineRange(range);
     if (!inlineRange) return;
 
     if (this._isComposing) {
-      if (IS_ANDROID && event.inputType === "insertCompositionText") {
+      if (IS_ANDROID && event.inputType === 'insertCompositionText') {
         this._compositionInlineRange = inlineRange;
       }
       return;
@@ -64,7 +55,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
     let ifHandleTargetRange = true;
 
     if (
-      event.inputType.startsWith("delete") &&
+      event.inputType.startsWith('delete') &&
       (isInEmbedGap(range.commonAncestorContainer) ||
         // https://github.com/mamahuhu-io/stone/issues/5381
         isInEmptyLine(range.commonAncestorContainer)) &&
@@ -101,7 +92,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       this.editor.rerenderWholeEditor();
       await this.editor.waitForUpdate();
       if (
-        event.inputType === "deleteContentBackward" &&
+        event.inputType === 'deleteContentBackward' &&
         !(inlineRange.index === 0 && inlineRange.length === 0)
       ) {
         // when press backspace at offset 1, double characters will be removed.
@@ -115,7 +106,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       inlineEditor: this.editor,
       raw: event,
       inlineRange,
-      data: event.data ?? event.dataTransfer?.getData("text/plain") ?? null,
+      data: event.data ?? event.dataTransfer?.getData('text/plain') ?? null,
       attributes: {} as TextAttributes,
     };
     this.editor.hooks.beforeinput?.(ctx);
@@ -128,7 +119,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       this.editor as never,
     );
 
-    this.editor.slots.inputting.next(event.data ?? "");
+    this.editor.slots.inputting.next(event.data ?? '');
   };
 
   private readonly _onClick = (event: MouseEvent) => {
@@ -137,12 +128,12 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       const selection = document.getSelection();
       if (!selection) return;
       if (event.target instanceof HTMLElement) {
-        const vElement = event.target.closest("v-element");
+        const vElement = event.target.closest('v-element');
         if (vElement) {
           selection.selectAllChildren(vElement);
         }
       } else {
-        const vElement = event.target.parentElement?.closest("v-element");
+        const vElement = event.target.parentElement?.closest('v-element');
         if (vElement) {
           selection.selectAllChildren(vElement);
         }
@@ -157,12 +148,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
     }
 
     const range = this.editor.rangeService.getNativeRange();
-    if (
-      this.editor.isReadonly ||
-      !range ||
-      !this._isRangeCompletelyInRoot(range)
-    )
-      return;
+    if (this.editor.isReadonly || !range || !this._isRangeCompletelyInRoot(range)) return;
 
     this.editor.rerenderWholeEditor();
     await this.editor.waitForUpdate();
@@ -190,18 +176,16 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       });
     }
 
-    this.editor.slots.inputting.next(event.data ?? "");
+    this.editor.slots.inputting.next(event.data ?? '');
   };
 
   private readonly _onCompositionStart = (event: CompositionEvent) => {
     this._isComposing = true;
     if (!this.editor.rootElement) return;
     // embeds is not editable and it will break IME
-    const embeds = this.editor.rootElement.querySelectorAll(
-      '[data-v-embed="true"]',
-    );
+    const embeds = this.editor.rootElement.querySelectorAll('[data-v-embed="true"]');
     embeds.forEach((embed) => {
-      embed.removeAttribute("contenteditable");
+      embed.removeAttribute('contenteditable');
     });
 
     const range = this.editor.rangeService.getNativeRange();
@@ -211,7 +195,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       this._compositionInlineRange = null;
     }
 
-    this.editor.slots.inputting.next(event.data ?? "");
+    this.editor.slots.inputting.next(event.data ?? '');
   };
 
   private readonly _onCompositionUpdate = (event: CompositionEvent) => {
@@ -220,14 +204,9 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
     }
 
     const range = this.editor.rangeService.getNativeRange();
-    if (
-      this.editor.isReadonly ||
-      !range ||
-      !this._isRangeCompletelyInRoot(range)
-    )
-      return;
+    if (this.editor.isReadonly || !range || !this._isRangeCompletelyInRoot(range)) return;
 
-    this.editor.slots.inputting.next(event.data ?? "");
+    this.editor.slots.inputting.next(event.data ?? '');
   };
 
   private readonly _onKeyDown = (event: KeyboardEvent) => {
@@ -236,10 +215,7 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
 
     this.editor.slots.keydown.next(event);
 
-    if (
-      !event.shiftKey &&
-      (event.key === "ArrowLeft" || event.key === "ArrowRight")
-    ) {
+    if (!event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
       if (inlineRange.length !== 0) return;
 
       const prevent = () => {
@@ -249,16 +225,13 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
 
       const deltas = this.editor.getDeltasByInlineRange(inlineRange);
       if (deltas.length === 2) {
-        if (event.key === "ArrowLeft" && this.editor.isEmbed(deltas[0][0])) {
+        if (event.key === 'ArrowLeft' && this.editor.isEmbed(deltas[0][0])) {
           prevent();
           this.editor.setInlineRange({
             index: inlineRange.index - 1,
             length: 1,
           });
-        } else if (
-          event.key === "ArrowRight" &&
-          this.editor.isEmbed(deltas[1][0])
-        ) {
+        } else if (event.key === 'ArrowRight' && this.editor.isEmbed(deltas[1][0])) {
           prevent();
           this.editor.setInlineRange({
             index: inlineRange.index,
@@ -268,14 +241,14 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
       } else if (deltas.length === 1) {
         const delta = deltas[0][0];
         if (this.editor.isEmbed(delta)) {
-          if (event.key === "ArrowLeft" && inlineRange.index - 1 >= 0) {
+          if (event.key === 'ArrowLeft' && inlineRange.index - 1 >= 0) {
             prevent();
             this.editor.setInlineRange({
               index: inlineRange.index - 1,
               length: 1,
             });
           } else if (
-            event.key === "ArrowRight" &&
+            event.key === 'ArrowRight' &&
             inlineRange.index + 1 <= this.editor.yTextLength
           ) {
             prevent();
@@ -312,13 +285,11 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
     if (!range.intersectsNode(rootElement)) {
       const isContainerSelected =
         range.endContainer.contains(rootElement) &&
-        Array.from(range.endContainer.childNodes).filter(
-          (node) => node instanceof HTMLElement,
-        ).length === 1 &&
+        Array.from(range.endContainer.childNodes).filter((node) => node instanceof HTMLElement)
+          .length === 1 &&
         range.startContainer.contains(rootElement) &&
-        Array.from(range.startContainer.childNodes).filter(
-          (node) => node instanceof HTMLElement,
-        ).length === 1;
+        Array.from(range.startContainer.childNodes).filter((node) => node instanceof HTMLElement)
+          .length === 1;
       if (isContainerSelected) {
         this.editor.focusEnd();
         return;
@@ -343,41 +314,29 @@ export class EventService<TextAttributes extends BaseTextAttributes> {
     const rootElement = this.editor.rootElement;
 
     if (!this.editor.inlineRangeProviderOverride) {
-      this.editor.disposables.addFromEvent(
-        document,
-        "selectionchange",
-        this._onSelectionChange,
-      );
+      this.editor.disposables.addFromEvent(document, 'selectionchange', this._onSelectionChange);
     }
 
     if (!eventSource) {
-      console.error("Mount inline editor without event source ready");
+      console.error('Mount inline editor without event source ready');
       return;
     }
 
-    this.editor.disposables.addFromEvent(eventSource, "beforeinput", (e) => {
+    this.editor.disposables.addFromEvent(eventSource, 'beforeinput', (e) => {
       this._onBeforeInput(e).catch(console.error);
     });
+    this.editor.disposables.addFromEvent(eventSource, 'compositionstart', this._onCompositionStart);
     this.editor.disposables.addFromEvent(
       eventSource,
-      "compositionstart",
-      this._onCompositionStart,
-    );
-    this.editor.disposables.addFromEvent(
-      eventSource,
-      "compositionupdate",
+      'compositionupdate',
       this._onCompositionUpdate,
     );
-    this.editor.disposables.addFromEvent(eventSource, "compositionend", (e) => {
+    this.editor.disposables.addFromEvent(eventSource, 'compositionend', (e) => {
       this._onCompositionEnd(e).catch(console.error);
     });
-    this.editor.disposables.addFromEvent(
-      eventSource,
-      "keydown",
-      this._onKeyDown,
-    );
+    this.editor.disposables.addFromEvent(eventSource, 'keydown', this._onKeyDown);
     if (rootElement) {
-      this.editor.disposables.addFromEvent(rootElement, "click", this._onClick);
+      this.editor.disposables.addFromEvent(rootElement, 'click', this._onClick);
     }
   };
 

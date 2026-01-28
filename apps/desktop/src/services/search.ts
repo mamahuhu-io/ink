@@ -2,20 +2,20 @@
  * Search service - handles global file search via Tauri
  */
 
-import { isTauri } from './platform'
+import { isTauri } from './platform';
 
 export interface SearchMatch {
-  lineNumber: number
-  lineContent: string
-  matchStart: number
-  matchEnd: number
+  lineNumber: number;
+  lineContent: string;
+  matchStart: number;
+  matchEnd: number;
 }
 
 export interface SearchResult {
-  filePath: string
-  fileName: string
-  isNameMatch: boolean
-  matches: SearchMatch[]
+  filePath: string;
+  fileName: string;
+  isNameMatch: boolean;
+  matches: SearchMatch[];
 }
 
 /**
@@ -28,27 +28,27 @@ export interface SearchResult {
 export async function searchFiles(
   rootPath: string,
   query: string,
-  caseSensitive: boolean = false
+  caseSensitive: boolean = false,
 ): Promise<SearchResult[]> {
   if (!isTauri()) {
-    console.warn('Search is only available in Tauri environment')
-    return []
+    console.warn('Search is only available in Tauri environment');
+    return [];
   }
 
   if (!rootPath || !query.trim()) {
-    return []
+    return [];
   }
 
   try {
-    const { invoke } = await import('@tauri-apps/api/core')
+    const { invoke } = await import('@tauri-apps/api/core');
     const results = await invoke<SearchResult[]>('search_files', {
       rootPath,
       query,
       caseSensitive,
-    })
-    return results
+    });
+    return results;
   } catch (error) {
-    console.error('Search failed:', error)
-    return []
+    console.error('Search failed:', error);
+    return [];
   }
 }

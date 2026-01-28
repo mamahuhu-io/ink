@@ -2,6 +2,7 @@
 // import { DatabaseSelection } from '@ink/stone-block-database';
 // [REMOVED] Edgeless blocks - not needed for Page mode
 // import { EdgelessLegacySlotIdentifier } from '@ink/stone-block-surface';
+import type { ReferenceElement, SideObject } from '@floating-ui/dom';
 import { TableSelection } from '@ink/stone-block-table';
 import {
   darkToolbarStyles,
@@ -9,6 +10,8 @@ import {
   EditorToolbar,
   lightToolbarStyles,
 } from '@ink/stone-components/toolbar';
+import { Bound, getCommonBound, getCommonBoundWithRotation } from '@ink/stone-global/gfx';
+import { nextTick } from '@ink/stone-global/utils';
 import {
   CodeBlockModel,
   ImageBlockModel,
@@ -23,12 +26,6 @@ import {
 import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
 import { matchModels } from '@ink/stone-shared/utils';
 import {
-  Bound,
-  getCommonBound,
-  getCommonBoundWithRotation,
-} from '@ink/stone-global/gfx';
-import { nextTick } from '@ink/stone-global/utils';
-import {
   type BlockComponent,
   BlockSelection,
   TextSelection,
@@ -41,7 +38,6 @@ import {
   GfxPrimitiveElementModel,
 } from '@ink/stone-std/gfx';
 import { RANGE_SYNC_EXCLUDE_ATTR } from '@ink/stone-std/inline';
-import type { ReferenceElement, SideObject } from '@floating-ui/dom';
 import { batch, effect, signal } from '@preact/signals-core';
 import { css, unsafeCSS } from 'lit';
 import groupBy from 'lodash-es/groupBy';
@@ -124,9 +120,7 @@ export class InkToolbarWidget extends WidgetComponent {
       ? () => ({
           getBoundingClientRect: () => range.getBoundingClientRect(),
           getClientRects: () =>
-            Array.from(range.getClientRects()).filter(rect =>
-              Math.round(rect.width)
-            ),
+            Array.from(range.getClientRects()).filter((rect) => Math.round(rect.width)),
         })
       : null;
   }
@@ -136,7 +130,7 @@ export class InkToolbarWidget extends WidgetComponent {
   }
 
   setReferenceElementWithBlocks(blocks: BlockComponent[]) {
-    const getClientRects = () => blocks.map(e => e.getBoundingClientRect());
+    const getClientRects = () => blocks.map((e) => e.getBoundingClientRect());
 
     this.referenceElement$.value = blocks.length
       ? () => ({
@@ -168,11 +162,7 @@ export class InkToolbarWidget extends WidgetComponent {
       : null;
   }
 
-  updateWithSurface(
-    ctx: ToolbarContext,
-    activated: boolean,
-    elementIds: string[]
-  ) {
+  updateWithSurface(ctx: ToolbarContext, activated: boolean, elementIds: string[]) {
     const gfx = ctx.gfx;
     const surface = gfx.surface;
     let flavour = 'ink:surface';
@@ -183,16 +173,16 @@ export class InkToolbarWidget extends WidgetComponent {
 
     if (activated && surface) {
       elements = elementIds
-        .map(id => gfx.getElementById(id))
-        .filter(model => model !== null) as GfxModel[];
+        .map((id) => gfx.getElementById(id))
+        .filter((model) => model !== null) as GfxModel[];
 
       // Should double check
       activated &&= Boolean(elements.length);
 
-      hasLocked = elements.some(e => e.isLocked());
+      hasLocked = elements.some((e) => e.isLocked());
 
       const grouped = groupBy(
-        elements.map(model => {
+        elements.map((model) => {
           let flavour = surface.flavour;
 
           if (model instanceof GfxBlockElementModel) {
@@ -203,7 +193,7 @@ export class InkToolbarWidget extends WidgetComponent {
 
           return { model, flavour };
         }),
-        e => e.flavour
+        (e) => e.flavour,
       );
 
       paired = toPairs(grouped).map(([flavour, items]) => [
@@ -258,15 +248,8 @@ export class InkToolbarWidget extends WidgetComponent {
 
     this.setAttribute(RANGE_SYNC_EXCLUDE_ATTR, 'true');
 
-    const {
-      sideOptions$,
-      referenceElement$,
-      disposables,
-      toolbar,
-      toolbarRegistry,
-      host,
-      std,
-    } = this;
+    const { sideOptions$, referenceElement$, disposables, toolbar, toolbarRegistry, host, std } =
+      this;
     const { flags, flavour$, message$, placement$ } = toolbarRegistry;
     const context = new ToolbarContext(std);
 
@@ -277,14 +260,14 @@ export class InkToolbarWidget extends WidgetComponent {
     // Formatting
     // Selects text in note.
     disposables.add(
-      std.selection.find$(TextSelection).subscribe(result => {
+      std.selection.find$(TextSelection).subscribe((result) => {
         const range = std.range.value ?? null;
         const activated = Boolean(
           context.activated &&
-            range &&
-            result &&
-            !result.isCollapsed() &&
-            result.from.length + (result.to?.length ?? 0)
+          range &&
+          result &&
+          !result.isCollapsed() &&
+          result.from.length + (result.to?.length ?? 0),
         );
 
         batch(() => {
@@ -299,7 +282,7 @@ export class InkToolbarWidget extends WidgetComponent {
           placement$.value = toolbarRegistry.getModulePlacement('ink:note');
           flags.refresh(Flag.Text);
         });
-      })
+      }),
     );
 
     // Formatting
@@ -333,10 +316,7 @@ export class InkToolbarWidget extends WidgetComponent {
         activated &&= isNative;
 
         // Focues outside: `doc-title`
-        if (
-          flags.check(Flag.Text) &&
-          !std.host.contains(range?.commonAncestorContainer ?? null)
-        ) {
+        if (flags.check(Flag.Text) && !std.host.contains(range?.commonAncestorContainer ?? null)) {
           flags.toggle(Flag.Text, false);
         }
 
@@ -355,8 +335,8 @@ export class InkToolbarWidget extends WidgetComponent {
 
     // Selects blocks in note.
     disposables.add(
-      std.selection.filter$(BlockSelection).subscribe(selections => {
-        const blockIds = selections.map(s => s.blockId);
+      std.selection.filter$(BlockSelection).subscribe((selections) => {
+        const blockIds = selections.map((s) => s.blockId);
         const count = blockIds.length;
         let flavour = 'ink:note';
         let activated = context.activated && Boolean(count);
@@ -390,57 +370,50 @@ export class InkToolbarWidget extends WidgetComponent {
           if (!activated) return;
 
           this.setReferenceElementWithBlocks(
-            blockIds
-              .map(id => std.view.getBlock(id))
-              .filter(block => block !== null)
+            blockIds.map((id) => std.view.getBlock(id)).filter((block) => block !== null),
           );
 
           sideOptions$.value = null;
           flavour$.value = flavour;
           placement$.value = toolbarRegistry.getModulePlacement(
             flavour,
-            flavour === 'ink:note' ? 'top' : 'top-start'
+            flavour === 'ink:note' ? 'top' : 'top-start',
           );
           flags.refresh(Flag.Block);
         });
-      })
+      }),
     );
 
     // Selects elements in edgeless.
     // Triggered only when not in editing state.
     disposables.add(
-      context.gfx.selection.slots.updated.subscribe(selections => {
+      context.gfx.selection.slots.updated.subscribe((selections) => {
         // Should remove selections when clicking on frame navigator
         if (context.isPageMode) {
-          if (
-            std.host.contains(std.range.value?.commonAncestorContainer ?? null)
-          ) {
+          if (std.host.contains(std.range.value?.commonAncestorContainer ?? null)) {
             std.range.clear();
           }
           context.reset();
           return;
         }
 
-        const elementIds = selections.flatMap(s =>
-          s.editing || s.inoperable ? [] : s.elements
-        );
+        const elementIds = selections.flatMap((s) => (s.editing || s.inoperable ? [] : s.elements));
         const count = elementIds.length;
         const activated = context.activated && Boolean(count);
 
         this.updateWithSurface(context, activated, elementIds);
-      })
+      }),
     );
 
     disposables.add(
-      std.selection.slots.changed.subscribe(selections => {
+      std.selection.slots.changed.subscribe((selections) => {
         if (!context.activated) return;
 
         const value = flags.value$.peek();
         if (flags.contains(Flag.Hovering | Flag.Hiding, value)) return;
         if (!flags.check(Flag.Text, value)) return;
 
-        const hasTextSelection =
-          selections.filter(s => s.is(TextSelection)).length > 0;
+        const hasTextSelection = selections.filter((s) => s.is(TextSelection)).length > 0;
         if (!hasTextSelection) return;
 
         const range = std.range.value ?? null;
@@ -454,7 +427,7 @@ export class InkToolbarWidget extends WidgetComponent {
         nextTick()
           .then(() => flags.refresh(Flag.Text))
           .catch(console.error);
-      })
+      }),
     );
 
     // Handles blocks when adding
@@ -462,7 +435,7 @@ export class InkToolbarWidget extends WidgetComponent {
     // Waits until the view is created when switching the view mode.
     // `card view` or `embed view`
     disposables.add(
-      std.view.viewUpdated.subscribe(record => {
+      std.view.viewUpdated.subscribe((record) => {
         const hasAdded = record.type === 'block' && record.method === 'add';
         if (!hasAdded) return;
 
@@ -470,13 +443,11 @@ export class InkToolbarWidget extends WidgetComponent {
           const blockIds = std.selection
             .filter$(BlockSelection)
             .peek()
-            .map(s => s.blockId);
+            .map((s) => s.blockId);
           if (blockIds.includes(record.id)) {
             batch(() => {
               this.setReferenceElementWithBlocks(
-                blockIds
-                  .map(id => std.view.getBlock(id))
-                  .filter(block => block !== null)
+                blockIds.map((id) => std.view.getBlock(id)).filter((block) => block !== null),
               );
               flags.refresh(Flag.Block);
             });
@@ -488,13 +459,13 @@ export class InkToolbarWidget extends WidgetComponent {
           flags.refresh(Flag.Surface);
           return;
         }
-      })
+      }),
     );
 
     // Handles blocks when updating
     disposables.add(
       // TODO(@fundon): use rxjs' filter
-      std.store.slots.blockUpdated.subscribe(record => {
+      std.store.slots.blockUpdated.subscribe((record) => {
         const hasUpdated = record.type === 'update';
         if (!hasUpdated) return;
 
@@ -502,13 +473,11 @@ export class InkToolbarWidget extends WidgetComponent {
           const blockIds = std.selection
             .filter$(BlockSelection)
             .peek()
-            .map(s => s.blockId);
+            .map((s) => s.blockId);
           if (blockIds.includes(record.id)) {
             batch(() => {
               this.setReferenceElementWithBlocks(
-                blockIds
-                  .map(id => std.view.getBlock(id))
-                  .filter(block => block !== null)
+                blockIds.map((id) => std.view.getBlock(id)).filter((block) => block !== null),
               );
               flags.refresh(Flag.Block);
             });
@@ -521,16 +490,16 @@ export class InkToolbarWidget extends WidgetComponent {
           this.updateWithSurface(
             context,
             context.activated && Boolean(elementIds.length),
-            elementIds
+            elementIds,
           );
           return;
         }
-      })
+      }),
     );
 
     // Handles elements when updating
     disposables.add(
-      context.gfx.surface$.subscribe(surface => {
+      context.gfx.surface$.subscribe((surface) => {
         if (!surface) return;
 
         const subscription = surface.elementUpdated.subscribe(() => {
@@ -540,12 +509,12 @@ export class InkToolbarWidget extends WidgetComponent {
           this.updateWithSurface(
             context,
             context.activated && Boolean(elementIds.length),
-            elementIds
+            elementIds,
           );
         });
 
         disposables.add(subscription);
-      })
+      }),
     );
 
     // Handles `drag and drop`
@@ -566,19 +535,13 @@ export class InkToolbarWidget extends WidgetComponent {
           const { x, y, target } = event;
           if (target === this) return;
           const rect = host.getBoundingClientRect();
-          if (
-            x >= rect.left &&
-            x <= rect.right &&
-            y >= rect.top &&
-            y <= rect.bottom
-          )
-            return;
+          if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) return;
           dragEnd();
         },
         144,
-        { trailing: true }
+        { trailing: true },
       ),
-      eventOptions
+      eventOptions,
     );
 
     // Handles elements when resizing
@@ -591,11 +554,8 @@ export class InkToolbarWidget extends WidgetComponent {
 
     // Handles elements when hovering
     disposables.add(
-      message$.subscribe(data => {
-        if (
-          !context.activated ||
-          flags.contains(Flag.Text | Flag.Native | Flag.Block)
-        ) {
+      message$.subscribe((data) => {
+        if (!context.activated || flags.contains(Flag.Text | Flag.Native | Flag.Block)) {
           flags.toggle(Flag.Hovering, false);
           return;
         }
@@ -618,21 +578,21 @@ export class InkToolbarWidget extends WidgetComponent {
           placement$.value = toolbarRegistry.getModulePlacement(flavour);
           flags.refresh(Flag.Hovering);
         });
-      })
+      }),
     );
 
     // Updates toolbar theme when `app-theme` changing
     disposables.add(
-      context.theme.app$.subscribe(theme => {
+      context.theme.app$.subscribe((theme) => {
         toolbar.dataset.appTheme = theme;
-      })
+      }),
     );
 
     // Updates layout when placement changing to `inner`
     disposables.add(
       effect(() => {
         toolbar.dataset.placement = placement$.value;
-      })
+      }),
     );
 
     disposables.add(
@@ -644,9 +604,7 @@ export class InkToolbarWidget extends WidgetComponent {
           if ('inline' in toolbar.dataset) delete toolbar.dataset.inline;
           if (toolbar.dataset.open) delete toolbar.dataset.open;
           // Closes dropdown menus
-          toolbar
-            .querySelector<EditorMenuButton>('editor-menu-button[data-open]')
-            ?.hide();
+          toolbar.querySelector<EditorMenuButton>('editor-menu-button[data-open]')?.hide();
           return;
         }
 
@@ -659,7 +617,7 @@ export class InkToolbarWidget extends WidgetComponent {
         // 4. `Flag.Hovering`: inline links in note/database/table
         // 5. `Flag.Surface`: elements in edgeless
         renderToolbar(toolbar, context, flavour);
-      })
+      }),
     );
 
     let abortController = new AbortController();
@@ -694,7 +652,7 @@ export class InkToolbarWidget extends WidgetComponent {
           referenceElement,
           flavour,
           placement,
-          sideOptions
+          sideOptions,
         );
 
         signal.addEventListener('abort', cleanup, { once: true });
@@ -703,7 +661,7 @@ export class InkToolbarWidget extends WidgetComponent {
           if (signal.aborted) return;
           abortController.abort();
         };
-      })
+      }),
     );
   }
 }

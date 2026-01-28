@@ -2,7 +2,7 @@ import { MarkdownASTToDeltaExtension } from '@ink/stone-shared/adapters';
 
 export const markdownLinkToDeltaMatcher = MarkdownASTToDeltaExtension({
   name: 'link',
-  match: ast => ast.type === 'link',
+  match: (ast) => ast.type === 'link',
   toDelta: (ast, context) => {
     if (!('children' in ast) || !('url' in ast)) {
       return [];
@@ -42,11 +42,11 @@ export const markdownLinkToDeltaMatcher = MarkdownASTToDeltaExtension({
         ];
       }
     }
-    return ast.children.flatMap(child =>
-      context.toDelta(child).map(delta => {
+    return ast.children.flatMap((child) =>
+      context.toDelta(child).map((delta) => {
         delta.attributes = { ...delta.attributes, link: ast.url };
         return delta;
-      })
+      }),
     );
   },
 });

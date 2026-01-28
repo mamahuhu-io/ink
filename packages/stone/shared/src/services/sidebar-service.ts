@@ -7,12 +7,10 @@ export interface SidebarService {
   getTabIds: () => string[];
 }
 
-export const SidebarExtensionIdentifier = createIdentifier<SidebarService>(
-  'InkSidebarExtension'
-);
+export const SidebarExtensionIdentifier = createIdentifier<SidebarService>('InkSidebarExtension');
 
 export const SidebarExtension = (service: SidebarService): ExtensionType => ({
-  setup: di => {
+  setup: (di) => {
     di.addImpl(SidebarExtensionIdentifier, () => service);
   },
 });

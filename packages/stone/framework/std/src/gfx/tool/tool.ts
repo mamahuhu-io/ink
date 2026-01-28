@@ -1,6 +1,6 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
 import { DisposableGroup } from '@ink/stone-global/disposable';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import type { PointerEventState } from '../../event/index.js';
@@ -8,9 +8,7 @@ import type { GfxController } from '../controller.js';
 import { GfxControllerIdentifier } from '../identifiers.js';
 import type { ToolEventTarget } from './tool-controller.js';
 
-export abstract class BaseTool<
-  Option = Record<string, unknown>,
-> extends Extension {
+export abstract class BaseTool<Option = Record<string, unknown>> extends Extension {
   static toolName: string = '';
 
   private readonly eventTarget!: ToolEventTarget;
@@ -58,7 +56,7 @@ export abstract class BaseTool<
     if (!this.toolName) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        `The tool constructor '${this.name}' should have a static 'toolName' property.`
+        `The tool constructor '${this.name}' should have a static 'toolName' property.`,
       );
     }
 
@@ -116,8 +114,7 @@ export type ToolType<T extends BaseTool = BaseTool> = {
   toolName: string;
 };
 
-export type ToolOptions<T extends BaseTool> =
-  T extends BaseTool<infer O> ? O : never;
+export type ToolOptions<T extends BaseTool> = T extends BaseTool<infer O> ? O : never;
 
 export type ToolOptionWithType<T extends BaseTool = BaseTool> = {
   toolType?: ToolType<T>;

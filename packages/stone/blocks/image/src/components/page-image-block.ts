@@ -1,4 +1,5 @@
 import type { ResolvedStateInfo } from '@ink/stone-components/resource';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import {
   focusBlockEnd,
   focusBlockStart,
@@ -7,13 +8,8 @@ import {
 } from '@ink/stone-shared/commands';
 import { ImageSelection } from '@ink/stone-shared/selection';
 import { unsafeCSSVarV2 } from '@ink/stone-shared/theme';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import type { BlockComponent, UIEventStateContext } from '@ink/stone-std';
-import {
-  BlockSelection,
-  ShadowlessElement,
-  TextSelection,
-} from '@ink/stone-std';
+import { BlockSelection, ShadowlessElement, TextSelection } from '@ink/stone-std';
 import type { BaseSelection } from '@ink/stone-store';
 import { computed } from '@preact/signals-core';
 import { css, html, type PropertyValues } from 'lit';
@@ -27,9 +23,7 @@ import { ImageResizeManager } from '../image-resize-manager';
 import { shouldResizeImage } from '../utils';
 import { ImageSelectedRect } from './image-selected-rect';
 
-export class ImageBlockPageComponent extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class ImageBlockPageComponent extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     ink-page-image {
       position: relative;
@@ -52,10 +46,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
       height: 36px;
       padding: 5px;
       border-radius: 8px;
-      background: ${unsafeCSSVarV2(
-        'loading/imageLoadingBackground',
-        '#92929238'
-      )};
+      background: ${unsafeCSSVarV2('loading/imageLoadingBackground', '#92929238')};
 
       & > svg {
         font-size: 25.71px;
@@ -107,19 +98,14 @@ export class ImageBlockPageComponent extends SignalWatcher(
       if (!parent) return;
 
       const index = parent.children.indexOf(this._model);
-      const blockId = this._doc.addBlock(
-        'ink:paragraph',
-        {},
-        parent,
-        index + 1
-      );
+      const blockId = this._doc.addBlock('ink:paragraph', {}, parent, index + 1);
 
       const event = ctx.get('defaultState').event;
       event.preventDefault();
 
-      selection.update(selList =>
+      selection.update((selList) =>
         selList
-          .filter<BaseSelection>(sel => !sel.is(ImageSelection))
+          .filter<BaseSelection>((sel) => !sel.is(ImageSelection))
           .concat(
             selection.create(TextSelection, {
               from: {
@@ -128,18 +114,17 @@ export class ImageBlockPageComponent extends SignalWatcher(
                 length: 0,
               },
               to: null,
-            })
-          )
+            }),
+          ),
       );
     };
 
     // TODO: use key map extension
     this.block.bindHotKey({
       Escape: () => {
-        selection.update(selList => {
-          return selList.map(sel => {
-            const current =
-              sel.is(ImageSelection) && sel.blockId === this.block.blockId;
+        selection.update((selList) => {
+          return selList.map((sel) => {
+            const current = sel.is(ImageSelection) && sel.blockId === this.block.blockId;
             if (current) {
               return selection.create(BlockSelection, {
                 blockId: this.block.blockId,
@@ -150,27 +135,27 @@ export class ImageBlockPageComponent extends SignalWatcher(
         });
         return true;
       },
-      Delete: ctx => {
+      Delete: (ctx) => {
         if (this._host.store.readonly || !this.resizeable$.peek()) return;
 
         addParagraph(ctx);
         this._doc.deleteBlock(this._model);
         return true;
       },
-      Backspace: ctx => {
+      Backspace: (ctx) => {
         if (this._host.store.readonly || !this.resizeable$.peek()) return;
 
         addParagraph(ctx);
         this._doc.deleteBlock(this._model);
         return true;
       },
-      Enter: ctx => {
+      Enter: (ctx) => {
         if (this._host.store.readonly || !this.resizeable$.peek()) return;
 
         addParagraph(ctx);
         return true;
       },
-      ArrowDown: ctx => {
+      ArrowDown: (ctx) => {
         const std = this._host.std;
 
         // If the selection is not image selection, we should not handle it.
@@ -194,7 +179,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
           .run();
         return true;
       },
-      ArrowUp: ctx => {
+      ArrowUp: (ctx) => {
         const std = this._host.std;
 
         // If the selection is not image selection, we should not handle it.
@@ -231,40 +216,31 @@ export class ImageBlockPageComponent extends SignalWatcher(
   private _handleSelection() {
     const selection = this._host.selection;
 
-    this._disposables.addFromEvent(
-      this.resizeImg,
-      'click',
-      (event: MouseEvent) => {
-        // the peek view need handle shift + click
-        if (event.shiftKey) return;
+    this._disposables.addFromEvent(this.resizeImg, 'click', (event: MouseEvent) => {
+      // the peek view need handle shift + click
+      if (event.shiftKey) return;
 
-        event.stopPropagation();
-        selection.update(selList => {
-          return selList
-            .filter(sel => !['block', 'image', 'text'].includes(sel.type))
-            .concat(
-              selection.create(ImageSelection, { blockId: this.block.blockId })
-            );
-        });
-        return true;
-      }
-    );
+      event.stopPropagation();
+      selection.update((selList) => {
+        return selList
+          .filter((sel) => !['block', 'image', 'text'].includes(sel.type))
+          .concat(selection.create(ImageSelection, { blockId: this.block.blockId }));
+      });
+      return true;
+    });
 
     this.block.handleEvent(
       'click',
       () => {
         if (!this.resizeable$.peek()) return;
 
-        selection.update(selList =>
-          selList.filter(
-            sel =>
-              !(sel.is(ImageSelection) && sel.blockId === this.block.blockId)
-          )
+        selection.update((selList) =>
+          selList.filter((sel) => !(sel.is(ImageSelection) && sel.blockId === this.block.blockId)),
         );
       },
       {
         global: true,
-      }
+      },
     );
   }
 
@@ -293,7 +269,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
     const imageResizeManager = new ImageResizeManager();
 
     this._disposables.add(
-      this._host.event.add('dragStart', ctx => {
+      this._host.event.add('dragStart', (ctx) => {
         const pointerState = ctx.get('pointerState');
         const target = pointerState.event.target;
         if (shouldResizeImage(this, target)) {
@@ -302,18 +278,18 @@ export class ImageBlockPageComponent extends SignalWatcher(
           return true;
         }
         return false;
-      })
+      }),
     );
 
     this._disposables.add(
-      this._host.event.add('dragMove', ctx => {
+      this._host.event.add('dragMove', (ctx) => {
         const pointerState = ctx.get('pointerState');
         if (this._isDragging) {
           imageResizeManager.onMove(pointerState);
           return true;
         }
         return false;
-      })
+      }),
     );
 
     this._disposables.add(
@@ -324,7 +300,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
           return true;
         }
         return false;
-      })
+      }),
     );
   }
 
@@ -348,10 +324,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
     // so we need to blur it.
     // See also https://developer.mozilla.org/en-US/docs/Web/API/Document/activeElement
     this.addEventListener('click', () => {
-      if (
-        document.activeElement &&
-        document.activeElement instanceof HTMLElement
-      ) {
+      if (document.activeElement && document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
     });
@@ -360,9 +333,7 @@ export class ImageBlockPageComponent extends SignalWatcher(
   override render() {
     const imageSize = this._normalizeImageSize();
 
-    const imageSelectedRect = this.resizeable$.value
-      ? ImageSelectedRect(this._doc.readonly)
-      : null;
+    const imageSelectedRect = this.resizeable$.value ? ImageSelectedRect(this._doc.readonly) : null;
 
     const blobUrl = this.block.blobUrl;
     const caption = this.block.model.props.caption$.value ?? 'Image';
@@ -397,10 +368,8 @@ export class ImageBlockPageComponent extends SignalWatcher(
             .message=${description}
             .needUpload=${needUpload}
             .action=${() =>
-              needUpload
-                ? this.block.resourceController.upload()
-                : this.block.refreshData()}
-          ></ink-resource-status>`
+              needUpload ? this.block.resourceController.upload() : this.block.refreshData()}
+          ></ink-resource-status>`,
       )}
     `;
   }

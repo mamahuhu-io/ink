@@ -1,8 +1,5 @@
 import { ParagraphBlockModel } from '@ink/stone-model';
-import {
-  calculateCollapsedSiblings,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { calculateCollapsedSiblings, matchModels } from '@ink/stone-shared/utils';
 import { type Command, TextSelection } from '@ink/stone-std';
 
 import { dedentBlock } from './dedent-block';
@@ -20,14 +17,14 @@ export const dedentBlocks: Command<{
     const nativeRange = range.value;
     if (nativeRange) {
       const topBlocks = range.getSelectedBlockComponentsByRange(nativeRange, {
-        match: el => el.model.role === 'content',
+        match: (el) => el.model.role === 'content',
         mode: 'highest',
       });
       if (topBlocks.length > 0) {
-        blockIds = topBlocks.map(block => block.blockId);
+        blockIds = topBlocks.map((block) => block.blockId);
       }
     } else {
-      blockIds = std.selection.getGroup('note').map(sel => sel.blockId);
+      blockIds = std.selection.getGroup('note').map((sel) => sel.blockId);
     }
   }
 
@@ -54,7 +51,7 @@ export const dedentBlocks: Command<{
   if (stopCapture) store.captureSync();
 
   const collapsedIds: string[] = [];
-  blockIds.slice(firstDedentIndex).forEach(id => {
+  blockIds.slice(firstDedentIndex).forEach((id) => {
     const model = store.getBlock(id)?.model;
     if (!model) return;
     if (
@@ -63,14 +60,12 @@ export const dedentBlocks: Command<{
       model.props.collapsed
     ) {
       const collapsedSiblings = calculateCollapsedSiblings(model);
-      collapsedIds.push(...collapsedSiblings.map(sibling => sibling.id));
+      collapsedIds.push(...collapsedSiblings.map((sibling) => sibling.id));
     }
   });
   // Models waiting to be dedented
-  const dedentIds = blockIds
-    .slice(firstDedentIndex)
-    .filter(id => !collapsedIds.includes(id));
-  dedentIds.reverse().forEach(id => {
+  const dedentIds = blockIds.slice(firstDedentIndex).filter((id) => !collapsedIds.includes(id));
+  dedentIds.reverse().forEach((id) => {
     std.command.exec(dedentBlock, { blockId: id, stopCapture: false });
   });
 

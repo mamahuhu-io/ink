@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / PointTestOptions
 
@@ -16,7 +16,7 @@ The options for the hit testing of a point.
 
 The threshold of the hit test. The unit is pixel.
 
-***
+---
 
 ### ignoreTransparent?
 
@@ -27,7 +27,7 @@ Otherwise, the transparent area will be considered as filled area.
 
 Default is true.
 
-***
+---
 
 ### responsePadding?
 
@@ -36,7 +36,7 @@ Default is true.
 The padding of the response area for each element when do the hit testing. The unit is pixel.
 The first value is the padding for the x-axis, and the second value is the padding for the y-axis.
 
-***
+---
 
 ### useElementBound?
 
@@ -45,7 +45,7 @@ The first value is the padding for the x-axis, and the second value is the paddi
 If true, the element bound will be used for the hit testing.
 By default, the response bound will be used.
 
-***
+---
 
 ### zoom?
 

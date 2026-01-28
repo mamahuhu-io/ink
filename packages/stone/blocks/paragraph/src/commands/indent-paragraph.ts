@@ -73,7 +73,7 @@ export const indentParagraphCommand: Command<{
     indentContext.flavour !== 'ink:paragraph'
   ) {
     console.warn(
-      'you need to use `canIndentParagraph` command before running `indentParagraph` command'
+      'you need to use `canIndentParagraph` command before running `indentParagraph` command',
     );
     return;
   }
@@ -134,10 +134,7 @@ export const indentParagraphCommand: Command<{
   }
 
   // update collapsed state of ink list
-  if (
-    matchModels(previousSibling, [ListBlockModel]) &&
-    previousSibling.props.collapsed
-  ) {
+  if (matchModels(previousSibling, [ListBlockModel]) && previousSibling.props.collapsed) {
     store.updateBlock(previousSibling, {
       collapsed: false,
     });

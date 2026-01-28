@@ -23,9 +23,7 @@ export class CaptionedBlockComponent<
 
   get captionEditor() {
     if (!this.useCaptionEditor || !this._captionEditorRef.value) {
-      console.error(
-        'Oops! Please enable useCaptionEditor before accessing captionEditor'
-      );
+      console.error('Oops! Please enable useCaptionEditor before accessing captionEditor');
     }
     return this._captionEditorRef.value;
   }
@@ -53,14 +51,10 @@ export class CaptionedBlockComponent<
     >
       ${content}
       ${this.useCaptionEditor
-        ? html`<block-caption-editor
-            ${ref(this._captionEditorRef)}
-          ></block-caption-editor>`
+        ? html`<block-caption-editor ${ref(this._captionEditorRef)}></block-caption-editor>`
         : nothing}
       ${this.selectedStyle === SelectedStyle.Background
-        ? html`<ink-block-selection
-            .selected=${this.selected$.value}
-          ></ink-block-selection>`
+        ? html`<ink-block-selection .selected=${this.selected$.value}></ink-block-selection>`
         : null}
       ${this.useZeroWidth && !this.store.readonly
         ? html`<block-zero-width .block=${this}></block-zero-width>`
@@ -69,8 +63,7 @@ export class CaptionedBlockComponent<
   }
 
   // There may be multiple block-caption-editors in a nested structure.
-  private accessor _captionEditorRef: Ref<BlockCaptionEditor> =
-    createRef<BlockCaptionEditor>();
+  private accessor _captionEditorRef: Ref<BlockCaptionEditor> = createRef<BlockCaptionEditor>();
 
   protected accessor blockContainerStyles: StyleInfo | undefined = undefined;
 

@@ -116,5 +116,5 @@ type TransformerMiddlewareOptions = {
 type TransformerMiddlewareCleanup = () => void;
 
 export type TransformerMiddleware = (
-  options: TransformerMiddlewareOptions
+  options: TransformerMiddlewareOptions,
 ) => void | TransformerMiddlewareCleanup;

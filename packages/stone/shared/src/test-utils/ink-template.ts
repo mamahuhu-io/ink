@@ -1,3 +1,4 @@
+import { Container } from '@ink/stone-global/di';
 import {
   CodeBlockSchemaExtension,
   DatabaseBlockSchemaExtension,
@@ -7,14 +8,8 @@ import {
   ParagraphBlockSchemaExtension,
   RootBlockSchemaExtension,
 } from '@ink/stone-model';
-import { Container } from '@ink/stone-global/di';
 import { TextSelection } from '@ink/stone-std';
-import {
-  type Block,
-  type ExtensionType,
-  type Store,
-  Text,
-} from '@ink/stone-store';
+import { type Block, type ExtensionType, type Store, Text } from '@ink/stone-store';
 import { TestWorkspace } from '@ink/stone-store/test';
 
 import { createTestHost } from './create-test-host';
@@ -49,9 +44,7 @@ interface SelectionInfo {
   cursorOffset?: number;
 }
 
-export function createInkTemplate(
-  extensions: ExtensionType[] = DEFAULT_EXTENSIONS
-) {
+export function createInkTemplate(extensions: ExtensionType[] = DEFAULT_EXTENSIONS) {
   /**
    * Parse template strings and build InkStone document structure,
    * then create a host object with the document
@@ -83,11 +76,11 @@ export function createInkTemplate(
     workspace.meta.initialize();
     const doc = workspace.createDoc('test-doc');
     const container = new Container();
-    extensions.forEach(extension => {
+    extensions.forEach((extension) => {
       extension.setup(container);
     });
     const store = doc.getStore({ extensions, provider: container.provider() });
-    let selectionInfo: SelectionInfo = {};
+    const selectionInfo: SelectionInfo = {};
 
     // Use DOMParser to parse HTML string
     doc.load(() => {
@@ -160,10 +153,7 @@ export function createInkTemplate(
    * const block = block`<ink-note />`
    * ```
    */
-  function block(
-    strings: TemplateStringsArray,
-    ...values: any[]
-  ): Block | null {
+  function block(strings: TemplateStringsArray, ...values: any[]): Block | null {
     // Merge template strings and values
     let htmlString = '';
     strings.forEach((str, i) => {
@@ -194,11 +184,7 @@ export function createInkTemplate(
 
       // Create a root block if needed
       const flavour = tagToFlavour[root.tagName.toLowerCase()];
-      if (
-        flavour === 'ink:paragraph' ||
-        flavour === 'ink:list' ||
-        flavour === 'ink:code'
-      ) {
+      if (flavour === 'ink:paragraph' || flavour === 'ink:list' || flavour === 'ink:code') {
         const pageId = store.addBlock('ink:page', {});
         const noteId = store.addBlock('ink:note', {}, pageId);
         blockId = buildDocFromElement(store, root, noteId, selectionInfo);
@@ -231,7 +217,7 @@ function buildDocFromElement(
   doc: Store,
   element: Element,
   parentId: string | null,
-  selectionInfo: SelectionInfo
+  selectionInfo: SelectionInfo,
 ): string {
   const tagName = element.tagName.toLowerCase();
 
@@ -281,7 +267,7 @@ function buildDocFromElement(
   }
 
   // Process element attributes
-  Array.from(element.attributes).forEach(attr => {
+  Array.from(element.attributes).forEach((attr) => {
     if (attr.name !== 'id') {
       // Skip id attribute, we already handled it
       props[attr.name] = attr.value;
@@ -302,7 +288,7 @@ function buildDocFromElement(
   const blockId = doc.addBlock(flavour, props, parentId);
 
   // Process all child nodes, including text nodes
-  Array.from(element.children).forEach(child => {
+  Array.from(element.children).forEach((child) => {
     if (child.nodeType === Node.ELEMENT_NODE) {
       // Handle element nodes
       buildDocFromElement(doc, child as Element, blockId, selectionInfo);

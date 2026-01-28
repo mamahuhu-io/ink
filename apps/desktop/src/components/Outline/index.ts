@@ -1,1 +1,1 @@
-export { Outline } from './Outline'
+export { Outline } from './Outline';

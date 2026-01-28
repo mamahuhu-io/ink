@@ -14,16 +14,16 @@ export function insertPositionToIndex<
 export function insertPositionToIndex<T>(
   position: InsertToPosition,
   arr: T[],
-  key: (value: T) => string
+  key: (value: T) => string,
 ): number;
 export function insertPositionToIndex<T>(
   position: InsertToPosition,
   arr: T[],
 
-  key: (value: T) => string = (value: any) => value.id
+  key: (value: T) => string = (value: any) => value.id,
 ): number {
   if (typeof position === 'object') {
-    const index = arr.findIndex(v => key(v) === position.id);
+    const index = arr.findIndex((v) => key(v) === position.id);
     return index + (position.before ? 0 : 1);
   }
   if (position == null || position === 'start') {
@@ -32,14 +32,10 @@ export function insertPositionToIndex<T>(
   if (position === 'end') {
     return arr.length;
   }
-  return arr.findIndex(v => key(v) === position) + 1;
+  return arr.findIndex((v) => key(v) === position) + 1;
 }
-export const arrayMove = <T>(
-  arr: T[],
-  from: (t: T) => boolean,
-  to: (arr: T[]) => number
-): T[] => {
-  const columnIndex = arr.findIndex(v => from(v));
+export const arrayMove = <T>(arr: T[], from: (t: T) => boolean, to: (arr: T[]) => number): T[] => {
+  const columnIndex = arr.findIndex((v) => from(v));
   if (columnIndex < 0) {
     return arr;
   }

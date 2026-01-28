@@ -1,19 +1,8 @@
-import type {
-  GfxCommonBlockProps,
-  GfxElementGeometry,
-} from '@ink/stone-std/gfx';
+import type { GfxCommonBlockProps, GfxElementGeometry } from '@ink/stone-std/gfx';
 import { GfxCompatible } from '@ink/stone-std/gfx';
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
-import type {
-  BlockMeta,
-  EmbedCardStyle,
-  LinkPreviewData,
-} from '../../utils/index.js';
+import type { BlockMeta, EmbedCardStyle, LinkPreviewData } from '../../utils/index.js';
 
 export const BookmarkStyles = [
   'vertical',
@@ -62,19 +51,12 @@ export const BookmarkBlockSchema = defineBlockSchema({
   metadata: {
     version: 1,
     role: 'content',
-    parent: [
-      'ink:note',
-      'ink:surface',
-      'ink:edgeless-text',
-      'ink:paragraph',
-      'ink:list',
-    ],
+    parent: ['ink:note', 'ink:surface', 'ink:edgeless-text', 'ink:paragraph', 'ink:list'],
   },
   toModel: () => new BookmarkBlockModel(),
 });
 
-export const BookmarkBlockSchemaExtension =
-  BlockSchemaExtension(BookmarkBlockSchema);
+export const BookmarkBlockSchemaExtension = BlockSchemaExtension(BookmarkBlockSchema);
 
 export class BookmarkBlockModel
   extends GfxCompatible<BookmarkBlockProps>(BlockModel)

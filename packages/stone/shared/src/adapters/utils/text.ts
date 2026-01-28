@@ -5,7 +5,7 @@ import isEqual from 'lodash-es/isEqual';
 const mergeDeltas = (
   acc: DeltaInsert[],
   cur: DeltaInsert,
-  options: { force?: boolean } = { force: false }
+  options: { force?: boolean } = { force: false },
 ) => {
   if (acc.length === 0) {
     return [cur];
@@ -37,19 +37,13 @@ const createText = (s: string) => {
 };
 
 const isText = (o: unknown) => {
-  if (
-    typeof o === 'object' &&
-    o !== null &&
-    '$stone:internal:text$' in o
-  ) {
+  if (typeof o === 'object' && o !== null && '$stone:internal:text$' in o) {
     return o['$stone:internal:text$'] === true;
   }
   return false;
 };
 
-function toURLSearchParams(
-  params?: Partial<Record<string, string | string[]>>
-) {
+function toURLSearchParams(params?: Partial<Record<string, string | string[]>>) {
   if (!params) return;
 
   const items = Object.entries(params)
@@ -63,23 +57,17 @@ function toURLSearchParams(
       }
       return false;
     })
-    .map(([k, v]) => [k, Array.isArray(v) ? v.filter(v => v.length) : v]) as [
+    .map(([k, v]) => [k, Array.isArray(v) ? v.filter((v) => v.length) : v]) as [
     string,
     string | string[],
   ][];
 
   return new URLSearchParams(
-    items
-      .filter(([_, v]) => v.length)
-      .map(([k, v]) => [k, Array.isArray(v) ? v.join(',') : v])
+    items.filter(([_, v]) => v.length).map(([k, v]) => [k, Array.isArray(v) ? v.join(',') : v]),
   );
 }
 
-function generateDocUrl(
-  docBaseUrl: string,
-  pageId: string,
-  params: ReferenceParams
-) {
+function generateDocUrl(docBaseUrl: string, pageId: string, params: ReferenceParams) {
   const search = toURLSearchParams(params);
   const query = search?.size ? `?${search.toString()}` : '';
   const url = docBaseUrl ? `${docBaseUrl}/${pageId}${query}` : '';

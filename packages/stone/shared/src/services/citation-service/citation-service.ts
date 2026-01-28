@@ -3,10 +3,7 @@ import { type BlockStdScope, StdIdentifier } from '@ink/stone-std';
 import { type BlockModel, Extension } from '@ink/stone-store';
 
 import { DocModeProvider } from '../doc-mode-service';
-import type {
-  CitationEvents,
-  CitationEventType,
-} from '../telemetry-service/citation';
+import type { CitationEvents, CitationEventType } from '../telemetry-service/citation';
 import { TelemetryProvider } from '../telemetry-service/telemetry-service';
 
 const CitationEventTypeMap = {
@@ -28,10 +25,7 @@ export interface CitationViewService {
    * @param type - The type of citation event to track
    * @param properties - The properties of the event
    */
-  trackEvent<T extends EventType>(
-    type: T,
-    properties?: CitationEvents[EventTypeMapping[T]]
-  ): void;
+  trackEvent<T extends EventType>(type: T, properties?: CitationEvents[EventTypeMapping[T]]): void;
   /**
    * Checks if the model is a citation model
    * @param model - The model to check
@@ -40,8 +34,7 @@ export interface CitationViewService {
   isCitationModel(model: BlockModel): boolean;
 }
 
-export const CitationProvider =
-  createIdentifier<CitationViewService>('CitationService');
+export const CitationProvider = createIdentifier<CitationViewService>('CitationService');
 
 export class CitationService extends Extension implements CitationViewService {
   constructor(private readonly std: BlockStdScope) {
@@ -69,10 +62,7 @@ export class CitationService extends Extension implements CitationViewService {
     );
   };
 
-  trackEvent<T extends EventType>(
-    type: T,
-    properties?: CitationEvents[EventTypeMapping[T]]
-  ) {
+  trackEvent<T extends EventType>(type: T, properties?: CitationEvents[EventTypeMapping[T]]) {
     const editorMode = this.docModeService?.getEditorMode() ?? 'page';
     this.telemetryService?.track(CitationEventTypeMap[type], {
       page: editorMode === 'page' ? 'doc editor' : 'whiteboard editor',

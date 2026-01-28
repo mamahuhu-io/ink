@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / Schema
 
@@ -53,7 +53,7 @@ The block flavour name.
 
 The corresponding BlockSchemaType or undefined if not found.
 
-***
+---
 
 ### isValid()
 
@@ -81,7 +81,7 @@ The parent block flavour name.
 
 True if the relationship is valid, false otherwise.
 
-***
+---
 
 ### register()
 
@@ -103,7 +103,7 @@ An array of block schema definitions to register.
 
 The Schema instance (for chaining).
 
-***
+---
 
 ### safeValidate()
 
@@ -138,7 +138,7 @@ The child block flavours (optional).
 
 True if the schema relationship is valid, false otherwise.
 
-***
+---
 
 ### toJSON()
 
@@ -152,7 +152,7 @@ Serializes the schema map to a plain object for JSON output.
 
 An object mapping each flavour to its role, parent, and children.
 
-***
+---
 
 ### validate()
 
@@ -189,7 +189,7 @@ The child block flavours (optional).
 
 If the schema relationship is invalid.
 
-***
+---
 
 ### validateSchema()
 

@@ -1,9 +1,6 @@
 import type { InlineRange } from '../types.js';
 
-export function isMaybeInlineRangeEqual(
-  a: InlineRange | null,
-  b: InlineRange | null
-): boolean {
+export function isMaybeInlineRangeEqual(a: InlineRange | null, b: InlineRange | null): boolean {
   return a === b || (a && b ? isInlineRangeEqual(a, b) : false);
 }
 
@@ -15,10 +12,7 @@ export function isInlineRangeEqual(a: InlineRange, b: InlineRange): boolean {
   return a.index === b.index && a.length === b.length;
 }
 
-export function isInlineRangeIntersect(
-  a: InlineRange,
-  b: InlineRange
-): boolean {
+export function isInlineRangeIntersect(a: InlineRange, b: InlineRange): boolean {
   return a.index <= b.index + b.length && a.index + a.length >= b.index;
 }
 
@@ -30,24 +24,15 @@ export function isInlineRangeAfter(a: InlineRange, b: InlineRange): boolean {
   return a.index >= b.index + b.length;
 }
 
-export function isInlineRangeEdge(
-  index: InlineRange['index'],
-  range: InlineRange
-): boolean {
+export function isInlineRangeEdge(index: InlineRange['index'], range: InlineRange): boolean {
   return index === range.index || index === range.index + range.length;
 }
 
-export function isInlineRangeEdgeBefore(
-  index: InlineRange['index'],
-  range: InlineRange
-): boolean {
+export function isInlineRangeEdgeBefore(index: InlineRange['index'], range: InlineRange): boolean {
   return index === range.index;
 }
 
-export function isInlineRangeEdgeAfter(
-  index: InlineRange['index'],
-  range: InlineRange
-): boolean {
+export function isInlineRangeEdgeAfter(index: InlineRange['index'], range: InlineRange): boolean {
   return index === range.index + range.length;
 }
 
@@ -61,10 +46,7 @@ export function mergeInlineRange(a: InlineRange, b: InlineRange): InlineRange {
   return { index, length };
 }
 
-export function intersectInlineRange(
-  a: InlineRange,
-  b: InlineRange
-): InlineRange | null {
+export function intersectInlineRange(a: InlineRange, b: InlineRange): InlineRange | null {
   if (!isInlineRangeIntersect(a, b)) {
     return null;
   }

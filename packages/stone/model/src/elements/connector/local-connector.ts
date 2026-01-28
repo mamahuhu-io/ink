@@ -1,12 +1,7 @@
 import type { PointLocation } from '@ink/stone-global/gfx';
 import { GfxLocalElementModel } from '@ink/stone-std/gfx';
 
-import {
-  ConnectorMode,
-  DEFAULT_ROUGHNESS,
-  type PointStyle,
-  StrokeStyle,
-} from '../../consts/index';
+import { ConnectorMode, DEFAULT_ROUGHNESS, type PointStyle, StrokeStyle } from '../../consts/index';
 import { type Color, DefaultTheme } from '../../themes/index';
 import type { Connection } from './connector.js';
 
@@ -49,7 +44,7 @@ export class LocalConnectorElementModel extends GfxLocalElementModel {
     const { x, y } = this;
 
     this._path = value;
-    this.absolutePath = value.map(p => p.clone().setVec([p[0] + x, p[1] + y]));
+    this.absolutePath = value.map((p) => p.clone().setVec([p[0] + x, p[1] + y]));
   }
 
   get type() {

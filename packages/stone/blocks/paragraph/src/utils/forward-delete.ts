@@ -9,15 +9,8 @@ import {
   ParagraphBlockModel,
 } from '@ink/stone-model';
 import { EMBED_BLOCK_MODEL_LIST } from '@ink/stone-shared/consts';
-import {
-  getNextContentBlock,
-  matchModels,
-} from '@ink/stone-shared/utils';
-import {
-  BlockSelection,
-  type BlockStdScope,
-  TextSelection,
-} from '@ink/stone-std';
+import { getNextContentBlock, matchModels } from '@ink/stone-shared/utils';
+import { BlockSelection, type BlockStdScope, TextSelection } from '@ink/stone-std';
 
 export function forwardDelete(std: BlockStdScope) {
   const { store, host } = std;
@@ -68,12 +61,7 @@ export function forwardDelete(std: BlockStdScope) {
     if (nextBlock.children) {
       const parent = store.getParent(nextBlock);
       if (!parent) return false;
-      store.moveBlocks(
-        nextBlock.children,
-        parent,
-        store.getParent(model),
-        false
-      );
+      store.moveBlocks(nextBlock.children, parent, store.getParent(model), false);
     }
     store.deleteBlock(nextBlock);
     return true;

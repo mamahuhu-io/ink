@@ -1,2 +1,2 @@
-export { TabBar } from './TabBar'
-export { TabPanel } from './TabPanel'
+export { TabBar } from './TabBar';
+export { TabPanel } from './TabPanel';

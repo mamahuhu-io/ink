@@ -1,5 +1,5 @@
 import { type Container, createIdentifier } from '@ink/stone-global/di';
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { Extension } from '@ink/stone-store';
 
 import { LifeCycleWatcher } from '../extension/lifecycle-watcher.js';
@@ -26,13 +26,11 @@ export abstract class SurfaceMiddlewareBuilder extends Extension {
     if (!this.key) {
       throw new InkStoneError(
         ErrorCode.ValueNotExists,
-        'The surface middleware builder should have a static key property.'
+        'The surface middleware builder should have a static key property.',
       );
     }
 
-    di.addImpl(SurfaceMiddlewareBuilderIdentifier(this.key), this, [
-      StdIdentifier,
-    ]);
+    di.addImpl(SurfaceMiddlewareBuilderIdentifier(this.key), this, [StdIdentifier]);
   }
 
   mounted(): void {}
@@ -40,20 +38,21 @@ export abstract class SurfaceMiddlewareBuilder extends Extension {
   unmounted(): void {}
 }
 
-export const SurfaceMiddlewareBuilderIdentifier =
-  createIdentifier<SurfaceMiddlewareBuilder>('SurfaceMiddlewareBuilder');
+export const SurfaceMiddlewareBuilderIdentifier = createIdentifier<SurfaceMiddlewareBuilder>(
+  'SurfaceMiddlewareBuilder',
+);
 
 export class SurfaceMiddlewareExtension extends LifeCycleWatcher {
   static override key: string = 'surfaceMiddleware';
 
   override mounted(): void {
     const builders = Array.from(
-      this.std.provider.getAll(SurfaceMiddlewareBuilderIdentifier).values()
+      this.std.provider.getAll(SurfaceMiddlewareBuilderIdentifier).values(),
     );
 
-    const dispose = onSurfaceAdded(this.std.store, surface => {
+    const dispose = onSurfaceAdded(this.std.store, (surface) => {
       if (surface) {
-        surface.applyMiddlewares(builders.map(builder => builder.middleware));
+        surface.applyMiddlewares(builders.map((builder) => builder.middleware));
         queueMicrotask(() => dispose());
       }
     });

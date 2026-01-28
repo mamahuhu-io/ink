@@ -31,14 +31,10 @@ export class CodeBlockHighlighter extends LifeCycleWatcher {
 
   get themeKey() {
     const theme = this.std.get(ThemeProvider).theme$.value;
-    return theme === ColorScheme.Dark
-      ? this._darkThemeKey
-      : this._lightThemeKey;
+    return theme === ColorScheme.Dark ? this._darkThemeKey : this._lightThemeKey;
   }
 
-  private readonly _loadTheme = async (
-    highlighter: HighlighterCore
-  ): Promise<void> => {
+  private readonly _loadTheme = async (highlighter: HighlighterCore): Promise<void> => {
     // It is possible that by the time the highlighter is ready all instances
     // have already been unmounted. In that case there is no need to load
     // themes or update state.
@@ -63,7 +59,7 @@ export class CodeBlockHighlighter extends LifeCycleWatcher {
     if (!CodeBlockHighlighter._highlighterPromise) {
       CodeBlockHighlighter._highlighterPromise = createHighlighterCore({
         engine: createOnigurumaEngine(() => getWasm),
-      }).then(highlighter => {
+      }).then((highlighter) => {
         CodeBlockHighlighter._sharedHighlighter = highlighter;
         return highlighter;
       });
@@ -77,9 +73,7 @@ export class CodeBlockHighlighter extends LifeCycleWatcher {
 
     CodeBlockHighlighter._refCount++;
 
-    CodeBlockHighlighter._getOrCreateHighlighter()
-      .then(this._loadTheme)
-      .catch(console.error);
+    CodeBlockHighlighter._getOrCreateHighlighter().then(this._loadTheme).catch(console.error);
   }
 
   override unmounted(): void {
@@ -103,9 +97,7 @@ export class CodeBlockHighlighter extends LifeCycleWatcher {
       doDispose(CodeBlockHighlighter._sharedHighlighter);
     } else if (CodeBlockHighlighter._highlighterPromise) {
       // Highlighter still being created – wait for it, then dispose.
-      CodeBlockHighlighter._highlighterPromise
-        .then(doDispose)
-        .catch(console.error);
+      CodeBlockHighlighter._highlighterPromise.then(doDispose).catch(console.error);
     }
   }
 }
@@ -114,7 +106,5 @@ export class CodeBlockHighlighter extends LifeCycleWatcher {
  * https://github.com/shikijs/shiki/blob/933415cdc154fe74ccfb6bbb3eb6a7b7bf183e60/packages/core/src/internal.ts#L31
  */
 export async function normalizeGetter<T>(p: MaybeGetter<T>): Promise<T> {
-  return Promise.resolve(typeof p === 'function' ? (p as any)() : p).then(
-    r => r.default || r
-  );
+  return Promise.resolve(typeof p === 'function' ? (p as any)() : p).then((r) => r.default || r);
 }

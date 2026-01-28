@@ -37,10 +37,8 @@ export class EdgelessColorCustomButton extends LitElement {
       padding: 2px;
       border: 2px solid transparent;
       background:
-        linear-gradient(var(--c, transparent), var(--c, transparent))
-          content-box,
-        linear-gradient(var(--b, transparent), var(--b, transparent))
-          padding-box,
+        linear-gradient(var(--c, transparent), var(--c, transparent)) content-box,
+        linear-gradient(var(--b, transparent), var(--b, transparent)) padding-box,
         conic-gradient(
             from 180deg at 50% 50%,
             #d21c7e 0deg,

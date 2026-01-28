@@ -50,16 +50,16 @@ export const getSelectedModelsCommand: Command<
   const selectedModels: BlockModel[] = [];
   ctx.std.command
     .chain()
-    .tryAll(chain => [
+    .tryAll((chain) => [
       chain.pipe(getTextSelectionCommand),
       chain.pipe(getBlockSelectionsCommand),
       chain.pipe(getImageSelectionsCommand),
       chain.pipe(getSurfaceSelectionCommand),
     ])
     .pipe(getSelectedBlocksCommand, { types, mode })
-    .pipe(ctx => {
+    .pipe((ctx) => {
       const { selectedBlocks = [] } = ctx;
-      selectedModels.push(...selectedBlocks.map(el => el.model));
+      selectedModels.push(...selectedBlocks.map((el) => el.model));
     })
     .run();
 

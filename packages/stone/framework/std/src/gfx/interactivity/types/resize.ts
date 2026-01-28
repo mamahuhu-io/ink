@@ -23,19 +23,17 @@ export type ExtensionElementResizeStartContext = {
   handle: ResizeHandle;
 };
 
-export type ExtensionElementResizeEndContext =
-  ExtensionElementResizeStartContext;
+export type ExtensionElementResizeEndContext = ExtensionElementResizeStartContext;
 
-export type ExtensionElementResizeMoveContext =
-  ExtensionElementResizeStartContext & {
-    scaleX: number;
-    scaleY: number;
+export type ExtensionElementResizeMoveContext = ExtensionElementResizeStartContext & {
+  scaleX: number;
+  scaleY: number;
 
-    originalBound: IBound;
+  originalBound: IBound;
 
-    currentHandlePos: IVec;
+  currentHandlePos: IVec;
 
-    lockRatio: boolean;
+  lockRatio: boolean;
 
-    suggest: (distance: { scaleX: number; scaleY: number }) => void;
-  };
+  suggest: (distance: { scaleX: number; scaleY: number }) => void;
+};

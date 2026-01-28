@@ -1,8 +1,5 @@
 import type { MermaidProps } from '@ink/stone-model';
-import {
-  DocModeProvider,
-  TelemetryProvider,
-} from '@ink/stone-shared/services';
+import { DocModeProvider, TelemetryProvider } from '@ink/stone-shared/services';
 import type { Command } from '@ink/stone-std';
 import type { BlockModel } from '@ink/stone-store';
 
@@ -23,9 +20,7 @@ export const insertMermaidBlockCommand: Command<
   if (!selectedModels?.length) return;
 
   const targetModel =
-    place === 'before'
-      ? selectedModels[0]
-      : selectedModels[selectedModels.length - 1];
+    place === 'before' ? selectedModels[0] : selectedModels[selectedModels.length - 1];
 
   const mermaidBlockProps: Partial<MermaidProps> & {
     flavour: 'ink:mermaid';
@@ -34,11 +29,7 @@ export const insertMermaidBlockCommand: Command<
     code: code ?? '',
   };
 
-  const result = std.store.addSiblingBlocks(
-    targetModel,
-    [mermaidBlockProps],
-    place
-  );
+  const result = std.store.addSiblingBlocks(targetModel, [mermaidBlockProps], place);
   if (result.length === 0) return;
 
   if (removeEmptyLine && targetModel.text?.length === 0) {
@@ -56,12 +47,7 @@ export const insertMermaidBlockCommand: Command<
           const mode = std.get(DocModeProvider).getEditorMode() ?? 'page';
           const ifEdgelessText = blockComponent.closest('ink-edgeless-text');
           std.getOptional(TelemetryProvider)?.track('Mermaid', {
-            from:
-              mode === 'page'
-                ? 'doc'
-                : ifEdgelessText
-                  ? 'edgeless text'
-                  : 'edgeless note',
+            from: mode === 'page' ? 'doc' : ifEdgelessText ? 'edgeless text' : 'edgeless note',
             page: mode === 'page' ? 'doc' : 'edgeless',
             segment: mode === 'page' ? 'doc' : 'whiteboard',
             module: 'diagram',

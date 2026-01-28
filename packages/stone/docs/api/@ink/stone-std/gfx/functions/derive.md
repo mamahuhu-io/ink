@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../../README.md) / [@ink/stone-std](../../README.md) / [gfx](../README.md) / derive
 
@@ -12,6 +12,7 @@ The derive decorator is used to derive other properties' update when the
 decorated property is updated through assignment in the local.
 
 Note:
+
 1. The first argument of the function is the new value of the decorated property
    before the `convert` decorator is called.
 2. The decorator function will execute after the decorated property has been updated.
@@ -27,7 +28,7 @@ Note:
 
 ### T
 
-`T` *extends* `GfxPrimitiveElementModel`\<`BaseElementProps`\>
+`T` _extends_ `GfxPrimitiveElementModel`\<`BaseElementProps`\>
 
 ## Parameters
 

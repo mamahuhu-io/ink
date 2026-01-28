@@ -1,5 +1,5 @@
-import type { UniComponent } from '@ink/stone-shared/types';
 import { createIdentifier } from '@ink/stone-global/di';
+import type { UniComponent } from '@ink/stone-shared/types';
 export enum IconType {
   Emoji = 'emoji',
   InkIcon = 'ink-icon',
@@ -25,14 +25,13 @@ export interface IconPickerService {
   iconPickerComponent: UniComponent<{ onSelect?: (data?: IconData) => void }>;
 }
 
-export const IconPickerServiceIdentifier =
-  createIdentifier<IconPickerService>('IconPickerService');
+export const IconPickerServiceIdentifier = createIdentifier<IconPickerService>('IconPickerService');
 
 // Export implementation
 export {
-  IconPickerServiceExtension,
-  defaultIconPickerService,
   createEmojiIconPickerComponent,
-  setIconPickerI18nGetter,
+  defaultIconPickerService,
   type EmojiIconPickerProps,
+  IconPickerServiceExtension,
+  setIconPickerI18nGetter,
 } from './impl.js';

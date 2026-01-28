@@ -1,21 +1,12 @@
-import {
-  EmbedBlockComponent,
-  RENDER_CARD_THROTTLE_MS,
-} from '@ink/stone-block-embed';
+import { EmbedBlockComponent, RENDER_CARD_THROTTLE_MS } from '@ink/stone-block-embed';
 import { SurfaceBlockModel } from '@ink/stone-block-surface';
 import { LoadingIcon } from '@ink/stone-components/icons';
 import { isPeekable, Peekable } from '@ink/stone-components/peek';
+import { Bound } from '@ink/stone-global/gfx';
+import { ResetIcon } from '@ink/stone-icons/lit';
 import { RefNodeSlotsProvider } from '@ink/stone-inline-reference';
-import type {
-  DocMode,
-  EmbedLinkedDocModel,
-  EmbedLinkedDocStyles,
-} from '@ink/stone-model';
-import {
-  EMBED_CARD_HEIGHT,
-  EMBED_CARD_WIDTH,
-  REFERENCE_NODE,
-} from '@ink/stone-shared/consts';
+import type { DocMode, EmbedLinkedDocModel, EmbedLinkedDocStyles } from '@ink/stone-model';
+import { EMBED_CARD_HEIGHT, EMBED_CARD_WIDTH, REFERENCE_NODE } from '@ink/stone-shared/consts';
 import {
   CitationProvider,
   DocDisplayMetaProvider,
@@ -32,8 +23,6 @@ import {
   matchModels,
   referenceToNode,
 } from '@ink/stone-shared/utils';
-import { Bound } from '@ink/stone-global/gfx';
-import { ResetIcon } from '@ink/stone-icons/lit';
 import { BlockSelection } from '@ink/stone-std';
 import { Text } from '@ink/stone-store';
 import { computed } from '@preact/signals-core';
@@ -96,7 +85,7 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
     }
 
     if (!this.isError && !linkedDoc.root) {
-      await new Promise<void>(resolve => {
+      await new Promise<void>((resolve) => {
         const subscription = linkedDoc.slots.rootAdded.subscribe(() => {
           subscription.unsubscribe();
           resolve();
@@ -151,14 +140,12 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
         ...cloneReferenceInfoWithoutAliases(this.referenceInfo$.peek()),
       },
       parent,
-      index
+      index,
     );
 
     store.deleteBlock(this.model);
 
-    this.std.selection.setGroup('note', [
-      this.std.selection.create(BlockSelection, { blockId }),
-    ]);
+    this.std.selection.setGroup('note', [this.std.selection.create(BlockSelection, { blockId })]);
   };
 
   convertToInline = () => {
@@ -185,7 +172,7 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
         text,
       },
       parent,
-      index
+      index,
     );
 
     store.deleteBlock(this.model);
@@ -203,9 +190,8 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
 
   icon$ = computed(() => {
     const { pageId, params, title } = this.referenceInfo$.value;
-    return this.std
-      .get(DocDisplayMetaProvider)
-      .icon(pageId, { params, title, referenced: true }).value;
+    return this.std.get(DocDisplayMetaProvider).icon(pageId, { params, title, referenced: true })
+      .value;
   });
 
   open = ({
@@ -224,7 +210,7 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
   };
 
   refreshData = () => {
-    this._load().catch(e => {
+    this._load().catch((e) => {
       console.error(e);
       this.isError = true;
     });
@@ -233,9 +219,8 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
   title$ = computed(() => {
     const { pageId, params, title } = this.referenceInfo$.value;
     return (
-      this.std
-        .get(DocDisplayMetaProvider)
-        .title(pageId, { params, title, referenced: true }) || title
+      this.std.get(DocDisplayMetaProvider).title(pageId, { params, title, referenced: true }) ||
+      title
     );
   });
 
@@ -267,12 +252,9 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
   private readonly _handleDoubleClick = (event: MouseEvent) => {
     event.stopPropagation();
     const openDocService = this.std.get(OpenDocExtensionIdentifier);
-    const shouldOpenInPeek =
-      openDocService.isAllowed('open-in-center-peek') && isPeekable(this);
+    const shouldOpenInPeek = openDocService.isAllowed('open-in-center-peek') && isPeekable(this);
     this.open({
-      openMode: shouldOpenInPeek
-        ? 'open-in-center-peek'
-        : 'open-in-active-view',
+      openMode: shouldOpenInPeek ? 'open-in-center-peek' : 'open-in-active-view',
       event,
     });
   };
@@ -343,17 +325,10 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
     });
 
     const theme = this.std.get(ThemeProvider).theme;
-    const {
-      LinkedDocDeletedBanner,
-      LinkedDocEmptyBanner,
-      SyncedDocErrorBanner,
-    } = getEmbedLinkedDocIcons(theme, this._linkedDocMode, this._cardStyle);
+    const { LinkedDocDeletedBanner, LinkedDocEmptyBanner, SyncedDocErrorBanner } =
+      getEmbedLinkedDocIcons(theme, this._linkedDocMode, this._cardStyle);
 
-    const icon = isError
-      ? SyncedDocErrorIcon
-      : isLoading
-        ? LoadingIcon()
-        : this.icon$.value;
+    const icon = isError ? SyncedDocErrorIcon : isLoading ? LoadingIcon() : this.icon$.value;
     const title = isLoading ? 'Loading...' : this.title$;
     const description = this.model.props.description$;
 
@@ -394,23 +369,16 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
         >
           <div class="ink-embed-linked-doc-content">
             <div class="ink-embed-linked-doc-content-title">
-              <div class="ink-embed-linked-doc-content-title-icon">
-                ${icon}
-              </div>
+              <div class="ink-embed-linked-doc-content-title-icon">${icon}</div>
 
-              <div class="ink-embed-linked-doc-content-title-text">
-                ${title}
-              </div>
+              <div class="ink-embed-linked-doc-content-title-text">${title}</div>
             </div>
 
             ${when(
               hasDescriptionAlias,
               () =>
                 html`<div class="ink-embed-linked-doc-content-note alias">
-                  ${repeat(
-                    (description.value ?? '').split('\n'),
-                    text => html`<p>${text}</p>`
-                  )}
+                  ${repeat((description.value ?? '').split('\n'), (text) => html`<p>${text}</p>`)}
                 </div>`,
               () =>
                 when(
@@ -420,12 +388,8 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
                       ${defaultNoteContent}
                     </div>
                   `,
-                  () => html`
-                    <div
-                      class="ink-embed-linked-doc-content-note render"
-                    ></div>
-                  `
-                )
+                  () => html` <div class="ink-embed-linked-doc-content-note render"></div> `,
+                ),
             )}
             ${isError
               ? html`
@@ -448,14 +412,10 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
           </div>
 
           ${showDefaultBanner
-            ? html`
-                <div class="ink-embed-linked-doc-banner default">
-                  ${defaultBanner}
-                </div>
-              `
+            ? html` <div class="ink-embed-linked-doc-banner default">${defaultBanner}</div> `
             : nothing}
         </div>
-      `
+      `,
     );
   };
 
@@ -464,23 +424,19 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
     this._disposables.add(
       this.std.store.slots.blockUpdated
         .pipe(
-          filter(payload => {
+          filter((payload) => {
             if (!payload.isLocal) return false;
             const { flavour, id, type } = payload;
-            if (
-              type !== 'delete' ||
-              flavour !== this.model.flavour ||
-              id !== this.model.id
-            )
+            if (type !== 'delete' || flavour !== this.model.flavour || id !== this.model.id)
               return false;
             const { model } = payload;
             if (!this.citationService.isCitationModel(model)) return false;
             return true;
-          })
+          }),
         )
         .subscribe(() => {
           this.citationService.trackEvent('Delete');
-        })
+        }),
     );
   };
 
@@ -490,7 +446,7 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
     this._cardStyle = this.model.props.style;
     this._referenceToNode = referenceToNode(this.model.props);
 
-    this._load().catch(e => {
+    this._load().catch((e) => {
       console.error(e);
       this.isError = true;
     });
@@ -501,11 +457,8 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
       // Because the blockUpdated event is triggered too frequently at some cases
       this.disposables.add(
         linkedDoc.slots.blockUpdated.subscribe(
-          throttle(payload => {
-            if (
-              payload.type === 'update' &&
-              ['', 'caption', 'xywh'].includes(payload.props.key)
-            ) {
+          throttle((payload) => {
+            if (payload.type === 'update' && ['', 'caption', 'xywh'].includes(payload.props.key)) {
               return;
             }
 
@@ -513,12 +466,12 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
               return;
             }
 
-            this._load().catch(e => {
+            this._load().catch((e) => {
               console.error(e);
               this.isError = true;
             });
-          }, RENDER_CARD_THROTTLE_MS)
-        )
+          }, RENDER_CARD_THROTTLE_MS),
+        ),
       );
 
       this._setDocUpdatedAt();
@@ -529,9 +482,9 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
         const docMode = this.std.get(DocModeProvider);
         this._linkedDocMode = docMode.getPrimaryMode(this.model.props.pageId);
         this.disposables.add(
-          docMode.onPrimaryModeChange(mode => {
+          docMode.onPrimaryModeChange((mode) => {
             this._linkedDocMode = mode;
-          }, this.model.props.pageId)
+          }, this.model.props.pageId),
         );
       }
     }
@@ -542,19 +495,19 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
           this._cardStyle = this.model.props.style;
         }
         if (key === 'pageId' || key === 'style') {
-          this._load().catch(e => {
+          this._load().catch((e) => {
             console.error(e);
             this.isError = true;
           });
         }
-      })
+      }),
     );
 
     this.disposables.add(
       this.store.workspace.slots.docListUpdated.subscribe(() => {
         this._setDocUpdatedAt();
         this.refreshData();
-      })
+      }),
     );
 
     this._trackCitationDeleteEvent();
@@ -570,9 +523,7 @@ export class EmbedLinkedDocBlockComponent extends EmbedBlockComponent<EmbedLinke
   }
 
   override renderBlock() {
-    return this.isCitation
-      ? this._renderCitationView()
-      : this._renderEmbedView();
+    return this.isCitation ? this._renderCitationView() : this._renderEmbedView();
   }
 
   override updated() {

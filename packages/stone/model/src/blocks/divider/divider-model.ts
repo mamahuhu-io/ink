@@ -1,8 +1,4 @@
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema } from '@ink/stone-store';
 
 export const DividerBlockSchema = defineBlockSchema({
   flavour: 'ink:divider',
@@ -20,5 +16,4 @@ type Props = {
 
 export class DividerBlockModel extends BlockModel<Props> {}
 
-export const DividerBlockSchemaExtension =
-  BlockSchemaExtension(DividerBlockSchema);
+export const DividerBlockSchemaExtension = BlockSchemaExtension(DividerBlockSchema);

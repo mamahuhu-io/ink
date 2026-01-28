@@ -1,9 +1,6 @@
 import { CommentIcon } from '@ink/stone-icons/lit';
 import { BlockSelection, SurfaceSelection } from '@ink/stone-std';
-import type {
-  GfxPrimitiveElementModel,
-  SurfaceBlockModel,
-} from '@ink/stone-std/gfx';
+import type { GfxPrimitiveElementModel, SurfaceBlockModel } from '@ink/stone-std/gfx';
 import { BlockModel, type Store } from '@ink/stone-store';
 
 import type { ToolbarAction } from '../toolbar-service';
@@ -21,7 +18,7 @@ export function findAllCommentedBlocks(store: Store) {
 }
 
 export function findCommentedBlocks(store: Store, commentId: CommentId) {
-  return findAllCommentedBlocks(store).filter(block => {
+  return findAllCommentedBlocks(store).filter((block) => {
     return block.props.comments[commentId];
   });
 }
@@ -30,23 +27,16 @@ export function findAllCommentedElements(store: Store) {
   type CommentedElement = GfxPrimitiveElementModel & {
     comments: Record<CommentId, boolean>;
   };
-  const surface = store.getModelsByFlavour('ink:surface')[0] as
-    | SurfaceBlockModel
-    | undefined;
+  const surface = store.getModelsByFlavour('ink:surface')[0] as SurfaceBlockModel | undefined;
   if (!surface) return [];
 
-  return surface.elementModels.filter(
-    (element): element is CommentedElement => {
-      return (
-        element.comments !== undefined &&
-        Object.keys(element.comments).length > 0
-      );
-    }
-  );
+  return surface.elementModels.filter((element): element is CommentedElement => {
+    return element.comments !== undefined && Object.keys(element.comments).length > 0;
+  });
 }
 
 export function findCommentedElements(store: Store, commentId: CommentId) {
-  return findAllCommentedElements(store).filter(element => {
+  return findAllCommentedElements(store).filter((element) => {
     return element.comments[commentId];
   });
 }
@@ -55,7 +45,7 @@ export const blockCommentToolbarButton: Omit<ToolbarAction, 'id'> = {
   tooltip: 'Comment',
   when: ({ std }) => !!std.getOptional(CommentProviderIdentifier),
   icon: CommentIcon(),
-  run: ctx => {
+  run: (ctx) => {
     const commentProvider = ctx.std.getOptional(CommentProviderIdentifier);
     if (!commentProvider) return;
 
@@ -72,9 +62,7 @@ export const blockCommentToolbarButton: Omit<ToolbarAction, 'id'> = {
           }),
         ]);
       } else if (ctx.gfx.surface?.id) {
-        commentProvider.addComment([
-          new SurfaceSelection(ctx.gfx.surface.id, [model.id], false),
-        ]);
+        commentProvider.addComment([new SurfaceSelection(ctx.gfx.surface.id, [model.id], false)]);
       }
     } else if (selections.length > 0) {
       commentProvider.addComment(selections);

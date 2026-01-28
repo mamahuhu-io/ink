@@ -6,8 +6,8 @@ import {
   Heading5Icon,
   Heading6Icon,
 } from '@ink/stone-components/icons';
-import type { ParagraphBlockModel } from '@ink/stone-model';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import type { ParagraphBlockModel } from '@ink/stone-model';
 import { ShadowlessElement } from '@ink/stone-std';
 import { cssVarV2 } from '@ink/stone-theme';
 import { css, html, nothing, unsafeCSS } from 'lit';
@@ -32,9 +32,7 @@ function HeadingIcon(i: number) {
   }
 }
 
-export class ParagraphHeadingIcon extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class ParagraphHeadingIcon extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     ink-paragraph-heading-icon .heading-icon {
       display: flex;
@@ -72,9 +70,7 @@ export class ParagraphHeadingIcon extends SignalWatcher(
 
     const i = parseInt(type.slice(1));
 
-    return html`<div class="heading-icon" data-testid="heading-icon-${i}">
-      ${HeadingIcon(i)}
-    </div>`;
+    return html`<div class="heading-icon" data-testid="heading-icon-${i}">${HeadingIcon(i)}</div>`;
   }
 
   @property({ attribute: false })

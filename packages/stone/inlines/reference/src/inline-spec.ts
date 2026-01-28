@@ -10,12 +10,12 @@ import {
   ReferenceNodeConfigProvider,
 } from './reference-node/reference-config';
 
-export const ReferenceInlineSpecExtension =
-  InlineSpecExtension<InkTextAttributes>('reference', provider => {
+export const ReferenceInlineSpecExtension = InlineSpecExtension<InkTextAttributes>(
+  'reference',
+  (provider) => {
     const std = provider.get(StdIdentifier);
     const configProvider = new ReferenceNodeConfigProvider(std);
-    const config =
-      provider.getOptional(ReferenceNodeConfigExtension.identifier) ?? {};
+    const config = provider.getOptional(ReferenceNodeConfigExtension.identifier) ?? {};
     if (config.customContent) {
       configProvider.setCustomContent(config.customContent);
     }
@@ -41,7 +41,7 @@ export const ReferenceInlineSpecExtension =
           .nullable()
           .catch(undefined),
       }),
-      match: delta => {
+      match: (delta) => {
         return !!delta.attributes?.reference;
       },
       renderer: ({ delta, selected }) => {
@@ -54,4 +54,5 @@ export const ReferenceInlineSpecExtension =
       },
       embed: true,
     };
-  });
+  },
+);

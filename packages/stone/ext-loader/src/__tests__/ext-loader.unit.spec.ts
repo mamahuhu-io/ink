@@ -4,19 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import { ExtensionManager } from '../manager';
-import {
-  StoreExtensionManager,
-  StoreExtensionManagerIdentifier,
-} from '../store-manager';
-import {
-  type StoreExtensionContext,
-  StoreExtensionProvider,
-} from '../store-provider';
+import { StoreExtensionManager, StoreExtensionManagerIdentifier } from '../store-manager';
+import { type StoreExtensionContext, StoreExtensionProvider } from '../store-provider';
 import { ViewExtensionManager } from '../view-manager';
-import {
-  type ViewExtensionContext,
-  ViewExtensionProvider,
-} from '../view-provider';
+import { type ViewExtensionContext, ViewExtensionProvider } from '../view-provider';
 
 export const Ext1: ExtensionType = {
   setup: () => {},
@@ -133,7 +124,7 @@ it('should be able to validate schema', () => {
   const manager = new ExtensionManager([ViewExt1]);
 
   manager.configure(ViewExt1, { foo: 1, bar: '2' });
-  manager.configure(ViewExt1, prev => {
+  manager.configure(ViewExt1, (prev) => {
     if (!prev) {
       return prev;
     }
@@ -168,7 +159,7 @@ it('should extension manager be able to be injected', () => {
   const manager = new StoreExtensionManager([StoreExt1]);
   const extensions = manager.get('store');
   const container = new Container();
-  extensions.forEach(ext => {
+  extensions.forEach((ext) => {
     ext.setup(container);
   });
   const provider = container.provider();

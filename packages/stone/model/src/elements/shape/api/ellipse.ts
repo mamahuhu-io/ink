@@ -40,12 +40,7 @@ export const ellipse = {
 
     ctx.restore();
   },
-  includesPoint(
-    this: ShapeElementModel,
-    x: number,
-    y: number,
-    options: PointTestOptions
-  ) {
+  includesPoint(this: ShapeElementModel, x: number, y: number, options: PointTestOptions) {
     const point: IVec = [x, y];
     const expand = (options?.hitThreshold ?? 1) / (options?.zoom ?? 1);
     const rx = this.w / 2;
@@ -71,10 +66,7 @@ export const ellipse = {
         } else if (this.textBound) {
           hit = pointInPolygon(
             point,
-            getPointsFromBoundWithRotation(
-              this,
-              () => Bound.from(this.textBound!).points
-            )
+            getPointsFromBoundWithRotation(this, () => Bound.from(this.textBound!).points),
           );
         }
       }
@@ -84,7 +76,7 @@ export const ellipse = {
   },
   containsBound(bounds: Bound, element: ShapeElementModel): boolean {
     const points = getPointsFromBoundWithRotation(element, ellipse.points);
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   },
 
   // See links:
@@ -99,10 +91,7 @@ export const ellipse = {
     const b = h / 2;
 
     // Use the center of the ellipse as the origin
-    const [rotatedPointX, rotatedPointY] = Vec.rot(
-      Vec.sub(point, center),
-      -rad
-    );
+    const [rotatedPointX, rotatedPointY] = Vec.rot(Vec.sub(point, center), -rad);
 
     const px = Math.abs(rotatedPointX);
     const py = Math.abs(rotatedPointY);
@@ -135,35 +124,18 @@ export const ellipse = {
     }
 
     return Vec.add(
-      Vec.rot(
-        [a * tx * Math.sign(rotatedPointX), b * ty * Math.sign(rotatedPointY)],
-        rad
-      ),
-      center
+      Vec.rot([a * tx * Math.sign(rotatedPointX), b * ty * Math.sign(rotatedPointY)], rad),
+      center,
     );
   },
 
-  getLineIntersections(
-    start: IVec,
-    end: IVec,
-    { rotate, xywh }: ShapeElementModel
-  ) {
+  getLineIntersections(start: IVec, end: IVec, { rotate, xywh }: ShapeElementModel) {
     const rad = toRadian(rotate);
     const bound = Bound.deserialize(xywh);
-    return lineEllipseIntersects(
-      start,
-      end,
-      bound.center,
-      bound.w / 2,
-      bound.h / 2,
-      rad
-    );
+    return lineEllipseIntersects(start, end, bound.center, bound.w / 2, bound.h / 2, rad);
   },
 
-  getRelativePointLocation(
-    relativePoint: IVec,
-    { rotate, xywh }: ShapeElementModel
-  ) {
+  getRelativePointLocation(relativePoint: IVec, { rotate, xywh }: ShapeElementModel) {
     const bounds = Bound.deserialize(xywh);
     const point = bounds.getRelativePoint(relativePoint);
     const { x, y, w, h, center } = bounds;
@@ -180,7 +152,7 @@ export const ellipse = {
         point,
       ],
       center,
-      rotate
+      rotate,
     );
     const rotatedPoint = points.pop() as IVec;
     const len = points.length;

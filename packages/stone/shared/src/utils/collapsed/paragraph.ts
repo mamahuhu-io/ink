@@ -3,9 +3,7 @@ import type { BlockModel } from '@ink/stone-store';
 
 import { matchModels } from '../model/checker.js';
 
-export function calculateCollapsedSiblings(
-  model: ParagraphBlockModel
-): BlockModel[] {
+export function calculateCollapsedSiblings(model: ParagraphBlockModel): BlockModel[] {
   const parent = model.parent;
   if (!parent) return [];
   const children = parent.children;
@@ -35,9 +33,7 @@ export function calculateCollapsedSiblings(
   return collapsedSiblings;
 }
 
-export function getNearestHeadingBefore(
-  model: BlockModel
-): ParagraphBlockModel | null {
+export function getNearestHeadingBefore(model: BlockModel): ParagraphBlockModel | null {
   const parent = model.parent;
   if (!parent) return null;
   const index = parent.children.indexOf(model);
@@ -45,10 +41,7 @@ export function getNearestHeadingBefore(
 
   for (let i = index - 1; i >= 0; i--) {
     const sibling = parent.children[i];
-    if (
-      matchModels(sibling, [ParagraphBlockModel]) &&
-      sibling.props.type.startsWith('h')
-    ) {
+    if (matchModels(sibling, [ParagraphBlockModel]) && sibling.props.type.startsWith('h')) {
       return sibling;
     }
   }

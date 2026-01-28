@@ -1,7 +1,9 @@
 import { html } from 'lit';
-const Sidebar =
-  ({ width = '1em', height = '1em', style = '' }: { width?: string, height?: string, style?: string } = {}) =>
-    html`
+const Sidebar = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,7 +12,12 @@ const Sidebar =
     fill="none"
     style=${'user-select:none;flex-shrink:0;' + style}
   >
-    <path fill='currentColor' fill-rule="evenodd" d="M3.5 6.5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2zm6.75-.5h8.25a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-8.25zm-1.5 0H5.5a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h3.25z" clip-rule="evenodd"/>
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M3.5 6.5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2zm6.75-.5h8.25a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-8.25zm-1.5 0H5.5a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h3.25z"
+      clip-rule="evenodd"
+    />
   </svg>
 `;
 export default Sidebar;

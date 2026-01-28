@@ -4,7 +4,7 @@ import { getObjectPropMeta, setObjectPropMeta } from './common.js';
 type WatchFn<T extends GfxPrimitiveElementModel = GfxPrimitiveElementModel> = (
   oldValue: unknown,
   instance: T,
-  local: boolean
+  local: boolean,
 ) => void;
 
 const watchSymbol = Symbol('watch');
@@ -14,10 +14,7 @@ const watchSymbol = Symbol('watch');
  * You can thinks of it as a decorator version of `elementUpdated` slot of the surface model.
  */
 export function watch<V, T extends GfxPrimitiveElementModel>(fn: WatchFn<T>) {
-  return function watchDecorator(
-    _: unknown,
-    context: ClassAccessorDecoratorContext
-  ) {
+  return function watchDecorator(_: unknown, context: ClassAccessorDecoratorContext) {
     const prop = context.name;
     return {
       init(this: GfxPrimitiveElementModel, v: V) {
@@ -39,21 +36,18 @@ function startWatch(prop: string | symbol, receiver: GfxPrimitiveElementModel) {
   if (!watchFn) return;
 
   receiver['_disposable'].add(
-    receiver.surface.elementUpdated.subscribe(payload => {
+    receiver.surface.elementUpdated.subscribe((payload) => {
       if (payload.id === receiver.id && prop in payload.props) {
         watchFn(payload.oldValues[prop as string], receiver, payload.local);
       }
-    })
+    }),
   );
 }
 
-export function initializeWatchers(
-  prototype: unknown,
-  receiver: GfxPrimitiveElementModel
-) {
+export function initializeWatchers(prototype: unknown, receiver: GfxPrimitiveElementModel) {
   const watchers = getObjectPropMeta(prototype, watchSymbol);
 
-  Object.keys(watchers).forEach(prop => {
+  Object.keys(watchers).forEach((prop) => {
     startWatch(prop, receiver);
   });
 }

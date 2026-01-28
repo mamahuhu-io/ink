@@ -3,12 +3,7 @@ import type { CreateProxyOptions } from './types';
 
 type UpdateSignalOptions = Pick<
   CreateProxyOptions,
-  | 'shouldByPassSignal'
-  | 'root'
-  | 'onChange'
-  | 'byPassSignalUpdate'
-  | 'basePath'
-  | 'shouldByPassYjs'
+  'shouldByPassSignal' | 'root' | 'onChange' | 'byPassSignalUpdate' | 'basePath' | 'shouldByPassYjs'
 > & {
   firstKey: string;
   value: unknown;

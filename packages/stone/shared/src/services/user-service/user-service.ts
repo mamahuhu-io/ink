@@ -12,9 +12,7 @@ export interface UserService {
   revalidateUserInfo(id: string): void;
 }
 
-export const UserProvider = createIdentifier<UserService>(
-  'ink-user-service'
-);
+export const UserProvider = createIdentifier<UserService>('ink-user-service');
 
 export function UserServiceExtension(service: UserService): ExtensionType {
   return {

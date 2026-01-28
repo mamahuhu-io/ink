@@ -23,17 +23,17 @@ export class FontLoaderService extends LifeCycleWatcher {
   readonly fontFaces: FontFace[] = [];
 
   get ready() {
-    return Promise.all(this.fontFaces.map(fontFace => fontFace.loaded));
+    return Promise.all(this.fontFaces.map((fontFace) => fontFace.loaded));
   }
 
   load(fonts: FontConfig[]) {
     this.fontFaces.push(
-      ...fonts.map(font => {
+      ...fonts.map((font) => {
         const fontFace = initFontFace(font);
         document.fonts.add(fontFace);
         fontFace.load().catch(console.error);
         return fontFace;
-      })
+      }),
     );
   }
 
@@ -45,18 +45,15 @@ export class FontLoaderService extends LifeCycleWatcher {
   }
 
   override unmounted() {
-    this.fontFaces.forEach(fontFace => document.fonts.delete(fontFace));
+    this.fontFaces.forEach((fontFace) => document.fonts.delete(fontFace));
     this.fontFaces.splice(0, this.fontFaces.length);
   }
 }
 
-export const FontConfigIdentifier =
-  createIdentifier<FontConfig[]>('InkFontConfig');
+export const FontConfigIdentifier = createIdentifier<FontConfig[]>('InkFontConfig');
 
-export const FontConfigExtension = (
-  fontConfig: FontConfig[]
-): ExtensionType => ({
-  setup: di => {
+export const FontConfigExtension = (fontConfig: FontConfig[]): ExtensionType => ({
+  setup: (di) => {
     di.addImpl(FontConfigIdentifier, () => fontConfig);
   },
 });

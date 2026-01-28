@@ -10,21 +10,20 @@ export interface ViewportElementService {
   get viewport(): Viewport;
 }
 
-export const ViewportElementProvider = createIdentifier<ViewportElementService>(
-  'ViewportElementProvider'
-);
+export const ViewportElementProvider =
+  createIdentifier<ViewportElementService>('ViewportElementProvider');
 
 export const ViewportElementExtension = (selector: string): ExtensionType => {
   return {
-    setup: di => {
-      di.override(ViewportElementProvider, provider => {
+    setup: (di) => {
+      di.override(ViewportElementProvider, (provider) => {
         const getViewportElement = (): HTMLElement => {
           const std = provider.get(StdIdentifier);
           const viewportElement = std.host.closest<HTMLElement>(selector);
           if (!viewportElement) {
             throw new InkStoneError(
               InkStoneError.ErrorCode.ValueNotExists,
-              `ViewportElementProvider: viewport element is not found`
+              `ViewportElementProvider: viewport element is not found`,
             );
           }
           return viewportElement;
@@ -35,14 +34,8 @@ export const ViewportElementExtension = (selector: string): ExtensionType => {
           },
           get viewport() {
             const viewportElement = getViewportElement();
-            const {
-              scrollLeft,
-              scrollTop,
-              scrollWidth,
-              scrollHeight,
-              clientWidth,
-              clientHeight,
-            } = viewportElement;
+            const { scrollLeft, scrollTop, scrollWidth, scrollHeight, clientWidth, clientHeight } =
+              viewportElement;
             const { top, left } = viewportElement.getBoundingClientRect();
             return {
               top,

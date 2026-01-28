@@ -4,12 +4,7 @@ import cloneDeep from 'lodash-es/cloneDeep';
 /**
  * Clones reference info.
  */
-export function cloneReferenceInfo({
-  pageId,
-  params,
-  title,
-  description,
-}: ReferenceInfo) {
+export function cloneReferenceInfo({ pageId, params, title, description }: ReferenceInfo) {
   const info: ReferenceInfo = { pageId };
   if (params) info.params = cloneDeep(params);
   if (title) info.title = title;
@@ -34,10 +29,7 @@ export function referenceToNode({ params }: ReferenceInfo) {
  * Clones reference info without the aliases.
  * In `EmbedSyncedDocModel`, the aliases are not needed at the moment.
  */
-export function cloneReferenceInfoWithoutAliases({
-  pageId,
-  params,
-}: ReferenceInfo) {
+export function cloneReferenceInfoWithoutAliases({ pageId, params }: ReferenceInfo) {
   const info: ReferenceInfo = { pageId };
   if (params) info.params = cloneDeep(params);
   return info;

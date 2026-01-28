@@ -1,14 +1,14 @@
 // InkStone editor i18n integration
-import i18n from "../i18n";
+import i18n from '../i18n';
 
 /**
  * Subscribe to language change events
  * Returns an unsubscribe function
  */
 export function onLanguageChange(callback: (lang: string) => void): () => void {
-  i18n.on("languageChanged", callback);
+  i18n.on('languageChanged', callback);
   return () => {
-    i18n.off("languageChanged", callback);
+    i18n.off('languageChanged', callback);
   };
 }
 
@@ -28,15 +28,15 @@ export function getPlaceholder(type: string): string {
 function getDefaultPlaceholder(type: string): string {
   const defaults: Record<string, string> = {
     text: "Type '/' for commands",
-    h1: "Heading 1",
-    h2: "Heading 2",
-    h3: "Heading 3",
-    h4: "Heading 4",
-    h5: "Heading 5",
-    h6: "Heading 6",
-    quote: "",
+    h1: 'Heading 1',
+    h2: 'Heading 2',
+    h3: 'Heading 3',
+    h4: 'Heading 4',
+    h5: 'Heading 5',
+    h6: 'Heading 6',
+    quote: '',
   };
-  return defaults[type] || "";
+  return defaults[type] || '';
 }
 
 /**
@@ -53,10 +53,7 @@ export function getSlashMenuTranslation(key: string, fallback: string): string {
  * Get slash menu link popup translation by key
  * This is used as the i18n getter for InkStone slash menu link popup
  */
-export function getSlashMenuLinkPopupTranslation(
-  key: string,
-  fallback: string,
-): string {
+export function getSlashMenuLinkPopupTranslation(key: string, fallback: string): string {
   const fullKey = `editor.link.${key}`;
   const translation = i18n.t(fullKey);
   return translation !== fullKey ? translation : fallback;
@@ -76,10 +73,7 @@ export function getLinkPopupTranslation(key: string, fallback: string): string {
  * Get link toolbar translation by key
  * This is used as the i18n getter for InkStone link toolbar
  */
-export function getLinkToolbarTranslation(
-  key: string,
-  fallback: string,
-): string {
+export function getLinkToolbarTranslation(key: string, fallback: string): string {
   const fullKey = `editor.link.${key}`;
   const translation = i18n.t(fullKey);
   console.log(
@@ -122,10 +116,7 @@ export function getLatexTranslation(key: string, fallback: string): string {
  * Get text format toolbar translation by key
  * This is used as the i18n getter for InkStone text format toolbar (Bold, Italic, etc.)
  */
-export function getTextFormatTranslation(
-  key: string,
-  fallback: string,
-): string {
+export function getTextFormatTranslation(key: string, fallback: string): string {
   const fullKey = `editor.toolbar.${key}`;
   const translation = i18n.t(fullKey);
   return translation !== fullKey ? translation : fallback;
@@ -145,10 +136,7 @@ export function getToolbarTranslation(key: string, fallback: string): string {
  * Get text conversion translation by key
  * This is used as the i18n getter for InkStone text conversion options (Text, Heading 1-6, etc.)
  */
-export function getTextConversionTranslation(
-  key: string,
-  fallback: string,
-): string {
+export function getTextConversionTranslation(key: string, fallback: string): string {
   const fullKey = `editor.conversion.${key}`;
   const translation = i18n.t(fullKey);
   return translation !== fullKey ? translation : fallback;
@@ -188,10 +176,7 @@ export function getEmojiTranslation(key: string, fallback: string): string {
  * Get icon picker translation by key
  * This is used as the i18n getter for InkStone icon picker (icons)
  */
-export function getIconPickerTranslation(
-  key: string,
-  fallback: string,
-): string {
+export function getIconPickerTranslation(key: string, fallback: string): string {
   const fullKey = `editor.emoji.${key}`;
   const translation = i18n.t(fullKey);
   return translation !== fullKey ? translation : fallback;
@@ -212,38 +197,29 @@ export function getBlockTranslation(key: string, fallback: string): string {
  */
 export const slashMenuTranslations = {
   // Date group
-  today: () => i18n.t("editor.slashMenu.today", "Today"),
-  tomorrow: () => i18n.t("editor.slashMenu.tomorrow", "Tomorrow"),
-  yesterday: () => i18n.t("editor.slashMenu.yesterday", "Yesterday"),
-  now: () => i18n.t("editor.slashMenu.now", "Now"),
+  today: () => i18n.t('editor.slashMenu.today', 'Today'),
+  tomorrow: () => i18n.t('editor.slashMenu.tomorrow', 'Tomorrow'),
+  yesterday: () => i18n.t('editor.slashMenu.yesterday', 'Yesterday'),
+  now: () => i18n.t('editor.slashMenu.now', 'Now'),
 
   // Insert group
-  link: () => i18n.t("editor.slashMenu.link", "Link"),
-  linkDesc: () => i18n.t("editor.slashMenu.linkDesc", "Insert a hyperlink."),
+  link: () => i18n.t('editor.slashMenu.link', 'Link'),
+  linkDesc: () => i18n.t('editor.slashMenu.linkDesc', 'Insert a hyperlink.'),
 
   // Actions group
-  moveUp: () => i18n.t("editor.slashMenu.moveUp", "Move Up"),
-  moveUpDesc: () =>
-    i18n.t("editor.slashMenu.moveUpDesc", "Shift this line up."),
-  moveDown: () => i18n.t("editor.slashMenu.moveDown", "Move Down"),
-  moveDownDesc: () =>
-    i18n.t("editor.slashMenu.moveDownDesc", "Shift this line down."),
-  copy: () => i18n.t("editor.slashMenu.copy", "Copy"),
-  copyDesc: () =>
-    i18n.t("editor.slashMenu.copyDesc", "Copy this line to clipboard."),
-  duplicate: () => i18n.t("editor.slashMenu.duplicate", "Duplicate"),
-  duplicateDesc: () =>
-    i18n.t(
-      "editor.slashMenu.duplicateDesc",
-      "Create a duplicate of this line.",
-    ),
-  delete: () => i18n.t("editor.slashMenu.delete", "Delete"),
-  deleteDesc: () =>
-    i18n.t("editor.slashMenu.deleteDesc", "Remove this line permanently."),
+  moveUp: () => i18n.t('editor.slashMenu.moveUp', 'Move Up'),
+  moveUpDesc: () => i18n.t('editor.slashMenu.moveUpDesc', 'Shift this line up.'),
+  moveDown: () => i18n.t('editor.slashMenu.moveDown', 'Move Down'),
+  moveDownDesc: () => i18n.t('editor.slashMenu.moveDownDesc', 'Shift this line down.'),
+  copy: () => i18n.t('editor.slashMenu.copy', 'Copy'),
+  copyDesc: () => i18n.t('editor.slashMenu.copyDesc', 'Copy this line to clipboard.'),
+  duplicate: () => i18n.t('editor.slashMenu.duplicate', 'Duplicate'),
+  duplicateDesc: () => i18n.t('editor.slashMenu.duplicateDesc', 'Create a duplicate of this line.'),
+  delete: () => i18n.t('editor.slashMenu.delete', 'Delete'),
+  deleteDesc: () => i18n.t('editor.slashMenu.deleteDesc', 'Remove this line permanently.'),
 
   // Toast messages
-  copiedToClipboard: () =>
-    i18n.t("editor.toast.copiedToClipboard", "Copied to clipboard"),
+  copiedToClipboard: () => i18n.t('editor.toast.copiedToClipboard', 'Copied to clipboard'),
 };
 
 /**
@@ -251,21 +227,19 @@ export const slashMenuTranslations = {
  */
 export const editorTranslations = {
   // Link popup
-  pasteOrTypeLink: () =>
-    i18n.t("editor.link.pasteOrType", "Paste or type a link"),
-  enterText: () => i18n.t("editor.link.enterText", "Enter text"),
+  pasteOrTypeLink: () => i18n.t('editor.link.pasteOrType', 'Paste or type a link'),
+  enterText: () => i18n.t('editor.link.enterText', 'Enter text'),
 
   // Caption
-  writeCaption: () => i18n.t("editor.caption", "Write a caption"),
+  writeCaption: () => i18n.t('editor.caption', 'Write a caption'),
 
   // Code block
-  searchLanguage: () =>
-    i18n.t("editor.code.searchLanguage", "Search for a language"),
+  searchLanguage: () => i18n.t('editor.code.searchLanguage', 'Search for a language'),
 
   // LaTeX
-  equation: () => i18n.t("editor.latex.equation", "Equation"),
-  errorEquation: () => i18n.t("editor.latex.errorEquation", "Error equation"),
+  equation: () => i18n.t('editor.latex.equation', 'Equation'),
+  errorEquation: () => i18n.t('editor.latex.errorEquation', 'Error equation'),
 
   // Search
-  search: () => i18n.t("editor.search", "Search"),
+  search: () => i18n.t('editor.search', 'Search'),
 };

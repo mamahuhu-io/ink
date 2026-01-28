@@ -24,9 +24,7 @@ export type ToolbarAction = ActionBase & {
   tooltip?: string | TemplateResult;
   variant?: 'destructive';
   disabled?: ((cx: ToolbarContext) => boolean) | boolean;
-  content?:
-    | ((cx: ToolbarContext) => TemplateResult | null)
-    | (TemplateResult | null);
+  content?: ((cx: ToolbarContext) => TemplateResult | null) | (TemplateResult | null);
   run?: (cx: ToolbarContext) => void;
 };
 
@@ -35,14 +33,11 @@ export type ToolbarActionGenerator = ActionBase & {
   generate: (cx: ToolbarContext) => Omit<ToolbarAction, 'id'> | null;
 };
 
-export type ToolbarActionGroup<
-  T extends ActionBase = ToolbarAction | ToolbarActionGenerator,
-> = ActionBase & {
-  actions: T[];
-  content?:
-    | ((cx: ToolbarContext) => TemplateResult | null)
-    | (TemplateResult | null);
-};
+export type ToolbarActionGroup<T extends ActionBase = ToolbarAction | ToolbarActionGenerator> =
+  ActionBase & {
+    actions: T[];
+    content?: ((cx: ToolbarContext) => TemplateResult | null) | (TemplateResult | null);
+  };
 
 // Generates an action group at runtime
 export type ToolbarActionGroupGenerator = ActionBase & {

@@ -13,13 +13,9 @@ export interface UserListService {
   search(keyword: string): void;
 }
 
-export const UserListProvider = createIdentifier<UserListService>(
-  'ink-user-list-service'
-);
+export const UserListProvider = createIdentifier<UserListService>('ink-user-list-service');
 
-export function UserListServiceExtension(
-  service: UserListService
-): ExtensionType {
+export function UserListServiceExtension(service: UserListService): ExtensionType {
   return {
     setup(di) {
       di.addImpl(UserListProvider, () => service);

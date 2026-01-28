@@ -1,5 +1,5 @@
-import { fontSMStyle, panelBaseStyle } from "@ink/stone-shared/styles";
-import { css } from "lit";
+import { fontSMStyle, panelBaseStyle } from '@ink/stone-shared/styles';
+import { css } from 'lit';
 
 const editLinkStyle = css`
   .ink-link-edit-popover {
@@ -7,8 +7,8 @@ const editLinkStyle = css`
     grid-template-columns: auto auto;
     grid-template-rows: repeat(2, 1fr);
     grid-template-areas:
-      "text-area ."
-      "link-area btn";
+      'text-area .'
+      'link-area btn';
     justify-items: center;
     align-items: center;
     width: 320px;
@@ -17,7 +17,7 @@ const editLinkStyle = css`
     box-sizing: content-box;
   }
 
-  ${fontSMStyle(".ink-link-edit-popover label")}
+  ${fontSMStyle('.ink-link-edit-popover label')}
   .ink-link-edit-popover label {
     box-sizing: border-box;
     color: var(--ink-icon-color);
@@ -25,7 +25,7 @@ const editLinkStyle = css`
     width: 30px;
   }
 
-  ${fontSMStyle(".ink-link-edit-popover input")}
+  ${fontSMStyle('.ink-link-edit-popover input')}
   .ink-link-edit-popover input {
     color: inherit;
     padding: 0;
@@ -51,7 +51,7 @@ const editLinkStyle = css`
     gap: 8px;
     grid-template-columns: 26px auto;
     grid-template-rows: repeat(1, 1fr);
-    grid-template-areas: "label input";
+    grid-template-areas: 'label input';
     user-select: none;
     box-sizing: border-box;
 
@@ -99,7 +99,7 @@ export const linkPopupStyle = css`
     background-color: rgba(35, 131, 226, 0.28);
   }
 
-  ${panelBaseStyle(".popover-container")}
+  ${panelBaseStyle('.popover-container')}
   .popover-container {
     z-index: var(--ink-z-index-popover);
     animation: ink-popover-fade-in 0.2s ease;
@@ -150,7 +150,7 @@ export const linkPopupStyle = css`
     border-color: var(--ink-border-color);
     color: var(--ink-text-primary-color);
   }
-  ${fontSMStyle(".ink-link-popover-input")}
+  ${fontSMStyle('.ink-link-popover-input')}
   .ink-link-popover-input::placeholder {
     color: var(--ink-placeholder-color);
   }

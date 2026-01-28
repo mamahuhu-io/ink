@@ -1,7 +1,4 @@
-import {
-  createAutoIncrementIdGenerator,
-  TestWorkspace,
-} from '@ink/stone-store/test';
+import { createAutoIncrementIdGenerator, TestWorkspace } from '@ink/stone-store/test';
 import { describe, expect, test } from 'vitest';
 
 import { effects } from '../effects.js';
@@ -30,7 +27,7 @@ function createTestOptions() {
 }
 
 function wait(time: number) {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 describe('editor host', () => {

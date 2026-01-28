@@ -7,7 +7,7 @@ export class ServiceManager extends LifeCycleWatcher {
   override mounted() {
     super.mounted();
 
-    this.std.provider.getAll(BlockServiceIdentifier).forEach(service => {
+    this.std.provider.getAll(BlockServiceIdentifier).forEach((service) => {
       service.mounted();
     });
   }
@@ -15,7 +15,7 @@ export class ServiceManager extends LifeCycleWatcher {
   override unmounted() {
     super.unmounted();
 
-    this.std.provider.getAll(BlockServiceIdentifier).forEach(service => {
+    this.std.provider.getAll(BlockServiceIdentifier).forEach((service) => {
       service.unmounted();
     });
   }

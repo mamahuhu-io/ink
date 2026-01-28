@@ -15,15 +15,11 @@ export class WidgetComponent<
   B extends BlockComponent = BlockComponent,
   S extends BlockService = BlockService,
 > extends SignalWatcher(WithDisposable(LitElement)) {
-  handleEvent = (
-    name: EventName,
-    handler: UIEventHandler,
-    options?: { global?: boolean }
-  ) => {
+  handleEvent = (name: EventName, handler: UIEventHandler, options?: { global?: boolean }) => {
     this._disposables.add(
       this.host.event.add(name, handler, {
         flavour: options?.global ? undefined : this.flavour,
-      })
+      }),
     );
   };
 
@@ -59,14 +55,11 @@ export class WidgetComponent<
     return this.dataset.widgetId as string;
   }
 
-  bindHotKey(
-    keymap: Record<string, UIEventHandler>,
-    options?: { global: boolean }
-  ) {
+  bindHotKey(keymap: Record<string, UIEventHandler>, options?: { global: boolean }) {
     this._disposables.add(
       this.host.event.bindHotkey(keymap, {
         flavour: options?.global ? undefined : this.flavour,
-      })
+      }),
     );
   }
 

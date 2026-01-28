@@ -11,7 +11,7 @@ export function toggleReferencePopup(
   referenceInfo: ReferenceInfo,
   inlineEditor: InlineEditor<InkTextAttributes>,
   inlineRange: InlineRange,
-  abortController: AbortController
+  abortController: AbortController,
 ): ReferencePopup {
   const popup = new ReferencePopup();
   popup.std = std;

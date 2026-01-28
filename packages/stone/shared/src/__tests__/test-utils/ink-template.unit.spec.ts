@@ -48,8 +48,7 @@ describe('helpers/ink-template', () => {
     expect(listBlocks.length).toBe(1);
 
     const noteBlock = noteBlocks[0];
-    const noteChildren =
-      host.store.getBlock(noteBlock.id)?.model.children || [];
+    const noteChildren = host.store.getBlock(noteBlock.id)?.model.children || [];
     expect(noteChildren.length).toBe(3);
 
     expect(noteChildren[0].flavour).toBe('ink:paragraph');

@@ -3,12 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import * as Y from 'yjs';
 
 import { BlockSchemaExtension } from '../extension/schema.js';
-import {
-  Block,
-  BlockModel,
-  defineBlockSchema,
-  internalPrimitives,
-} from '../model/block/index.js';
+import { Block, BlockModel, defineBlockSchema, internalPrimitives } from '../model/block/index.js';
 import type { YBlock } from '../model/block/types.js';
 import type { Text } from '../reactive/text/index.js';
 import { createAutoIncrementIdGenerator } from '../test/index.js';
@@ -16,7 +11,7 @@ import { TestWorkspace } from '../test/test-workspace.js';
 
 const pageSchema = defineBlockSchema({
   flavour: 'page',
-  props: internal => ({
+  props: (internal) => ({
     title: internal.Text(),
     count: 0,
     toggle: false,
@@ -45,7 +40,7 @@ const tableSchemaExtension = BlockSchemaExtension(tableSchema);
 
 const flatTableSchema = defineBlockSchema({
   flavour: 'flat-table',
-  props: internal => ({
+  props: (internal) => ({
     title: internal.Text(),
     cols: { internal: { color: 'white' } } as Record<string, { color: string }>,
     textCols: {} as Record<string, Text>,
@@ -61,15 +56,9 @@ const flatTableSchema = defineBlockSchema({
 });
 const flatTableSchemaExtension = BlockSchemaExtension(flatTableSchema);
 
-class RootModel extends BlockModel<
-  ReturnType<(typeof pageSchema)['model']['props']>
-> {}
-class TableModel extends BlockModel<
-  ReturnType<(typeof tableSchema)['model']['props']>
-> {}
-class FlatTableModel extends BlockModel<
-  ReturnType<(typeof flatTableSchema)['model']['props']>
-> {}
+class RootModel extends BlockModel<ReturnType<(typeof pageSchema)['model']['props']>> {}
+class TableModel extends BlockModel<ReturnType<(typeof tableSchema)['model']['props']>> {}
+class FlatTableModel extends BlockModel<ReturnType<(typeof flatTableSchema)['model']['props']>> {}
 
 function createTestOptions() {
   const idGenerator = createAutoIncrementIdGenerator();
@@ -84,11 +73,7 @@ function createTestDoc(docId = defaultDocId) {
   const doc = collection.createDoc(docId);
   doc.load();
   const store = doc.getStore({
-    extensions: [
-      pageSchemaExtension,
-      tableSchemaExtension,
-      flatTableSchemaExtension,
-    ],
+    extensions: [pageSchemaExtension, tableSchemaExtension, flatTableSchemaExtension],
   });
   return store;
 }
@@ -492,9 +477,7 @@ describe('flat', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange).toHaveBeenCalledWith(expect.anything(), 'textCols', true);
     expect((yBlock.get('prop:textCols.a') as Y.Text).toJSON()).toBe('test');
-    expect(model.props.textCols$.value.a.toDelta()).toEqual([
-      { insert: 'test' },
-    ]);
+    expect(model.props.textCols$.value.a.toDelta()).toEqual([{ insert: 'test' }]);
 
     onChange.mockClear();
     expect(model.props).not.toHaveProperty('optional');

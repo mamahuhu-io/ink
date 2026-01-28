@@ -21,10 +21,7 @@ export const RenameModal = ({
   // Fix auto focus
   setTimeout(() => inputRef.value?.focus());
   const originalName = model.props.name;
-  const nameWithoutExtension = originalName.slice(
-    0,
-    originalName.lastIndexOf('.')
-  );
+  const nameWithoutExtension = originalName.slice(0, originalName.lastIndexOf('.'));
   const originalExtension = originalName.slice(originalName.lastIndexOf('.'));
   const includeExtension =
     originalExtension.includes('.') &&
@@ -83,11 +80,7 @@ export const RenameModal = ({
         />
         <span class="ink-attachment-rename-extension">${extension}</span>
       </div>
-      <editor-icon-button
-        class="ink-confirm-button"
-        .iconSize=${'24px'}
-        @click=${onConfirm}
-      >
+      <editor-icon-button class="ink-confirm-button" .iconSize=${'24px'} @click=${onConfirm}>
         ${ConfirmIcon}
       </editor-icon-button>
     </div>

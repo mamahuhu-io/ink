@@ -1,4 +1,5 @@
 import type { Store, TransformerMiddleware } from '@ink/stone-core/store';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import {
   type HtmlAdapter,
   HtmlAdapterFactoryIdentifier,
@@ -7,18 +8,13 @@ import {
   type PlainTextAdapter,
   PlainTextAdapterFactoryIdentifier,
 } from '@ink/stone-shared/adapters';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { baseTheme } from '@ink/stone-theme';
 import { provide } from '@lit/context';
 import { effect, signal } from '@preact/signals-core';
-import { baseTheme } from '@ink/stone-theme';
 import { css, html, LitElement, type PropertyValues, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 
-import {
-  type AdapterPanelContext,
-  adapterPanelContext,
-  ADAPTERS,
-} from './config';
+import { type AdapterPanelContext, adapterPanelContext, ADAPTERS } from './config';
 
 export const INK_ADAPTER_PANEL = 'ink-adapter-panel';
 
@@ -70,12 +66,8 @@ export class AdapterPanel extends SignalWatcher(WithDisposable(LitElement)) {
   private async _getMarkdownContent() {
     try {
       const job = this._createJob();
-      const markdownAdapterFactory = this.store.get(
-        MarkdownAdapterFactoryIdentifier
-      );
-      const markdownAdapter = markdownAdapterFactory.get(
-        job
-      ) as MarkdownAdapter;
+      const markdownAdapterFactory = this.store.get(MarkdownAdapterFactoryIdentifier);
+      const markdownAdapter = markdownAdapterFactory.get(job) as MarkdownAdapter;
       const result = await markdownAdapter.fromDoc(this.store);
       return result?.file;
     } catch (error) {
@@ -87,12 +79,8 @@ export class AdapterPanel extends SignalWatcher(WithDisposable(LitElement)) {
   private async _getPlainTextContent() {
     try {
       const job = this._createJob();
-      const plainTextAdapterFactory = this.store.get(
-        PlainTextAdapterFactoryIdentifier
-      );
-      const plainTextAdapter = plainTextAdapterFactory.get(
-        job
-      ) as PlainTextAdapter;
+      const plainTextAdapterFactory = this.store.get(PlainTextAdapterFactoryIdentifier);
+      const plainTextAdapter = plainTextAdapterFactory.get(job) as PlainTextAdapter;
       const result = await plainTextAdapter.fromDoc(this.store);
       return result?.file;
     } catch (error) {
@@ -105,15 +93,13 @@ export class AdapterPanel extends SignalWatcher(WithDisposable(LitElement)) {
     const activeId = this.activeAdapter.id;
     switch (activeId) {
       case 'markdown':
-        this._context.markdownContent$.value =
-          (await this._getMarkdownContent()) || '';
+        this._context.markdownContent$.value = (await this._getMarkdownContent()) || '';
         break;
       case 'html':
         this._context.htmlContent$.value = (await this._getHtmlContent()) || '';
         break;
       case 'plaintext':
-        this._context.plainTextContent$.value =
-          (await this._getPlainTextContent()) || '';
+        this._context.plainTextContent$.value = (await this._getPlainTextContent()) || '';
         break;
       case 'snapshot':
         this._context.docSnapshot$.value = this._getDocSnapshot() || null;
@@ -145,7 +131,7 @@ export class AdapterPanel extends SignalWatcher(WithDisposable(LitElement)) {
         if (this.activeAdapter) {
           this._updateActiveContent().catch(console.error);
         }
-      })
+      }),
     );
   }
 

@@ -1,4 +1,5 @@
-const changeCase = require("change-case");
+/* eslint-disable @typescript-eslint/no-require-imports */
+const changeCase = require('change-case');
 
 /**
  * Filter icons by icon pascal name.
@@ -33,30 +34,28 @@ function iconNameFilter(icons) {
  */
 function getIconName(name, size = 24) {
   const prefix = {
-    16: "Small",
-    20: "Middle",
-    24: "",
+    16: 'Small',
+    20: 'Middle',
+    24: '',
   }[size];
   return `${prefix}${name}Icon`;
 }
 
-const treeNodeTypes = ["GROUP", "FRAME"];
-const leafNodeTypes = ["COMPONENT", "INSTANCE"];
+const treeNodeTypes = ['GROUP', 'FRAME'];
+const leafNodeTypes = ['COMPONENT', 'INSTANCE'];
 
 function flattenNodeGroup(children) {
   const result = [];
   const walk = (node, path = []) => {
     if (treeNodeTypes.includes(node.type)) {
-      node.children.forEach(child => walk(child, [...path, node.name]));
+      node.children.forEach((child) => walk(child, [...path, node.name]));
     } else if (leafNodeTypes.includes(node.type)) {
       result.push({ ...node, path });
     } else {
-      console.warn(
-        `Unsupported node type: ${node.type}, please check design file`
-      );
+      console.warn(`Unsupported node type: ${node.type}, please check design file`);
     }
   };
-  children.forEach(child => walk(child));
+  children.forEach((child) => walk(child));
   return result;
 }
 

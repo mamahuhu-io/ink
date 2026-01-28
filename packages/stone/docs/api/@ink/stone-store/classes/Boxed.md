@@ -1,6 +1,6 @@
 [**InkStone API Documentation**](../../../README.md)
 
-***
+---
 
 [InkStone API Documentation](../../../README.md) / [@ink/stone-store](../README.md) / Boxed
 
@@ -45,7 +45,7 @@ Get the current value of the Boxed.
 
 `Value` \| `undefined`
 
-***
+---
 
 ### setValue()
 
@@ -65,7 +65,7 @@ The new value to set.
 
 `Value`
 
-***
+---
 
 ### from()
 
@@ -107,7 +107,7 @@ const data2 = doc2.getMap('data');
 const boxed2 = Boxed.from<{ a: number; b: number }>(data2.get('boxed'));
 ```
 
-***
+---
 
 ### is()
 

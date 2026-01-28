@@ -34,7 +34,7 @@ export function lineIntersects(
   ep: IVec,
   sp2: IVec,
   ep2: IVec,
-  infinite = false
+  infinite = false,
 ): IVec | null {
   const v1 = Vec.sub(ep, sp);
   const v2 = Vec.sub(ep2, sp2);
@@ -98,25 +98,18 @@ export function polygonPointDistance(points: IVec[], point: IVec) {
   return Vec.dist(nearest, point);
 }
 
-export function rotatePoints<T extends IVec>(
-  points: T[],
-  center: IVec,
-  rotate: number
-): T[] {
+export function rotatePoints<T extends IVec>(points: T[], center: IVec, rotate: number): T[] {
   const rad = toRadian(rotate);
-  return points.map(p => Vec.rotWith(p, center, rad)) as T[];
+  return points.map((p) => Vec.rotWith(p, center, rad)) as T[];
 }
 
 export function rotatePoint(
   point: [number, number],
   center: IVec,
-  rotate: number
+  rotate: number,
 ): [number, number] {
   const rad = toRadian(rotate);
-  return Vec.add(center, Vec.rot(Vec.sub(point, center), rad)) as [
-    number,
-    number,
-  ];
+  return Vec.add(center, Vec.rot(Vec.sub(point, center), rad)) as [number, number];
 }
 
 export function toRadian(angle: number) {
@@ -142,11 +135,7 @@ export function polygonGetPointTangent(points: IVec[], point: IVec): IVec {
   return [0, 0];
 }
 
-export function linePolygonIntersects(
-  sp: IVec,
-  ep: IVec,
-  points: IVec[]
-): PointLocation[] | null {
+export function linePolygonIntersects(sp: IVec, ep: IVec, points: IVec[]): PointLocation[] | null {
   const result: PointLocation[] = [];
   const len = points.length;
 
@@ -164,11 +153,7 @@ export function linePolygonIntersects(
   return result.length ? result : null;
 }
 
-export function linePolylineIntersects(
-  sp: IVec,
-  ep: IVec,
-  points: IVec[]
-): PointLocation[] | null {
+export function linePolylineIntersects(sp: IVec, ep: IVec, points: IVec[]): PointLocation[] | null {
   const result: PointLocation[] = [];
   const len = points.length;
 
@@ -206,7 +191,7 @@ export function isPointOnlines(
   points: readonly [number, number][],
   rotate: number,
   hitPoint: [number, number],
-  threshold: number
+  threshold: number,
 ): boolean {
   // credit to Excalidraw hitTestFreeDrawElement
 
@@ -222,7 +207,7 @@ export function isPointOnlines(
     const rotatedPoint = rotatePoint(
       hitPoint,
       [minX + (maxX - minX) / 2, minY + (maxY - minY) / 2],
-      -rotate
+      -rotate,
     ) as [number, number];
     x = rotatedPoint[0] - element.x;
     y = rotatedPoint[1] - element.y;
@@ -232,10 +217,7 @@ export function isPointOnlines(
   let P: readonly [number, number];
 
   // For freedraw dots
-  if (
-    distance2d(A[0], A[1], x, y) < threshold ||
-    distance2d(B[0], B[1], x, y) < threshold
-  ) {
+  if (distance2d(A[0], A[1], x, y) < threshold || distance2d(B[0], B[1], x, y) < threshold) {
     return true;
   }
 
@@ -299,9 +281,7 @@ export function isPointIn(a: IBound, x: number, y: number): boolean {
 }
 
 export function intersects(a: IBound, b: IBound): boolean {
-  return (
-    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
-  );
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
 export function almostEqual(a: number, b: number, epsilon = 0.0001) {
@@ -309,7 +289,7 @@ export function almostEqual(a: number, b: number, epsilon = 0.0001) {
 }
 
 export function isVecZero(v: IVec) {
-  return v.every(n => isZero(n));
+  return v.every((n) => isZero(n));
 }
 
 export function isZero(x: number) {
@@ -324,13 +304,7 @@ export function clamp(n: number, min: number, max?: number): number {
   return Math.max(min, max !== undefined ? Math.min(n, max) : n);
 }
 
-export function pointInEllipse(
-  A: IVec,
-  C: IVec,
-  rx: number,
-  ry: number,
-  rotation = 0
-): boolean {
+export function pointInEllipse(A: IVec, C: IVec, rx: number, ry: number, rotation = 0): boolean {
   const cos = Math.cos(rotation);
   const sin = Math.sin(rotation);
   const delta = Vec.sub(A, C);
@@ -357,32 +331,19 @@ export function pointInPolygon(p: IVec, points: IVec[]): boolean {
   return wn !== 0;
 }
 
-export function pointOnEllipse(
-  point: IVec,
-  rx: number,
-  ry: number,
-  threshold: number
-): boolean {
+export function pointOnEllipse(point: IVec, rx: number, ry: number, threshold: number): boolean {
   // slope of point
   const t = point[1] / point[0];
-  const squaredX =
-    (square(rx) * square(ry)) / (square(rx) * square(t) + square(ry));
-  const squaredY =
-    (square(rx) * square(ry) - square(ry) * squaredX) / square(rx);
+  const squaredX = (square(rx) * square(ry)) / (square(rx) * square(t) + square(ry));
+  const squaredY = (square(rx) * square(ry) - square(ry) * squaredX) / square(rx);
 
   return (
-    Math.abs(
-      Math.sqrt(square(point[1]) + square(point[0])) -
-        Math.sqrt(squaredX + squaredY)
-    ) < threshold
+    Math.abs(Math.sqrt(square(point[1]) + square(point[0])) - Math.sqrt(squaredX + squaredY)) <
+    threshold
   );
 }
 
-export function pointOnPolygonStoke(
-  p: IVec,
-  points: IVec[],
-  threshold: number
-): boolean {
+export function pointOnPolygonStoke(p: IVec, points: IVec[], threshold: number): boolean {
   for (let i = 0; i < points.length; ++i) {
     const next = i + 1 === points.length ? 0 : i + 1;
     if (distToSegment(p, points[i], points[next]) <= threshold) {
@@ -393,10 +354,7 @@ export function pointOnPolygonStoke(
   return false;
 }
 
-export function getPolygonPathFromPoints(
-  points: IVec[],
-  closed = true
-): string {
+export function getPolygonPathFromPoints(points: IVec[], closed = true): string {
   const len = points.length;
   if (len < 2) return ``;
 
@@ -425,18 +383,13 @@ export function getSvgPathFromStroke(points: IVec[], closed = true): string {
   const c = points[2];
 
   let result = `M${a[0].toFixed(2)},${a[1].toFixed(2)} Q${b[0].toFixed(
-    2
-  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(
-    b[1],
-    c[1]
-  ).toFixed(2)} T`;
+    2,
+  )},${b[1].toFixed(2)} ${average(b[0], c[0]).toFixed(2)},${average(b[1], c[1]).toFixed(2)} T`;
 
   for (let i = 2, max = len - 1; i < max; i++) {
     a = points[i];
     b = points[i + 1];
-    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(
-      2
-    )} `;
+    result += `${average(a[0], b[0]).toFixed(2)},${average(a[1], b[1]).toFixed(2)} `;
   }
 
   if (closed) {
@@ -451,14 +404,7 @@ function average(a: number, b: number): number {
 }
 
 //reference https://www.xarg.org/book/computer-graphics/line-segment-ellipse-intersection/
-export function lineEllipseIntersects(
-  A: IVec,
-  B: IVec,
-  C: IVec,
-  rx: number,
-  ry: number,
-  rad = 0
-) {
+export function lineEllipseIntersects(A: IVec, B: IVec, C: IVec, rx: number, ry: number, rad = 0) {
   A = Vec.rot(Vec.sub(A, C), -rad);
   B = Vec.rot(Vec.sub(B, C), -rad);
 
@@ -480,8 +426,7 @@ export function lineEllipseIntersects(
     const t1 = (-b + sqrtD) / (2 * a);
     const t2 = (-b - sqrtD) / (2 * a);
 
-    if (0 <= t1 && t1 <= 1)
-      rst.push(Vec.add(Vec.rot(Vec.add(Vec.mul(v, t1), A), rad), C));
+    if (0 <= t1 && t1 <= 1) rst.push(Vec.add(Vec.rot(Vec.add(Vec.mul(v, t1), A), rad), C));
 
     if (0 <= t2 && t2 <= 1 && Math.abs(t1 - t2) > 1e-16)
       rst.push(Vec.add(Vec.rot(Vec.add(Vec.mul(v, t2), A), rad), C));
@@ -489,7 +434,7 @@ export function lineEllipseIntersects(
 
   if (rst.length === 0) return null;
 
-  return rst.map(v => {
+  return rst.map((v) => {
     const pl = new PointLocation(v);
     const normalVector = Vec.uni(Vec.divV(Vec.sub(v, C), [rx * rx, ry * ry]));
     pl.tangent = [-normalVector[1], normalVector[0]];
@@ -501,10 +446,7 @@ export function sign(number: number) {
   return number > 0 ? 1 : -1;
 }
 
-export function getPointFromBoundsWithRotation(
-  bounds: IBound,
-  point: IVec
-): IVec {
+export function getPointFromBoundsWithRotation(bounds: IBound, point: IVec): IVec {
   const { x, y, w, h, rotate } = bounds;
 
   if (!rotate) return point;
@@ -512,10 +454,7 @@ export function getPointFromBoundsWithRotation(
   const cx = x + w / 2;
   const cy = y + h / 2;
 
-  const m = new DOMMatrix()
-    .translateSelf(cx, cy)
-    .rotateSelf(rotate)
-    .translateSelf(-cx, -cy);
+  const m = new DOMMatrix().translateSelf(cx, cy).rotateSelf(rotate).translateSelf(-cx, -cy);
 
   const p = new DOMPoint(...point).matrixTransform(m);
   return [p.x, p.y];
@@ -532,24 +471,11 @@ export function toDegree(radian: number) {
 }
 
 // 0 means x axis, 1 means y axis
-export function isOverlap(
-  line1: IVec[],
-  line2: IVec[],
-  axis: 0 | 1,
-  strict = true
-) {
-  const less = strict
-    ? (a: number, b: number) => a < b
-    : (a: number, b: number) => a <= b;
+export function isOverlap(line1: IVec[], line2: IVec[], axis: 0 | 1, strict = true) {
+  const less = strict ? (a: number, b: number) => a < b : (a: number, b: number) => a <= b;
   return !(
-    less(
-      Math.max(line1[0][axis], line1[1][axis]),
-      Math.min(line2[0][axis], line2[1][axis])
-    ) ||
-    less(
-      Math.max(line2[0][axis], line2[1][axis]),
-      Math.min(line1[0][axis], line1[1][axis])
-    )
+    less(Math.max(line1[0][axis], line1[1][axis]), Math.min(line2[0][axis], line2[1][axis])) ||
+    less(Math.max(line2[0][axis], line2[1][axis]), Math.min(line1[0][axis], line1[1][axis]))
   );
 }
 

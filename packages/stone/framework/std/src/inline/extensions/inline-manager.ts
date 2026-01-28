@@ -1,7 +1,4 @@
-import {
-  createIdentifier,
-  type ServiceIdentifier,
-} from '@ink/stone-global/di';
+import { createIdentifier, type ServiceIdentifier } from '@ink/stone-global/di';
 import {
   type BaseTextAttributes,
   baseTextAttributes,
@@ -30,11 +27,11 @@ export class InlineManager<TextAttributes extends BaseTextAttributes> {
   getRenderer = (): AttributeRenderer<TextAttributes> => {
     const defaultRenderer = getDefaultAttributeRenderer<TextAttributes>();
 
-    const renderer: AttributeRenderer<TextAttributes> = props => {
+    const renderer: AttributeRenderer<TextAttributes> = (props) => {
       // Priority increases from front to back
       const specs = this.specs.toReversed();
-      const wrapperSpecs = specs.filter(spec => spec.wrapper);
-      const normalSpecs = specs.filter(spec => !spec.wrapper);
+      const wrapperSpecs = specs.filter((spec) => spec.wrapper);
+      const normalSpecs = specs.filter((spec) => !spec.wrapper);
 
       let result = defaultRenderer(props);
 
@@ -70,9 +67,7 @@ export class InlineManager<TextAttributes extends BaseTextAttributes> {
     if (!this.enableMarkdown) {
       return [];
     }
-    const matches = Array.from(
-      this.std.provider.getAll(MarkdownMatcherIdentifier).values()
-    );
+    const matches = Array.from(this.std.provider.getAll(MarkdownMatcherIdentifier).values());
     return matches as InlineMarkdownMatch<TextAttributes>[];
   }
 
@@ -87,21 +82,15 @@ export class InlineManager<TextAttributes extends BaseTextAttributes> {
   }
 }
 
-export type InlineManagerExtensionConfig<
-  TextAttributes extends BaseTextAttributes,
-> = {
+export type InlineManagerExtensionConfig<TextAttributes extends BaseTextAttributes> = {
   id: string;
   enableMarkdown?: boolean;
   specs: ServiceIdentifier<InlineSpecs<TextAttributes>>[];
 };
 
-const InlineManagerIdentifier = createIdentifier<unknown>(
-  'InkInlineManager'
-);
+const InlineManagerIdentifier = createIdentifier<unknown>('InkInlineManager');
 
-export function InlineManagerExtension<
-  TextAttributes extends BaseTextAttributes,
->({
+export function InlineManagerExtension<TextAttributes extends BaseTextAttributes>({
   id,
   enableMarkdown = true,
   specs,
@@ -110,12 +99,12 @@ export function InlineManagerExtension<
 } {
   const identifier = InlineManagerIdentifier<InlineManager<TextAttributes>>(id);
   return {
-    setup: di => {
-      di.addImpl(identifier, provider => {
+    setup: (di) => {
+      di.addImpl(identifier, (provider) => {
         return new InlineManager(
           provider.get(StdIdentifier),
           enableMarkdown,
-          ...specs.map(spec => provider.get(spec))
+          ...specs.map((spec) => provider.get(spec)),
         );
       });
     },

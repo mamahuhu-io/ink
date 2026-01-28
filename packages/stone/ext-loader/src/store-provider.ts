@@ -1,8 +1,4 @@
-import {
-  BaseExtensionProvider,
-  type Context,
-  type Empty,
-} from './base-provider';
+import { BaseExtensionProvider, type Context, type Empty } from './base-provider';
 
 /**
  * A specialized extension provider for store-related functionality.
@@ -27,9 +23,10 @@ import {
  * }
  * ```
  */
-export class StoreExtensionProvider<
-  Options extends object = Empty,
-> extends BaseExtensionProvider<'store', Options> {
+export class StoreExtensionProvider<Options extends object = Empty> extends BaseExtensionProvider<
+  'store',
+  Options
+> {
   /** The name of the store extension provider */
   override name = 'StoreExtension';
 }

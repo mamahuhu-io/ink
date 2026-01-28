@@ -23,10 +23,7 @@ export const getFilenameFromContentDisposition = (header_value: string) => {
   }
   if (quote_map[target_index + 9] === undefined) {
     const end_space = header_value.indexOf(' ', target_index);
-    return header_value.slice(
-      target_index + 9,
-      end_space === -1 ? header_value.length : end_space
-    );
+    return header_value.slice(target_index + 9, end_space === -1 ? header_value.length : end_space);
   }
   return header_value.slice(target_index + 10, quote_map[target_index + 9]);
 };

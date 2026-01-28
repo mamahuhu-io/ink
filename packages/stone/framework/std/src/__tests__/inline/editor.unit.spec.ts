@@ -80,7 +80,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 0,
       length: 0,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -100,7 +100,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 0,
       length: 1,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -120,7 +120,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 0,
       length: 3,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -140,7 +140,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 0,
       length: 4,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -172,7 +172,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 3,
       length: 1,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -204,7 +204,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 3,
       length: 3,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -236,7 +236,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 3,
       length: 4,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -280,7 +280,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 4,
       length: 0,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -300,7 +300,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 4,
       length: 1,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -320,7 +320,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 4,
       length: 2,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -340,7 +340,7 @@ test('getDeltasByInlineRange', () => {
     inlineEditor.getDeltasByInlineRange({
       index: 4,
       length: 4,
-    })
+    }),
   ).toEqual([
     [
       {
@@ -382,7 +382,7 @@ test('cursor with format', () => {
     'aaa',
     {
       bold: true,
-    }
+    },
   );
 
   inlineEditor.setMarks({
@@ -394,7 +394,7 @@ test('cursor with format', () => {
       index: 3,
       length: 0,
     },
-    'bbb'
+    'bbb',
   );
 
   expect(inlineEditor.yText.toDelta()).toEqual([
@@ -426,7 +426,7 @@ test('getFormat', () => {
     'aaa',
     {
       bold: true,
-    }
+    },
   );
 
   inlineEditor.insertText(
@@ -437,7 +437,7 @@ test('getFormat', () => {
     'bbb',
     {
       italic: true,
-    }
+    },
   );
 
   expect(inlineEditor.getFormat({ index: 0, length: 0 })).toEqual({});
@@ -482,7 +482,7 @@ test('incorrect format value `false`', () => {
       // @ts-expect-error insert incorrect value
       bold: false,
       italic: true,
-    }
+    },
   );
 
   inlineEditor.insertText(
@@ -493,7 +493,7 @@ test('incorrect format value `false`', () => {
     'bbb',
     {
       underline: true,
-    }
+    },
   );
 
   expect(inlineEditor.yText.toDelta()).toEqual([
@@ -520,7 +520,5 @@ test('yText should not contain \r', () => {
   expect(yText.toString()).toEqual('aaa\r');
   expect(() => {
     new InlineEditor(yText);
-  }).toThrow(
-    'yText must not contain "\\r" because it will break the range synchronization'
-  );
+  }).toThrow('yText must not contain "\\r" because it will break the range synchronization');
 });

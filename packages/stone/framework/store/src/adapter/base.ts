@@ -1,19 +1,10 @@
 import type { ServiceProvider } from '@ink/stone-global/di';
 import { InkStoneError } from '@ink/stone-global/exceptions';
 
-import {
-  BlockModel,
-  type DraftModel,
-  type Store,
-  toDraftModel,
-} from '../model/index.js';
+import { BlockModel, type DraftModel, type Store, toDraftModel } from '../model/index.js';
 import type { AssetsManager } from '../transformer/assets.js';
 import type { Slice, Transformer } from '../transformer/index.js';
-import type {
-  BlockSnapshot,
-  DocSnapshot,
-  SliceSnapshot,
-} from '../transformer/type.js';
+import type { BlockSnapshot, DocSnapshot, SliceSnapshot } from '../transformer/type.js';
 import { ASTWalkerContext } from './context.js';
 
 export type FromDocSnapshotPayload = {
@@ -76,15 +67,14 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
 
   constructor(
     job: Transformer,
-    readonly provider: ServiceProvider
+    readonly provider: ServiceProvider,
   ) {
     this.job = job;
   }
 
   async fromBlock(model: BlockModel | DraftModel) {
     try {
-      const draftModel =
-        model instanceof BlockModel ? toDraftModel(model) : model;
+      const draftModel = model instanceof BlockModel ? toDraftModel(model) : model;
       const blockSnapshot = this.job.blockToSnapshot(draftModel);
       if (!blockSnapshot) return;
       return await this.fromBlockSnapshot({
@@ -99,10 +89,8 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract fromBlockSnapshot(
-    payload: FromBlockSnapshotPayload
-  ):
-    | Promise<FromBlockSnapshotResult<AdapterTarget>>
-    | FromBlockSnapshotResult<AdapterTarget>;
+    payload: FromBlockSnapshotPayload,
+  ): Promise<FromBlockSnapshotResult<AdapterTarget>> | FromBlockSnapshotResult<AdapterTarget>;
 
   async fromDoc(doc: Store) {
     try {
@@ -120,10 +108,8 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract fromDocSnapshot(
-    payload: FromDocSnapshotPayload
-  ):
-    | Promise<FromDocSnapshotResult<AdapterTarget>>
-    | FromDocSnapshotResult<AdapterTarget>;
+    payload: FromDocSnapshotPayload,
+  ): Promise<FromDocSnapshotResult<AdapterTarget>> | FromDocSnapshotResult<AdapterTarget>;
 
   async fromSlice(slice: Slice) {
     try {
@@ -142,16 +128,14 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract fromSliceSnapshot(
-    payload: FromSliceSnapshotPayload
-  ):
-    | Promise<FromSliceSnapshotResult<AdapterTarget>>
-    | FromSliceSnapshotResult<AdapterTarget>;
+    payload: FromSliceSnapshotPayload,
+  ): Promise<FromSliceSnapshotResult<AdapterTarget>> | FromSliceSnapshotResult<AdapterTarget>;
 
   async toBlock(
     payload: ToBlockSnapshotPayload<AdapterTarget>,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ) {
     try {
       const snapshot = await this.toBlockSnapshot(payload);
@@ -165,7 +149,7 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract toBlockSnapshot(
-    payload: ToBlockSnapshotPayload<AdapterTarget>
+    payload: ToBlockSnapshotPayload<AdapterTarget>,
   ): Promise<BlockSnapshot> | BlockSnapshot;
 
   async toDoc(payload: ToDocSnapshotPayload<AdapterTarget>) {
@@ -181,14 +165,14 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract toDocSnapshot(
-    payload: ToDocSnapshotPayload<AdapterTarget>
+    payload: ToDocSnapshotPayload<AdapterTarget>,
   ): Promise<DocSnapshot> | DocSnapshot;
 
   async toSlice(
     payload: ToSliceSnapshotPayload<AdapterTarget>,
     doc: Store,
     parent?: string,
-    index?: number
+    index?: number,
   ) {
     try {
       const snapshot = await this.toSliceSnapshot(payload);
@@ -202,7 +186,7 @@ export abstract class BaseAdapter<AdapterTarget = unknown> {
   }
 
   abstract toSliceSnapshot(
-    payload: ToSliceSnapshotPayload<AdapterTarget>
+    payload: ToSliceSnapshotPayload<AdapterTarget>,
   ): Promise<SliceSnapshot | null> | SliceSnapshot | null;
 }
 
@@ -210,7 +194,7 @@ type Keyof<T> = T extends unknown ? keyof T : never;
 
 type WalkerFn<ONode extends object, TNode extends object> = (
   o: NodeProps<ONode>,
-  context: ASTWalkerContext<TNode>
+  context: ASTWalkerContext<TNode>,
 ) => Promise<void> | void;
 
 export type NodeProps<Node extends object> = {
@@ -250,17 +234,9 @@ export class ASTWalker<ONode extends object, TNode extends object | never> {
 
       if (value && typeof value === 'object') {
         if (Array.isArray(value)) {
-          for (
-            let i = this.context._skipChildrenNum;
-            i < value.length;
-            i += 1
-          ) {
+          for (let i = this.context._skipChildrenNum; i < value.length; i += 1) {
             const item = value[i];
-            if (
-              item !== null &&
-              typeof item === 'object' &&
-              this._isONode(item)
-            ) {
+            if (item !== null && typeof item === 'object' && this._isONode(item)) {
               const nextItem = value[i + 1] ?? null;
               await this._visit({
                 node: item,
@@ -271,10 +247,7 @@ export class ASTWalker<ONode extends object, TNode extends object | never> {
               });
             }
           }
-        } else if (
-          this.context._skipChildrenNum === 0 &&
-          this._isONode(value)
-        ) {
+        } else if (this.context._skipChildrenNum === 0 && this._isONode(value)) {
           await this._visit({
             node: value,
             next: null,

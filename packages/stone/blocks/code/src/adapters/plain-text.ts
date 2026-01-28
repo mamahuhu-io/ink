@@ -8,19 +8,20 @@ import type { DeltaInsert } from '@ink/stone-store';
 export const codeBlockPlainTextAdapterMatcher: BlockPlainTextAdapterMatcher = {
   flavour: CodeBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === CodeBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === CodeBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
       const text = (o.node.props.text ?? { delta: [] }) as {
         delta: DeltaInsert[];
       };
-      const buffer = text.delta.map(delta => delta.insert).join('');
+      const buffer = text.delta.map((delta) => delta.insert).join('');
       context.textBuffer.content += buffer;
       context.textBuffer.content += '\n';
     },
   },
 };
 
-export const CodeBlockPlainTextAdapterExtension =
-  BlockPlainTextAdapterExtension(codeBlockPlainTextAdapterMatcher);
+export const CodeBlockPlainTextAdapterExtension = BlockPlainTextAdapterExtension(
+  codeBlockPlainTextAdapterMatcher,
+);

@@ -41,10 +41,7 @@ export function getSvgPath({
     bottomLeftCornerRadius === topLeftCornerRadius
   ) {
     const roundingAndSmoothingBudget = Math.min(width, height) / 2;
-    const cornerRadius = Math.min(
-      topLeftCornerRadius,
-      roundingAndSmoothingBudget
-    );
+    const cornerRadius = Math.min(topLeftCornerRadius, roundingAndSmoothingBudget);
 
     const pathParams = getPathParamsForCorner({
       cornerRadius,
@@ -63,16 +60,14 @@ export function getSvgPath({
     });
   }
 
-  const { topLeft, topRight, bottomLeft, bottomRight } = distributeAndNormalize(
-    {
-      topLeftCornerRadius,
-      topRightCornerRadius,
-      bottomRightCornerRadius,
-      bottomLeftCornerRadius,
-      width,
-      height,
-    }
-  );
+  const { topLeft, topRight, bottomLeft, bottomRight } = distributeAndNormalize({
+    topLeftCornerRadius,
+    topRightCornerRadius,
+    bottomRightCornerRadius,
+    bottomLeftCornerRadius,
+    width,
+    height,
+  });
 
   return getSVGPathFromPathParams({
     width,

@@ -13,11 +13,7 @@ let ToastContainer: HTMLDivElement | null = null;
  * toast('Hello World');
  * ```
  */
-export const toast = (
-  editorHost: EditorHost,
-  message: string,
-  duration = 2500
-) => {
+export const toast = (editorHost: EditorHost, message: string, duration = 2500) => {
   if (!ToastContainer) {
     ToastContainer = createToastContainer(editorHost);
   }
@@ -71,7 +67,7 @@ export const toast = (
           },
           {
             once: true,
-          }
+          },
         );
       })
       .catch(console.error);

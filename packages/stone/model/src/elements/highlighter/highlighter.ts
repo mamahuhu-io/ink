@@ -17,13 +17,7 @@ import {
   Vec,
 } from '@ink/stone-global/gfx';
 import type { BaseElementProps, PointTestOptions } from '@ink/stone-std/gfx';
-import {
-  convert,
-  derive,
-  field,
-  GfxPrimitiveElementModel,
-  watch,
-} from '@ink/stone-std/gfx';
+import { convert, derive, field, GfxPrimitiveElementModel, watch } from '@ink/stone-std/gfx';
 
 import { DEFAULT_HIGHLIGHTER_LINE_WIDTH } from '../../consts';
 import { type Color, DefaultTheme } from '../../themes/index';
@@ -63,13 +57,13 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
 
   override containsBound(bounds: Bound) {
     const points = getPointsFromBoundWithRotation(this);
-    return points.some(point => bounds.containsPoint(point));
+    return points.some((point) => bounds.containsPoint(point));
   }
 
   override getLineIntersections(start: IVec, end: IVec) {
     const tl = [this.x, this.y];
-    const points = getPointsFromBoundWithRotation(this, _ =>
-      this.points.map(point => Vec.add(point, tl))
+    const points = getPointsFromBoundWithRotation(this, (_) =>
+      this.points.map((point) => Vec.add(point, tl)),
     );
 
     const box = Bound.fromDOMRect(getQuadBoundWithRotation(this));
@@ -83,12 +77,7 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
       for (let i = 1; i < len; i++) {
         const result = lineIntersects(start, end, points[i - 1], points[i]);
         if (result) {
-          return [
-            new PointLocation(
-              result,
-              Vec.normalize(Vec.sub(points[i], points[i - 1]))
-            ),
-          ];
+          return [new PointLocation(result, Vec.normalize(Vec.sub(points[i], points[i - 1])))];
         }
       }
     }
@@ -99,8 +88,8 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
     const { x, y } = this;
 
     return polyLineNearestPoint(
-      this.points.map(p => Vec.add(p, [x, y])),
-      point
+      this.points.map((p) => Vec.add(p, [x, y])),
+      point,
     ) as IVec;
   }
 
@@ -109,17 +98,13 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
     return new PointLocation(point);
   }
 
-  override includesPoint(
-    px: number,
-    py: number,
-    options?: PointTestOptions
-  ): boolean {
+  override includesPoint(px: number, py: number, options?: PointTestOptions): boolean {
     const hit = isPointOnlines(
       Bound.deserialize(this.xywh),
       this.points as [number, number][],
       this.rotate,
       [px, py],
-      (options?.hitThreshold ?? 10) / Math.min(options?.zoom ?? 1, 1)
+      (options?.hitThreshold ?? 10) / Math.min(options?.zoom ?? 1, 1),
     );
     return hit;
   }
@@ -133,12 +118,7 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
   @derive((lineWidth: number, instance: Instance) => {
     const oldBound = Bound.fromXYWH(instance.deserializedXYWH);
 
-    if (
-      lineWidth === instance.lineWidth ||
-      oldBound.w === 0 ||
-      oldBound.h === 0
-    )
-      return {};
+    if (lineWidth === instance.lineWidth || oldBound.w === 0 || oldBound.h === 0) return {};
 
     const points = instance.points;
     const transformed = transformPointsToNewBound(
@@ -146,7 +126,7 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
       oldBound,
       instance.lineWidth / 2,
       inflateBound(oldBound, lineWidth - instance.lineWidth),
-      lineWidth / 2
+      lineWidth / 2,
     );
 
     return {
@@ -202,7 +182,7 @@ export class HighlighterElementModel extends GfxPrimitiveElementModel<Highlighte
       instance,
       instance.lineWidth / 2,
       bound,
-      lineWidth / 2
+      lineWidth / 2,
     );
 
     return {

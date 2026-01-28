@@ -19,6 +19,4 @@ export type EmbedLinkedDocBlockProps = {
   footnoteIdentifier: string | null;
 } & ReferenceInfo;
 
-export class EmbedLinkedDocModel extends defineEmbedModel<EmbedLinkedDocBlockProps>(
-  BlockModel
-) {}
+export class EmbedLinkedDocModel extends defineEmbedModel<EmbedLinkedDocBlockProps>(BlockModel) {}

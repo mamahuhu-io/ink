@@ -48,9 +48,9 @@ export async function getFileType(file: File) {
 function hasExceeded(
   std: BlockStdScope,
   files: File[],
-  maxFileSize = std.get(FileSizeLimitProvider).maxFileSize
+  maxFileSize = std.get(FileSizeLimitProvider).maxFileSize,
 ) {
-  const exceeded = files.some(file => file.size > maxFileSize);
+  const exceeded = files.some((file) => file.size > maxFileSize);
 
   if (exceeded) {
     const size = formatSize(maxFileSize);
@@ -60,10 +60,7 @@ function hasExceeded(
   return exceeded;
 }
 
-async function buildPropsWith(
-  std: BlockStdScope,
-  file: File
-) {
+async function buildPropsWith(std: BlockStdScope, file: File) {
   let type = file.type;
   let category: AttachmentUploadedEvent['category'] = 'success';
 
@@ -100,7 +97,7 @@ export async function addSiblingAttachmentBlocks(
   std: BlockStdScope,
   files: File[],
   targetModel: BlockModel,
-  placement: 'before' | 'after' = 'after'
+  placement: 'before' | 'after' = 'after',
 ) {
   if (!files.length) return [];
 
@@ -108,14 +105,12 @@ export async function addSiblingAttachmentBlocks(
 
   const flavour = AttachmentBlockSchema.model.flavour;
 
-  const propsArray = await Promise.all(
-    files.map(file => buildPropsWith(std, file))
-  );
+  const propsArray = await Promise.all(files.map((file) => buildPropsWith(std, file)));
 
   const blockIds = std.store.addSiblingBlocks(
     targetModel,
-    propsArray.map(props => ({ ...props, flavour })),
-    placement
+    propsArray.map((props) => ({ ...props, flavour })),
+    placement,
   );
 
   return blockIds;
@@ -125,7 +120,7 @@ export async function addAttachments(
   std: BlockStdScope,
   files: File[],
   targetModel: BlockModel,
-  placement: 'before' | 'after' = 'after'
+  placement: 'before' | 'after' = 'after',
 ): Promise<string[]> {
   return addSiblingAttachmentBlocks(std, files, targetModel, placement);
 }

@@ -77,7 +77,7 @@ export class SmoothCorner extends LitElement {
 
   constructor() {
     super();
-    this._resizeObserver = new ResizeObserver(entries => {
+    this._resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         this.width = entry.contentRect.width;
         this.height = entry.contentRect.height;
@@ -90,9 +90,7 @@ export class SmoothCorner extends LitElement {
       class="${className}"
       width=${this.width + this.borderWidth}
       height=${this.height + this.borderWidth}
-      viewBox="0 0 ${this.width + this.borderWidth} ${
-        this.height + this.borderWidth
-      }"
+      viewBox="0 0 ${this.width + this.borderWidth} ${this.height + this.borderWidth}"
       xmlns="http://www.w3.org/2000/svg"
     >
       ${path}
@@ -117,7 +115,7 @@ export class SmoothCorner extends LitElement {
           fill="${this.bgColor}"
           fill-opacity="${this.bgOpacity}"
           transform="translate(${this.borderWidth / 2} ${this.borderWidth / 2})"
-        >`
+        >`,
       )}
       ${this._getSvg(
         'smooth-corner-border',
@@ -127,7 +125,7 @@ export class SmoothCorner extends LitElement {
           stroke="${this.borderColor}"
           stroke-width="${this.borderWidth}"
           transform="translate(${this.borderWidth / 2} ${this.borderWidth / 2})"
-        >`
+        >`,
       )}
       <div class="smooth-corner-content">
         <slot></slot>

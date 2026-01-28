@@ -1,11 +1,7 @@
-import { ImageBlockSchema } from '@ink/stone-model';
-import {
-  FetchUtils,
-  FULL_FILE_PATH_KEY,
-  getImageFullPath,
-} from '@ink/stone-shared/adapters';
-import { getFilenameFromContentDisposition } from '@ink/stone-shared/utils';
 import { sha } from '@ink/stone-global/utils';
+import { ImageBlockSchema } from '@ink/stone-model';
+import { FetchUtils, FULL_FILE_PATH_KEY, getImageFullPath } from '@ink/stone-shared/adapters';
+import { getFilenameFromContentDisposition } from '@ink/stone-shared/utils';
 import {
   type AssetsManager,
   type ASTWalkerContext,
@@ -17,7 +13,7 @@ export async function processImageNodeToBlock(
   imageURL: string,
   walkerContext: ASTWalkerContext<BlockSnapshot>,
   assets: AssetsManager,
-  configs: Map<string, string>
+  configs: Map<string, string>,
 ) {
   let blobId = '';
   if (!FetchUtils.fetchable(imageURL)) {
@@ -32,9 +28,7 @@ export async function processImageNodeToBlock(
     } else {
       const imageURLSplit = imageURL.split('/');
       while (imageURLSplit.length > 0) {
-        const key = assets
-          .getPathBlobIdMap()
-          .get(decodeURIComponent(imageURLSplit.join('/')));
+        const key = assets.getPathBlobIdMap().get(decodeURIComponent(imageURLSplit.join('/')));
         if (key) {
           blobId = key;
           break;
@@ -47,16 +41,14 @@ export async function processImageNodeToBlock(
       const res = await FetchUtils.fetchImage(
         imageURL,
         undefined,
-        configs.get('imageProxy') as string
+        configs.get('imageProxy') as string,
       );
       if (!res) {
         return;
       }
       const clonedRes = res.clone();
       const name =
-        getFilenameFromContentDisposition(
-          res.headers.get('Content-Disposition') ?? ''
-        ) ??
+        getFilenameFromContentDisposition(res.headers.get('Content-Disposition') ?? '') ??
         (imageURL.split('/').at(-1) ?? 'image') +
           '.' +
           (res.headers.get('Content-Type')?.split('/').at(-1) ?? 'png');
@@ -82,7 +74,7 @@ export async function processImageNodeToBlock(
         },
         children: [],
       },
-      'children'
+      'children',
     )
     .closeNode();
   walkerContext.skipAllChildren();

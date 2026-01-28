@@ -205,9 +205,7 @@ export const styles = css`
     }
   }
 
-  .ink-embed-linked-doc-block:not(.loading):not(.deleted):not(.error):not(
-      .empty
-    ).banner-empty {
+  .ink-embed-linked-doc-block:not(.loading):not(.deleted):not(.error):not(.empty).banner-empty {
     .ink-embed-linked-doc-content {
       width: 100%;
       height: 100%;
@@ -295,9 +293,9 @@ export const styles = css`
       height: 170px;
     }
   }
-  .ink-embed-linked-doc-block.vertical:not(.loading):not(.deleted):not(
-      .error
-    ):not(.empty).banner-empty {
+  .ink-embed-linked-doc-block.vertical:not(.loading):not(.deleted):not(.error):not(
+      .empty
+    ).banner-empty {
     .ink-embed-linked-doc-content {
       width: 100%;
       height: 100%;
@@ -465,17 +463,8 @@ export const LightLinkedPageEmptySmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9783"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_9783"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9783" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_9783" result="shape" />
     </filter>
     <clipPath id="clip0_3075_9783">
       <rect width="204" height="102" fill="white" />
@@ -589,11 +578,7 @@ export const DarkLinkedPageEmptySmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_12065"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_12065" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -620,57 +605,12 @@ export const LightLinkedPageEmptyLargeBanner = html`<svg
       fill="#F4F4F5"
     />
     <g filter="url(#filter0_d_3075_10418)">
-      <rect
-        width="268"
-        height="300"
-        transform="translate(36 26)"
-        fill="white"
-      />
-      <rect
-        x="77"
-        y="56.3567"
-        width="131.747"
-        height="18"
-        rx="9"
-        fill="black"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="88.3567"
-        width="186.925"
-        height="10"
-        rx="5"
-        fill="black"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="112.357"
-        width="98.8106"
-        height="10"
-        rx="5"
-        fill="black"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="136.357"
-        width="186.925"
-        height="10"
-        rx="5"
-        fill="black"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="160.357"
-        width="98.8106"
-        height="10"
-        rx="5"
-        fill="black"
-        fill-opacity="0.1"
-      />
+      <rect width="268" height="300" transform="translate(36 26)" fill="white" />
+      <rect x="77" y="56.3567" width="131.747" height="18" rx="9" fill="black" fill-opacity="0.1" />
+      <rect x="77" y="88.3567" width="186.925" height="10" rx="5" fill="black" fill-opacity="0.1" />
+      <rect x="77" y="112.357" width="98.8106" height="10" rx="5" fill="black" fill-opacity="0.1" />
+      <rect x="77" y="136.357" width="186.925" height="10" rx="5" fill="black" fill-opacity="0.1" />
+      <rect x="77" y="160.357" width="98.8106" height="10" rx="5" fill="black" fill-opacity="0.1" />
     </g>
   </g>
   <defs>
@@ -697,11 +637,7 @@ export const LightLinkedPageEmptyLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.1 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_10418"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_10418" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -739,51 +675,11 @@ export const DarkLinkedPageEmptyLargeBanner = html`<svg
         fill="white"
         fill-opacity="0.06"
       />
-      <rect
-        x="77"
-        y="56.3567"
-        width="131.747"
-        height="18"
-        rx="9"
-        fill="white"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="88.3567"
-        width="186.925"
-        height="10"
-        rx="5"
-        fill="white"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="112.357"
-        width="98.8106"
-        height="10"
-        rx="5"
-        fill="white"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="136.357"
-        width="186.925"
-        height="10"
-        rx="5"
-        fill="white"
-        fill-opacity="0.1"
-      />
-      <rect
-        x="77"
-        y="160.357"
-        width="98.8106"
-        height="10"
-        rx="5"
-        fill="white"
-        fill-opacity="0.1"
-      />
+      <rect x="77" y="56.3567" width="131.747" height="18" rx="9" fill="white" fill-opacity="0.1" />
+      <rect x="77" y="88.3567" width="186.925" height="10" rx="5" fill="white" fill-opacity="0.1" />
+      <rect x="77" y="112.357" width="98.8106" height="10" rx="5" fill="white" fill-opacity="0.1" />
+      <rect x="77" y="136.357" width="186.925" height="10" rx="5" fill="white" fill-opacity="0.1" />
+      <rect x="77" y="160.357" width="98.8106" height="10" rx="5" fill="white" fill-opacity="0.1" />
     </g>
   </g>
   <defs>
@@ -806,15 +702,8 @@ export const DarkLinkedPageEmptyLargeBanner = html`<svg
       <feOffset dy="13" />
       <feGaussianBlur stdDeviation="14" />
       <feComposite in2="hardAlpha" operator="out" />
-      <feColorMatrix
-        type="matrix"
-        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.44 0"
-      />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_13652"
-      />
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.44 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_13652" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -918,17 +807,8 @@ export const LightLinkedPageDeletedSmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.1 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_418"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_418"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_418" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_418" result="shape" />
     </filter>
   </defs>
 </svg> `;
@@ -941,13 +821,7 @@ export const DarkLinkedPageDeletedSmallBanner = html`<svg
   xmlns="http://www.w3.org/2000/svg"
 >
   <g filter="url(#filter0_d_3075_12843)">
-    <rect
-      width="53"
-      height="66"
-      transform="translate(49 22)"
-      fill="white"
-      fill-opacity="0.08"
-    />
+    <rect width="53" height="66" transform="translate(49 22)" fill="white" fill-opacity="0.08" />
     <rect
       x="57.0168"
       y="30.8"
@@ -1026,11 +900,7 @@ export const DarkLinkedPageDeletedSmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.1 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_12843"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_12843" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -1049,17 +919,9 @@ export const LightLinkedPageDeletedLargeBanner = html`<svg
   xmlns="http://www.w3.org/2000/svg"
 >
   <g clip-path="url(#clip0_3075_695)">
-    <path
-      d="M0 4C0 1.79086 1.79086 0 4 0H336C338.209 0 340 1.79086 340 4V170H0V4Z"
-      fill="white"
-    />
+    <path d="M0 4C0 1.79086 1.79086 0 4 0H336C338.209 0 340 1.79086 340 4V170H0V4Z" fill="white" />
     <g filter="url(#filter0_d_3075_695)">
-      <rect
-        width="124"
-        height="154"
-        transform="translate(41 61)"
-        fill="white"
-      />
+      <rect width="124" height="154" transform="translate(41 61)" fill="white" />
       <rect
         x="59.7562"
         y="81.5333"
@@ -1139,17 +1001,8 @@ export const LightLinkedPageDeletedLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_695"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_695"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_695" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_695" result="shape" />
     </filter>
     <clipPath id="clip0_3075_695">
       <path
@@ -1259,11 +1112,7 @@ export const DarkLinkedPageDeletedLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_10008"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_10008" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -1378,17 +1227,8 @@ export const LightLinkedEdgelessEmptySmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9806"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_9806"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9806" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_9806" result="shape" />
     </filter>
     <clipPath id="clip0_3075_9806">
       <rect width="204" height="102" fill="white" />
@@ -1505,17 +1345,8 @@ export const DarkLinkedEdgelessEmptySmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.17 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9829"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_9829"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9829" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_9829" result="shape" />
     </filter>
     <clipPath id="clip0_3075_9829">
       <rect width="204" height="102" fill="white" />
@@ -1553,24 +1384,8 @@ export const LightLinkedEdgelessEmptyLargeBanner = html`<svg
     <g filter="url(#filter1_dd_3075_9936)">
       <rect x="189" y="102.378" width="119" height="54" rx="8" fill="#EEEEEE" />
     </g>
-    <rect
-      x="35.999"
-      y="120.552"
-      width="113"
-      height="11"
-      rx="5.5"
-      fill="black"
-      fill-opacity="0.1"
-    />
-    <rect
-      x="35.999"
-      y="145.378"
-      width="81"
-      height="11"
-      rx="5.5"
-      fill="black"
-      fill-opacity="0.1"
-    />
+    <rect x="35.999" y="120.552" width="113" height="11" rx="5.5" fill="black" fill-opacity="0.1" />
+    <rect x="35.999" y="145.378" width="81" height="11" rx="5.5" fill="black" fill-opacity="0.1" />
     <path
       d="M160 57.1802C159.172 57.1802 158.5 57.8517 158.5 58.6802C158.5 59.5086 159.172 60.1802 160 60.1802V57.1802ZM164.75 60.1802C165.578 60.1802 166.25 59.5086 166.25 58.6802C166.25 57.8517 165.578 57.1802 164.75 57.1802V60.1802ZM174.25 57.1802C173.422 57.1802 172.75 57.8517 172.75 58.6802C172.75 59.5086 173.422 60.1802 174.25 60.1802V57.1802ZM183.75 60.1802C184.578 60.1802 185.25 59.5086 185.25 58.6802C185.25 57.8517 184.578 57.1802 183.75 57.1802V60.1802ZM193.25 57.1802C192.422 57.1802 191.75 57.8517 191.75 58.6802C191.75 59.5086 192.422 60.1802 193.25 60.1802V57.1802ZM202.75 60.1802C203.578 60.1802 204.25 59.5086 204.25 58.6802C204.25 57.8517 203.578 57.1802 202.75 57.1802V60.1802ZM212.25 57.1802C211.422 57.1802 210.75 57.8517 210.75 58.6802C210.75 59.5086 211.422 60.1802 212.25 60.1802V57.1802ZM221.75 60.1802C222.578 60.1802 223.25 59.5086 223.25 58.6802C223.25 57.8517 222.578 57.1802 221.75 57.1802V60.1802ZM231.25 57.1802C230.422 57.1802 229.75 57.8517 229.75 58.6802C229.75 59.5086 230.422 60.1802 231.25 60.1802V57.1802ZM240.019 60.9763C240.784 61.2937 241.662 60.9306 241.979 60.1653C242.296 59.4001 241.933 58.5225 241.168 58.2052L240.019 60.9763ZM248.475 65.5121C248.158 64.7469 247.28 64.3838 246.515 64.7011C245.75 65.0185 245.387 65.8961 245.704 66.6613L248.475 65.5121ZM246.5 78.1288C246.5 78.9572 247.172 79.6288 248 79.6288C248.828 79.6288 249.5 78.9572 249.5 78.1288H246.5ZM249.5 93.0259C249.5 92.1975 248.828 91.5259 248 91.5259C247.172 91.5259 246.5 92.1975 246.5 93.0259H249.5ZM160 60.1802H164.75V57.1802H160V60.1802ZM174.25 60.1802H183.75V57.1802H174.25V60.1802ZM193.25 60.1802H202.75V57.1802H193.25V60.1802ZM212.25 60.1802H221.75V57.1802H212.25V60.1802ZM231.25 60.1802H236V57.1802H231.25V60.1802ZM236 60.1802C237.426 60.1802 238.783 60.4638 240.019 60.9763L241.168 58.2052C239.574 57.5442 237.828 57.1802 236 57.1802V60.1802ZM245.704 66.6613C246.216 67.8973 246.5 69.2537 246.5 70.6802H249.5C249.5 68.8525 249.136 67.106 248.475 65.5121L245.704 66.6613ZM246.5 70.6802V78.1288H249.5V70.6802H246.5ZM246.5 93.0259V100.475H249.5V93.0259H246.5Z"
       fill="black"
@@ -1617,11 +1432,7 @@ export const LightLinkedEdgelessEmptyLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.1 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9936"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9936" />
       <feColorMatrix
         in="SourceAlpha"
         type="matrix"
@@ -1645,12 +1456,7 @@ export const LightLinkedEdgelessEmptyLargeBanner = html`<svg
         in2="effect1_dropShadow_3075_9936"
         result="effect2_dropShadow_3075_9936"
       />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect2_dropShadow_3075_9936"
-        result="shape"
-      />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_3075_9936" result="shape" />
     </filter>
     <filter
       id="filter1_dd_3075_9936"
@@ -1680,11 +1486,7 @@ export const LightLinkedEdgelessEmptyLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.1 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9936"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9936" />
       <feColorMatrix
         in="SourceAlpha"
         type="matrix"
@@ -1708,12 +1510,7 @@ export const LightLinkedEdgelessEmptyLargeBanner = html`<svg
         in2="effect1_dropShadow_3075_9936"
         result="effect2_dropShadow_3075_9936"
       />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect2_dropShadow_3075_9936"
-        result="shape"
-      />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_3075_9936" result="shape" />
     </filter>
     <clipPath id="clip0_3075_9936">
       <path
@@ -1741,24 +1538,8 @@ export const DarkLinkedEdgelessEmptyLargeBanner = html`<svg
   />
   <rect x="32" y="19.3782" width="119" height="78" rx="8" fill="#303030" />
   <rect x="189" y="102.378" width="119" height="54" rx="8" fill="#303030" />
-  <rect
-    x="35.999"
-    y="120.552"
-    width="113"
-    height="11"
-    rx="5.5"
-    fill="white"
-    fill-opacity="0.1"
-  />
-  <rect
-    x="35.999"
-    y="145.378"
-    width="81"
-    height="11"
-    rx="5.5"
-    fill="white"
-    fill-opacity="0.1"
-  />
+  <rect x="35.999" y="120.552" width="113" height="11" rx="5.5" fill="white" fill-opacity="0.1" />
+  <rect x="35.999" y="145.378" width="81" height="11" rx="5.5" fill="white" fill-opacity="0.1" />
   <path
     d="M160 57.1802C159.172 57.1802 158.5 57.8517 158.5 58.6802C158.5 59.5086 159.172 60.1802 160 60.1802V57.1802ZM164.75 60.1802C165.578 60.1802 166.25 59.5086 166.25 58.6802C166.25 57.8517 165.578 57.1802 164.75 57.1802V60.1802ZM174.25 57.1802C173.422 57.1802 172.75 57.8517 172.75 58.6802C172.75 59.5086 173.422 60.1802 174.25 60.1802V57.1802ZM183.75 60.1802C184.578 60.1802 185.25 59.5086 185.25 58.6802C185.25 57.8517 184.578 57.1802 183.75 57.1802V60.1802ZM193.25 57.1802C192.422 57.1802 191.75 57.8517 191.75 58.6802C191.75 59.5086 192.422 60.1802 193.25 60.1802V57.1802ZM202.75 60.1802C203.578 60.1802 204.25 59.5086 204.25 58.6802C204.25 57.8517 203.578 57.1802 202.75 57.1802V60.1802ZM212.25 57.1802C211.422 57.1802 210.75 57.8517 210.75 58.6802C210.75 59.5086 211.422 60.1802 212.25 60.1802V57.1802ZM221.75 60.1802C222.578 60.1802 223.25 59.5086 223.25 58.6802C223.25 57.8517 222.578 57.1802 221.75 57.1802V60.1802ZM231.25 57.1802C230.422 57.1802 229.75 57.8517 229.75 58.6802C229.75 59.5086 230.422 60.1802 231.25 60.1802V57.1802ZM240.019 60.9763C240.784 61.2937 241.662 60.9306 241.979 60.1653C242.296 59.4001 241.933 58.5225 241.168 58.2052L240.019 60.9763ZM248.475 65.5121C248.158 64.7469 247.28 64.3838 246.515 64.7011C245.75 65.0185 245.387 65.8961 245.704 66.6613L248.475 65.5121ZM246.5 78.1288C246.5 78.9572 247.172 79.6288 248 79.6288C248.828 79.6288 249.5 78.9572 249.5 78.1288H246.5ZM249.5 93.0259C249.5 92.1975 248.828 91.5259 248 91.5259C247.172 91.5259 246.5 92.1975 246.5 93.0259H249.5ZM160 60.1802H164.75V57.1802H160V60.1802ZM174.25 60.1802H183.75V57.1802H174.25V60.1802ZM193.25 60.1802H202.75V57.1802H193.25V60.1802ZM212.25 60.1802H221.75V57.1802H212.25V60.1802ZM231.25 60.1802H236V57.1802H231.25V60.1802ZM236 60.1802C237.426 60.1802 238.783 60.4638 240.019 60.9763L241.168 58.2052C239.574 57.5442 237.828 57.1802 236 57.1802V60.1802ZM245.704 66.6613C246.216 67.8973 246.5 69.2537 246.5 70.6802H249.5C249.5 68.8525 249.136 67.106 248.475 65.5121L245.704 66.6613ZM246.5 70.6802V78.1288H249.5V70.6802H246.5ZM246.5 93.0259V100.475H249.5V93.0259H246.5Z"
     fill="white"
@@ -1781,30 +1562,9 @@ export const LightLinkedEdgelessDeletedSmallBanner = html`<svg
   xmlns="http://www.w3.org/2000/svg"
 >
   <g filter="url(#filter0_d_3075_9990)">
-    <rect
-      x="35.446"
-      y="22.3057"
-      width="66"
-      height="44.9836"
-      rx="2"
-      fill="white"
-    />
-    <rect
-      x="42.8223"
-      y="28.7544"
-      width="23.1"
-      height="17.0581"
-      rx="2"
-      fill="#EAEAEA"
-    />
-    <rect
-      x="73.2991"
-      y="47.4768"
-      width="23.1"
-      height="11.4414"
-      rx="2"
-      fill="#EAEAEA"
-    />
+    <rect x="35.446" y="22.3057" width="66" height="44.9836" rx="2" fill="white" />
+    <rect x="42.8223" y="28.7544" width="23.1" height="17.0581" rx="2" fill="#EAEAEA" />
+    <rect x="73.2991" y="47.4768" width="23.1" height="11.4414" rx="2" fill="#EAEAEA" />
     <rect
       x="43.9871"
       y="51.8455"
@@ -1869,17 +1629,8 @@ export const LightLinkedEdgelessDeletedSmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_9990"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_9990"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_9990" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_9990" result="shape" />
     </filter>
   </defs>
 </svg> `;
@@ -1984,17 +1735,8 @@ export const DarkLinkedEdgelessDeletedSmallBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_2681"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_3075_2681"
-        result="shape"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_2681" />
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3075_2681" result="shape" />
     </filter>
   </defs>
 </svg> `;
@@ -2007,23 +1749,13 @@ export const LightLinkedEdgelessDeletedLargeBanner = html`<svg
   xmlns="http://www.w3.org/2000/svg"
 >
   <g clip-path="url(#clip0_3075_10039)">
-    <path
-      d="M0 4C0 1.79086 1.79086 0 4 0H336C338.209 0 340 1.79086 340 4V170H0V4Z"
-      fill="white"
-    />
+    <path d="M0 4C0 1.79086 1.79086 0 4 0H336C338.209 0 340 1.79086 340 4V170H0V4Z" fill="white" />
     <g filter="url(#filter0_d_3075_10039)">
       <path
         d="M30 71C30 68.7909 31.7909 67 34 67H175C177.209 67 179 68.7909 179 71V170H30V71Z"
         fill="white"
       />
-      <rect
-        x="46.6523"
-        y="81.7659"
-        width="52.15"
-        height="39.0585"
-        rx="4"
-        fill="#EEEEEE"
-      />
+      <rect x="46.6523" y="81.7659" width="52.15" height="39.0585" rx="4" fill="#EEEEEE" />
       <rect x="115" y="125" width="53" height="30" rx="4" fill="#EEEEEE" />
       <rect
         x="49.282"
@@ -2093,11 +1825,7 @@ export const LightLinkedEdgelessDeletedLargeBanner = html`<svg
         type="matrix"
         values="0 0 0 0 0.258824 0 0 0 0 0.254902 0 0 0 0 0.286275 0 0 0 0.14 0"
       />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_10039"
-      />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_10039" />
       <feBlend
         mode="normal"
         in="SourceGraphic"
@@ -2133,14 +1861,7 @@ export const DarkLinkedEdgelessDeletedLargeBanner = html`<svg
         fill-opacity="0.06"
         shape-rendering="crispEdges"
       />
-      <rect
-        x="46.6523"
-        y="81.7659"
-        width="52.15"
-        height="39.0585"
-        rx="4"
-        fill="#303030"
-      />
+      <rect x="46.6523" y="81.7659" width="52.15" height="39.0585" rx="4" fill="#303030" />
       <rect x="115" y="125" width="53" height="30" rx="4" fill="#303030" />
       <rect
         x="49.282"
@@ -2206,15 +1927,8 @@ export const DarkLinkedEdgelessDeletedLargeBanner = html`<svg
       <feOffset />
       <feGaussianBlur stdDeviation="2" />
       <feComposite in2="hardAlpha" operator="out" />
-      <feColorMatrix
-        type="matrix"
-        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0"
-      />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_3075_10071"
-      />
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0" />
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3075_10071" />
       <feBlend
         mode="normal"
         in="SourceGraphic"

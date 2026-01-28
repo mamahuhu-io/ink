@@ -1,4 +1,4 @@
-import { IS_FIREFOX } from "@ink/stone-global/env";
+import { IS_FIREFOX } from '@ink/stone-global/env';
 
 declare global {
   interface Document {
@@ -17,10 +17,7 @@ declare global {
  * A wrapper for the browser's `caretPositionFromPoint` and `caretRangeFromPoint`,
  * but adapted for different browsers.
  */
-export function caretRangeFromPoint(
-  clientX: number,
-  clientY: number,
-): Range | null {
+export function caretRangeFromPoint(clientX: number, clientY: number): Range | null {
   if (IS_FIREFOX) {
     const caret = document.caretPositionFromPoint(clientX, clientY);
     if (!caret) {
@@ -76,14 +73,14 @@ export function getCurrentNativeRange(selection = window.getSelection()) {
   // When called on an <iframe> that is not displayed (e.g., where display: none is set) Firefox will return null
   // See https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection for more details
   if (!selection) {
-    console.error("Failed to get current range, selection is null");
+    console.error('Failed to get current range, selection is null');
     return null;
   }
   if (selection.rangeCount === 0) {
     return null;
   }
   if (selection.rangeCount > 1) {
-    console.warn("getCurrentNativeRange may be wrong, rangeCount > 1");
+    console.warn('getCurrentNativeRange may be wrong, rangeCount > 1');
   }
   return selection.getRangeAt(0);
 }

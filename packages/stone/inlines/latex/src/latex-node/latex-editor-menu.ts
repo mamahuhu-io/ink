@@ -1,11 +1,11 @@
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import { noop } from '@ink/stone-global/utils';
+import { DoneIcon } from '@ink/stone-icons/lit';
 import { ColorScheme } from '@ink/stone-model';
 import type { RichText } from '@ink/stone-rich-text';
 import { ThemeProvider } from '@ink/stone-shared/services';
 import { unsafeCSSVar } from '@ink/stone-shared/theme';
 import type { InkTextAttributes } from '@ink/stone-shared/types';
-import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
-import { noop } from '@ink/stone-global/utils';
-import { DoneIcon } from '@ink/stone-icons/lit';
 import { type BlockStdScope, ShadowlessElement } from '@ink/stone-std';
 import { InlineManagerExtension } from '@ink/stone-std/inline';
 import { effect, type Signal, signal } from '@preact/signals-core';
@@ -16,16 +16,13 @@ import * as Y from 'yjs';
 
 import { LatexEditorUnitSpecExtension } from '../inline-spec';
 
-export const LatexEditorInlineManagerExtension =
-  InlineManagerExtension<InkTextAttributes>({
-    id: 'latex-inline-editor',
-    enableMarkdown: false,
-    specs: [LatexEditorUnitSpecExtension.identifier],
-  });
+export const LatexEditorInlineManagerExtension = InlineManagerExtension<InkTextAttributes>({
+  id: 'latex-inline-editor',
+  enableMarkdown: false,
+  specs: [LatexEditorUnitSpecExtension.identifier],
+});
 
-export class LatexEditorMenu extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
+export class LatexEditorMenu extends SignalWatcher(WithDisposable(ShadowlessElement)) {
   static override styles = css`
     .latex-editor-container {
       display: grid;
@@ -112,7 +109,7 @@ export class LatexEditorMenu extends SignalWatcher(
       lang: 'latex',
       theme,
     })
-      .then(token => {
+      .then((token) => {
         this.highlightTokens$.value = token;
       })
       .catch(console.error);
@@ -140,16 +137,16 @@ export class LatexEditorMenu extends SignalWatcher(
       effect(() => {
         noop(this.highlightTokens$.value);
         this.richText?.inlineEditor?.render();
-      })
+      }),
     );
 
     this.disposables.add(
       this.std.get(ThemeProvider).theme$.subscribe(() => {
         this._updateHighlightTokens(this.yText.toString());
-      })
+      }),
     );
 
-    this.disposables.addFromEvent(this, 'keydown', e => {
+    this.disposables.addFromEvent(this, 'keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         e.stopPropagation();
@@ -157,10 +154,10 @@ export class LatexEditorMenu extends SignalWatcher(
       }
     });
 
-    this.disposables.addFromEvent(this, 'pointerdown', e => {
+    this.disposables.addFromEvent(this, 'pointerdown', (e) => {
       e.stopPropagation();
     });
-    this.disposables.addFromEvent(this, 'pointerup', e => {
+    this.disposables.addFromEvent(this, 'pointerup', (e) => {
       e.stopPropagation();
     });
 

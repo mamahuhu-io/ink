@@ -1,8 +1,4 @@
-import {
-  type BlockComponent,
-  type Command,
-  TextSelection,
-} from '@ink/stone-std';
+import { type BlockComponent, type Command, TextSelection } from '@ink/stone-std';
 
 export const focusBlockStart: Command<{
   focusBlock?: BlockComponent;

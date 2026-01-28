@@ -8,7 +8,7 @@ import type { DeltaInsert } from '@ink/stone-store';
 export const rootBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
   flavour: RootBlockSchema.model.flavour,
   toMatch: () => false,
-  fromMatch: o => o.node.flavour === RootBlockSchema.model.flavour,
+  fromMatch: (o) => o.node.flavour === RootBlockSchema.model.flavour,
   toBlockSnapshot: {},
   fromBlockSnapshot: {
     enter: (o, context) => {
@@ -24,7 +24,7 @@ export const rootBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
             depth: 1,
             children: deltaConverter.deltaToAST(title.delta, 0),
           },
-          'children'
+          'children',
         )
         .closeNode();
     },
@@ -32,5 +32,5 @@ export const rootBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
 };
 
 export const RootBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
-  rootBlockMarkdownAdapterMatcher
+  rootBlockMarkdownAdapterMatcher,
 );

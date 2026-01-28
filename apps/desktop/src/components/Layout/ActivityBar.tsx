@@ -1,14 +1,15 @@
-import { Folder, List, Search, Settings } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { useSidebarStore, type SidebarView } from '../../stores/sidebar'
-import { triggerGlobalSearch, triggerPreferences } from '../../hooks/useAppCommands'
-import { formatShortcut } from '../../utils/shortcuts'
+import { Folder, List, Search, Settings } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
+import { triggerGlobalSearch, triggerPreferences } from '../../hooks/useAppCommands';
+import { type SidebarView, useSidebarStore } from '../../stores/sidebar';
+import { formatShortcut } from '../../utils/shortcuts';
 
 interface ActivityItemProps {
-  icon: React.ReactNode
-  title: string
-  isActive: boolean
-  onClick: () => void
+  icon: React.ReactNode;
+  title: string;
+  isActive: boolean;
+  onClick: () => void;
 }
 
 function ActivityItem({ icon, title, isActive, onClick }: ActivityItemProps) {
@@ -21,36 +22,31 @@ function ActivityItem({ icon, title, isActive, onClick }: ActivityItemProps) {
     >
       {icon}
     </button>
-  )
+  );
 }
 
 interface ActionItemProps {
-  icon: React.ReactNode
-  title: string
-  onClick: () => void
+  icon: React.ReactNode;
+  title: string;
+  onClick: () => void;
 }
 
 function ActionItem({ icon, title, onClick }: ActionItemProps) {
   return (
-    <button
-      className="activity-item"
-      onClick={onClick}
-      title={title}
-      aria-label={title}
-    >
+    <button className="activity-item" onClick={onClick} title={title} aria-label={title}>
       {icon}
     </button>
-  )
+  );
 }
 
 export function ActivityBar() {
-  const { t } = useTranslation()
-  const { view, setView } = useSidebarStore()
+  const { t } = useTranslation();
+  const { view, setView } = useSidebarStore();
 
   const viewItems: { id: SidebarView; icon: React.ReactNode; labelKey: string }[] = [
     { id: 'files', icon: <Folder size={20} />, labelKey: 'sidebar.files' },
     { id: 'outline', icon: <List size={20} />, labelKey: 'sidebar.outline' },
-  ]
+  ];
 
   return (
     <div className="activity-bar">
@@ -82,5 +78,5 @@ export function ActivityBar() {
         />
       </div>
     </div>
-  )
+  );
 }

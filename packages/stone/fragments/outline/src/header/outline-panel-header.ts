@@ -1,6 +1,6 @@
-import { createButtonPopper } from '@ink/stone-shared/utils';
 import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
 import { SettingsIcon, SortIcon } from '@ink/stone-icons/lit';
+import { createButtonPopper } from '@ink/stone-shared/utils';
 import { ShadowlessElement } from '@ink/stone-std';
 import { consume } from '@lit/context';
 import { signal } from '@preact/signals-core';
@@ -12,12 +12,8 @@ import * as styles from './outline-panel-header.css';
 
 export const INK_OUTLINE_PANEL_HEADER = 'ink-outline-panel-header';
 
-export class OutlinePanelHeader extends SignalWatcher(
-  WithDisposable(ShadowlessElement)
-) {
-  private _notePreviewSettingMenuPopper: ReturnType<
-    typeof createButtonPopper
-  > | null = null;
+export class OutlinePanelHeader extends SignalWatcher(WithDisposable(ShadowlessElement)) {
+  private _notePreviewSettingMenuPopper: ReturnType<typeof createButtonPopper> | null = null;
 
   private readonly _settingPopperShow$ = signal(false);
 

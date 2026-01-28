@@ -11,7 +11,7 @@ export class GfxViewEventManager {
 
   private _callInReverseOrder(
     callback: (view: GfxElementModelView) => void,
-    arr = this._hoveredElementsStack
+    arr = this._hoveredElementsStack,
   ) {
     for (let i = arr.length - 1; i >= 0; i--) {
       const view = arr[i];
@@ -27,10 +27,7 @@ export class GfxViewEventManager {
       this._handlePointerMove(evt);
       return false;
     } else if (eventName.startsWith('drag')) {
-      return this._handleDrag(
-        eventName as 'dragstart' | 'dragend' | 'dragmove',
-        evt
-      );
+      return this._handleDrag(eventName as 'dragstart' | 'dragend' | 'dragmove', evt);
     } else {
       return last(this._hoveredElementsStack)?.dispatch(eventName, evt);
     }
@@ -38,7 +35,7 @@ export class GfxViewEventManager {
 
   private _handleDrag(
     evtName: 'dragstart' | 'dragend' | 'dragmove',
-    _evt: PointerEventState
+    _evt: PointerEventState,
   ): boolean {
     switch (evtName) {
       case 'dragstart': {
@@ -52,8 +49,7 @@ export class GfxViewEventManager {
         return this._draggingElement?.dispatch('dragmove', _evt) ?? false;
       }
       case 'dragend': {
-        const dispatched =
-          this._draggingElement?.dispatch('dragend', _evt) ?? false;
+        const dispatched = this._draggingElement?.dispatch('dragend', _evt) ?? false;
         this._draggingElement = null;
         return dispatched;
       }
@@ -75,11 +71,9 @@ export class GfxViewEventManager {
               hitThreshold: 10,
               responsePadding: [5, 5],
             },
-            this.gfx.std.host
+            this.gfx.std.host,
           ) ||
-          ('externalBound' in model
-            ? model.externalBound?.isPointInBound([x, y])
-            : false)
+          ('externalBound' in model ? model.externalBound?.isPointInBound([x, y]) : false)
         ) {
           const view = this.gfx.view.get(model) as GfxElementModelView | null;
 
@@ -92,7 +86,7 @@ export class GfxViewEventManager {
     const currentStackedViews = new Set(this._hoveredElementsStack);
     const visited = new Set<GfxElementModelView>();
 
-    this._callInReverseOrder(view => {
+    this._callInReverseOrder((view) => {
       if (currentStackedViews.has(view)) {
         visited.add(view);
         view.dispatch('pointermove', _evt);
@@ -100,9 +94,7 @@ export class GfxViewEventManager {
         view.dispatch('pointerenter', _evt);
       }
     }, hoveredElmViews);
-    this._callInReverseOrder(
-      view => !visited.has(view) && view.dispatch('pointerleave', _evt)
-    );
+    this._callInReverseOrder((view) => !visited.has(view) && view.dispatch('pointerleave', _evt));
     this._hoveredElementsStack = hoveredElmViews;
   }
 }

@@ -5,10 +5,7 @@ import {
   NoteBlockSchema,
   ParagraphBlockModel,
 } from '@ink/stone-model';
-import {
-  textAlignConfigs,
-  textConversionConfigs,
-} from '@ink/stone-rich-text';
+import { textAlignConfigs, textConversionConfigs } from '@ink/stone-rich-text';
 import {
   focusBlockEnd,
   focusBlockStart,
@@ -17,10 +14,7 @@ import {
   getPrevBlockCommand,
   getTextSelectionCommand,
 } from '@ink/stone-shared/commands';
-import {
-  asyncGetBlockComponent,
-  matchModels,
-} from '@ink/stone-shared/utils';
+import { asyncGetBlockComponent, matchModels } from '@ink/stone-shared/utils';
 import {
   type BlockComponent,
   BlockSelection,
@@ -57,31 +51,31 @@ class NoteKeymap {
           (acc, key) => {
             return {
               ...acc,
-              [key]: ctx => {
+              [key]: (ctx) => {
                 ctx.get('defaultState').event.preventDefault();
                 return config.action(this.std);
               },
             };
           },
-          {} as Record<string, UIEventHandler>
+          {} as Record<string, UIEventHandler>,
         );
         return {
           ...acc,
           ...keys,
         };
       },
-      {} as Record<string, UIEventHandler>
+      {} as Record<string, UIEventHandler>,
     );
   };
 
   private readonly _bindQuickActionHotKey = () => {
     return quickActionConfig
-      .filter(config => config.hotkey)
+      .filter((config) => config.hotkey)
       .reduce(
         (acc, config) => {
           return {
             ...acc,
-            [config.hotkey!]: ctx => {
+            [config.hotkey!]: (ctx) => {
               if (!config.showWhen(this.std)) return;
 
               ctx.get('defaultState').event.preventDefault();
@@ -89,20 +83,20 @@ class NoteKeymap {
             },
           };
         },
-        {} as Record<string, UIEventHandler>
+        {} as Record<string, UIEventHandler>,
       );
   };
 
   private readonly _bindTextConversionHotKey = () => {
     return textConversionConfigs
-      .filter(item => item.hotkey)
+      .filter((item) => item.hotkey)
       .reduce(
         (acc, item) => {
           const keymap = item.hotkey!.reduce(
             (acc, key) => {
               return {
                 ...acc,
-                [key]: ctx => {
+                [key]: (ctx) => {
                   ctx.get('defaultState').event.preventDefault();
                   const [result] = this._std.command
                     .chain()
@@ -124,7 +118,7 @@ class NoteKeymap {
 
                       const [codeModel] = newModels;
                       asyncGetBlockComponent(ctx.std, codeModel.id)
-                        .then(codeElement => {
+                        .then((codeElement) => {
                           if (!codeElement) {
                             return;
                           }
@@ -149,7 +143,7 @@ class NoteKeymap {
                 },
               };
             },
-            {} as Record<string, UIEventHandler>
+            {} as Record<string, UIEventHandler>,
           );
 
           return {
@@ -157,7 +151,7 @@ class NoteKeymap {
             ...keymap,
           };
         },
-        {} as Record<string, UIEventHandler>
+        {} as Record<string, UIEventHandler>,
       );
   };
 
@@ -168,7 +162,7 @@ class NoteKeymap {
           (acc, key) => {
             return {
               ...acc,
-              [key]: ctx => {
+              [key]: (ctx) => {
                 ctx.get('defaultState').event.preventDefault();
                 const [result] = this._std.command
                   .chain()
@@ -179,7 +173,7 @@ class NoteKeymap {
               },
             };
           },
-          {} as Record<string, UIEventHandler>
+          {} as Record<string, UIEventHandler>,
         );
 
         return {
@@ -187,7 +181,7 @@ class NoteKeymap {
           ...keymap,
         };
       },
-      {} as Record<string, UIEventHandler>
+      {} as Record<string, UIEventHandler>,
     );
   };
 
@@ -214,7 +208,7 @@ class NoteKeymap {
         this._reset();
         return next();
       })
-      .try(cmd => [
+      .try((cmd) => [
         // text selection - select the next block
         // 1. is paragraph, list, code block - follow the default behavior
         // 2. is not - select the next block (use block selection instead of text selection)
@@ -236,11 +230,7 @@ class NoteKeymap {
             }
 
             if (
-              !matchModels(nextBlock.model, [
-                ParagraphBlockModel,
-                ListBlockModel,
-                CodeBlockModel,
-              ])
+              !matchModels(nextBlock.model, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])
             ) {
               this._std.command.exec(selectBlock, {
                 focusBlock: nextBlock,
@@ -272,11 +262,7 @@ class NoteKeymap {
 
             event.preventDefault();
             if (
-              matchModels(nextBlock.model, [
-                ParagraphBlockModel,
-                ListBlockModel,
-                CodeBlockModel,
-              ])
+              matchModels(nextBlock.model, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])
             ) {
               this._std.command.exec(focusBlockStart, {
                 focusBlock: nextBlock,
@@ -304,7 +290,7 @@ class NoteKeymap {
         this._reset();
         return next();
       })
-      .try(cmd => [
+      .try((cmd) => [
         // text selection - select the previous block
         // 1. is paragraph, list, code block - follow the default behavior
         // 2. is not - select the previous block (use block selection instead of text selection)
@@ -326,11 +312,7 @@ class NoteKeymap {
             }
 
             if (
-              !matchModels(prevBlock.model, [
-                ParagraphBlockModel,
-                ListBlockModel,
-                CodeBlockModel,
-              ])
+              !matchModels(prevBlock.model, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])
             ) {
               this._std.command.exec(selectBlock, {
                 focusBlock: prevBlock,
@@ -360,11 +342,7 @@ class NoteKeymap {
             }
 
             if (
-              matchModels(prevBlock.model, [
-                ParagraphBlockModel,
-                ListBlockModel,
-                CodeBlockModel,
-              ])
+              matchModels(prevBlock.model, [ParagraphBlockModel, ListBlockModel, CodeBlockModel])
             ) {
               event.preventDefault();
               this._std.command.exec(focusBlockEnd, {
@@ -387,31 +365,28 @@ class NoteKeymap {
   private readonly _onBlockShiftDown = (cmd: Chain) => {
     return cmd
       .pipe(getBlockSelectionsCommand)
-      .pipe<{ currentSelectionPath: string; anchorBlock: BlockComponent }>(
-        (ctx, next) => {
-          const blockSelections = ctx.currentBlockSelections;
-          if (!blockSelections) {
-            return;
-          }
-
-          if (!this._anchorSel) {
-            this._anchorSel = blockSelections.at(-1) ?? null;
-          }
-          if (!this._anchorSel) {
-            return;
-          }
-
-          const anchorBlock = ctx.std.view.getBlock(this._anchorSel.blockId);
-          if (!anchorBlock) {
-            return;
-          }
-          return next({
-            anchorBlock,
-            currentSelectionPath:
-              this._focusBlock?.blockId ?? anchorBlock?.blockId,
-          });
+      .pipe<{ currentSelectionPath: string; anchorBlock: BlockComponent }>((ctx, next) => {
+        const blockSelections = ctx.currentBlockSelections;
+        if (!blockSelections) {
+          return;
         }
-      )
+
+        if (!this._anchorSel) {
+          this._anchorSel = blockSelections.at(-1) ?? null;
+        }
+        if (!this._anchorSel) {
+          return;
+        }
+
+        const anchorBlock = ctx.std.view.getBlock(this._anchorSel.blockId);
+        if (!anchorBlock) {
+          return;
+        }
+        return next({
+          anchorBlock,
+          currentSelectionPath: this._focusBlock?.blockId ?? anchorBlock?.blockId,
+        });
+      })
       .pipe(getNextBlockCommand)
       .pipe<{ focusBlock: BlockComponent }>((ctx, next) => {
         const nextBlock = ctx.nextBlock;
@@ -429,29 +404,26 @@ class NoteKeymap {
   private readonly _onBlockShiftUp = (cmd: Chain) => {
     return cmd
       .pipe(getBlockSelectionsCommand)
-      .pipe<{ currentSelectionPath: string; anchorBlock: BlockComponent }>(
-        (ctx, next) => {
-          const blockSelections = ctx.currentBlockSelections;
-          if (!blockSelections) {
-            return;
-          }
-          if (!this._anchorSel) {
-            this._anchorSel = blockSelections.at(0) ?? null;
-          }
-          if (!this._anchorSel) {
-            return;
-          }
-          const anchorBlock = ctx.std.view.getBlock(this._anchorSel.blockId);
-          if (!anchorBlock) {
-            return;
-          }
-          return next({
-            anchorBlock,
-            currentSelectionPath:
-              this._focusBlock?.blockId ?? anchorBlock?.blockId,
-          });
+      .pipe<{ currentSelectionPath: string; anchorBlock: BlockComponent }>((ctx, next) => {
+        const blockSelections = ctx.currentBlockSelections;
+        if (!blockSelections) {
+          return;
         }
-      )
+        if (!this._anchorSel) {
+          this._anchorSel = blockSelections.at(0) ?? null;
+        }
+        if (!this._anchorSel) {
+          return;
+        }
+        const anchorBlock = ctx.std.view.getBlock(this._anchorSel.blockId);
+        if (!anchorBlock) {
+          return;
+        }
+        return next({
+          anchorBlock,
+          currentSelectionPath: this._focusBlock?.blockId ?? anchorBlock?.blockId,
+        });
+      })
       .pipe(getPrevBlockCommand)
       .pipe((ctx, next) => {
         const prevBlock = ctx.prevBlock;
@@ -492,12 +464,7 @@ class NoteKeymap {
 
         const index = parent.children.indexOf(model) ?? undefined;
 
-        const blockId = store.addBlock(
-          'ink:paragraph',
-          {},
-          parent,
-          index + 1
-        );
+        const blockId = store.addBlock('ink:paragraph', {}, parent, index + 1);
 
         const sel = selection.create(TextSelection, {
           from: {
@@ -529,8 +496,8 @@ class NoteKeymap {
           return;
         }
 
-        ctx.std.selection.update(selList => {
-          return selList.filter(sel => !sel.is(BlockSelection));
+        ctx.std.selection.update((selList) => {
+          return selList.filter((sel) => !sel.is(BlockSelection));
         });
 
         return next();
@@ -540,7 +507,7 @@ class NoteKeymap {
     return result;
   };
 
-  private readonly _onSelectAll: UIEventHandler = ctx => {
+  private readonly _onSelectAll: UIEventHandler = (ctx) => {
     const selection = this._std.selection;
     const block = selection.find(BlockSelection);
     if (!block) {
@@ -552,22 +519,20 @@ class NoteKeymap {
     }
     ctx.get('defaultState').event.preventDefault();
     const children = note.children;
-    const blocks: BlockSelection[] = children.map(child => {
+    const blocks: BlockSelection[] = children.map((child) => {
       return selection.create(BlockSelection, {
         blockId: child.id,
       });
     });
-    selection.update(selList => {
-      return selList
-        .filter<BaseSelection>(sel => !sel.is(BlockSelection))
-        .concat(blocks);
+    selection.update((selList) => {
+      return selList.filter<BaseSelection>((sel) => !sel.is(BlockSelection)).concat(blocks);
     });
   };
 
   private readonly _onShiftArrowDown = () => {
     const [result] = this._std.command
       .chain()
-      .try(cmd => [
+      .try((cmd) => [
         // block selection
         this._onBlockShiftDown(cmd),
       ])
@@ -579,7 +544,7 @@ class NoteKeymap {
   private readonly _onShiftArrowUp = () => {
     const [result] = this._std.command
       .chain()
-      .try(cmd => [
+      .try((cmd) => [
         // block selection
         this._onBlockShiftUp(cmd),
       ])
@@ -603,7 +568,7 @@ class NoteKeymap {
       ...this._bindQuickActionHotKey(),
       ...this._bindTextConversionHotKey(),
       ...this._bindTextAlignHotKey(),
-      Tab: ctx => {
+      Tab: (ctx) => {
         const [success] = this.std.command.exec(indentBlocks);
 
         if (!success) return;
@@ -611,7 +576,7 @@ class NoteKeymap {
         ctx.get('keyboardState').raw.preventDefault();
         return true;
       },
-      'Shift-Tab': ctx => {
+      'Shift-Tab': (ctx) => {
         const [success] = this.std.command.exec(dedentBlocks);
 
         if (!success) return;
@@ -619,7 +584,7 @@ class NoteKeymap {
         ctx.get('keyboardState').raw.preventDefault();
         return true;
       },
-      'Mod-Backspace': ctx => {
+      'Mod-Backspace': (ctx) => {
         const [success] = this.std.command.exec(dedentBlocksToRoot);
 
         if (!success) return;
@@ -638,9 +603,6 @@ class NoteKeymap {
   }
 }
 
-export const NoteKeymapExtension = KeymapExtension(
-  std => new NoteKeymap(std).hotKeys,
-  {
-    flavour: NoteBlockSchema.model.flavour,
-  }
-);
+export const NoteKeymapExtension = KeymapExtension((std) => new NoteKeymap(std).hotKeys, {
+  flavour: NoteBlockSchema.model.flavour,
+});

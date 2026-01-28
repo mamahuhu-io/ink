@@ -26,7 +26,7 @@ export function transformDeltasToEmbedDeltas<
   TextAttributes extends BaseTextAttributes = BaseTextAttributes,
 >(
   editor: InlineEditor<TextAttributes>,
-  deltas: DeltaInsert<TextAttributes>[]
+  deltas: DeltaInsert<TextAttributes>[],
 ): DeltaInsert<TextAttributes>[] {
   // According to our regulations, the length of each "embed" node should only be 1.
   // Therefore, if the length of an "embed" type node is greater than 1,
@@ -34,7 +34,7 @@ export function transformDeltasToEmbedDeltas<
   const result: DeltaInsert<TextAttributes>[] = [];
   for (const delta of deltas) {
     if (editor.isEmbed(delta)) {
-      const dividedDeltas = [...delta.insert].map(subInsert => ({
+      const dividedDeltas = [...delta.insert].map((subInsert) => ({
         insert: subInsert,
         attributes: delta.attributes,
       }));

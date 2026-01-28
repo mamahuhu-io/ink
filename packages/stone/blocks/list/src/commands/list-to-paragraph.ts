@@ -33,12 +33,7 @@ export const listToParagraphCommand: Command<
     deleteChildren: false,
   });
 
-  const listConvertedId = doc.addBlock(
-    'ink:paragraph',
-    blockProps,
-    parent,
-    index
-  );
+  const listConvertedId = doc.addBlock('ink:paragraph', blockProps, parent, index);
   focusTextModel(std, listConvertedId);
   return next({ listConvertedId });
 };

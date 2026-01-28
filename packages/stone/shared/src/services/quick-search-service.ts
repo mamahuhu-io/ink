@@ -1,5 +1,5 @@
-import type { ReferenceParams } from '@ink/stone-model';
 import { createIdentifier } from '@ink/stone-global/di';
+import type { ReferenceParams } from '@ink/stone-model';
 import type { ExtensionType } from '@ink/stone-store';
 
 export interface QuickSearchService {
@@ -16,15 +16,11 @@ export type QuickSearchResult =
     }
   | null;
 
-export const QuickSearchProvider = createIdentifier<QuickSearchService>(
-  'InkQuickSearchService'
-);
+export const QuickSearchProvider = createIdentifier<QuickSearchService>('InkQuickSearchService');
 
-export function QuickSearchExtension(
-  quickSearchService: QuickSearchService
-): ExtensionType {
+export function QuickSearchExtension(quickSearchService: QuickSearchService): ExtensionType {
   return {
-    setup: di => {
+    setup: (di) => {
       di.addImpl(QuickSearchProvider, quickSearchService);
     },
   };

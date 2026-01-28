@@ -1,8 +1,4 @@
-import {
-  type BlockComponent,
-  BlockSelection,
-  type Command,
-} from '@ink/stone-std';
+import { type BlockComponent, BlockSelection, type Command } from '@ink/stone-std';
 
 export const selectBlock: Command<{
   focusBlock?: BlockComponent;
@@ -14,9 +10,7 @@ export const selectBlock: Command<{
 
   const { selection } = std;
 
-  selection.setGroup('note', [
-    selection.create(BlockSelection, { blockId: focusBlock.blockId }),
-  ]);
+  selection.setGroup('note', [selection.create(BlockSelection, { blockId: focusBlock.blockId })]);
 
   return next();
 };

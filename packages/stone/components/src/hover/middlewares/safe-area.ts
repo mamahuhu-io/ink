@@ -19,7 +19,7 @@ function hasIntersection(
   { x: a, y: b }: { x: number; y: number },
   { x: c, y: d }: { x: number; y: number },
   { x: p, y: q }: { x: number; y: number },
-  { x: r, y: s }: { x: number; y: number }
+  { x: r, y: s }: { x: number; y: number },
 ) {
   const det = (c - a) * (s - q) - (r - p) * (d - b);
   if (det === 0) {
@@ -31,11 +31,7 @@ function hasIntersection(
   }
 }
 
-function isInside(
-  { x, y }: { x: number; y: number },
-  rect: DOMRect,
-  buffer = 0
-) {
+function isInside({ x, y }: { x: number; y: number }, rect: DOMRect, buffer = 0) {
   return (
     x >= rect.left - buffer &&
     x <= rect.right + buffer &&
@@ -46,13 +42,9 @@ function isInside(
 
 const getNearestSide = (
   point: { x: number; y: number },
-  rect: DOMRect
+  rect: DOMRect,
 ):
-  | [
-      'top' | 'bottom' | 'left' | 'right',
-      { x: number; y: number },
-      { x: number; y: number },
-    ]
+  | ['top' | 'bottom' | 'left' | 'right', { x: number; y: number }, { x: number; y: number }]
   | null => {
   const centerPoint = {
     x: rect.x + rect.width / 2,
@@ -150,12 +142,12 @@ export const safeTriangle = ({
       const areaHeight = Math.max(
         Math.abs(p1.y - p2.y),
         Math.abs(p1.y - p3.y),
-        Math.abs(p2.y - p3.y)
+        Math.abs(p2.y - p3.y),
       );
       const areaWidth = Math.max(
         Math.abs(p1.x - p2.x),
         Math.abs(p1.x - p3.x),
-        Math.abs(p2.x - p3.x)
+        Math.abs(p2.x - p3.x),
       );
       Object.assign(svg.style, {
         position: 'fixed',
@@ -172,7 +164,7 @@ export const safeTriangle = ({
         'd',
         `M${p1.x - basePoint.x} ${p1.y - basePoint.y} ${p2.x - basePoint.x} ${
           p2.y - basePoint.y
-        } ${p3.x - basePoint.x} ${p3.y - basePoint.y} z`
+        } ${p3.x - basePoint.x} ${p3.y - basePoint.y} z`,
       );
     };
     path.setAttributeNS(null, 'pointer-events', 'auto');
@@ -187,28 +179,20 @@ export const safeTriangle = ({
     document.body.append(svg);
     abortController.signal.addEventListener('abort', () => svg.remove());
     let frameId = 0;
-    let idleId = window.setTimeout(
-      () => newAbortController.abort(),
-      idleTimeout
-    );
+    let idleId = window.setTimeout(() => newAbortController.abort(), idleTimeout);
     svg.addEventListener(
       'mousemove',
-      e => {
+      (e) => {
         clearTimeout(idleId);
-        idleId = window.setTimeout(
-          () => newAbortController.abort(),
-          idleTimeout
-        );
+        idleId = window.setTimeout(() => newAbortController.abort(), idleTimeout);
         cancelAnimationFrame(frameId);
         // prevent unexpected mouseleave
-        frameId = requestAnimationFrame(() =>
-          updateSafeTriangle(e.clientX, e.clientY)
-        );
+        frameId = requestAnimationFrame(() => updateSafeTriangle(e.clientX, e.clientY));
       },
-      { signal: newAbortController.signal }
+      { signal: newAbortController.signal },
     );
 
-    await new Promise<void>(res => {
+    await new Promise<void>((res) => {
       if (newAbortController.signal.aborted) res();
       newAbortController.signal.addEventListener('abort', () => res());
       svg.addEventListener('mouseleave', () => newAbortController.abort(), {
@@ -269,9 +253,8 @@ export const safeBridge = ({
           rectRect = new DOMRect(
             Math.max(rect.left, refRect.left),
             rect.bottom,
-            Math.min(rect.right, refRect.right) -
-              Math.max(rect.left, refRect.left),
-            refRect.top - rect.bottom
+            Math.min(rect.right, refRect.right) - Math.max(rect.left, refRect.left),
+            refRect.top - rect.bottom,
           );
           break;
         }
@@ -279,9 +262,8 @@ export const safeBridge = ({
           rectRect = new DOMRect(
             Math.max(rect.left, refRect.left),
             refRect.bottom,
-            Math.min(rect.right, refRect.right) -
-              Math.max(rect.left, refRect.left),
-            rect.top - refRect.bottom
+            Math.min(rect.right, refRect.right) - Math.max(rect.left, refRect.left),
+            rect.top - refRect.bottom,
           );
           break;
         }
@@ -290,8 +272,7 @@ export const safeBridge = ({
             rect.right,
             Math.max(rect.top, refRect.top),
             refRect.left - rect.right,
-            Math.min(rect.bottom, refRect.bottom) -
-              Math.max(rect.top, refRect.top)
+            Math.min(rect.bottom, refRect.bottom) - Math.max(rect.top, refRect.top),
           );
           break;
         }
@@ -300,8 +281,7 @@ export const safeBridge = ({
             refRect.right,
             Math.max(rect.top, refRect.top),
             rect.left - refRect.right,
-            Math.min(rect.bottom, refRect.bottom) -
-              Math.max(rect.top, refRect.top)
+            Math.min(rect.bottom, refRect.bottom) - Math.max(rect.top, refRect.top),
           );
           break;
         }
@@ -313,8 +293,7 @@ export const safeBridge = ({
       if (inside && debug) {
         const debugId = 'debug-rectangle-bridge-rect';
         const rectDom =
-          document.querySelector<HTMLDivElement>(`#${debugId}`) ??
-          document.createElement('div');
+          document.querySelector<HTMLDivElement>(`#${debugId}`) ?? document.createElement('div');
         rectDom.id = debugId;
         Object.assign(rectDom.style, {
           position: 'fixed',
@@ -327,33 +306,25 @@ export const safeBridge = ({
           height: rectRect.height + 'px',
         });
         document.body.append(rectDom);
-        newAbortController.signal.addEventListener('abort', () =>
-          rectDom.remove()
-        );
+        newAbortController.signal.addEventListener('abort', () => rectDom.remove());
       }
       return inside;
     };
     if (!checkInside(event.x, event.y)) return true;
-    await new Promise<void>(res => {
+    await new Promise<void>((res) => {
       if (newAbortController.signal.aborted) res();
       newAbortController.signal.addEventListener('abort', () => res());
-      let idleId = window.setTimeout(
-        () => newAbortController.abort(),
-        idleTimeout
-      );
+      let idleId = window.setTimeout(() => newAbortController.abort(), idleTimeout);
       document.addEventListener(
         'mousemove',
-        e => {
+        (e) => {
           clearTimeout(idleId);
-          idleId = window.setTimeout(
-            () => newAbortController.abort(),
-            idleTimeout
-          );
+          idleId = window.setTimeout(() => newAbortController.abort(), idleTimeout);
           if (!checkInside(e.clientX, e.clientY)) newAbortController.abort();
         },
         {
           signal: newAbortController.signal,
-        }
+        },
       );
     });
     return true;

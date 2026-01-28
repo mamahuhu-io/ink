@@ -1,9 +1,9 @@
+import type { Placement } from '@floating-ui/dom';
 import { selectBlock } from '@ink/stone-block-note';
 import { CaptionedBlockComponent } from '@ink/stone-components/caption';
 import { createLitPortal } from '@ink/stone-components/portal';
 import type { LatexBlockModel } from '@ink/stone-model';
 import { BlockSelection } from '@ink/stone-std';
-import type { Placement } from '@floating-ui/dom';
 import { effect } from '@preact/signals-core';
 import katex from 'katex';
 import { html, render } from 'lit';
@@ -22,9 +22,7 @@ export class LatexBlockComponent extends CaptionedBlockComponent<LatexBlockModel
 
   get isBlockSelected() {
     const blockSelection = this.selection.filter(BlockSelection);
-    return blockSelection.some(
-      selection => selection.blockId === this.model.id
-    );
+    return blockSelection.some((selection) => selection.blockId === this.model.id);
   }
 
   override firstUpdated(props: Map<string, unknown>) {
@@ -50,10 +48,7 @@ export class LatexBlockComponent extends CaptionedBlockComponent<LatexBlockModel
         delete katexContainer['_$litPart$'];
 
         if (latex.length === 0) {
-          render(
-            html`<span class="latex-block-empty-placeholder">Equation</span>`,
-            katexContainer
-          );
+          render(html`<span class="latex-block-empty-placeholder">Equation</span>`, katexContainer);
         } else {
           try {
             katex.render(latex, katexContainer, {
@@ -64,14 +59,12 @@ export class LatexBlockComponent extends CaptionedBlockComponent<LatexBlockModel
             // @ts-expect-error lit hack won't fix
             delete katexContainer['_$litPart$'];
             render(
-              html`<span class="latex-block-error-placeholder"
-                >Error equation</span
-              >`,
-              katexContainer
+              html`<span class="latex-block-error-placeholder">Error equation</span>`,
+              katexContainer,
             );
           }
         }
-      })
+      }),
     );
   }
 
@@ -91,11 +84,7 @@ export class LatexBlockComponent extends CaptionedBlockComponent<LatexBlockModel
 
   override renderBlock() {
     return html`
-      <div
-        contenteditable="false"
-        class="latex-block-container"
-        @click=${this._handleClick}
-      >
+      <div contenteditable="false" class="latex-block-container" @click=${this._handleClick}>
         <div class="katex"></div>
       </div>
     `;
@@ -143,7 +132,7 @@ export class LatexBlockComponent extends CaptionedBlockComponent<LatexBlockModel
       () => {
         this.removeEditor(portal);
       },
-      { once: true }
+      { once: true },
     );
   }
 

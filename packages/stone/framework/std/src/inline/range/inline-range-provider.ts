@@ -5,9 +5,9 @@ import { TextSelection } from '../../selection/index.js';
 import type { BlockComponent } from '../../view/element/block-component.js';
 import { isActiveInEditor } from './active.js';
 
-export const getInlineRangeProvider: (
-  element: BlockComponent
-) => InlineRangeProvider | null = element => {
+export const getInlineRangeProvider: (element: BlockComponent) => InlineRangeProvider | null = (
+  element,
+) => {
   const editorHost = element.host;
   const selectionManager = editorHost.selection;
   const rangeManager = editorHost.range;
@@ -16,10 +16,7 @@ export const getInlineRangeProvider: (
     return null;
   }
 
-  const calculateInlineRange = (
-    range: Range,
-    textSelection: TextSelection
-  ): InlineRange | null => {
+  const calculateInlineRange = (range: Range, textSelection: TextSelection): InlineRange | null => {
     const { from, to } = textSelection;
 
     if (from.blockId === element.blockId) {
@@ -40,10 +37,7 @@ export const getInlineRangeProvider: (
       return null;
     }
 
-    if (
-      textSelection.isInSameBlock() &&
-      textSelection.from.blockId !== element.blockId
-    ) {
+    if (textSelection.isInSameBlock() && textSelection.from.blockId !== element.blockId) {
       return null;
     }
 
@@ -55,7 +49,7 @@ export const getInlineRangeProvider: (
           length: element.model.text.length,
         },
         to: null,
-      })
+      }),
     );
 
     if (
@@ -94,12 +88,10 @@ export const getInlineRangeProvider: (
   const inlineRange$: InlineRangeProvider['inlineRange$'] = signal(null);
 
   element.disposables.add(
-    selectionManager.slots.changed.subscribe(selections => {
+    selectionManager.slots.changed.subscribe((selections) => {
       if (!isActiveInEditor(editorHost)) return;
 
-      const textSelection = selections.find(s => s.type === 'text') as
-        | TextSelection
-        | undefined;
+      const textSelection = selections.find((s) => s.type === 'text') as TextSelection | undefined;
       const range = rangeManager.value;
       if (!range || !textSelection) {
         inlineRange$.value = null;
@@ -108,7 +100,7 @@ export const getInlineRangeProvider: (
 
       const inlineRange = calculateInlineRange(range, textSelection);
       inlineRange$.value = inlineRange;
-    })
+    }),
   );
 
   return {

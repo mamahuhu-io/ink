@@ -1,15 +1,9 @@
-import { InkStoneError, ErrorCode } from '@ink/stone-global/exceptions';
+import { ErrorCode, InkStoneError } from '@ink/stone-global/exceptions';
 import { effect, signal } from '@preact/signals-core';
 import { createMutex } from 'lib0/mutex.js';
 import * as Y from 'yjs';
 
-import {
-  Boxed,
-  createYProxy,
-  native2Y,
-  type UnRecord,
-  y2Native,
-} from '../../reactive/index.js';
+import { Boxed, createYProxy, native2Y, type UnRecord, y2Native } from '../../reactive/index.js';
 import type { Schema } from '../../schema/schema.js';
 import type { Store } from '../store/store.js';
 import { BlockModel } from './block-model.js';
@@ -36,8 +30,8 @@ export class SyncController {
   private readonly _mutex = createMutex();
 
   private readonly _observeYBlockChanges = () => {
-    this.yBlock.observe(event => {
-      event.keysChanged.forEach(key => {
+    this.yBlock.observe((event) => {
+      event.keysChanged.forEach((key) => {
         const type = event.changes.keys.get(key);
         if (!type) {
           return;
@@ -112,7 +106,7 @@ export class SyncController {
     readonly schema: Schema,
     readonly yBlock: YBlock,
     readonly doc?: Store,
-    readonly onChange?: (key: string, isLocal: boolean) => void
+    readonly onChange?: (key: string, isLocal: boolean) => void,
   ) {
     const { id, flavour, version, yChildren, props } = this._parseYBlock();
 
@@ -132,7 +126,7 @@ export class SyncController {
     if (!schema) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        `schema for flavour: ${this.flavour} not found`
+        `schema for flavour: ${this.flavour} not found`,
       );
     }
 
@@ -159,7 +153,7 @@ export class SyncController {
           [key]: value,
         };
       },
-      {} as Record<string, unknown>
+      {} as Record<string, unknown>,
     );
 
     model.id = this.id;
@@ -176,11 +170,7 @@ export class SyncController {
         return Reflect.has(target, p);
       },
       set: (target, p, value, receiver) => {
-        if (
-          !this._byPassProxy &&
-          typeof p === 'string' &&
-          model.keys.includes(p)
-        ) {
+        if (!this._byPassProxy && typeof p === 'string' && model.keys.includes(p)) {
           if (this._stashed.has(p)) {
             setValue(target, p, value);
             const result = Reflect.set(target, p, value, receiver);
@@ -204,11 +194,7 @@ export class SyncController {
         return Reflect.get(target, p, receiver);
       },
       deleteProperty: (target, p) => {
-        if (
-          !this._byPassProxy &&
-          typeof p === 'string' &&
-          model.keys.includes(p)
-        ) {
+        if (!this._byPassProxy && typeof p === 'string' && model.keys.includes(p)) {
           this.yBlock.delete(`prop:${p}`);
           setValue(target, p, undefined);
         }
@@ -276,28 +262,25 @@ export class SyncController {
     if (!id) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block id is not found when creating model'
+        'block id is not found when creating model',
       );
     }
     if (!flavour) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block flavour is not found when creating model'
+        'block flavour is not found when creating model',
       );
     }
     if (!yChildren) {
       throw new InkStoneError(
         ErrorCode.ModelCRUDError,
-        'block children is not found when creating model'
+        'block children is not found when creating model',
       );
     }
 
     const schema = this.schema.flavourSchemaMap.get(flavour);
     if (!schema) {
-      throw new InkStoneError(
-        ErrorCode.ModelCRUDError,
-        `schema for flavour: ${flavour} not found`
-      );
+      throw new InkStoneError(ErrorCode.ModelCRUDError, `schema for flavour: ${flavour} not found`);
     }
     const defaultProps = schema.model.props?.(internalPrimitives);
 
@@ -385,7 +368,7 @@ export class SyncController {
 
           return value;
         },
-      }
+      },
     );
   }
 }

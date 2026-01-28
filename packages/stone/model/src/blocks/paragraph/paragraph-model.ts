@@ -1,22 +1,9 @@
-import {
-  BlockModel,
-  BlockSchemaExtension,
-  defineBlockSchema,
-  type Text,
-} from '@ink/stone-store';
+import { BlockModel, BlockSchemaExtension, defineBlockSchema, type Text } from '@ink/stone-store';
 
 import type { TextAlign } from '../../consts';
 import type { BlockMeta } from '../../utils/types';
 
-export type ParagraphType =
-  | 'text'
-  | 'quote'
-  | 'h1'
-  | 'h2'
-  | 'h3'
-  | 'h4'
-  | 'h5'
-  | 'h6';
+export type ParagraphType = 'text' | 'quote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 export type ParagraphProps = {
   type: ParagraphType;
@@ -54,8 +41,7 @@ export const ParagraphBlockSchema = defineBlockSchema({
   toModel: () => new ParagraphBlockModel(),
 });
 
-export const ParagraphBlockSchemaExtension =
-  BlockSchemaExtension(ParagraphBlockSchema);
+export const ParagraphBlockSchemaExtension = BlockSchemaExtension(ParagraphBlockSchema);
 
 export class ParagraphBlockModel extends BlockModel<ParagraphProps> {
   override isEmpty(): boolean {

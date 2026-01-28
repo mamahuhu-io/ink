@@ -14,8 +14,7 @@ export interface VirtualKeyboardProvider {
   readonly appTabSafeArea$: ReadonlySignal<string>;
 }
 
-export interface VirtualKeyboardProviderWithAction
-  extends VirtualKeyboardProvider {
+export interface VirtualKeyboardProviderWithAction extends VirtualKeyboardProvider {
   show: () => void;
   hide: () => void;
 }
@@ -25,7 +24,7 @@ export const VirtualKeyboardProvider = createIdentifier<
 >('VirtualKeyboardProvider');
 
 export function isVirtualKeyboardProviderWithAction(
-  provider: VirtualKeyboardProvider
+  provider: VirtualKeyboardProvider,
 ): provider is VirtualKeyboardProviderWithAction {
   return 'show' in provider && 'hide' in provider;
 }

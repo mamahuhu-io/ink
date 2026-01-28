@@ -1,9 +1,6 @@
 import type { InkTextAttributes } from '@ink/stone-shared/types';
 import type { Command } from '@ink/stone-std';
-import {
-  INLINE_ROOT_ATTR,
-  type InlineRootElement,
-} from '@ink/stone-std/inline';
+import { INLINE_ROOT_ATTR, type InlineRootElement } from '@ink/stone-std/inline';
 
 import { toggleLinkPopup } from './link-node/link-popup/toggle-link-popup';
 
@@ -35,7 +32,7 @@ export const toggleLink: Command = (ctx, next) => {
     'create',
     inlineEditor,
     targetInlineRange,
-    abortController
+    abortController,
   );
   abortController.signal.addEventListener('abort', () => popup.remove());
   return next();

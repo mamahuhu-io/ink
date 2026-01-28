@@ -7,11 +7,11 @@ import { isValidUrl } from '@ink/stone-shared/utils';
 const codePreprocessor: MarkdownAdapterPreprocessor = {
   name: 'code',
   levels: ['slice'],
-  preprocess: content => {
+  preprocess: (content) => {
     let codeFence = '';
     const lines = content
       .split('\n')
-      .map(line => {
+      .map((line) => {
         let trimmedLine = line.trimStart();
         if (
           trimmedLine.startsWith('-') ||
@@ -22,21 +22,15 @@ const codePreprocessor: MarkdownAdapterPreprocessor = {
           return line;
         }
         if (!codeFence && trimmedLine.startsWith('```')) {
-          codeFence = trimmedLine.substring(
-            0,
-            trimmedLine.lastIndexOf('```') + 3
-          );
-          if (codeFence.split('').every(c => c === '`')) {
+          codeFence = trimmedLine.substring(0, trimmedLine.lastIndexOf('```') + 3);
+          if (codeFence.split('').every((c) => c === '`')) {
             return line;
           }
           codeFence = '';
         }
         if (!codeFence && trimmedLine.startsWith('~~~')) {
-          codeFence = trimmedLine.substring(
-            0,
-            trimmedLine.lastIndexOf('~~~') + 3
-          );
-          if (codeFence.split('').every(c => c === '~')) {
+          codeFence = trimmedLine.substring(0, trimmedLine.lastIndexOf('~~~') + 3);
+          if (codeFence.split('').every((c) => c === '~')) {
             return line;
           }
           codeFence = '';
@@ -77,5 +71,4 @@ const codePreprocessor: MarkdownAdapterPreprocessor = {
   },
 };
 
-export const CodeMarkdownPreprocessorExtension =
-  MarkdownPreprocessorExtension(codePreprocessor);
+export const CodeMarkdownPreprocessorExtension = MarkdownPreprocessorExtension(codePreprocessor);

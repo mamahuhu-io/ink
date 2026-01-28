@@ -1,3 +1,4 @@
+import { HeadingsIcon } from '@ink/stone-icons/lit';
 import {
   formatBlockCommand,
   type TextFormatConfig,
@@ -9,19 +10,15 @@ import {
   type TextConversionConfig,
   textConversionConfigs,
 } from '@ink/stone-rich-text';
-import {
-  getSelectedModelsCommand,
-  getTextSelectionCommand,
-} from '@ink/stone-shared/commands';
+import { getSelectedModelsCommand, getTextSelectionCommand } from '@ink/stone-shared/commands';
 import { isInsideBlockByFlavour } from '@ink/stone-shared/utils';
+import { BlockSelection } from '@ink/stone-std';
 import {
   type SlashMenuActionItem,
   type SlashMenuConfig,
   SlashMenuConfigExtension,
   type SlashMenuItem,
 } from '@ink/stone-widget-slash-menu';
-import { HeadingsIcon } from '@ink/stone-icons/lit';
-import { BlockSelection } from '@ink/stone-std';
 
 import { updateBlockAlign, updateBlockType } from '../commands';
 import { tooltips } from './tooltips';
@@ -30,57 +27,47 @@ let basicIndex = 0;
 const noteSlashMenuConfig: SlashMenuConfig = {
   items: [
     ...textConversionConfigs
-      .filter(i => i.type && ['h1', 'h2', 'h3', 'text'].includes(i.type))
-      .map(config => createConversionItem(config, `0_Basic@${basicIndex++}`)),
+      .filter((i) => i.type && ['h1', 'h2', 'h3', 'text'].includes(i.type))
+      .map((config) => createConversionItem(config, `0_Basic@${basicIndex++}`)),
     {
       name: 'Other Headings',
       icon: HeadingsIcon(),
       group: `0_Basic@${basicIndex++}`,
       subMenu: textConversionConfigs
-        .filter(i => i.type && ['h4', 'h5', 'h6'].includes(i.type))
-        .map(config => createConversionItem(config)),
+        .filter((i) => i.type && ['h4', 'h5', 'h6'].includes(i.type))
+        .map((config) => createConversionItem(config)),
     },
     ...textConversionConfigs
-      .filter(i => i.flavour === 'ink:code')
-      .map(config => createConversionItem(config, `0_Basic@${basicIndex++}`)),
+      .filter((i) => i.flavour === 'ink:code')
+      .map((config) => createConversionItem(config, `0_Basic@${basicIndex++}`)),
 
     ...textConversionConfigs
-      .filter(i => i.type && ['divider', 'quote'].includes(i.type))
+      .filter((i) => i.type && ['divider', 'quote'].includes(i.type))
       .map(
-        config =>
+        (config) =>
           ({
             ...createConversionItem(config, `0_Basic@${basicIndex++}`),
             when: ({ model }) =>
               model.store.schema.flavourSchemaMap.has(config.flavour) &&
-              !isInsideBlockByFlavour(
-                model.store,
-                model,
-                'ink:edgeless-text'
-              ),
-          }) satisfies SlashMenuActionItem
+              !isInsideBlockByFlavour(model.store, model, 'ink:edgeless-text'),
+          }) satisfies SlashMenuActionItem,
       ),
 
     ...textConversionConfigs
-      .filter(i => i.flavour === 'ink:list')
-      .map((config, index) =>
-        createConversionItem(config, `1_List@${index++}`)
-      ),
+      .filter((i) => i.flavour === 'ink:list')
+      .map((config, index) => createConversionItem(config, `1_List@${index++}`)),
 
-    ...textAlignConfigs.map((config, index) =>
-      createAlignItem(config, `2_Align@${index++}`)
-    ),
+    ...textAlignConfigs.map((config, index) => createAlignItem(config, `2_Align@${index++}`)),
 
     ...textFormatConfigs
-      .filter(i => !['Code', 'Link'].includes(i.name))
-      .map((config, index) =>
-        createTextFormatItem(config, `2_Style@${index++}`)
-      ),
+      .filter((i) => !['Code', 'Link'].includes(i.name))
+      .map((config, index) => createTextFormatItem(config, `2_Style@${index++}`)),
   ],
 };
 
 function createConversionItem(
   config: TextConversionConfig,
-  group?: SlashMenuItem['group']
+  group?: SlashMenuItem['group'],
 ): SlashMenuActionItem {
   const { name, description, icon, flavour, type } = config;
   return {
@@ -101,7 +88,7 @@ function createConversionItem(
 
 function createAlignItem(
   config: TextAlignConfig,
-  group?: SlashMenuItem['group']
+  group?: SlashMenuItem['group'],
 ): SlashMenuActionItem {
   const { textAlign, name, icon } = config;
   return {
@@ -121,7 +108,7 @@ function createAlignItem(
 
 function createTextFormatItem(
   config: TextFormatConfig,
-  group?: SlashMenuItem['group']
+  group?: SlashMenuItem['group'],
 ): SlashMenuActionItem {
   const { name, icon, id, action } = config;
   return {
@@ -151,5 +138,5 @@ function createTextFormatItem(
 
 export const NoteSlashMenuConfigExtension = SlashMenuConfigExtension(
   'ink:note',
-  noteSlashMenuConfig
+  noteSlashMenuConfig,
 );

@@ -7,10 +7,7 @@ import type { InlineEditor } from '../inline-editor.js';
 import type { InlineRange, TextPoint } from '../types.js';
 import { isInEmbedGap } from '../utils/embed.js';
 import { isMaybeInlineRangeEqual } from '../utils/inline-range.js';
-import {
-  domRangeToInlineRange,
-  inlineRangeToDomRange,
-} from '../utils/range-conversion.js';
+import { domRangeToInlineRange, inlineRangeToDomRange } from '../utils/range-conversion.js';
 import { calculateTextLength, getTextNodesFromElement } from '../utils/text.js';
 
 export class RangeService<TextAttributes extends BaseTextAttributes> {
@@ -57,7 +54,7 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
 
   // the number is related to the VLine's textLength
   getLine = (
-    rangeIndex: InlineRange['index']
+    rangeIndex: InlineRange['index'],
   ): {
     line: VLine;
     lineIndex: number;
@@ -70,10 +67,7 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
 
     let beforeIndex = 0;
     for (const [lineIndex, lineElement] of lineElements.entries()) {
-      if (
-        rangeIndex >= beforeIndex &&
-        rangeIndex < beforeIndex + lineElement.vTextLength + 1
-      ) {
+      if (rangeIndex >= beforeIndex && rangeIndex < beforeIndex + lineElement.vTextLength + 1) {
         return {
           line: lineElement,
           lineIndex,
@@ -114,7 +108,7 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
         return null;
       }
 
-      for (const text of texts.filter(text => !isInEmbedGap(text))) {
+      for (const text of texts.filter((text) => !isInEmbedGap(text))) {
         if (!text.textContent) {
           return null;
         }
@@ -224,8 +218,7 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
   isValidInlineRange = (inlineRange: InlineRange | null): boolean => {
     return !(
       inlineRange &&
-      (inlineRange.index < 0 ||
-        inlineRange.index + inlineRange.length > this.editor.yText.length)
+      (inlineRange.index < 0 || inlineRange.index + inlineRange.length > this.editor.yText.length)
     );
   };
 
@@ -243,11 +236,13 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
 
         const yText = editor.yText;
         if (newInlineRange) {
-          this._lastStartRelativePosition =
-            Y.createRelativePositionFromTypeIndex(yText, newInlineRange.index);
+          this._lastStartRelativePosition = Y.createRelativePositionFromTypeIndex(
+            yText,
+            newInlineRange.index,
+          );
           this._lastEndRelativePosition = Y.createRelativePositionFromTypeIndex(
             yText,
-            newInlineRange.index + newInlineRange.length
+            newInlineRange.index + newInlineRange.length,
           );
         } else {
           this._lastStartRelativePosition = null;
@@ -264,7 +259,7 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
         } else {
           this.syncInlineRange();
         }
-      })
+      }),
     );
   };
 
@@ -311,12 +306,10 @@ export class RangeService<TextAttributes extends BaseTextAttributes> {
 
             this.editor.slots.inlineRangeSync.next(newRange);
           } else {
-            const subscription = this.editor.slots.renderComplete.subscribe(
-              () => {
-                subscription.unsubscribe();
-                this.syncInlineRange(inlineRange);
-              }
-            );
+            const subscription = this.editor.slots.renderComplete.subscribe(() => {
+              subscription.unsubscribe();
+              this.syncInlineRange(inlineRange);
+            });
           }
         } catch (error) {
           console.error('failed to apply inline range');

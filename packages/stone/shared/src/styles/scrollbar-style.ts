@@ -6,7 +6,7 @@ import { css, unsafeCSS } from 'lit';
 export const scrollbarStyle = (container: string) => {
   if (!container) {
     console.error(
-      'To prevent style pollution of the whole doc, you must add a container before the scrollbar style.'
+      'To prevent style pollution of the whole doc, you must add a container before the scrollbar style.',
     );
     return css``;
   }

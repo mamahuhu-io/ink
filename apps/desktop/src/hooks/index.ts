@@ -1,2 +1,2 @@
-export { useTheme } from './useTheme'
-export { useAppCommands } from './useAppCommands'
+export { useAppCommands } from './useAppCommands';
+export { useTheme } from './useTheme';

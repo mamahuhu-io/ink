@@ -62,19 +62,15 @@ export function distributeAndNormalize({
       // Look at the 2 adjacent sides, figure out how much space we can have on both sides,
       // then take the smaller one
       const budget = Math.min(
-        ...adjacents.map(adjacent => {
+        ...adjacents.map((adjacent) => {
           const adjacentCornerRadius = cornerRadiusMap[adjacent.corner];
           if (radius === 0 && adjacentCornerRadius === 0) {
             return 0;
           }
 
-          const adjacentCornerBudget =
-            roundingAndSmoothingBudgetMap[adjacent.corner];
+          const adjacentCornerBudget = roundingAndSmoothingBudgetMap[adjacent.corner];
 
-          const sideLength =
-            adjacent.side === 'top' || adjacent.side === 'bottom'
-              ? width
-              : height;
+          const sideLength = adjacent.side === 'top' || adjacent.side === 'bottom' ? width : height;
 
           // If the adjacent corner's already been given the rounding and smoothing budget,
           // we'll just take the rest
@@ -83,7 +79,7 @@ export function distributeAndNormalize({
           } else {
             return (radius / (radius + adjacentCornerRadius)) * sideLength;
           }
-        })
+        }),
       );
 
       roundingAndSmoothingBudgetMap[corner] = budget;

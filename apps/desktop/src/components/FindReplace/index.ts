@@ -1,2 +1,2 @@
-export { FindReplaceBar } from './FindReplaceBar'
-export { SearchHighlights } from './SearchHighlights'
+export { FindReplaceBar } from './FindReplaceBar';
+export { SearchHighlights } from './SearchHighlights';

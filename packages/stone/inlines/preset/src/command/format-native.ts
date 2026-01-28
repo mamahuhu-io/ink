@@ -1,13 +1,6 @@
 import type { InkTextAttributes } from '@ink/stone-shared/types';
-import {
-  BLOCK_ID_ATTR,
-  type BlockComponent,
-  type Command,
-} from '@ink/stone-std';
-import {
-  INLINE_ROOT_ATTR,
-  type InlineRootElement,
-} from '@ink/stone-std/inline';
+import { BLOCK_ID_ATTR, type BlockComponent, type Command } from '@ink/stone-std';
+import { INLINE_ROOT_ATTR, type InlineRootElement } from '@ink/stone-std/inline';
 
 import { FORMAT_NATIVE_SUPPORT_FLAVOURS } from './consts.js';
 
@@ -28,19 +21,19 @@ export const formatNativeCommand: Command<{
   if (!range) return;
 
   const selectedInlineEditors = Array.from<InlineRootElement>(
-    ctx.std.host.querySelectorAll(`[${INLINE_ROOT_ATTR}]`)
+    ctx.std.host.querySelectorAll(`[${INLINE_ROOT_ATTR}]`),
   )
-    .filter(el => range?.intersectsNode(el))
-    .filter(el => {
+    .filter((el) => range?.intersectsNode(el))
+    .filter((el) => {
       const block = el.closest<BlockComponent>(`[${BLOCK_ID_ATTR}]`);
       if (block) {
         return FORMAT_NATIVE_SUPPORT_FLAVOURS.includes(block.model.flavour);
       }
       return false;
     })
-    .map(el => el.inlineEditor);
+    .map((el) => el.inlineEditor);
 
-  selectedInlineEditors.forEach(inlineEditor => {
+  selectedInlineEditors.forEach((inlineEditor) => {
     const inlineRange = inlineEditor.getInlineRange();
     if (!inlineRange) return;
 

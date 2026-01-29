@@ -101,3 +101,7 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }} --verbose
+          updaterJsonPath: latest.json
+          updaterJsonKeepUniversal: true
+          updaterJsonPreferNsis: true
+          includeDebug: true

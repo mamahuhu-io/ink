@@ -60,15 +60,11 @@ jobs:
 
       # ⭐ 统一用 tauri-action
       - name: Build & Release Tauri App
-        uses: tauri-apps/tauri-action@v1
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-          # ⭐ updater / signer 必需
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-
-          # macOS codesign / notarization
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
@@ -76,12 +72,9 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
-          tagName: v__VERSION__
-          releaseName: "v__VERSION__"
-          releaseBody: |
-            ## Changes
-            - See assets below
+          tagName: v__VERSION__ 
+          releaseName: '__VERSION__ 🌈'
+          releaseBody: 'See for more info'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
-          updater: true

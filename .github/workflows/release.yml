@@ -15,12 +15,12 @@ jobs:
         include:
           - platform: "macos-latest"
             args: "--target aarch64-apple-darwin"
-          - platform: "macos-latest"
-            args: "--target x86_64-apple-darwin"
-          - platform: "ubuntu-22.04"
-            args: ""
-          - platform: "windows-latest"
-            args: ""
+          # - platform: "macos-latest"
+          #   args: "--target x86_64-apple-darwin"
+          # - platform: "ubuntu-22.04"
+          #   args: ""
+          # - platform: "windows-latest"
+          #   args: ""
 
     runs-on: ${{ matrix.platform }}
 
@@ -58,6 +58,23 @@ jobs:
           pnpm build:stone:icon
           pnpm build:stone
 
+      - name: Debug Secret
+        run: |
+          if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            echo "❌ 错误: TAURI_SIGNING_PRIVATE_KEY 是空的！检查你的 GitHub Secrets 设置。"
+            exit 1
+          else
+            echo "✅ 私钥变量已找到。"
+          fi
+          if [ -z "$TAURI_SIGNING_PRIVATE_KEY_PASSWORD" ]; then
+            echo "❌ 错误: TAURI_SIGNING_PRIVATE_KEY_PASSWORD 是空的！检查你的 GitHub Secrets 设置。"
+            exit 1
+          else
+            echo "✅ 私钥密码变量已找到。"
+          fi
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+
       # ⭐ 统一用 tauri-action
       - name: Build & Release Tauri App
         uses: tauri-apps/tauri-action@v0
@@ -73,10 +90,10 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: 'apps/desktop'
-          includeUpdater: true
+          includeUpdaterJson: true
           tagName: v__VERSION__ 
           releaseName: '__VERSION__ 🌈'
-          releaseBody: 'See for more info'
+          releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

@@ -1,4 +1,4 @@
-name: "publish-on-tag"
+name: "Release"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 # This workflow will build your tauri app without uploading it anywhere.
 
 jobs:
-  publish-postdata:
+  publish-ink:
     permissions:
       contents: write
     strategy:
@@ -18,12 +18,12 @@ jobs:
         include:
           - platform: "macos-latest" # for Arm based macs (M1 and above).
             args: "--target aarch64-apple-darwin"
-          # - platform: "macos-latest" # for Intel based macs.
-          #   args: "--target x86_64-apple-darwin"
-          # - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
-          #   args: ""
-          # - platform: "windows-latest"
-          #   args: ""
+          - platform: "macos-latest" # for Intel based macs.
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
+            args: ""
+          - platform: "windows-latest"
+            args: ""
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -37,7 +37,6 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: install dependencies (ubuntu only)
@@ -45,26 +44,23 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
-        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
       - name: install pnpm
-        run: npm install -g pnpm@9.15.3 # change this to npm, pnpm or bun depending on which one you use.
+        run: npm install -g pnpm@9.15.3 
 
       - name: install frontend dependencies
-        run: pnpm install --no-frozen-lockfile # change this to npm, pnpm or bun depending on which one you use.
+        run: pnpm install --no-frozen-lockfile 
 
       - name: Build frontend
         run: |
           pnpm build:stone:icon
           pnpm build:stone
 
-      - name: cd  cd apps/esktop
+      - name: cd  cd apps/desktop
         run: cd apps/desktop
 
       # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
-      - name: Build Tauri App on MacOS
-        if: matrix.platform == 'macos-latest'
+      - name: Build Ink App 
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,34 +81,34 @@ jobs:
           args: ${{ matrix.args }}
 
       # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
-      - name: Build Tauri App on Linux
-        if: matrix.platform == 'ubuntu-22.04'
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        with:
-          tagName: v__VERSION__
-          releaseName: "v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
+      # - name: Build Tauri App on Linux
+      #   if: matrix.platform == 'ubuntu-22.04'
+      #   uses: tauri-apps/tauri-action@v0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+      #     TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      #   with:
+      #     tagName: v__VERSION__
+      #     releaseName: "v__VERSION__"
+      #     releaseBody: "See the assets to download this version and install."
+      #     releaseDraft: true
+      #     prerelease: false
+      #     args: ${{ matrix.args }}
 
 
       # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
-      - name: Build Tauri App on Windows
-        if: matrix.platform == 'windows-latest'
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        with:
-          tagName: v__VERSION__
-          releaseName: "v__VERSION__"
-          releaseBody: "See the assets to download this version and install."
-          releaseDraft: true
-          prerelease: false
-          args: ${{ matrix.args }}
+      # - name: Build Tauri App on Windows
+      #   if: matrix.platform == 'windows-latest'
+      #   uses: tauri-apps/tauri-action@v0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+      #     TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      #   with:
+      #     tagName: v__VERSION__
+      #     releaseName: "v__VERSION__"
+      #     releaseBody: "See the assets to download this version and install."
+      #     releaseDraft: true
+      #     prerelease: false
+      #     args: ${{ matrix.args }}

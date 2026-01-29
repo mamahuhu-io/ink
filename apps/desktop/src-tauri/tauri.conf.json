@@ -1,5 +1,5 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "Ink",
   "version": "1.0.0",
   "identifier": "io.mamahuhu.ink",
@@ -67,16 +67,16 @@
     }
   },
   "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": ["https://github.com/mamahuhu-io/ink/releases/latest/download/latest.json"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDEzMENEMTlEQjBEQkNBNUIKUldSYnl0dXduZEVNRStiK3JJRlVPTkQvSWxjZFV4eHFSMndYei9mMmJ6SmdXQ2x5UjdWc0lhcnEK"
+    },
     "fs": {
       "requireLiteralLeadingDot": false
     },
     "shell": {
-      "open": ".*"
-    },
-    "updater": {
-      "active": true,
-      "endpoints": ["https://github.com/mamahuhu-io/Ink/releases/latest/download/latest.json"],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDEzMENEMTlEQjBEQkNBNUIKUldSYnl0dXduZEVNRStiK3JJRlVPTkQvSWxjZFV4eHFSMndYei9mMmJ6SmdXQ2x5UjdWc0lhcnEK"
+      "open": true
     }
   }
 }

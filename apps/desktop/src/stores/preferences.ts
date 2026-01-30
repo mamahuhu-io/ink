@@ -26,6 +26,7 @@ export interface PreferencesState {
 
   // Update settings
   autoCheckUpdates: boolean;
+  skippedVersion: string | null;
 
   // Actions
   setAutoSaveEnabled: (enabled: boolean) => void;
@@ -41,6 +42,7 @@ export interface PreferencesState {
   setCodeBlockShowLineNumbers: (show: boolean) => void;
   setCodeBlockEnableWordWrap: (enable: boolean) => void;
   setAutoCheckUpdates: (check: boolean) => void;
+  setSkippedVersion: (version: string | null) => void;
   resetToDefaults: () => void;
 }
 
@@ -58,6 +60,7 @@ const DEFAULT_PREFERENCES = {
   codeBlockShowLineNumbers: true,
   codeBlockEnableWordWrap: false,
   autoCheckUpdates: true,
+  skippedVersion: null,
 };
 
 export const usePreferencesStore = create<PreferencesState>()(
@@ -78,6 +81,7 @@ export const usePreferencesStore = create<PreferencesState>()(
       setCodeBlockShowLineNumbers: (codeBlockShowLineNumbers) => set({ codeBlockShowLineNumbers }),
       setCodeBlockEnableWordWrap: (codeBlockEnableWordWrap) => set({ codeBlockEnableWordWrap }),
       setAutoCheckUpdates: (autoCheckUpdates) => set({ autoCheckUpdates }),
+      setSkippedVersion: (skippedVersion) => set({ skippedVersion }),
       resetToDefaults: () => set(DEFAULT_PREFERENCES),
     }),
     {

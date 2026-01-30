@@ -136,7 +136,10 @@
         "autoCheckDesc": "アプリケーション起動時にアップデートを確認する",
         "checkUpdates": "アップデートを確認",
         "checkUpdatesDesc": "新しいバージョンが利用可能か確認する",
-        "checkNow": "今すぐ確認"
+        "checkNow": "今すぐ確認",
+        "checking": "確認中...",
+        "downloadUpdate": "更新をダウンロード",
+        "downloading": "ダウンロード中..."
       },
       "resources": {
         "title": "リソース",
@@ -451,16 +454,19 @@
     "releaseNotes": "リリースノート:",
     "noReleaseNotes": "リリースノートはありません。",
     "installConfirm": "今すぐインストールしますか？",
-    "installAndRestart": "インストールして再起動",
+    "installAndRestart": "ダウンロードして更新",
     "later": "後で",
     "downloading": "アップデートをダウンロード中...",
-    "downloaded": "アップデートがダウンロードされました。再起動しています...",
+    "downloaded": "更新がダウンロードされました。",
+    "readyToRestart": "更新がダウンロードされ、インストールされました。今すぐ再起動して適用しますか？",
+    "restart": "再起動",
     "noUpdates": "アップデートなし",
     "latestVersion": "最新バージョンを使用しています。",
     "error": "エラー",
     "checkFailed": "アップデートの確認に失敗しました: {{error}}",
     "networkError": "アップデートを確認できませんでした。インターネット接続を確認して再試行してください。",
-    "invalidJson": "アップデート情報を確認できませんでした。サーバーの設定が正しくない可能性があります。"
+    "invalidJson": "アップデート情報を確認できませんでした。サーバーの設定が正しくない可能性があります。",
+    "skipVersion": "このバージョンをスキップ"
   },
   "image": {
     "download": "ダウンロード",

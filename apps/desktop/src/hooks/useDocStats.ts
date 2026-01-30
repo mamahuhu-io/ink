@@ -4,20 +4,20 @@ import { useLayoutEffect, useState } from 'react';
 import { getStore, onStoreCreated } from '../stores/editor';
 
 export interface DocStats {
-  wordCount: number; // 字数（中文字符+英文单词）
-  lineCount: number; // 行数
-  charCount: number; // 字符数（不含空格）
+  wordCount: number; // Word count (Chinese characters + English words)
+  lineCount: number; // Line count
+  charCount: number; // Character count (excluding spaces)
 }
 
 /**
- * 从文本对象中提取纯文本
+ * Extract plain text from text object
  */
 function extractText(textObj: any): string {
   if (!textObj) return '';
 
   if (typeof textObj === 'string') return textObj;
 
-  // 如果是 Text 对象，提取 delta
+  // If it is a Text object, extract delta
   if (typeof textObj.toDelta === 'function') {
     const deltas = textObj.toDelta();
     return deltas.map((d: any) => d.insert || '').join('');
@@ -27,19 +27,19 @@ function extractText(textObj: any): string {
 }
 
 /**
- * 统计文本的字数、字符数
- * 字数规则：
- * - 中文/日文/韩文：每个字符计为 1 字
- * - 英文/数字：按空格分隔的单词计数
+ * Count words and characters in text
+ * Word count rules:
+ * - Chinese/Japanese/Korean: Each character counts as 1 word
+ * - English/Numbers: Count words separated by spaces
  */
 function countText(text: string): { words: number; chars: number } {
-  // 字符数：移除所有空白字符后的长度
+  // Character count: length after removing all whitespace characters
   const chars = text.replace(/\s/g, '').length;
 
   let words = 0;
 
-  // 1. 统计 CJK（中日韩）字符数
-  // 包括：中文汉字、日文假名、韩文等
+  // 1. Count CJK (Chinese/Japanese/Korean) characters
+  // Includes: Chinese characters, Japanese kana, Korean, etc.
   const cjkPattern =
     /[\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2a6df}\u{2a700}-\u{2b73f}\u{2b740}-\u{2b81f}\u{2b820}-\u{2ceaf}\uf900-\ufaff\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]/gu;
   const cjkChars = text.match(cjkPattern);
@@ -47,11 +47,11 @@ function countText(text: string): { words: number; chars: number } {
     words += cjkChars.length;
   }
 
-  // 2. 统计非 CJK 部分的单词数（英文、数字等）
-  // 移除 CJK 字符，然后按空白符分割统计单词
+  // 2. Count non-CJK words (English, numbers, etc.)
+  // Remove CJK characters, then split by whitespace to count words
   const nonCJKText = text.replace(cjkPattern, ' ');
   const nonCJKWords = nonCJKText.split(/\s+/).filter((word) => {
-    // 过滤掉空字符串和纯标点符号
+    // Filter out empty strings and pure punctuation
     const trimmed = word.trim();
     return trimmed.length > 0 && /[a-zA-Z0-9]/.test(trimmed);
   });
@@ -62,26 +62,26 @@ function countText(text: string): { words: number; chars: number } {
 }
 
 /**
- * 统计单个块的内容
+ * Count content of a single block
  */
 function countBlock(block: BlockModel): { words: number; chars: number; lines: number } {
   let words = 0;
   let chars = 0;
   let lines = 0;
 
-  // 可统计的块类型
+  // Countable block types
   const countableBlocks = ['ink:paragraph', 'ink:list', 'ink:code'];
 
   if (countableBlocks.includes(block.flavour)) {
     const text = extractText((block as any).text);
 
-    // 统计行数：统计内部的换行符数量
+    // Count lines: count number of internal newlines
     if (text.length > 0) {
-      // 换行符数量 + 1 = 实际行数
+      // Newline count + 1 = actual line count
       const newlineCount = (text.match(/\n/g) || []).length;
       lines += newlineCount + 1;
     } else {
-      // 空内容也算 1 行
+      // Empty content counts as 1 line
       lines++;
     }
 
@@ -90,7 +90,7 @@ function countBlock(block: BlockModel): { words: number; chars: number; lines: n
     chars += counts.chars;
   }
 
-  // 递归统计子块
+  // Recursively count child blocks
   for (const child of block.children) {
     const childCounts = countBlock(child);
     words += childCounts.words;
@@ -102,7 +102,7 @@ function countBlock(block: BlockModel): { words: number; chars: number; lines: n
 }
 
 /**
- * Hook：统计文档的字数、行数、字符数
+ * Hook: Count words, lines, and characters of the document
  */
 export function useDocStats(docId: string | null): DocStats {
   const [stats, setStats] = useState<DocStats>({
@@ -132,7 +132,7 @@ export function useDocStats(docId: string | null): DocStats {
       return dispose;
     }
 
-    // 计算统计数据
+    // Calculate statistics
     const calculateStats = () => {
       const root = store.root;
       if (!root) {
@@ -143,10 +143,10 @@ export function useDocStats(docId: string | null): DocStats {
       let totalChars = 0;
       let totalLines = 0;
 
-      // 遍历所有顶层块（通常是 ink:note）
+      // Iterate over all top-level blocks (usually ink:note)
       for (const child of root.children) {
         if (child.flavour === 'ink:note') {
-          // 统计 note 下的所有内容块
+          // Count all content blocks under note
           for (const noteChild of child.children) {
             const counts = countBlock(noteChild);
             totalWords += counts.words;
@@ -163,21 +163,21 @@ export function useDocStats(docId: string | null): DocStats {
       };
     };
 
-    // 初始计算
+    // Initial calculation
     const initialStats = calculateStats();
     setStats(initialStats);
 
-    // 订阅文档变化
+    // Subscribe to document changes
     let debounceTimer: NodeJS.Timeout | null = null;
     const subscription = store.slots.blockUpdated.subscribe(() => {
-      // 使用防抖避免频繁计算
+      // Use debounce to avoid frequent calculations
       if (debounceTimer) {
         clearTimeout(debounceTimer);
       }
       debounceTimer = setTimeout(() => {
         const newStats = calculateStats();
         setStats(newStats);
-      }, 300); // 300ms 防抖
+      }, 300); // 300ms debounce
     });
 
     return () => {

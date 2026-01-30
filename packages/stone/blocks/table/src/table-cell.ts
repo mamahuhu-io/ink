@@ -532,7 +532,7 @@ export class TableCell extends SignalWatcher(WithDisposable(ShadowlessElement)) 
     const columnWidth = this.virtualWidth$.value ?? this.column?.width;
     const backgroundColor = this.column?.backgroundColor ?? this.row?.backgroundColor ?? undefined;
     const textAlign = this.column?.textAlign;
-    // 如果有设置列宽，使用固定宽度；否则让列自动分配空间
+    // If column width is set, use fixed width; otherwise let column auto-distribute space
     if (columnWidth) {
       return styleMap({
         backgroundColor,

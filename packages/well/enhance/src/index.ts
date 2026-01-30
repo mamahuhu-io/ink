@@ -1,5 +1,5 @@
 // @ink/well-enhance
-// 内容增强功能
+// Content enhancement features
 
 export type EnhanceAction = 'rewrite' | 'translate' | 'summarize' | 'expand' | 'grammar' | 'tone';
 

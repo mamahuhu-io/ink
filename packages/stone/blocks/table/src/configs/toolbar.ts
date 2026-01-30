@@ -39,7 +39,7 @@ const setSelectedColumnsTextAlign = (block: TableBlockComponent, textAlign: Text
       }
     }
   } else if (selected.type === 'row') {
-    // 选中行时，修改所有列
+    // When row is selected, modify all columns
     columnIds = columns.map((c) => c.columnId);
   }
 

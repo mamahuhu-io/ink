@@ -136,7 +136,10 @@
         "autoCheckDesc": "Verificar atualizações ao iniciar o aplicativo",
         "checkUpdates": "Verificar atualizações",
         "checkUpdatesDesc": "Verificar se uma nova versão está disponível",
-        "checkNow": "Verificar agora"
+        "checkNow": "Verificar agora",
+        "checking": "Verificando...",
+        "downloadUpdate": "Baixar Atualização",
+        "downloading": "Baixando..."
       },
       "resources": {
         "title": "Recursos",
@@ -450,17 +453,20 @@
     "message": "A versão {{version}} está disponível.",
     "releaseNotes": "Notas de Lançamento:",
     "noReleaseNotes": "Nenhuma nota de lançamento fornecida.",
-    "installConfirm": "Deseja instalá-la agora?",
-    "installAndRestart": "Instalar e Reiniciar",
+    "installConfirm": "Você quer instalar agora?",
+    "installAndRestart": "Baixar e Atualizar",
     "later": "Mais tarde",
     "downloading": "Baixando atualização...",
-    "downloaded": "Atualização baixada. Reiniciando...",
+    "downloaded": "Atualização baixada.",
+    "readyToRestart": "Atualização baixada e instalada. Reiniciar agora para aplicar?",
+    "restart": "Reiniciar",
     "noUpdates": "Nenhuma Atualização",
     "latestVersion": "Você está usando a versão mais recente.",
     "error": "Erro",
     "checkFailed": "Falha ao verificar atualizações: {{error}}",
     "networkError": "Não foi possível verificar atualizações. Verifique sua conexão com a internet e tente novamente.",
-    "invalidJson": "Não foi possível verificar as informações de atualização. O servidor pode estar configurado incorretamente."
+    "invalidJson": "Não foi possível verificar as informações de atualização. O servidor pode estar configurado incorretamente.",
+    "skipVersion": "Pular Esta Versão"
   },
   "image": {
     "download": "Baixar",

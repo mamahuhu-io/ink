@@ -6,8 +6,6 @@ on:
       - 'v*'
   pull_request: {}
 
-# This workflow will build your tauri app without uploading it anywhere.
-
 jobs:
   publish-ink:
     permissions:
@@ -59,7 +57,6 @@ jobs:
       - name: cd apps/desktop
         run: cd apps/desktop
 
-      # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
       - name: Build Ink App 
         uses: tauri-apps/tauri-action@v0
         env:
@@ -73,42 +70,9 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          tagName: v__VERSION__
           releaseName: "v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
-
-      # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
-      # - name: Build Tauri App on Linux
-      #   if: matrix.platform == 'ubuntu-22.04'
-      #   uses: tauri-apps/tauri-action@v0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-      #     TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      #   with:
-      #     tagName: v__VERSION__
-      #     releaseName: "v__VERSION__"
-      #     releaseBody: "See the assets to download this version and install."
-      #     releaseDraft: true
-      #     prerelease: false
-      #     args: ${{ matrix.args }}
-
-
-      # If tagName and releaseId are omitted tauri-action will only build the app and won't try to upload any assets.
-      # - name: Build Tauri App on Windows
-      #   if: matrix.platform == 'windows-latest'
-      #   uses: tauri-apps/tauri-action@v0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-      #     TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      #   with:
-      #     tagName: v__VERSION__
-      #     releaseName: "v__VERSION__"
-      #     releaseBody: "See the assets to download this version and install."
-      #     releaseDraft: true
-      #     prerelease: false
-      #     args: ${{ matrix.args }}

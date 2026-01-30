@@ -1,5 +1,5 @@
 // @ink/well-core
-// AI 核心抽象层
+// AI core abstraction layer
 
 export interface AIProvider {
   name: string;

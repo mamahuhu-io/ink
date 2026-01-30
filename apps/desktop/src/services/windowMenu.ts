@@ -1,11 +1,11 @@
 /**
- * 设置 Window 菜单（仅在 macOS 下）
- * 注意：实际的 setAsWindowsMenuForNSApp 调用已在 Rust 端完成
- * 这个函数保留用于日志记录和将来可能的扩展
+ * Set up Window menu (macOS only)
+ * Note: The actual setAsWindowsMenuForNSApp call is done on the Rust side
+ * This function is reserved for logging and possible future extensions
  */
 export async function setupWindowMenu(): Promise<void> {
   try {
-    // 检测平台：只在 macOS 下执行
+    // Platform check: execute only on macOS
     const isMacOS = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
     if (!isMacOS) {
@@ -13,8 +13,8 @@ export async function setupWindowMenu(): Promise<void> {
       return;
     }
 
-    // Window menu 和 setAsWindowsMenuForNSApp 已在 Rust 端设置
-    // 参见 src-tauri/src/lib.rs 中的 create_menu 函数
+    // Window menu and setAsWindowsMenuForNSApp are already set on the Rust side
+    // See create_menu function in src-tauri/src/lib.rs
     console.log('[WindowMenu] Window menu configured from Rust backend');
   } catch (error) {
     console.error('[WindowMenu] Error:', error);

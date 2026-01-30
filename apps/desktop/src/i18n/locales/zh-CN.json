@@ -136,7 +136,10 @@
         "autoCheckDesc": "应用程序启动时检查更新",
         "checkUpdates": "检查更新",
         "checkUpdatesDesc": "检查是否有新版本可用",
-        "checkNow": "立即检查"
+        "checkNow": "立即检查",
+        "checking": "正在检查...",
+        "downloadUpdate": "下载更新",
+        "downloading": "正在下载..."
       },
       "resources": {
         "title": "资源",
@@ -509,16 +512,19 @@
     "message": "版本 {{version}} 可用。",
     "releaseNotes": "发布说明：",
     "noReleaseNotes": "未提供发布说明。",
-    "installConfirm": "是否立即安装？",
-    "installAndRestart": "安装并重启",
+    "installConfirm": "你想现在安装吗？",
+    "installAndRestart": "下载并更新",
     "later": "稍后",
     "downloading": "正在下载更新...",
-    "downloaded": "更新已下载。正在重启...",
+    "downloaded": "更新已下载。",
+    "readyToRestart": "更新已下载并安装。立即重启以应用？",
+    "restart": "重启",
     "noUpdates": "无更新",
     "latestVersion": "您正在运行最新版本。",
     "error": "错误",
     "checkFailed": "检查更新失败：{{error}}",
     "networkError": "无法检查更新。请检查您的网络连接并重试。",
-    "invalidJson": "无法验证更新信息。服务器配置可能不正确。"
+    "invalidJson": "无法验证更新信息。服务器配置可能不正确。",
+    "skipVersion": "跳过此版本"
   }
 }

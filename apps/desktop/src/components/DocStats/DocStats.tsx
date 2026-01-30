@@ -15,12 +15,12 @@ export function DocStats() {
   const activeTab = tabs.find((t) => t.id === activeTabId);
   const stats = useDocStats(activeTab?.docId ?? null);
 
-  // 如果设置关闭或没有活动标签，不显示
+  // If disabled or no active tab, do not display
   if (!showDocStats || !activeTab) {
     return null;
   }
 
-  // 格式化数字（添加千位分隔符，使用当前语言环境）
+  // Format number (add thousand separators, using current locale)
   const formatNumber = (num: number): string => {
     return num.toLocaleString(i18n.language);
   };
@@ -32,13 +32,13 @@ export function DocStats() {
       onMouseLeave={() => setShowDetail(false)}
       aria-label={`${t('editor.docStats.title')}: ${stats.wordCount} ${t('editor.docStats.wordUnit')}, ${stats.lineCount} ${t('editor.docStats.lineCount')}, ${stats.charCount} ${t('editor.docStats.charCount')}`}
     >
-      {/* 默认显示：只显示字数 */}
+      {/* Default display: show word count only */}
       <div className="doc-stats-trigger">
         <Type size={13} strokeWidth={2} />
         <span>{formatNumber(stats.wordCount)}</span>
       </div>
 
-      {/* 悬停时显示：详细统计弹出层 */}
+      {/* Hover display: detailed statistics popover */}
       {showDetail && (
         <div className="doc-stats-popover">
           <div className="doc-stats-header">{t('editor.docStats.title')}</div>

@@ -60,13 +60,13 @@ export default defineConfig({
       '@ink/stone-sync',
     ],
     alias: {
-      // ============ Stone 框架 ============
+      // ============ Stone Framework ============
       '@ink/stone-store': r('../../packages/stone/framework/store/src'),
       '@ink/stone-std': r('../../packages/stone/framework/std/src'),
       '@ink/stone-global': r('../../packages/stone/framework/global/src'),
       '@ink/stone-sync': r('../../packages/stone/framework/sync/src'),
 
-      // ============ Stone 核心 ============
+      // ============ Stone Core ============
       '@ink/stone-core': r('../../packages/stone/core/src'),
       '@ink/stone-model': r('../../packages/stone/model/src'),
       '@ink/stone-shared': r('../../packages/stone/shared/src'),
@@ -75,7 +75,7 @@ export default defineConfig({
       '@ink/stone-foundation': r('../../packages/stone/foundation/src'),
       '@ink/stone-ext-loader': r('../../packages/stone/ext-loader/src'),
 
-      // ============ Stone 块类型 ============
+      // ============ Stone Block Types ============
       '@ink/stone-block-root': r('../../packages/stone/blocks/root/src'),
       '@ink/stone-block-paragraph': r('../../packages/stone/blocks/paragraph/src'),
       '@ink/stone-block-code': r('../../packages/stone/blocks/code/src'),
@@ -112,7 +112,7 @@ export default defineConfig({
       '@ink/stone-fragment-outline': r('../../packages/stone/fragments/outline/src'),
       '@ink/stone-fragment-adapter-panel': r('../../packages/stone/fragments/adapter-panel/src'),
 
-      // ============ Stone 其他 ============
+      // ============ Stone Others ============
       '@ink/stone-icons/lit': r('../../packages/stone/icons/dist/lit.mjs'),
       '@ink/stone-icons/rc': r('../../packages/stone/icons/dist/rc.mjs'),
       '@ink/stone-theme': r('../../packages/stone/theme'),

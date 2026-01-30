@@ -1,5 +1,5 @@
 // @ink/well-assistant
-// AI 对话式助手
+// AI conversational assistant
 
 export interface ChatMessage {
   id: string;

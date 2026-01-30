@@ -12,7 +12,7 @@ export interface ShortcutCategory {
 }
 
 export const SHORTCUTS: ShortcutCategory[] = [
-  // 文件操作
+  // File operations
   {
     titleKey: 'settings.shortcuts.categories.file',
     shortcuts: [
@@ -32,7 +32,7 @@ export const SHORTCUTS: ShortcutCategory[] = [
       { id: 'file-close-tab', key: 'Mod-W', descriptionKey: 'settings.shortcuts.actions.closeTab' },
     ],
   },
-  // 编辑操作
+  // Edit operations
   {
     titleKey: 'settings.shortcuts.categories.edit',
     shortcuts: [
@@ -55,7 +55,7 @@ export const SHORTCUTS: ShortcutCategory[] = [
       { id: 'edit-search', key: 'Mod-K', descriptionKey: 'settings.shortcuts.actions.search' },
     ],
   },
-  // 文本格式
+  // Text formatting
   {
     titleKey: 'settings.shortcuts.categories.format',
     shortcuts: [
@@ -75,7 +75,7 @@ export const SHORTCUTS: ShortcutCategory[] = [
       { id: 'format-link', key: 'Mod-K', descriptionKey: 'settings.shortcuts.actions.link' },
     ],
   },
-  // 块转换
+  // Block conversion
   {
     titleKey: 'settings.shortcuts.categories.blocks',
     shortcuts: [
@@ -112,7 +112,7 @@ export const SHORTCUTS: ShortcutCategory[] = [
       },
     ],
   },
-  // 文本对齐
+  // Text alignment
   {
     titleKey: 'settings.shortcuts.categories.align',
     shortcuts: [
@@ -133,7 +133,7 @@ export const SHORTCUTS: ShortcutCategory[] = [
       },
     ],
   },
-  // 视图操作
+  // View operations
   {
     titleKey: 'settings.shortcuts.categories.view',
     shortcuts: [

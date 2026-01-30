@@ -1,5 +1,5 @@
 // @ink/well-widgets
-// AI 相关 Widget 组件
+// AI related Widget components
 
 // Widget types
 export const AI_TOOLBAR_WIDGET = 'ink:ai-toolbar';

@@ -1,0 +1,174 @@
+/* Title Bar - Windows Custom Title Bar */
+.title-bar {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  background: var(--ink-background-primary-color);
+  color: var(--ink-text-primary-color);
+  user-select: none;
+  -webkit-app-region: drag;
+  border-bottom: 1px solid var(--ink-border-color);
+  flex-shrink: 0;
+}
+
+.title-bar-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+
+.title-bar-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+.title-bar-spacer {
+  flex: 1;
+  height: 100%;
+}
+
+.title-bar-title {
+  font-size: 12px;
+  color: var(--ink-text-secondary-color);
+  pointer-events: none;
+}
+
+/* Menu Bar */
+.menu-bar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.menu-bar-item {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink-text-primary-color);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.menu-bar-item:hover,
+.menu-bar-item.active {
+  background: var(--ink-hover-color);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: fixed;
+  min-width: 220px;
+  background: var(--ink-background-primary-color);
+  border: 1px solid var(--ink-border-color);
+  border-radius: 6px;
+  padding: 4px 0;
+  box-shadow: var(--ink-menu-shadow);
+  z-index: 10000;
+  -webkit-app-region: no-drag;
+}
+
+.dropdown-menu.submenu {
+  margin-left: -1px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--ink-text-primary-color);
+  cursor: pointer;
+  transition: background-color 0.1s;
+  position: relative;
+}
+
+.dropdown-item:hover,
+.dropdown-item.active {
+  background: var(--ink-hover-color);
+}
+
+.dropdown-item.disabled {
+  color: var(--ink-text-disable-color);
+  cursor: not-allowed;
+}
+
+.dropdown-item.disabled:hover {
+  background: transparent;
+}
+
+.dropdown-item-check {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-primary-color);
+}
+
+.dropdown-item-label {
+  flex: 1;
+}
+
+.dropdown-item-shortcut {
+  margin-left: 24px;
+  color: var(--ink-text-secondary-color);
+  font-size: 12px;
+}
+
+.dropdown-item-arrow {
+  margin-left: 8px;
+  color: var(--ink-text-secondary-color);
+}
+
+.dropdown-separator {
+  height: 1px;
+  background: var(--ink-border-color);
+  margin: 4px 8px;
+}
+
+/* Window Controls */
+.window-controls {
+  display: flex;
+  height: 100%;
+  -webkit-app-region: no-drag;
+}
+
+.window-control-btn {
+  width: 46px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--ink-text-primary-color);
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.window-control-btn:hover {
+  background: var(--ink-hover-color);
+}
+
+.window-control-btn.close:hover {
+  background: #e81123;
+  color: white;
+}
+
+.window-control-btn:focus {
+  outline: none;
+}
+
+/* Icon color */
+.title-bar-icon img {
+  opacity: 0.8;
+}
+
+.window-control-btn svg {
+  color: var(--ink-icon-color);
+}

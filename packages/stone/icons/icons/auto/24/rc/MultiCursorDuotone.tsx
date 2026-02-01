@@ -1,0 +1,27 @@
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const MultiCursorDuotoneIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="#6E52DF"
+      d="M3.03 5.302c-.278-1.606 1.41-2.832 2.851-2.07l13.518 7.14c1.542.815 1.336 3.086-.328 3.609l-5.526 1.736a1.96 1.96 0 0 0-1.01.734L9.17 21.174c-1.012 1.421-3.236.915-3.534-.804z"
+    />
+    <path
+      stroke="#000"
+      strokeOpacity={0.1}
+      d="M3.523 5.217c-.2-1.16.974-2.053 2.024-1.592l.101.049 13.518 7.14c1.113.589 1.003 2.195-.132 2.649l-.113.04-5.526 1.737c-.448.14-.844.406-1.145.763l-.123.158-3.363 4.723c-.73 1.026-2.31.704-2.609-.482l-.025-.117z"
+    />
+  </svg>
+);
+export default MultiCursorDuotoneIcon;

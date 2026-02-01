@@ -1,0 +1,57 @@
+/*
+ * Theme Index - Import all themes
+ * Add new custom themes here
+ */
+
+@import './light.css';
+@import './dark.css';
+
+/* Default fallback (dark theme as default to prevent white flash) */
+:root {
+  /* Font families - shared across all themes */
+  --ink-font-family:
+    'Inter', 'Source Sans 3', Poppins, apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma,
+    'PingFang SC', 'Microsoft Yahei', Arial, sans-serif;
+  --ink-font-sans-family:
+    'Inter', 'Source Sans 3', Poppins, apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma,
+    Arial, sans-serif;
+  --ink-font-serif-family: 'Source Serif 4', 'Noto Serif', serif, 'Cambria';
+  --ink-font-mono-family:
+    'Source Code Pro', 'IBM Plex Mono', 'Roboto Mono', 'Noto Sans Mono', monospace;
+  --ink-font-code-family:
+    'Source Code Pro', 'IBM Plex Mono', 'Roboto Mono', 'Noto Sans Mono', monospace;
+  --ink-font-number-family: 'Roboto Mono', 'Noto Sans Mono', sans-serif;
+
+  /* Font sizes - shared across all themes */
+  --ink-font-title: 36px;
+  --ink-font-h-1: 28px;
+  --ink-font-h-2: 26px;
+  --ink-font-h-3: 24px;
+  --ink-font-h-4: 22px;
+  --ink-font-h-5: 20px;
+  --ink-font-h-6: 18px;
+  --ink-font-base: 15px;
+  --ink-font-sm: 14px;
+  --ink-font-xs: 12px;
+  --ink-line-height: calc(1em + 8px);
+
+  /* Editor dimensions - shared across all themes */
+  --ink-editor-width: 800px;
+  --ink-editor-side-padding: 24px;
+  --ink-paragraph-space: 8px;
+  --ink-popover-radius: 12px;
+  --ink-scale: 1;
+
+  /* Layout variables - shared across all themes */
+  --sidebar-width: 260px;
+  --tab-bar-height: 40px;
+
+  /* Default color values (dark theme) - prevents flash before theme CSS loads */
+  --ink-background-primary-color: #141414;
+  --ink-background-secondary-color: #1e1e1e;
+  --ink-text-primary-color: rgba(235, 235, 235, 1);
+  --ink-text-secondary-color: rgba(155, 155, 160, 1);
+  --ink-divider-color: rgba(60, 60, 65, 1);
+  --ink-border-color: rgba(60, 60, 65, 1);
+  color-scheme: dark;
+}

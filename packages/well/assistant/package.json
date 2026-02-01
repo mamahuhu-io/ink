@@ -1,0 +1,13 @@
+{
+  "name": "@ink/well-assistant",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@ink/well-core": "workspace:*"
+  }
+}

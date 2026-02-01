@@ -1,0 +1,54 @@
+import { LatexBlockSchema } from '@ink/stone-model';
+import {
+  BlockMarkdownAdapterExtension,
+  type BlockMarkdownAdapterMatcher,
+  type MarkdownAST,
+} from '@ink/stone-shared/adapters';
+import { nanoid } from '@ink/stone-store';
+
+const isLatexNode = (node: MarkdownAST) => node.type === 'math';
+
+export const latexBlockMarkdownAdapterMatcher: BlockMarkdownAdapterMatcher = {
+  flavour: LatexBlockSchema.model.flavour,
+  toMatch: (o) => isLatexNode(o.node),
+  fromMatch: (o) => o.node.flavour === LatexBlockSchema.model.flavour,
+  toBlockSnapshot: {
+    enter: (o, context) => {
+      const latex = 'value' in o.node ? o.node.value : '';
+      const { walkerContext } = context;
+      walkerContext
+        .openNode(
+          {
+            type: 'block',
+            id: nanoid(),
+            flavour: 'ink:latex',
+            props: {
+              latex,
+            },
+            children: [],
+          },
+          'children',
+        )
+        .closeNode();
+    },
+  },
+  fromBlockSnapshot: {
+    enter: (o, context) => {
+      const latex = 'latex' in o.node.props ? (o.node.props.latex as string) : '';
+      const { walkerContext } = context;
+      walkerContext
+        .openNode(
+          {
+            type: 'math',
+            value: latex,
+          },
+          'children',
+        )
+        .closeNode();
+    },
+  },
+};
+
+export const LatexBlockMarkdownAdapterExtension = BlockMarkdownAdapterExtension(
+  latexBlockMarkdownAdapterMatcher,
+);

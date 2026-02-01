@@ -1,0 +1,514 @@
+{
+  "app": {
+    "name": "Ink",
+    "untitled": "無題"
+  },
+  "menu": {
+    "file": "ファイル",
+    "file.new_window": "新規ウィンドウ",
+    "file.new_tab": "新規タブ",
+    "file.open": "開く",
+    "file.open_recent": "最近開いた項目",
+    "file.no_recent": "最近の項目はありません",
+    "file.clear_recent": "メニューを消去",
+    "file.save": "保存",
+    "file.save_as": "名前を付けて保存",
+    "file.import": "インポート",
+    "file.export": "エクスポート",
+    "file.export.html": "HTMLとしてエクスポート",
+    "file.export.pdf": "PDFとしてエクスポート",
+    "file.export.docx": "Wordとしてエクスポート",
+    "file.export.image": "画像としてエクスポート",
+    "file.close_tab": "タブを閉じる",
+    "file.quit": "終了",
+    "edit": "編集",
+    "edit.undo": "元に戻す",
+    "edit.redo": "やり直す",
+    "edit.find": "検索",
+    "edit.find_replace": "検索と置換",
+    "edit.search_files": "ファイル検索",
+    "edit.preferences": "設定",
+    "view": "表示",
+    "view.toggle_sidebar": "サイドバーの切り替え",
+    "view.toggle_source": "ソースモードの切り替え",
+    "view.zoom_in": "拡大",
+    "view.zoom_out": "縮小",
+    "view.actual_size": "実際のサイズ",
+    "view.fullscreen": "フルスクリーン",
+    "themes": "テーマ",
+    "themes.open_folder": "テーマフォルダを開く",
+    "themes.refresh": "テーマを更新",
+    "help": "ヘルプ",
+    "help.website": "ウェブサイト",
+    "help.about": "について"
+  },
+  "settings": {
+    "title": "設定",
+    "tabs": {
+      "editor": "エディタ",
+      "general": "一般",
+      "appearance": "外観",
+      "shortcuts": "ショートカット",
+      "about": "Inkについて"
+    },
+    "editor": {
+      "title": "エディタ設定",
+      "subtitle": "編集体験をカスタマイズ",
+      "autoSave": {
+        "title": "自動保存",
+        "enable": "自動保存を有効にする",
+        "enableDesc": "ドキュメントの変更を自動的に保存します",
+        "delay": "保存遅延",
+        "delayDesc": "自動保存までの待機時間（秒）"
+      },
+      "text": {
+        "title": "テキスト",
+        "fontSize": "フォントサイズ",
+        "fontSizeDesc": "エディタのフォントサイズ（ピクセル）",
+        "lineHeight": "行の高さ",
+        "lineHeightDesc": "テキストの行間隔",
+        "spellCheck": "スペルチェック",
+        "spellCheckDesc": "エディタ内でスペルミスを強調表示する"
+      },
+      "code": {
+        "title": "コードブロック",
+        "lineNumbers": "行番号を表示",
+        "lineNumbersDesc": "コードブロックに行番号を表示します",
+        "wordWrap": "折り返しを有効にする",
+        "wordWrapDesc": "コードブロック内の長い行を折り返します"
+      }
+    },
+    "general": {
+      "title": "一般設定",
+      "subtitle": "アプリケーションの一般的な動作を設定",
+      "files": {
+        "title": "ファイル",
+        "defaultLocation": "デフォルトの保存場所",
+        "defaultLocationDesc": "新規ドキュメントのデフォルトフォルダ",
+        "chooseButton": "選択...",
+        "recentLimit": "最近使用したファイルの制限",
+        "recentLimitDesc": "記憶する最近使用したファイルの最大数"
+      },
+      "behavior": {
+        "title": "動作",
+        "confirmDelete": "削除前に確認する",
+        "confirmDeleteDesc": "ファイルを削除する前に確認ダイアログを表示する",
+        "openLastFile": "起動時に最後のファイルを開く",
+        "openLastFileDesc": "起動時に最後に編集したファイルを自動的に開く"
+      },
+      "language": {
+        "title": "言語",
+        "select": "表示言語",
+        "selectDesc": "ユーザーインターフェースの言語を選択"
+      }
+    },
+    "appearance": {
+      "title": "外観",
+      "subtitle": "Inkの見た目をカスタマイズ",
+      "theme": {
+        "title": "テーマ",
+        "colorMode": "カラーモード",
+        "colorModeDesc": "ライトモードとダークモードを選択",
+        "system": "システム",
+        "light": "ライト",
+        "dark": "ダーク",
+        "openFolder": "フォルダを開く",
+        "getThemes": "テーマを入手"
+      },
+      "export": {
+        "title": "エクスポート",
+        "theme": "エクスポートテーマ",
+        "themeDesc": "ドキュメントのエクスポート時に使用するテーマ",
+        "auto": "自動（現在に合わせる）"
+      },
+      "display": {
+        "title": "表示",
+        "showDocStats": "ドキュメント統計を表示",
+        "showDocStatsDesc": "文字数、単語数、文字数統計を表示します"
+      }
+    },
+    "about": {
+      "title": "Inkについて",
+      "subtitle": "ローカルファーストで拡張可能なMarkdownワークスペース",
+      "version": {
+        "title": "バージョン",
+        "autoCheck": "自動的にアップデートを確認する",
+        "autoCheckDesc": "アプリケーション起動時にアップデートを確認する",
+        "checkUpdates": "アップデートを確認",
+        "checkUpdatesDesc": "新しいバージョンが利用可能か確認する",
+        "checkNow": "今すぐ確認",
+        "checking": "確認中...",
+        "downloadUpdate": "更新をダウンロード",
+        "downloading": "ダウンロード中..."
+      },
+      "resources": {
+        "title": "リソース",
+        "website": "ウェブサイト",
+        "websiteDesc": "公式サイトにアクセス",
+        "github": "GitHub",
+        "githubDesc": "ソースコードを表示して問題を報告",
+        "documentation": "ドキュメント",
+        "documentationDesc": "ユーザーガイドとドキュメントを読む"
+      },
+      "data": {
+        "title": "データ",
+        "reset": "すべての設定をリセット",
+        "resetDesc": "すべての設定をデフォルト値に戻す",
+        "resetButton": "リセット"
+      }
+    },
+    "shortcuts": {
+      "title": "キーボードショートカット",
+      "subtitle": "Inkで使用可能なすべてのショートカットを表示",
+      "categories": {
+        "file": "ファイル",
+        "edit": "編集",
+        "format": "テキスト形式",
+        "blocks": "ブロック",
+        "align": "配置",
+        "view": "表示"
+      },
+      "actions": {
+        "newWindow": "新しいウィンドウ",
+        "newTab": "新しいタブ",
+        "openFile": "ファイルを開く",
+        "save": "保存",
+        "saveAs": "名前を付けて保存",
+        "closeTab": "タブを閉じる",
+        "undo": "元に戻す",
+        "redo": "やり直し",
+        "cut": "切り取り",
+        "copy": "コピー",
+        "paste": "貼り付け",
+        "selectAll": "すべて選択",
+        "find": "検索",
+        "replace": "検索と置換",
+        "search": "グローバル検索",
+        "bold": "太字",
+        "italic": "斜体",
+        "underline": "下線",
+        "strikethrough": "取り消し線",
+        "inlineCode": "インラインコード",
+        "link": "リンクを挿入",
+        "paragraph": "段落",
+        "heading1": "見出し 1",
+        "heading2": "見出し 2",
+        "heading3": "見出し 3",
+        "heading4": "見出し 4",
+        "heading5": "見出し 5",
+        "heading6": "見出し 6",
+        "bulletList": "箇条書きリスト",
+        "numberList": "番号付きリスト",
+        "codeBlock": "コードブロック",
+        "divider": "区切り線",
+        "alignLeft": "左揃え",
+        "alignCenter": "中央揃え",
+        "alignRight": "右揃え",
+        "toggleSidebar": "サイドバーの切り替え",
+        "toggleSource": "ソースモードの切り替え",
+        "zoomIn": "拡大",
+        "zoomOut": "縮小",
+        "zoomReset": "ズームのリセット",
+        "openSettings": "設定を開く"
+      }
+    }
+  },
+  "sidebar": {
+    "files": "ファイル",
+    "outline": "アウトライン",
+    "toggle": "サイドバーを切り替える"
+  },
+  "fileTree": {
+    "noWorkspace": "ワークスペースフォルダが開かれていません",
+    "openFolder": "フォルダを開く",
+    "refresh": "更新",
+    "closeWorkspace": "ワークスペースを閉じる",
+    "loading": "読み込み中...",
+    "noFiles": "Markdownファイルが見つかりません",
+    "contextMenu": {
+      "rename": "名前を変更",
+      "delete": "削除",
+      "reveal": "システムエクスプローラーで表示",
+      "copyPath": "パスをコピー",
+      "newFile": "新しいファイル",
+      "newFolder": "新しいフォルダ"
+    },
+    "deleteConfirm": "\"{{path}}\" を削除してもよろしいですか？"
+  },
+  "outline": {
+    "title": "アウトライン",
+    "noDocument": "ドキュメントが開かれていません",
+    "noHeadings": "見出しが見つかりません",
+    "hint": "見出し（# H1, ## H2 など）を追加してアウトラインを作成します"
+  },
+  "tabs": {
+    "newTab": "新しいタブ",
+    "closeTab": "タブを閉じる",
+    "contextMenu": {
+      "close": "タブを閉じる",
+      "closeOthers": "他のタブを閉じる",
+      "closeToRight": "右側のタブを閉じる",
+      "closeAll": "すべてのタブを閉じる"
+    }
+  },
+  "search": {
+    "placeholder": "ファイルを検索...",
+    "noResults": "結果が見つかりません",
+    "placeholderWithFolder": "ファイルとコンテンツを検索...",
+    "placeholderNoFolder": "フォルダを開いて検索",
+    "openFolderHint": "フォルダを開いて検索を有効にする",
+    "noResultsFor": "\"{{query}}\" の結果が見つかりません",
+    "searching": "検索中...",
+    "typeToSearch": "入力してファイルとコンテンツを検索",
+    "shortcuts": {
+      "navigate": "移動",
+      "open": "開く",
+      "close": "閉じる"
+    },
+    "badge": {
+      "nameMatch": "名前一致",
+      "moreMatches": "他 {{count}} 件の一致"
+    }
+  },
+  "findReplace": {
+    "findPlaceholder": "検索",
+    "replacePlaceholder": "置換",
+    "matchCase": "大文字と小文字を区別 (Alt+C)",
+    "useRegex": "正規表現を使用 (Alt+R)",
+    "noResults": "結果なし",
+    "count": "{{current}} / {{total}}",
+    "prevMatch": "前の一致 (Shift+Enter)",
+    "nextMatch": "次の一致 (Enter)",
+    "close": "閉じる (Escape)",
+    "replace": "置換",
+    "replaceAll": "すべて置換"
+  },
+  "fileDialog": {
+    "markdown": "Markdown",
+    "html": "HTML",
+    "allFiles": "すべてのファイル"
+  },
+  "messages": {
+    "fileSaved": "ファイルが保存されました",
+    "fileOpened": "ファイルが開かれました",
+    "error": "エラー",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "unsavedChanges": {
+      "title": "未保存の変更",
+      "singleFile": "\"{{filename}}\" への変更を保存しますか？",
+      "multipleFiles": "{{count}} 個のファイルに未保存の変更があります。閉じる前に保存しますか？",
+      "warning": "保存しない場合、変更は失われます。",
+      "save": "保存",
+      "saveAll": "すべて保存",
+      "dontSave": "保存しない",
+      "cancel": "キャンセル"
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "text": "'/' を入力してコマンドを使用",
+      "h1": "見出し 1",
+      "h2": "見出し 2",
+      "h3": "見出し 3",
+      "h4": "見出し 4",
+      "h5": "見出し 5",
+      "h6": "見出し 6",
+      "quote": ""
+    },
+    "docStats": {
+      "title": "ドキュメント統計",
+      "wordCount": "単語数",
+      "lineCount": "行数",
+      "charCount": "文字数",
+      "wordUnit": "単語"
+    },
+    "slashMenu": {
+      "today": "今日",
+      "tomorrow": "明日",
+      "yesterday": "昨日",
+      "now": "現在時刻",
+      "link": "リンク",
+      "linkDesc": "ハイパーリンクを挿入。",
+      "moveUp": "上に移動",
+      "moveUpDesc": "この行を上に移動。",
+      "moveDown": "下に移動",
+      "moveDownDesc": "この行を下に移動。",
+      "copy": "コピー",
+      "copyDesc": "この行をクリップボードにコピー。",
+      "duplicate": "複製",
+      "duplicateDesc": "この行の複製を作成。",
+      "delete": "削除",
+      "deleteDesc": "この行を完全に削除。"
+    },
+    "toast": {
+      "copiedToClipboard": "クリップボードにコピーしました"
+    },
+    "link": {
+      "pasteOrTypeLink": "リンクを貼り付けまたは入力",
+      "enterText": "テキストを入力",
+      "enterLinkText": "リンクテキストを入力",
+      "text": "テキスト",
+      "link": "リンク",
+      "copyLink": "リンクをコピー",
+      "edit": "編集",
+      "copiedLinkToClipboard": "リンクをクリップボードにコピーしました",
+      "inlineView": "インラインビュー",
+      "cardView": "カードビュー",
+      "embedView": "埋め込みビュー",
+      "removeLink": "リンクを削除",
+      "delete": "削除"
+    },
+    "caption": {
+      "writeCaption": "キャプションを書く"
+    },
+    "code": {
+      "searchLanguage": "言語を検索",
+      "more": "もっと見る",
+      "viewCode": "コード",
+      "viewPreview": "プレビュー",
+      "copy": "コードをコピー",
+      "caption": "キャプション",
+      "comment": "コメント",
+      "wrap": "折り返し",
+      "cancelWrap": "折り返し解除",
+      "lineNumber": "行番号",
+      "cancelLineNumber": "行番号を隠す",
+      "duplicate": "複製",
+      "delete": "削除"
+    },
+    "latex": {
+      "equation": "数式",
+      "errorEquation": "数式エラー"
+    },
+    "toolbar": {
+      "bold": "太字",
+      "italic": "斜体",
+      "underline": "下線",
+      "strikethrough": "取り消し線",
+      "code": "コード",
+      "link": "リンク"
+    },
+    "toolbarAction": {
+      "turnInto": "変換",
+      "align": "配置",
+      "copy": "コピー",
+      "duplicate": "複製",
+      "delete": "削除",
+      "copiedToClipboard": "クリップボードにコピーしました"
+    },
+    "conversion": {
+      "text": "テキスト",
+      "textDesc": "プレーンテキストで入力を開始。",
+      "heading1": "見出し 1",
+      "heading1Desc": "最大フォントの見出し。",
+      "heading2": "見出し 2",
+      "heading2Desc": "2番目のフォントサイズの見出し。",
+      "heading3": "見出し 3",
+      "heading3Desc": "3番目のフォントサイズの見出し。",
+      "heading4": "見出し 4",
+      "heading4Desc": "4番目のフォントサイズの見出し。",
+      "heading5": "見出し 5",
+      "heading5Desc": "5番目のフォントサイズの見出し。",
+      "heading6": "見出し 6",
+      "heading6Desc": "6番目のフォントサイズの見出し。",
+      "bulletedList": "箇条書きリスト",
+      "bulletedListDesc": "箇条書きリストを作成。",
+      "numberedList": "番号付きリスト",
+      "numberedListDesc": "番号付きリストを作成。",
+      "todoList": "To-doリスト",
+      "todoListDesc": "タスクをTo-doリストに追加。",
+      "codeBlock": "コードブロック",
+      "codeBlockDesc": "書式付きのコードスニペット。",
+      "quote": "引用",
+      "quoteDesc": "強調のために引用を追加。",
+      "divider": "区切り線",
+      "dividerDesc": "コンテンツを視覚的に分離。"
+    },
+    "align": {
+      "alignLeft": "左揃え",
+      "alignCenter": "中央揃え",
+      "alignRight": "右揃え"
+    },
+    "highlight": {
+      "highlight": "ハイライト",
+      "color": "色",
+      "background": "背景",
+      "defaultColor": "デフォルト色",
+      "defaultBackground": "デフォルト背景",
+      "red": "赤",
+      "orange": "オレンジ",
+      "yellow": "黄",
+      "green": "緑",
+      "blue": "青",
+      "purple": "紫",
+      "pink": "ピンク",
+      "grey": "グレー",
+      "teal": "ティール"
+    },
+    "search": "検索"
+  },
+  "updater": {
+    "title": "アップデート利用可能",
+    "message": "バージョン {{version}} が利用可能です。",
+    "releaseNotes": "リリースノート:",
+    "noReleaseNotes": "リリースノートはありません。",
+    "installConfirm": "今すぐインストールしますか？",
+    "installAndRestart": "ダウンロードして更新",
+    "later": "後で",
+    "downloading": "アップデートをダウンロード中...",
+    "downloaded": "更新がダウンロードされました。",
+    "readyToRestart": "更新がダウンロードされ、インストールされました。今すぐ再起動して適用しますか？",
+    "restart": "再起動",
+    "noUpdates": "アップデートなし",
+    "latestVersion": "最新バージョンを使用しています。",
+    "error": "エラー",
+    "checkFailed": "アップデートの確認に失敗しました: {{error}}",
+    "networkError": "アップデートを確認できませんでした。インターネット接続を確認して再試行してください。",
+    "invalidJson": "アップデート情報を確認できませんでした。サーバーの設定が正しくない可能性があります。",
+    "skipVersion": "このバージョンをスキップ"
+  },
+  "image": {
+    "download": "ダウンロード",
+    "caption": "キャプション",
+    "turnIntoCardView": "カードビューに変換"
+  },
+  "attachment": {
+    "cardView": "カードビュー",
+    "embedView": "埋め込みビュー",
+    "replaceAttachment": "添付ファイルを置き換える",
+    "download": "ダウンロード",
+    "caption": "キャプション",
+    "rename": "名前を変更",
+    "horizontalStyle": "水平スタイル",
+    "verticalStyle": "垂直スタイル",
+    "reload": "再読み込み"
+  },
+  "table": {
+    "backgroundColor": "背景色",
+    "default": "デフォルト",
+    "clearColumnStyle": "列スタイルをクリア",
+    "insertLeft": "左に挿入",
+    "insertRight": "右に挿入",
+    "moveLeft": "左に移動",
+    "moveRight": "右に移動",
+    "duplicate": "複製",
+    "clearColumnContents": "列の内容をクリア",
+    "delete": "削除",
+    "deleteTable": "テーブル全体を削除",
+    "clearRowStyle": "行スタイルをクリア",
+    "insertAbove": "上に挿入",
+    "insertBelow": "下に挿入",
+    "moveUp": "上に移動",
+    "moveDown": "下に移動",
+    "clearRowContents": "行の内容をクリア",
+    "copy": "コピー",
+    "paste": "貼り付け",
+    "clearContents": "内容をクリア"
+  },
+  "note": {
+    "slicer": "スライサー",
+    "size": "サイズ",
+    "viewInToc": "目次で表示"
+  }
+}

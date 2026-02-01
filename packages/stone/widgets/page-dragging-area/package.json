@@ -1,0 +1,40 @@
+{
+  "name": "@ink/stone-widget-page-dragging-area",
+  "description": "Ink page dragging area widget.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "sideEffects": false,
+  "keywords": [],
+  "author": "mamahuhu",
+  "license": "MIT",
+  "dependencies": {
+    "@ink/stone-components": "workspace:*",
+    "@ink/stone-ext-loader": "workspace:*",
+    "@ink/stone-model": "workspace:*",
+    "@ink/stone-shared": "workspace:*",
+    "@ink/stone-global": "workspace:*",
+    "@ink/stone-icons": "^2.2.17",
+    "@ink/stone-std": "workspace:*",
+    "@ink/stone-store": "workspace:*",
+    "@lit/context": "^1.1.2",
+    "@preact/signals-core": "^1.8.0",
+    "@types/lodash-es": "^4.17.12",
+    "fflate": "^0.8.2",
+    "lit": "^3.2.0",
+    "lodash-es": "^4.17.21",
+    "rxjs": "^7.8.1"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./view": "./src/view.ts"
+  },
+  "files": [
+    "src",
+    "dist",
+    "!src/__tests__",
+    "!dist/__tests__"
+  ],
+  "version": "1.0.0"
+}

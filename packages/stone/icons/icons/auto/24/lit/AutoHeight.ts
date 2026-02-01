@@ -1,0 +1,29 @@
+import { html } from 'lit';
+const AutoHeight = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M3.25 4A.75.75 0 0 1 4 3.25h16a.75.75 0 0 1 0 1.5H4A.75.75 0 0 1 3.25 4M3.25 20a.75.75 0 0 1 .75-.75h16a.75.75 0 0 1 0 1.5H4a.75.75 0 0 1-.75-.75M11.47 5.47a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1-1.06 1.06L12 7.06 9.53 9.53a.75.75 0 0 1-1.06-1.06zM8.47 14.47a.75.75 0 0 1 1.06 0L12 16.94l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06"
+      clip-rule="evenodd"
+    />
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M12 5.25a.75.75 0 0 1 .75.75v12a.75.75 0 0 1-1.5 0V6a.75.75 0 0 1 .75-.75"
+      clip-rule="evenodd"
+    />
+  </svg>
+`;
+export default AutoHeight;

@@ -1,0 +1,24 @@
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const ProgressIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M15 4.25a.75.75 0 0 1 .75.75v1.25H19A2.75 2.75 0 0 1 21.75 9v6A2.75 2.75 0 0 1 19 17.75h-3.25V19a.75.75 0 0 1-1.5 0v-1.25H5A2.75 2.75 0 0 1 2.25 15V9A2.75 2.75 0 0 1 5 6.25h9.25V5a.75.75 0 0 1 .75-.75M5 7.75h9.25v8.5H5c-.69 0-1.25-.56-1.25-1.25V9c0-.69.56-1.25 1.25-1.25m10.75 0v8.5H19c.69 0 1.25-.56 1.25-1.25V9c0-.69-.56-1.25-1.25-1.25zm-3 2.25a.75.75 0 0 0-1.5 0v4a.75.75 0 0 0 1.5 0zM9 9.25a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0v-4A.75.75 0 0 1 9 9.25M6.75 10a.75.75 0 0 0-1.5 0v4a.75.75 0 0 0 1.5 0z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+export default ProgressIcon;

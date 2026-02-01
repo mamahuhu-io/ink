@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#141414" />
+    <title>Ink</title>
+
+    <!-- Inline theme initialization to prevent flash -->
+    <script>
+      (function () {
+        // Read resolved theme from localStorage (set by useTheme hook)
+        // Default to 'dark' if not set
+        var resolvedTheme = localStorage.getItem('resolvedTheme') || 'dark';
+        var isDark = resolvedTheme === 'dark';
+
+        // Set data-theme attribute immediately
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+
+        // Set initial background color on html element to prevent white flash
+        var bgColor = isDark ? '#141414' : '#ffffff';
+        document.documentElement.style.backgroundColor = bgColor;
+
+        // Update theme-color meta tag
+        var metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', bgColor);
+        }
+      })();
+    </script>
+
+    <!-- Local fonts -->
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

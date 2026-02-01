@@ -1,0 +1,77 @@
+import { AlignLeft, Hash, Type } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { useDocStats } from '../../hooks/useDocStats';
+import { usePreferencesStore } from '../../stores/preferences';
+import { useTabStore } from '../../stores/tabs';
+
+export function DocStats() {
+  const { t, i18n } = useTranslation();
+  const { activeTabId, tabs } = useTabStore();
+  const { showDocStats } = usePreferencesStore();
+  const [showDetail, setShowDetail] = useState(false);
+
+  const activeTab = tabs.find((t) => t.id === activeTabId);
+  const stats = useDocStats(activeTab?.docId ?? null);
+
+  // If disabled or no active tab, do not display
+  if (!showDocStats || !activeTab) {
+    return null;
+  }
+
+  // Format number (add thousand separators, using current locale)
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString(i18n.language);
+  };
+
+  return (
+    <div
+      className="doc-stats"
+      onMouseEnter={() => setShowDetail(true)}
+      onMouseLeave={() => setShowDetail(false)}
+      aria-label={`${t('editor.docStats.title')}: ${stats.wordCount} ${t('editor.docStats.wordUnit')}, ${stats.lineCount} ${t('editor.docStats.lineCount')}, ${stats.charCount} ${t('editor.docStats.charCount')}`}
+    >
+      {/* Default display: show word count only */}
+      <div className="doc-stats-trigger">
+        <Type size={13} strokeWidth={2} />
+        <span>{formatNumber(stats.wordCount)}</span>
+      </div>
+
+      {/* Hover display: detailed statistics popover */}
+      {showDetail && (
+        <div className="doc-stats-popover">
+          <div className="doc-stats-header">{t('editor.docStats.title')}</div>
+
+          <div className="doc-stats-item">
+            <div className="doc-stats-item-left">
+              <Type size={12} strokeWidth={2} className="doc-stats-icon" />
+              <span className="doc-stats-label">{t('editor.docStats.wordCount')}</span>
+            </div>
+            <span className="doc-stats-value">{formatNumber(stats.wordCount)}</span>
+          </div>
+
+          <div className="doc-stats-divider"></div>
+
+          <div className="doc-stats-item">
+            <div className="doc-stats-item-left">
+              <AlignLeft size={12} strokeWidth={2} className="doc-stats-icon" />
+              <span className="doc-stats-label">{t('editor.docStats.lineCount')}</span>
+            </div>
+            <span className="doc-stats-value">{formatNumber(stats.lineCount)}</span>
+          </div>
+
+          <div className="doc-stats-divider"></div>
+
+          <div className="doc-stats-item">
+            <div className="doc-stats-item-left">
+              <Hash size={12} strokeWidth={2} className="doc-stats-icon" />
+              <span className="doc-stats-label">{t('editor.docStats.charCount')}</span>
+            </div>
+            <span className="doc-stats-value">{formatNumber(stats.charCount)}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

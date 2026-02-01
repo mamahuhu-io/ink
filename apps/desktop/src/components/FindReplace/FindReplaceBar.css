@@ -1,0 +1,199 @@
+.find-replace-bar {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  z-index: 100;
+  background: var(--ink-background-primary-color);
+  border: 1px solid var(--ink-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 400px;
+}
+
+.find-row,
+.replace-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.find-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: var(--ink-background-secondary-color);
+  border: 1px solid var(--ink-border-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  gap: 6px;
+}
+
+.find-input-wrapper:focus-within {
+  border-color: var(--ink-brand-color);
+}
+
+.find-icon {
+  color: var(--ink-text-secondary-color);
+  flex-shrink: 0;
+}
+
+.find-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--ink-text-primary-color);
+  outline: none;
+  min-width: 120px;
+}
+
+.find-input::placeholder {
+  color: var(--ink-text-secondary-color);
+}
+
+.find-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.find-option-btn:hover {
+  background: var(--ink-background-secondary-color);
+  color: var(--ink-text-primary-color);
+}
+
+.find-option-btn.active {
+  background: var(--ink-hover-color-filled);
+  color: var(--ink-brand-color);
+  border-color: var(--ink-brand-color);
+}
+
+.match-count {
+  font-size: 12px;
+  color: var(--ink-text-secondary-color);
+  min-width: 70px;
+  text-align: center;
+}
+
+.find-nav-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.find-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.find-nav-btn:hover:not(:disabled) {
+  background: var(--ink-background-secondary-color);
+  color: var(--ink-text-primary-color);
+}
+
+.find-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.find-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-text-secondary-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.find-close-btn:hover {
+  background: var(--ink-background-secondary-color);
+  color: var(--ink-text-primary-color);
+}
+
+.replace-btn {
+  padding: 4px 12px;
+  border: 1px solid var(--ink-border-color);
+  border-radius: 4px;
+  background: var(--ink-background-secondary-color);
+  color: var(--ink-text-primary-color);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.replace-btn:hover:not(:disabled) {
+  background: var(--ink-hover-color-filled);
+  border-color: var(--ink-text-secondary-color);
+}
+
+.replace-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.replace-all-btn {
+  background: var(--ink-brand-color);
+  color: white;
+  border-color: var(--ink-brand-color);
+}
+
+.replace-all-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  background: var(--ink-brand-color);
+  border-color: var(--ink-brand-color);
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.find-replace-bar {
+  animation: slideIn 0.15s ease-out;
+}
+
+/* CSS Custom Highlight API styles */
+::highlight(search-results) {
+  background-color: rgba(255, 213, 0, 0.4);
+  color: inherit;
+}
+
+::highlight(search-current) {
+  background-color: rgba(255, 150, 0, 0.6);
+  color: inherit;
+}

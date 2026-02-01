@@ -1,0 +1,24 @@
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const ViewBarIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M3.25 20a.75.75 0 0 1-.75-.75V4.75a.75.75 0 0 1 1.5 0v14.5a.75.75 0 0 1-.75.75M9.665 8.44a.75.75 0 0 1 .062 1.058L8.17 11.25h7.66l-1.557-1.752a.75.75 0 0 1 1.12-.996l2.668 3a.75.75 0 0 1 0 .996l-2.667 3a.75.75 0 1 1-1.121-.996l1.557-1.752H8.17l1.557 1.752a.75.75 0 0 1-1.12.996l-2.668-3a.75.75 0 0 1 0-.996l2.667-3a.75.75 0 0 1 1.059-.063M21.5 4.75a.75.75 0 0 0-1.5 0v14.5a.75.75 0 0 0 1.5 0z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+export default ViewBarIcon;

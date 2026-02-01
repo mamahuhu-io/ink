@@ -1,0 +1,55 @@
+name: Create Update PR
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+  workflow_dispatch:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+# See https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for
+  # pull requests or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Necessary for `npm version patch`
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - run: npm run download
+        env:
+          figma_token: ${{ secrets.FIGMA_TOKEN }}
+
+      - run: git rev-parse --git-dir > /dev/null 2>&1 && (git diff --quiet && git diff --cached --quiet) || npm version patch --no-git-tag-version
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: '[AUTO] Update icons'
+          commit-message: '[AUTO] Update icons'
+          reviewers: JimmFly, CatsJuice, pengx17

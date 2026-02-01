@@ -1,0 +1,40 @@
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const AdminIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M6.75 7a4.75 4.75 0 1 1 9.5 0 4.75 4.75 0 0 1-9.5 0m4.75-3.25a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5"
+      clipRule="evenodd"
+    />
+    <path
+      fill="currentColor"
+      d="M12.003 13.978a.75.75 0 0 1-.723.776 6.25 6.25 0 0 0-5.778 4.484.67.67 0 0 0 .161.666c.183.2.486.346.837.346h4.754a.75.75 0 0 1 0 1.5H6.5a2.64 2.64 0 0 1-1.943-.833 2.16 2.16 0 0 1-.495-2.102 7.75 7.75 0 0 1 7.166-5.56.75.75 0 0 1 .775.723"
+    />
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M14.544 17.5a2.162 2.162 0 1 1 4.324 0 2.162 2.162 0 0 1-4.324 0m2.162-.662a.662.662 0 1 0 0 1.324.662.662 0 0 0 0-1.324"
+      clipRule="evenodd"
+    />
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M14.757 12.75c-.516 0-.994.273-1.255.718l-1.938 3.294a1.46 1.46 0 0 0 0 1.476l1.938 3.294c.261.445.739.718 1.255.718h3.898c.516 0 .993-.273 1.255-.718l1.938-3.294a1.46 1.46 0 0 0 0-1.476l-1.938-3.294a1.46 1.46 0 0 0-1.255-.718zM12.87 17.5l1.912-3.25h3.848l1.912 3.25-1.912 3.25h-3.848z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+export default AdminIcon;

@@ -1,0 +1,162 @@
+import { getAttachmentFileIcon, WebIcon16 } from '@ink/stone-components/icons';
+import { SignalWatcher, WithDisposable } from '@ink/stone-global/lit';
+import type { FootNote } from '@ink/stone-model';
+import { DocDisplayMetaProvider } from '@ink/stone-shared/services';
+import { unsafeCSSVar, unsafeCSSVarV2 } from '@ink/stone-shared/theme';
+import type { BlockStdScope } from '@ink/stone-std';
+import { baseTheme } from '@ink/stone-theme';
+import { computed, signal } from '@preact/signals-core';
+import { css, html, LitElement, nothing, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
+
+import type { FootNotePopupClickHandler } from './footnote-config';
+
+export class FootNotePopup extends SignalWatcher(WithDisposable(LitElement)) {
+  static override styles = css`
+    .footnote-popup-container {
+      border-radius: 8px;
+      box-shadow: ${unsafeCSSVar('overlayPanelShadow')};
+      background-color: ${unsafeCSSVarV2('layer/background/primary')};
+      border: 0.5px solid ${unsafeCSSVarV2('layer/insideBorder/border')};
+      max-width: 260px;
+      padding: 4px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .footnote-popup-description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: ${unsafeCSS(baseTheme.fontSansFamily)};
+      font-size: var(--ink-font-xs);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+      height: 20px;
+    }
+  `;
+
+  private readonly _linkPreview$ = signal<{
+    favicon: string | undefined;
+    title?: string;
+    description?: string;
+  }>({
+    favicon: undefined,
+    title: undefined,
+    description: undefined,
+  });
+
+  private readonly _prefixIcon$ = computed(() => {
+    const referenceType = this.footnote.reference.type;
+    if (referenceType === 'doc') {
+      const docId = this.footnote.reference.docId;
+      if (!docId) {
+        return undefined;
+      }
+      return this.std.get(DocDisplayMetaProvider).icon(docId).value;
+    } else if (referenceType === 'attachment') {
+      const fileType = this.footnote.reference.fileType;
+      if (!fileType) {
+        return undefined;
+      }
+      return getAttachmentFileIcon(fileType);
+    } else if (referenceType === 'url') {
+      const favicon = this._linkPreview$.value?.favicon;
+      // Directly use favicon URL since Tauri app doesn't have CORS restrictions
+      return favicon ? html`<img src=${favicon} alt="favicon" />` : WebIcon16;
+    }
+    return undefined;
+  });
+
+  private readonly _popupLabel$ = computed(() => {
+    const referenceType = this.footnote.reference.type;
+    let label = '';
+    const { docId, fileName, url } = this.footnote.reference;
+    switch (referenceType) {
+      case 'doc':
+        if (!docId) {
+          return label;
+        }
+        label = this.std.get(DocDisplayMetaProvider).title(docId).value;
+        break;
+      case 'attachment':
+        if (!fileName) {
+          return label;
+        }
+        label = fileName;
+        break;
+      case 'url':
+        if (!url) {
+          return label;
+        }
+        label = this._linkPreview$.value?.title ?? url;
+        break;
+    }
+    return label;
+  });
+
+  private readonly _tooltip$ = computed(() => {
+    const referenceType = this.footnote.reference.type;
+    if (referenceType === 'url') {
+      const title = this._linkPreview$.value?.title;
+      const url = this.footnote.reference.url;
+      return [title, url].filter(Boolean).join('\n') || '';
+    }
+    return this._popupLabel$.value;
+  });
+
+  private readonly _onClick = () => {
+    this.onPopupClick(this.footnote, this.abortController);
+    this.abortController.abort();
+  };
+
+  private readonly _initLinkPreviewData = () => {
+    this._linkPreview$.value = {
+      favicon: this.footnote.reference.favicon,
+      title: this.footnote.reference.title,
+      description: this.footnote.reference.description,
+    };
+  };
+
+  override connectedCallback() {
+    super.connectedCallback();
+    // Initialize link preview data from footnote reference (no remote fetching)
+    this._initLinkPreviewData();
+  }
+
+  override render() {
+    const description = this._linkPreview$.value?.description;
+
+    return html`
+      <div class="footnote-popup-container" @click=${this._onClick}>
+        <footnote-popup-chip
+          .prefixIcon=${this._prefixIcon$.value}
+          .label=${this._popupLabel$.value}
+          .tooltip=${this._tooltip$.value}
+        ></footnote-popup-chip>
+        ${description
+          ? html` <div class="footnote-popup-description">${description}</div> `
+          : nothing}
+      </div>
+    `;
+  }
+
+  @property({ attribute: false })
+  accessor footnote!: FootNote;
+
+  @property({ attribute: false })
+  accessor std!: BlockStdScope;
+
+  @property({ attribute: false })
+  accessor abortController!: AbortController;
+
+  @property({ attribute: false })
+  accessor onPopupClick: FootNotePopupClickHandler | (() => void) = () => {};
+
+  @property({ attribute: false })
+  accessor updateFootnoteAttributes: (footnote: FootNote) => void = () => {};
+}

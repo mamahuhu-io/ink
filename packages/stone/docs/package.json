@@ -1,0 +1,21 @@
+{
+  "name": "@ink/stone-docs",
+  "description": "InkStone documentation",
+  "private": true,
+  "keywords": [],
+  "author": "mamahuhu",
+  "repository": "mamahuhu/stone",
+  "license": "MPL-2.0",
+  "type": "module",
+  "devDependencies": {
+    "typedoc": "^0.28.0",
+    "typedoc-plugin-markdown": "^4.5.0"
+  },
+  "scripts": {
+    "build": "typedoc"
+  },
+  "dependencies": {
+    "@ink/stone-core": "workspace:*"
+  },
+  "version": "1.0.0"
+}

@@ -1,0 +1,23 @@
+import { html } from 'lit';
+const SingleSelectCheckSolid = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25m4.626 7.214a.75.75 0 0 0-1.102-1.017l-5.156 5.589-1.955-1.956a.75.75 0 0 0-1.06 1.06l2.507 2.508a.75.75 0 0 0 1.081-.021z"
+      clip-rule="evenodd"
+    />
+  </svg>
+`;
+export default SingleSelectCheckSolid;

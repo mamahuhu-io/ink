@@ -1,0 +1,21 @@
+import { html } from 'lit';
+const StarPanel = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path
+      fill="currentColor"
+      d="M11.024 3.5c.347-.889 1.605-.889 1.952 0l1.573 4.03c.149.381.506.64.915.664l4.318.251c.953.056 1.342 1.252.604 1.857l-3.347 2.74c-.316.26-.453.68-.35 1.076l1.097 4.185c.241.923-.776 1.662-1.58 1.147l-3.64-2.335a1.05 1.05 0 0 0-1.132 0l-3.64 2.335c-.804.515-1.821-.224-1.58-1.147l1.096-4.185a1.05 1.05 0 0 0-.35-1.075l-3.345-2.741c-.739-.605-.35-1.801.603-1.857l4.318-.25c.409-.024.766-.284.915-.665z"
+    />
+  </svg>
+`;
+export default StarPanel;

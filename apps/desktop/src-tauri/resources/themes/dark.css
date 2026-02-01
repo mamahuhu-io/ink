@@ -1,0 +1,167 @@
+/*
+ * Dark Theme - Ink
+ * Elegant dark theme for nighttime use
+ */
+
+:root {
+  /* Primary colors */
+  --ink-brand-color: #60a5fa;
+  --ink-primary-color: #60a5fa;
+  --ink-secondary-color: rgb(144, 150, 246);
+  --ink-tertiary-color: rgba(30, 41, 59, 1);
+
+  /* Background colors */
+  --ink-background-primary-color: #141414;
+  --ink-background-secondary-color: #1e1e1e;
+  --ink-background-tertiary-color: #2a2a2a;
+  --ink-background-code-block: rgba(40, 40, 40, 1);
+  --ink-background-modal-color: rgba(0, 0, 0, 0.85);
+  --ink-background-overlay-panel-color: #1e1e1e;
+  --ink-background-error-color: rgba(70, 30, 30, 1);
+  --ink-background-warning-color: rgba(70, 55, 25, 1);
+  --ink-background-success-color: rgba(25, 55, 40, 1);
+  --ink-background-processing-color: rgba(30, 45, 70, 1);
+  --ink-hover-color: rgba(255, 255, 255, 0.06);
+  --ink-hover-color-filled: rgba(60, 60, 60, 1);
+
+  /* Text colors */
+  --ink-text-primary-color: rgba(235, 235, 235, 1);
+  --ink-text-secondary-color: rgba(155, 155, 160, 1);
+  --ink-text-emphasis-color: #60a5fa;
+  --ink-text-disable-color: rgba(100, 100, 105, 1);
+  --ink-link-color: #60a5fa;
+  --ink-placeholder-color: rgba(100, 100, 105, 1);
+  --ink-quote-color: rgba(180, 175, 165, 1);
+  --ink-icon-color: rgba(155, 155, 160, 1);
+  --ink-icon-secondary: rgba(155, 155, 160, 1);
+
+  /* Divider & border */
+  --ink-divider-color: rgba(60, 60, 65, 1);
+  --ink-border-color: rgba(60, 60, 65, 1);
+
+  /* Shadows */
+  --ink-shadow-1: 0px 0px 6px 0px rgba(0, 0, 0, 0.35);
+  --ink-shadow-2: 0px 0px 14px 0px rgba(0, 0, 0, 0.45);
+  --ink-shadow-3: 0px 0px 24px 0px rgba(0, 0, 0, 0.55);
+  --ink-button-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+  --ink-overlay-panel-shadow: 0px 2px 8px rgba(0, 0, 0, 0.35), 0px 10px 18px rgba(0, 0, 0, 0.25);
+  --ink-menu-shadow: 0px 12px 22px rgba(0, 0, 0, 0.35), 0px -2px 14px rgba(0, 0, 0, 0.2);
+  --ink-toolbar-shadow: 0px 8px 20px rgba(0, 0, 0, 0.35);
+  --ink-float-button-shadow:
+    0px 0px 12px rgba(0, 0, 0, 0.2), 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
+
+  /* Highlight colors */
+  --ink-highlight-pink: rgba(120, 70, 100, 0.5);
+  --ink-highlight-red: rgba(130, 60, 55, 0.5);
+  --ink-highlight-orange: rgba(140, 90, 45, 0.5);
+  --ink-highlight-yellow: rgba(140, 120, 45, 0.5);
+  --ink-highlight-green: rgba(55, 110, 75, 0.5);
+  --ink-highlight-teal: rgba(50, 110, 110, 0.5);
+  --ink-highlight-blue: rgba(55, 95, 130, 0.5);
+  --ink-highlight-purple: rgba(95, 70, 130, 0.5);
+  --ink-highlight-grey: rgba(80, 80, 85, 0.5);
+
+  /* Text highlight background colors */
+  --ink-text-highlight-red: rgba(130, 60, 55, 0.6);
+  --ink-text-highlight-orange: rgba(140, 90, 45, 0.6);
+  --ink-text-highlight-yellow: rgba(140, 120, 45, 0.6);
+  --ink-text-highlight-green: rgba(55, 110, 75, 0.6);
+  --ink-text-highlight-blue: rgba(55, 95, 130, 0.6);
+  --ink-text-highlight-purple: rgba(95, 70, 130, 0.6);
+  --ink-text-highlight-pink: rgba(120, 70, 100, 0.6);
+  --ink-text-highlight-grey: rgba(80, 80, 85, 0.6);
+
+  /* Text highlight foreground colors */
+  --ink-text-highlight-foreground-red: rgba(255, 120, 120, 1);
+  --ink-text-highlight-foreground-orange: rgba(255, 180, 100, 1);
+  --ink-text-highlight-foreground-yellow: rgba(255, 230, 100, 1);
+  --ink-text-highlight-foreground-green: rgba(100, 220, 140, 1);
+  --ink-text-highlight-foreground-blue: rgba(100, 170, 255, 1);
+  --ink-text-highlight-foreground-purple: rgba(190, 140, 255, 1);
+  --ink-text-highlight-foreground-pink: rgba(255, 140, 190, 1);
+  --ink-text-highlight-foreground-grey: rgba(180, 180, 185, 1);
+
+  /* Layer variables */
+  --ink-layer-background-overlayPanel: #1e1e1e;
+  --ink-layer-insideBorder-border: rgba(255, 255, 255, 0.1);
+  --ink-layer-insideBorder-blackBorder: rgba(255, 255, 255, 0.1);
+  --ink-layer-background-primary: #141414;
+  --layer-background-overlayPanel: #1e1e1e;
+  --layer-background-primary: #141414;
+  --layer-insideBorder-border: rgba(255, 255, 255, 0.1);
+
+  /* Tooltip */
+  --ink-tooltip: rgba(235, 235, 235, 1);
+  --ink-tooltip-background: rgba(235, 235, 235, 1);
+  --ink-tooltip-text-color: #141414;
+  --ink-white: #ffffff;
+  --ink-black: #000000;
+
+  /* Accent background (for selected items) */
+  --ink-accent-bg: rgba(96, 165, 250, 0.15);
+
+  /* Scrollbar */
+  --ink-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --ink-scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+
+  /* Color scheme */
+  color-scheme: dark;
+
+  /* ========== Mermaid Theme Configuration ========== */
+  --mermaid-theme: dark;
+  --mermaid-primary-color: #1e96eb;
+  --mermaid-primary-text-color: #e3e2e4;
+  --mermaid-primary-border-color: #424149;
+  --mermaid-line-color: #84818a;
+  --mermaid-secondary-color: #2c2c2e;
+  --mermaid-tertiary-color: #1e1e20;
+  --mermaid-background: #1e1e20;
+  --mermaid-main-bkg: #1e1e20;
+  --mermaid-second-bkg: #2c2c2e;
+  --mermaid-label-background: #1e1e20;
+  --mermaid-label-color: #e3e2e4;
+  --mermaid-node-border: #424149;
+  --mermaid-cluster-bkg: #2c2c2e;
+  --mermaid-cluster-border: #424149;
+  --mermaid-default-link-color: #84818a;
+  --mermaid-title-color: #e3e2e4;
+  --mermaid-edge-label-background: #1e1e20;
+  --mermaid-actor-border: #424149;
+  --mermaid-actor-bkg: #1e1e20;
+  --mermaid-actor-text-color: #e3e2e4;
+  --mermaid-actor-line-color: #84818a;
+  --mermaid-signal-color: #e3e2e4;
+  --mermaid-signal-text-color: #e3e2e4;
+  --mermaid-label-box-bkg-color: #2c2c2e;
+  --mermaid-label-box-border-color: #424149;
+  --mermaid-label-text-color: #e3e2e4;
+  --mermaid-loop-text-color: #e3e2e4;
+  --mermaid-note-border-color: #424149;
+  --mermaid-note-bkg-color: #3d3d00;
+  --mermaid-note-text-color: #e3e2e4;
+  --mermaid-activation-border-color: #424149;
+  --mermaid-activation-bkg-color: #2c2c2e;
+  --mermaid-sequence-number-color: #1e1e20;
+  --mermaid-section-bkg-color: #2c2c2e;
+  --mermaid-alt-section-bkg-color: #1e1e20;
+  --mermaid-section-bkg-color2: #3d3d00;
+  --mermaid-exclude-bkg-color: #424149;
+  --mermaid-task-border-color: #424149;
+  --mermaid-task-bkg-color: #1e96eb;
+  --mermaid-task-text-color: #e3e2e4;
+  --mermaid-task-text-light-color: #1e1e20;
+  --mermaid-task-text-outside-color: #e3e2e4;
+  --mermaid-task-text-clickable-color: #1e96eb;
+  --mermaid-active-task-border-color: #424149;
+  --mermaid-active-task-bkg-color: #2c2c2e;
+  --mermaid-grid-color: #424149;
+  --mermaid-done-task-bkg-color: #84818a;
+  --mermaid-done-task-border-color: #84818a;
+  --mermaid-crit-border-color: #ff4d4f;
+  --mermaid-crit-bkg-color: #ff4d4f;
+  --mermaid-today-line-color: #ff4d4f;
+  --mermaid-person-border: #424149;
+  --mermaid-person-bkg: #1e1e20;
+  --mermaid-error-bkg-color: #ff4d4f;
+  --mermaid-error-text-color: #1e1e20;
+}

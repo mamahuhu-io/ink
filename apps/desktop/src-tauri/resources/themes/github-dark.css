@@ -1,0 +1,132 @@
+/**
+ * GitHub Dark Theme
+ * Based on GitHub's dark color scheme
+ */
+:root {
+  /* Brand colors */
+  --ink-brand-color: #2f81f7;
+  --ink-primary-color: #2f81f7;
+  --ink-secondary-color: #a371f7;
+
+  /* Background colors */
+  --ink-background-primary-color: #0d1117;
+  --ink-background-secondary-color: #161b22;
+  --ink-background-tertiary-color: #21262d;
+  --ink-background-code-block: #161b22;
+  --ink-background-overlay-panel-color: #161b22;
+  --ink-background-error-color: rgba(248, 81, 73, 0.1);
+  --ink-background-warning-color: rgba(210, 153, 34, 0.1);
+  --ink-background-success-color: rgba(63, 185, 80, 0.1);
+  --ink-background-processing-color: rgba(47, 129, 247, 0.1);
+
+  /* Hover colors */
+  --ink-hover-color: rgba(177, 186, 196, 0.12);
+  --ink-hover-color-filled: #21262d;
+
+  /* Text colors */
+  --ink-text-primary-color: #e6edf3;
+  --ink-text-secondary-color: #8b949e;
+  --ink-text-emphasis-color: #e6edf3;
+  --ink-text-disable-color: #484f58;
+  --ink-placeholder-color: #6e7681;
+  --ink-quote-color: #8b949e;
+  --ink-link-color: #2f81f7;
+  --ink-icon-color: #8b949e;
+  --ink-icon-secondary: #6e7681;
+
+  /* Border & divider */
+  --ink-border-color: #30363d;
+  --ink-divider-color: #21262d;
+
+  /* Editor specific */
+  --ink-editor-width: 800px;
+  --ink-editor-side-padding: 24px;
+
+  /* Font */
+  --ink-font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  --ink-font-code-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Code syntax highlighting - GitHub Dark style */
+  --ink-code-color: #e6edf3;
+  --ink-code-block-background: #161b22;
+  --ink-code-comment: #8b949e;
+  --ink-code-keyword: #ff7b72;
+  --ink-code-string: #a5d6ff;
+  --ink-code-number: #79c0ff;
+  --ink-code-function: #d2a8ff;
+  --ink-code-variable: #ffa657;
+  --ink-code-operator: #e6edf3;
+
+  /* Shadow */
+  --ink-shadow-1: 0 0 transparent;
+  --ink-shadow-2: 0 3px 6px rgba(0, 0, 0, 0.4);
+  --ink-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* Tooltip */
+  --ink-tooltip-background: #6e7681;
+  --ink-tooltip-color: #ffffff;
+
+  /* Button colors */
+  --ink-button-primary-background: #238636;
+  --ink-button-primary-color: #ffffff;
+  --ink-button-secondary-background: #21262d;
+  --ink-button-secondary-color: #c9d1d9;
+
+  /* Status colors */
+  --ink-error-color: #f85149;
+  --ink-warning-color: #d29922;
+  --ink-success-color: #3fb950;
+  --ink-info-color: #2f81f7;
+
+  /* Tag colors */
+  --ink-tag-red: #f85149;
+  --ink-tag-orange: #db6d28;
+  --ink-tag-yellow: #d29922;
+  --ink-tag-green: #3fb950;
+  --ink-tag-teal: #2f81f7;
+  --ink-tag-blue: #58a6ff;
+  --ink-tag-purple: #a371f7;
+  --ink-tag-pink: #db61a2;
+  --ink-tag-gray: #8b949e;
+
+  /* Palette */
+  --ink-palette-line-yellow: #d29922;
+  --ink-palette-line-orange: #db6d28;
+  --ink-palette-line-tangerine: #f85149;
+  --ink-palette-line-red: #da3633;
+  --ink-palette-line-magenta: #db61a2;
+  --ink-palette-line-purple: #a371f7;
+  --ink-palette-line-navy: #58a6ff;
+  --ink-palette-line-blue: #2f81f7;
+  --ink-palette-line-teal: #39c5cf;
+  --ink-palette-line-green: #3fb950;
+  --ink-palette-line-black: #e6edf3;
+  --ink-palette-line-grey: #8b949e;
+  --ink-palette-line-white: #0d1117;
+
+  --ink-palette-shape-yellow: rgba(210, 153, 34, 0.2);
+  --ink-palette-shape-orange: rgba(219, 109, 40, 0.2);
+  --ink-palette-shape-tangerine: rgba(248, 81, 73, 0.2);
+  --ink-palette-shape-red: rgba(218, 54, 51, 0.2);
+  --ink-palette-shape-magenta: rgba(219, 97, 162, 0.2);
+  --ink-palette-shape-purple: rgba(163, 113, 247, 0.2);
+  --ink-palette-shape-navy: rgba(88, 166, 255, 0.2);
+  --ink-palette-shape-blue: rgba(47, 129, 247, 0.2);
+  --ink-palette-shape-teal: rgba(57, 197, 207, 0.2);
+  --ink-palette-shape-green: rgba(63, 185, 80, 0.2);
+  --ink-palette-shape-black: #21262d;
+  --ink-palette-shape-grey: #30363d;
+  --ink-palette-shape-white: #0d1117;
+
+  /* Scrollbar */
+  --ink-scrollbar-track: transparent;
+  --ink-scrollbar-thumb: rgba(139, 148, 158, 0.3);
+  --ink-scrollbar-thumb-hover: rgba(139, 148, 158, 0.5);
+
+  /* Accent background (for selected items) */
+  --ink-accent-bg: rgba(47, 129, 247, 0.15);
+
+  color-scheme: dark;
+}

@@ -1,0 +1,166 @@
+.file-change-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(2px);
+}
+
+.file-change-dialog {
+  background: var(--bg-primary, #1e1e1e);
+  border: 1px solid var(--border-color, #3c3c3c);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  max-width: 480px;
+  width: 90%;
+  animation: dialogSlideIn 0.2s ease-out;
+}
+
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.file-change-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color, #3c3c3c);
+}
+
+.file-change-icon {
+  color: #f0a500;
+  flex-shrink: 0;
+}
+
+.file-change-dialog-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.file-change-dialog-content {
+  padding: 16px 20px;
+}
+
+.file-change-dialog-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary, #a0a0a0);
+}
+
+.file-change-dialog-content strong {
+  color: var(--text-primary, #e0e0e0);
+}
+
+.file-change-list {
+  list-style: none;
+  margin: 16px 0 0 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.file-change-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-secondary, #252525);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.file-change-list .file-name {
+  font-size: 13px;
+  color: var(--text-primary, #e0e0e0);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-change-list .file-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.btn-small {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn-small.btn-reload {
+  background: var(--accent-color, #0078d4);
+  color: white;
+}
+
+.btn-small.btn-reload:hover {
+  background: var(--accent-color-hover, #106ebe);
+}
+
+.btn-small.btn-keep {
+  background: var(--bg-tertiary, #333);
+  color: var(--text-primary, #e0e0e0);
+}
+
+.btn-small.btn-keep:hover {
+  background: var(--bg-hover, #3c3c3c);
+}
+
+.file-change-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color, #3c3c3c);
+}
+
+.file-change-dialog-actions button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.btn-primary {
+  background: var(--accent-color, #0078d4);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--accent-color-hover, #106ebe);
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary, #333);
+  color: var(--text-primary, #e0e0e0);
+  border: 1px solid var(--border-color, #3c3c3c);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover, #3c3c3c);
+}

@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "useDefineForClassFields": true,
+    "types": ["node"],
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@ink/stone/global/*": ["packages/stone/framework/global/src/*"],
+      "@ink/stone/std/*": ["packages/stone/framework/std/src/*"],
+      "@ink/stone/std": ["packages/stone/framework/std/src/index.ts"],
+      "@ink/stone/store/*": ["packages/stone/framework/store/src/*"],
+      "@ink/stone/store": ["packages/stone/framework/store/src/index.ts"],
+      "@ink/stone/core/*": ["packages/stone/core/all/src/*"],
+      "@ink/stone/core": ["packages/stone/core/all/src/index.ts"]
+    }
+  }
+}

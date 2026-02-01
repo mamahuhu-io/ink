@@ -1,0 +1,88 @@
+import {
+  type ListBlockModel,
+  ListBlockSchema,
+  type ListType,
+  ParagraphBlockModel,
+} from '@ink/stone-model';
+import { focusTextModel } from '@ink/stone-rich-text';
+import type { InkTextAttributes } from '@ink/stone-shared/types';
+import { matchModels, toNumberedList } from '@ink/stone-shared/utils';
+import type { BlockComponent } from '@ink/stone-std';
+import { InlineMarkdownExtension } from '@ink/stone-std/inline';
+
+export const ListMarkdownExtension = InlineMarkdownExtension<InkTextAttributes>({
+  name: 'list',
+  // group 2: number
+  // group 3: bullet (-, +, *)
+  // group 4: todo
+  // group 5: todo checked
+  pattern: /^((\d+\.)|([-+*])|(\[ ?\])|(\[x\]))\s$/,
+  action: ({ inlineEditor, pattern, inlineRange, prefixText }) => {
+    if (inlineEditor.yTextString.slice(0, inlineRange.index).includes('\n')) {
+      return;
+    }
+
+    const match = prefixText.match(pattern);
+    if (!match) return;
+
+    let type: ListType;
+
+    if (match[2]) {
+      type = 'numbered';
+    } else if (match[3]) {
+      type = 'bulleted';
+    } else if (match[4] || match[5]) {
+      type = 'todo';
+    } else {
+      return;
+    }
+
+    const checked = match[5] !== undefined;
+
+    if (!inlineEditor.rootElement) return;
+    const blockComponent = inlineEditor.rootElement.closest<BlockComponent>('[data-block-id]');
+    if (!blockComponent) return;
+
+    const { model, std, store } = blockComponent;
+    if (!matchModels(model, [ParagraphBlockModel])) return;
+
+    if (type !== 'numbered') {
+      const parent = store.getParent(model);
+      if (!parent) return;
+      const index = parent.children.indexOf(model);
+
+      store.captureSync();
+      inlineEditor.deleteText({
+        index: 0,
+        length: inlineRange.index,
+      });
+      const id = store.addBlock<ListBlockModel>(
+        ListBlockSchema.model.flavour,
+        {
+          type: type,
+          text: model.text?.clone(),
+          children: model.children,
+          ...(type === 'todo' ? { checked } : {}),
+        },
+        parent,
+        index,
+      );
+      store.deleteBlock(model, { deleteChildren: false });
+      focusTextModel(std, id);
+    } else {
+      let order = parseInt(match[2]);
+      if (!Number.isInteger(order)) order = 1;
+
+      store.captureSync();
+      inlineEditor.deleteText({
+        index: 0,
+        length: inlineRange.index,
+      });
+
+      const id = toNumberedList(std, model, order);
+      if (!id) return;
+
+      focusTextModel(std, id);
+    }
+  },
+});

@@ -1,0 +1,30 @@
+import type { SVGProps } from 'react';
+import * as React from 'react';
+const ScaleAltIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="1em"
+    height="1em"
+    fill="none"
+    style={{
+      userSelect: 'none',
+      flexShrink: 0,
+    }}
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M13.25 4a.75.75 0 0 1 .75-.75h6a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0V4.75H14a.75.75 0 0 1-.75-.75M10.75 20a.75.75 0 0 1-.75.75H4a.75.75 0 0 1-.75-.75v-6a.75.75 0 0 1 1.5 0v5.25H10a.75.75 0 0 1 .75.75"
+      clipRule="evenodd"
+    />
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="m3.47 19.47 16-16 1.06 1.06-16 16z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+export default ScaleAltIcon;

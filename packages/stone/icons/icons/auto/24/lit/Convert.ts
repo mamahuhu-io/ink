@@ -1,0 +1,23 @@
+import { html } from 'lit';
+const Convert = ({
+  width = '1em',
+  height = '1em',
+  style = '',
+}: { width?: string; height?: string; style?: string } = {}) => html`
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width=${width}
+    height=${height}
+    fill="none"
+    style=${'user-select:none;flex-shrink:0;' + style}
+  >
+    <path
+      fill="currentColor"
+      fill-rule="evenodd"
+      d="M8.192 4.25a.75.75 0 1 0 0 1.5h8.539c.69 0 1.25.56 1.25 1.25v7.728l-1.605-1.604a.75.75 0 0 0-1.06 1.06L18.2 17.07a.75.75 0 0 0 1.06 0l2.885-2.885a.75.75 0 0 0-1.06-1.06l-1.605 1.604V7a2.75 2.75 0 0 0-2.75-2.75zm7.231 15.5a.75.75 0 0 0 0-1.5H6.885c-.69 0-1.25-.56-1.25-1.25V9.272l1.604 1.604a.75.75 0 1 0 1.06-1.06L5.416 6.93a.75.75 0 0 0-1.06 0L1.47 9.816a.75.75 0 0 0 1.06 1.06l1.605-1.604V17a2.75 2.75 0 0 0 2.75 2.75z"
+      clip-rule="evenodd"
+    />
+  </svg>
+`;
+export default Convert;

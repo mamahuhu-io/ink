@@ -1,6 +1,6 @@
 [package]
 name = "Ink"
-version = "1.0.0"
+version = "1.0.1"
 description = "A modern Markdown editor"
 authors = ["mamahuhu<ink@mamahuhu.io>"]
 license = "MIT"

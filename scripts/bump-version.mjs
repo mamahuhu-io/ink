@@ -4,7 +4,7 @@
  * Updates version numbers across all relevant configuration files
  *
  * Usage: pnpm bump <new-version>
- * Example: pnpm version 1.0.3
+ * Example: pnpm version 1.0.1
  */
 import fs from 'fs';
 import path from 'path';

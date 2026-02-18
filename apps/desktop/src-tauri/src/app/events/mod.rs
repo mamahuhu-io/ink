@@ -118,12 +118,9 @@ fn create_main_window(app_handle: &AppHandle) {
         Ok(window) => {
             debug_log!("WindowCreation", "Window created successfully");
 
-            // Setup macOS-specific window configuration
+            // Update window theme to match current theme
             #[cfg(target_os = "macos")]
             {
-                // Configure window (toolbar, delegate, initial styles)
-                crate::platform::macos::configure_window(&window);
-
                 if let Some(theme_manager) = app_handle.try_state::<Arc<ThemeManager>>() {
                     let current_theme = theme_manager.get_current_theme();
                     let is_dark = theme_manager.is_dark_theme(&current_theme);

@@ -1,6 +1,6 @@
 {
   "name": "@ink/stone-icons",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "exports": {
     "./rc": {
       "types": "./dist/rc.d.ts",

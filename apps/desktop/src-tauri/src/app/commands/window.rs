@@ -30,15 +30,12 @@ pub fn show_window(window: WebviewWindow) -> Result<(), String> {
 /// Update window appearance for macOS (traffic light buttons)
 #[tauri::command]
 pub fn update_window_appearance(window: WebviewWindow, is_dark: bool) {
-    #[cfg(target_os = "macos")]
-    {
-        crate::platform::macos::update_window_theme(&window, is_dark);
-    }
-    // No-op on other platforms
-    #[cfg(not(target_os = "macos"))]
-    {
-        let _ = (window, is_dark);
-    }
+    let theme = if is_dark {
+        tauri::Theme::Dark
+    } else {
+        tauri::Theme::Light
+    };
+    let _ = window.set_theme(Some(theme));
 }
 
 /// Get files that were opened via "Open With" before frontend was ready

@@ -38,15 +38,6 @@ use domain::files::{operations as file_ops, search as search_async, watcher as f
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    // Enable spell checking on macOS - must be done before webview creation
-    #[cfg(target_os = "macos")]
-    {
-        use objc2_foundation::{NSString, NSUserDefaults};
-        let defaults = NSUserDefaults::standardUserDefaults();
-        let key = NSString::from_str("WebContinuousSpellCheckingEnabled");
-        defaults.setBool_forKey(true, &key);
-    }
-
     // Build the app with platform-specific configuration
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
